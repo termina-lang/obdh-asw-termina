@@ -1,0 +1,76 @@
+
+/**
+ * \brief Serializes a 16-bit word
+ *
+ * \param data_bytes vector containing the MSB and LSB bytes of the word
+ *
+ * \return the serialized 16-bit word
+ */
+function deserialize_uint16(data_bytes : &[u8 ; 2]) -> u16 {
+
+    var aux : u16 = 0 : u16;
+
+    aux = (*data_bytes)[0 : usize] as u16;
+    aux = aux << 8 : u8 ;
+    aux = aux | (*data_bytes)[1 : usize] as u16;
+
+    return aux;
+}
+
+
+
+/**
+ * \brief Serializes a 32-bit word
+ *
+ * \param data_bytes vector containing the 4 bytes of the word
+ *
+ * \return the serialized 32-bit word
+ */
+function deserialize_uint32(data_bytes : &[u8 ; 4]) -> u32 {
+
+    var aux : u32 = 0 : u32;
+
+    aux = (*data_bytes)[0 : usize] as u32;
+    aux = aux << 8 : u8 ;
+    aux = aux | (*data_bytes)[1 : usize] as u32;
+    aux = aux << 8 : u8 ;
+    aux = aux | (*data_bytes)[2 : usize] as u32;
+    aux = aux << 8 : u8 ;
+    aux = aux | (*data_bytes)[3 : usize] as u32;
+
+    return aux;
+}
+
+
+/**
+ * \brief Serializes a 16-bit word
+ *
+ * \param var the 16-bit word to serialize
+ * \param data_bytes vector that will store the serialized 16-bit word
+ *
+ */
+function serialize_uint16(aux : u16, data_bytes : &mut[u8 ; 2]) {
+
+    (*data_bytes)[0 : usize] = ((aux & 0xFF00 : u16) >> 8 : u8) as u8;
+    (*data_bytes)[1 : usize] = (aux & 0x00FF : u16) as u8;
+
+    return;
+}
+
+
+/**
+ * \brief Serializes a 32-bit word
+ *
+ * \param var the 32-bit word to serialize
+ * \param data_bytes vector that will store the serialized 32-bit word
+ *
+ */
+function serialize_uint32(aux : u32, data_bytes : &mut[u8 ; 4]) {
+
+    (*data_bytes)[0 : usize] = ((aux & 0xFF000000 : u32) >> 24 : u8) as u8;
+    (*data_bytes)[1 : usize] = ((aux & 0x00FF0000 : u32) >> 16 : u8) as u8;
+    (*data_bytes)[2 : usize] = ((aux & 0x0000FF00 : u32) >> 8 : u8) as u8;
+    (*data_bytes)[3 : usize] = (aux & 0x000000FF : u32) as u8;
+
+    return;
+}

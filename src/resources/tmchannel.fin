@@ -1,0 +1,98 @@
+import{modules.ccsds_pus_format, modules.serialize, resources.uart}
+
+interface TMChannel {
+
+    procedure get_next_tm_count(&priv self, count : &mut u16);
+
+    procedure send_tm(&priv self, tm_descriptor: dyn TMDescriptorT);
+
+};
+
+resource class CTMChannel provides TMChannel {
+
+   uart : access UARTDriver;
+   tm_count : u16;
+   tm_descriptor_pool : access Allocator<TMDescriptorT>;
+   
+
+   procedure get_next_tm_count(&priv self, count : &mut u16) {
+
+        *count = self->tm_count;
+        self->tm_count = (self->tm_count + 1 : u16) & 0x3FFF : u16;
+
+        return;
+   }
+
+    procedure send_tm(&priv self, tm_descriptor: dyn TMDescriptorT) {
+
+        var frame_header : [u8;6] = [0 : u8;6];
+        let timeout : u32 = 0xAAAAA : u32;
+        var write_timeout : u32 = 0 : u32;
+        var check : bool = false;
+
+        frame_header[0 : usize] = 0xBE : u8;
+        frame_header[1 : usize] = 0xBA : u8;
+        frame_header[2 : usize] = 0xBE : u8;
+        frame_header[3 : usize] = 0xEF : u8;
+
+    
+        serialize_uint16(tm_descriptor.tm_num_bytes, &mut frame_header[4 : usize .. 6 : usize]);
+
+        var result : Result = Result::Ok;
+        var flag : bool = true;
+
+        for i : u8 in 0 : u8 .. 6 : u8 while flag{
+
+            self->uart.riscv_putchar(frame_header[i as usize], &mut result);
+
+            match result{
+                case Ok =>{
+                    flag = true;
+                }
+                case Error =>{
+                    flag = false;
+                    
+                }
+            }
+
+        }
+
+        for j : u16 in 0 : u16 .. tm_descriptor.tm_num_bytes while flag{
+
+            self->uart.riscv_putchar(tm_descriptor.tm_bytes[j as usize], &mut result);
+
+            match result{
+                case Ok =>{
+                    flag = true;
+                }
+                case Error =>{
+                    flag = false;
+                    
+                }
+            }
+
+        }
+        
+        self->uart.riscv_uart_tf_is_empty(&mut check);
+
+        for k : u32 in 0 : u32 .. timeout while check == false {
+            
+            self->uart.riscv_uart_tf_is_empty(&mut check);
+            write_timeout = write_timeout + 1 : u32;
+
+        }
+
+        if (write_timeout < timeout){
+
+            //
+
+        }
+  
+        self->tm_descriptor_pool.free(tm_descriptor);
+        
+
+        return;
+
+    }
+   
+   };

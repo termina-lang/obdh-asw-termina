@@ -1,0 +1,657 @@
+import{modules.tc_ccsds_pus_format,modules.tm_ccsds_pus_format,modules.crc}
+
+
+enum TCAcceptationStatus {
+    TCAcceptationNotProcessed,
+	TCAcceptationOK,
+	TCAcceptationCRCError,
+	TCAcceptationAPIDError,
+	TCAcceptationSourceIDError,
+	TCAcceptationTypeError,
+	TCAcceptationSubTypeError
+};
+
+enum TCExecutionCtrl {
+    ExecCtrlPrioTC, ExecCtrlReboot,ExecCtrlHK_FDIRTC,ExecCtrlBKGTC
+};
+
+interface PUSService1_mng {
+
+    procedure try_tc_acceptation(&priv self, tc_descriptor: &TCDescriptorT);
+	
+
+};
+
+interface PUSService1_tm_generation {
+
+    procedure build_tm_1_1(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16);
+	procedure build_tm_1_2 (&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16);
+	procedure build_tm_1_7(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16);
+	procedure build_tm_1_8_tc_3_X_SIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					SID : u16);
+	procedure build_tm_1_8_tc_20_X_PIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					PID : u16);
+	procedure build_tm_1_8_tc_5_X_RIDunknown(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					RID : u16);
+	procedure build_tm_1_8_tc_12_X_PMONIDundefined(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					PMONID : u16);
+	procedure build_tm_1_8_tc_12_X_PMONIDdefined(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					PMONID : u16);
+	procedure build_tm_1_8_tc_12_X_PMONIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					PMONID : u16);
+
+};
+
+resource class RCPUSService1 provides PUSService1_mng, PUSService1_tm_generation {
+
+    acceptation_status : TCAcceptationStatus;
+    execution_status : TCExecutionCtrl;
+
+
+  viewer is_crc_valid(&self, tc_descriptor: &TCDescriptorT) -> bool {
+
+	let cal_crc_value : u16 = cal_crc_16(&(tc_descriptor->tc_bytes), (tc_descriptor->tc_num_bytes - 2 : u16));
+	var packet_error_ctrl : u16 = get_packet_error_ctrl(tc_descriptor);
+
+	var is_valid : bool = (tc_cal_crc_value == packet_error_ctrl);
+
+	return is_valid;
+  }
+
+
+  viewer is_apid_valid(&self, tc_descriptor: &TCDescriptorT) -> bool {
+	
+	let epd_apid : u16 = 0x32C : u16;
+	var tc_apid : u16 = get_APID(&(tc_descriptor->tc_bytes));
+	
+	var is_valid : bool = (epd_apid == tc_apid);
+
+	return is_valid;
+  }
+
+
+  viewer is_sourceID_valid(&self, tc_descriptor: &TCDescriptorT) -> bool {
+	
+	let SOLO_Mission_TimeLine_SourceID : u16 = 110 : u16;
+	let SOLO_TC_Sequences_SourceID : u16 = 111 : u16;
+	let SOLO_Direct_Commands_SourceID : u16 = 120 : u16;
+
+	var sourceID : u16 = get_source_id(&(tc_descriptor->tc_bytes));
+
+	var is_valid : bool = ((SOLO_Mission_TimeLine_SourceID == sourceID)
+		 || (SOLO_TC_Sequences_SourceID == sourceID)
+		 || (SOLO_Direct_Commands_SourceID == sourceID));
+
+	return is_valid;
+  }
+
+  procedure try_tc_acceptation(&priv self, tc_descriptor: &TCDescriptorT) {
+
+	self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
+
+	if (false == is_crc_valid(tc_descriptor)) {
+
+		self.acceptation_status = TCAcceptationStatus::TCAcceptationCRCError;
+
+	} else if (false == is_apid_valid(tc_descriptor)) {
+
+		self.acceptation_status = TCAcceptationStatus::TCAcceptationAPIDError;
+
+	} else if (false == is_sourceid_valid(tc_descriptor)) {
+
+		self.acceptation_status = TCAcceptationStatus::TCAcceptationSourceIDError;
+
+	} else {
+
+		var type : u8 = get_type(&(tc_descriptor->tc_bytes));
+		var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
+
+		if (9 : u8 == type) {
+		
+			if (129 : u8 == subtype) {
+
+				self.execution_status = TCExecutionStatus::ExecCtrlPrioTC;
+
+			} else {
+				self.acceptation_status = TCAcceptationStatus::TCAcceptationSubTypeError;
+			}
+        }
+			
+		if (17 : u8 == type) {
+		
+			if (1 : u8 == subtype) {
+
+				self.execution_status = TCExecutionStatus::ExecCtrlPrioTC;
+
+			} else {
+				self.acceptation_status = TCAcceptationStatus::TCAcceptationSubTypeError;
+			}
+        }
+			
+        if (3 : u8 == type) {
+		
+			if (5 : u8 == subtype) {
+
+				self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
+
+			}
+
+            else if (6 : u8 == subtype) {
+
+                self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
+            }
+
+            else if (31 : u8 == subtype) {
+
+                self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
+            }
+
+			else {
+
+				self.acceptation_status = TCAcceptationStatus::TCAcceptationSubTypeError;
+			}
+        }
+		
+        if (20 : u8 == type) {
+		
+			if (1 : u8 == subtype) {
+
+				self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
+
+			}
+
+            else if (3 : u8 == subtype) {
+
+                self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
+            }
+
+			else {
+                
+				self.acceptation_status = TCAcceptationStatus::TCAcceptationSubTypeError;
+			}
+        }
+
+		self.acceptationStatus = TCAcceptationStatus::TCAcceptationTypeError;
+		
+
+		}
+
+		return;
+	}
+
+
+	procedure build_tm_1_1(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16) {
+
+	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 0x07 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 1 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+	}
+
+
+procedure build_tm_1_2 (&priv self, p_tm_descriptor : &mut TMDescriptorT,
+		tm_seq_counter : u16) {
+
+		var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+		var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+		var error_code : u16 = 0 : u16;
+		var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+		var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+		tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+		tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+
+		df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+		df_header.type = 1 : u8;
+		df_header.subtype = 2 : u8;
+		df_header.destinationID = 0x78 : u8;
+
+		match (self.acceptation_status) {
+			case TCAcceptationCRCError => {
+
+				tm_packet_header.packet_length = 13 : u16;
+				error_code = 2;
+				var packet_error_ctrl : u16 = get_packet_error_ctrl(&(tc_descriptor->tc_bytes));
+				var calculated_crc : u16 = cal_crc_16(&(tc_descriptor->tc_bytes), (tc_descriptor->tc_num_bytes - 2 : u16));
+				serialize_uint16(packet_err_ctrl, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+				serialize_uint16(calculated_crc, &mut p_tm_descriptor->tm_bytes[18 : usize .. 20 : usize]);
+				
+			}
+			case TCAcceptationAPIDError => {
+
+				tm_packet_header.packet_length = 9 : u16;
+				error_code = 3;
+				
+			}
+			case TCAcceptationSourceIDError => {
+
+				tm_packet_header.packet_length = 11 : u16;
+				error_code = 4;
+				var sourceID : u16 = get_source_id(&(tc_descriptor->tc_bytes));
+				serialize_uint16(sourceID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+				
+			}
+			case TCAcceptationTypeError => {
+
+				tm_packet_header.packet_length = 9 : u16;
+				error_code = 5;
+				
+			}
+			case TCAcceptationSubTypeError => {
+
+				tm_packet_header.packet_length = 9 : u16;
+				error_code = 6;
+			}
+	}
+
+		ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+		serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+		serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+		serialize_uint16(error_code ,&mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+		p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+		return;
+}
+
+
+
+
+procedure build_tm_1_7(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16) {
+
+	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 0x07 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 7 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}
+
+
+procedure build_tm_1_8_tc_3_X_SIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					SID : u16) {
+
+	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 11 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(1, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(SID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}
+
+
+
+procedure build_tm_1_8_tc_20_X_PIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					PID : u16) {
+
+	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 11 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(2, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(PID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}
+
+
+procedure build_tm_1_8_tc_5_X_RIDunknown(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					RID : u16) {
+
+	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 11 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(3, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(RID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}
+
+
+procedure build_tm_1_8_tc_12_X_PMONIDundefined(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					PMONID : u16) {
+
+	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 11 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(4, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(PMONID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}
+
+procedure build_tm_1_8_tc_12_X_PMONIDdefined(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					PMONID : u16) {
+
+	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 11 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(5, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(PMONID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}
+
+
+procedure build_tm_1_8_tc_12_X_PMONIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					PMONID : u16) {
+
+	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 11 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(6, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(PMONID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}
+
+
+
+	
+
+    
+
+ };
+
+
