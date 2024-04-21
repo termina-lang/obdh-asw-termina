@@ -12,19 +12,14 @@ enum TCAcceptationStatus {
 };
 
 enum TCExecutionCtrl {
-    ExecCtrlPrioTC, ExecCtrlReboot,ExecCtrlHK_FDIRTC,ExecCtrlBKGTC
+    ExecCtrlPrioTC, ExecCtrlReboot, ExecCtrlHK_FDIRTC, ExecCtrlBKGTC
 };
 
-interface PUSService1_mng {
+interface PUSService1 {
 
     procedure try_tc_acceptation(&priv self, tc_descriptor: &TCDescriptorT);
-	
 
-};
-
-interface PUSService1_tm_generation {
-
-    procedure build_tm_1_1(&priv self, p_tm_descriptor : &mut TMDescriptorT,
+	procedure build_tm_1_1(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16);
 	procedure build_tm_1_2 (&priv self, p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16);
@@ -48,10 +43,13 @@ interface PUSService1_tm_generation {
 	procedure build_tm_1_8_tc_12_X_PMONIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16,
 					PMONID : u16);
+	
 
 };
 
-resource class RCPUSService1 provides PUSService1_mng, PUSService1_tm_generation {
+
+
+resource class RCPUSService1 provides PUSService1 {
 
     acceptation_status : TCAcceptationStatus;
     execution_status : TCExecutionCtrl;
@@ -112,6 +110,8 @@ resource class RCPUSService1 provides PUSService1_mng, PUSService1_tm_generation
 
 	} else {
 
+		self.acceptationStatus = TCAcceptationStatus::TCAcceptationTypeError;
+
 		var type : u8 = get_type(&(tc_descriptor->tc_bytes));
 		var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
 
@@ -119,6 +119,7 @@ resource class RCPUSService1 provides PUSService1_mng, PUSService1_tm_generation
 		
 			if (129 : u8 == subtype) {
 
+				self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
 				self.execution_status = TCExecutionStatus::ExecCtrlPrioTC;
 
 			} else {
@@ -130,6 +131,7 @@ resource class RCPUSService1 provides PUSService1_mng, PUSService1_tm_generation
 		
 			if (1 : u8 == subtype) {
 
+				self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
 				self.execution_status = TCExecutionStatus::ExecCtrlPrioTC;
 
 			} else {
@@ -141,17 +143,20 @@ resource class RCPUSService1 provides PUSService1_mng, PUSService1_tm_generation
 		
 			if (5 : u8 == subtype) {
 
+				self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
 				self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
 
 			}
 
             else if (6 : u8 == subtype) {
 
+				self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
                 self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
             }
 
             else if (31 : u8 == subtype) {
 
+				self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
                 self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
             }
 
@@ -165,12 +170,14 @@ resource class RCPUSService1 provides PUSService1_mng, PUSService1_tm_generation
 		
 			if (1 : u8 == subtype) {
 
+				self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
 				self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
 
 			}
 
             else if (3 : u8 == subtype) {
 
+				self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
                 self.execution_status = TCExecutionStatus::ExecCtrlHK_FDIRTC;
             }
 
@@ -180,10 +187,8 @@ resource class RCPUSService1 provides PUSService1_mng, PUSService1_tm_generation
 			}
         }
 
-		self.acceptationStatus = TCAcceptationStatus::TCAcceptationTypeError;
-		
-
-		}
+	}
+  
 
 		return;
 	}

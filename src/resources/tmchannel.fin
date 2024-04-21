@@ -12,7 +12,8 @@ resource class CTMChannel provides TMChannel {
 
    uart : access UARTDriver;
    tm_count : u16;
-   tm_descriptor_pool : access Allocator<TMDescriptorT>;
+   tm_list_count : u8;
+   a_tm_list_pool: access Allocator<TMDescriptorTList>;
    
 
    procedure get_next_tm_count(&priv self, count : &mut u16) {
@@ -23,7 +24,16 @@ resource class CTMChannel provides TMChannel {
         return;
    }
 
-    procedure send_tm(&priv self, tm_descriptor: dyn TMDescriptorT) {
+    procedure add_tm (&priv self, tm_descriptor: &TMDescriptorT) {
+
+        var tm_list : TMDescriptorTList = self->a_tm_list_pool.get();
+        tm_list.add(tm_descriptor);
+        self->send_tm_list(tm_list);
+
+        return;
+    }
+
+    procedure send_tm_list(&priv self, tm_descriptor: dyn TMDescriptorT) {
 
         var frame_header : [u8;6] = [0 : u8;6];
         let timeout : u32 = 0xAAAAA : u32;

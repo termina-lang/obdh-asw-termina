@@ -1,3 +1,4 @@
 import{resources.epd_pus_services}
 
-resource tm_list_pool : Pool<[TMDescriptorT ; 5]; 5>;
+resource tm_list_pool : Pool<TMDescriptorTList; 5>;
+

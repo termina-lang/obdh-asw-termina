@@ -1,4 +1,4 @@
-import {modules.serialize}
+import {serialize}
 
 
 struct CCSDSPUSTMTCPacketHeaderT {
@@ -26,6 +26,13 @@ struct CCSDSPUSTMDFHeaderT {
     tm_bytes : [u8 ; 256];
     tm_num_bytes : u16;
 
+};
+
+
+struct TMDescriptorTList {
+
+	tm_list : [TMDescriptorT ; 5];
+	num_tms : u8;
 };
 
 

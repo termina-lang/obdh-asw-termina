@@ -3,279 +3,83 @@ import{modules.serialize, modules.ccsds_pus_format,resources.tm_channel,modules.
 
 task class TCEPDManager {
 
-    ar_tm_list_pool: access Allocator<[TMDescriptorT; 5]>;
+    a_tm_list_pool: access Allocator<TMDescriptorTList>;
     tc_descriptor_pool: access Allocator<TCDescriptorT>;
     hkfdir_message_queue_output: out dyn TCDescriptorT;
     bkg_message_queue_output: out dyn TCDescriptorT;
     tm_channel: access TMChannel;
-    pus_service_1 : access PUSService1_mng;
+    pus_service_1 : access PUSService1;
 
     tc_message_queue_input: in dyn TCDescriptorT triggers process_tc;
 
 
-    viewer accept_tc(&self, tc_descriptor: &TCDescriptorT) -> bool {
-
-        var ret : bool = true;
-
-        var tc_packet_header: CCSDSPUSTMTCPacketHeaderT = {
-            packet_id = 0: u16,
-            packet_seq_ctrl = 0: u16,
-            packet_length = 0: u16
-        }: CCSDSPUSTMTCPacketHeaderT;
-
-	    var tc_df_header: CCSDSPUSTCDFHeaderT = {
-            flag_ver_ack = 0: u8,
-	        type = 0: u8,
-	        subtype = 0: u8,
-	        sourceID = 0: u8
-        }: CCSDSPUSTCDFHeaderT;
-
-	    var tc_packet_err_ctrl: u16 = 0: u16;
-
-	    ccsds_pus_tc_get_fields(&tc_descriptor->tc_bytes,
-			&mut tc_packet_header, &mut tc_df_header, &mut tc_packet_err_ctrl);
-
-        var crc_value_calc: u16 = 0: u16;
-       
-        crc_value_calc = cal_crc_16(&(tc_descriptor->tc_bytes), (tc_descriptor->tc_num_bytes - 2 : u16));
-
-        if (crc_value_calc != tc_packet_err_ctrl){
-            
-            var tm_descriptor : Option<dyn TMDescriptorT> = None;
-            self->tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-            match tm_descriptor {
-
-                case Some(descriptor) => {
-
-                    var tm_count : u16 = 0 : u16;
-                    self->tm_channel.get_next_tm_count(&mut tm_count);
-
-                    epd_pus_build_tm_1_2_crc_error(&mut descriptor, tm_count, tc_packet_header.packet_id,
-		                                            tc_packet_header.packet_seq_ctrl,
-		                                            tc_packet_err_ctrl,
-		                                            crc_value_calc);
-
-
-                    self->tm_channel.send_tm(descriptor);
-
-                }
-                case None => {
-                    //error
-                }
-            }
-
-            ret = false;
-
-        }
-        
-        if(ret == true){
-
-            if (tc_df_header.type == 17: u8) {
-
-                if (tc_df_header.subtype != 1: u8) {
-
-                    var tm_descriptor : Option<dyn TMDescriptorT> = None;
-                    self->tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-                    match tm_descriptor {
-
-                        case Some(descriptor) => {
-
-                            var tm_count : u16 = 0 : u16;
-                            self->tm_channel.get_next_tm_count(&mut tm_count);
-
-                            epd_pus_build_tm_1_2_illegal_subtype(&mut descriptor, tm_count, tc_packet_header.packet_id,
-                                                    tc_packet_header.packet_seq_ctrl);
-                                                    
-                            self->tm_channel.send_tm(descriptor);
-
-                        }
-                        case None => {
-                            //error
-                        }
-                    }
-
-                }
-            
-            } else if (tc_df_header.type == 3: u8) {
-
-               if (tc_df_header.subtype != 31: u8) {
-
-                    var tm_descriptor : Option<dyn TMDescriptorT> = None;
-                    self->tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-                    match tm_descriptor {
-
-                        case Some(descriptor) => {
-
-                            var tm_count : u16 = 0 : u16;
-                            self->tm_channel.get_next_tm_count(&mut tm_count);
-
-                            epd_pus_build_tm_1_2_illegal_subtype(&mut descriptor, tm_count, tc_packet_header.packet_id,
-                                                    tc_packet_header.packet_seq_ctrl);
-                                                    
-                            self->tm_channel.send_tm(descriptor);
-                           
-
-                        }
-                        case None => {
-                            //error
-                        }
-                    }
-
-                    ret = false;
-                }
-
-            } else {
-
-                var tm_descriptor : Option<dyn TMDescriptorT> = None;
-                self->tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-                match tm_descriptor {
-
-                    case Some(descriptor) => {
-
-                        var tm_count : u16 = 0 : u16;
-                        self->tm_channel.get_next_tm_count(&mut tm_count);
-
-                        epd_pus_build_tm_1_2_illegal_type(&mut descriptor, tm_count, tc_packet_header.packet_id,
-                                                    tc_packet_header.packet_seq_ctrl);
-                                                    
-                        self->tm_channel.send_tm(descriptor);
-
-                    }
-                    case None => {
-                         //error
-                    }
-                }
-
-            ret = false;
-
-            }
-
-        }
-               
-
-        if (ret == true) {
-
-            var tm_descriptor : Option<dyn TMDescriptorT> = None;
-            self->tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-            match tm_descriptor {
-
-                case Some(descriptor) => {
-
-                    var tm_count : u16 = 0 : u16;
-                    self->tm_channel.get_next_tm_count(&mut tm_count);
-
-                    epd_pus_build_tm_1_1(&mut descriptor, tm_count, tc_packet_header.packet_id,
-                                            tc_packet_header.packet_seq_ctrl);
-                                            
-                    self->tm_channel.send_tm(descriptor);
-                    
-
-                }
-                case None => {
-                    //error
-                }
-            }
-
-        }
-
-        return ret;
-    
-    }
-
 
     action process_tc(&priv self, tc_descriptor: dyn TCDescriptorT) -> Result {
 
-        var tc_accepted : bool = false;
         var ret : Result = Result::Ok;
 
         self->pus_service_1.try_tc_acceptation(&tc_descriptor);
 
-        if (tc_accepted == true) {
+        match self->pus_service_1.acceptation_status {
 
-            var tc_packet_header: CCSDSPUSTMTCPacketHeaderT = {
-                packet_id = 0: u16,
-                packet_seq_ctrl = 0: u16,
-                packet_length = 0: u16
-            }: CCSDSPUSTMTCPacketHeaderT;
+            case TCAcceptationOK => {
+                
+                //generar tm(1,1)
 
-            var tc_df_header: CCSDSPUSTCDFHeaderT = {
-                flag_ver_ack = 0: u8,
-                type = 0: u8,
-                subtype = 0: u8,
-                sourceID = 0: u8
-            }: CCSDSPUSTCDFHeaderT;
+                match self->pus_service_1.tc_execution_status {
 
-            var tc_packet_err_ctrl: u16 = 0: u16;
+                    case ExecCtrlReboot => {
+                        //Ejecutar tc como prioritario
+                    }
+                    case  ExecCtrlHK_FDIRTC => {
+                    
+                        self->hk_message_queue_output.send(tc_descriptor);
+                    }
+                    case ExecCtrlBKGTC => {
+                        //Enviar tc a tarea bkg
+                    }
+                    case ExecCtrlPrioTC => {
+                        //Ejecutar tc como prioritario
+                    }
 
-            ccsds_pus_tc_get_fields(&tc_descriptor.tc_bytes,
-                &mut tc_packet_header, &mut tc_df_header, &mut tc_packet_err_ctrl);
+                }
+            }
+            idk => {  //Esto no está implementado en el lenguaje, pero sería muy útil y eficiente
+               
+                //generar tm(1,2)
 
-            if ((tc_df_header.type == 3 : u8) && (tc_df_header.subtype == 31 : u8)) {
+                //ojo, tengo en mente dos ideas diferentes para el tema de las listas de telemetrías
+                // consultar con Pablo cuál es la mejor opción
+            
+            /*
+                var tm_list : Option<TMDescriptorTList> = None;
+                self->a_tm_list_pool.alloc(&mut tm_list);
 
-                self->hk_message_queue_output.send(tc_descriptor);
+                match tm_list {
 
-            } else {
-                        
-                var tm_descriptor1 : Option<dyn TMDescriptorT> = None;
-                self->tm_descriptor_pool.alloc(&mut tm_descriptor1);
+                    case Some(list) => {
 
-                match tm_descriptor1 {
-
-                    case Some(tm1) => {
-
+                        var tm_descriptor : TMDescriptorT;
                         var tm_count : u16 = 0 : u16;
                         self->tm_channel.get_next_tm_count(&mut tm_count);
 
-                        epd_pus_build_tm_17_2(&mut tm1, tm_count);
+                        self->pus_service_1.build_tm_1_2(&mut tm_descriptor, tm_count);
 
-                        self->tm_channel.send_tm(tm1);
-                        
                     }
                     case None => {
                         //error
                     }
                 }
-
-                var tm_descriptor2 : Option<dyn TMDescriptorT> = None;
-                self->tm_descriptor_pool.alloc(&mut tm_descriptor2);
-
-                match tm_descriptor2 {
-
-                    case Some(tm2) => {
-
-                        var tm_count : u16 = 0 : u16;
-                        self->tm_channel.get_next_tm_count(&mut tm_count);
-
-                        epd_pus_build_tm_1_7(&mut tm2, tm_count, tc_packet_header.packet_id, tc_packet_header.packet_seq_ctrl);
-                                                            
-                        self->tm_channel.send_tm(tm2);
-                        
-
-                    }
-                    case None => {
-                        //error
-                    }
-
-                }
-
-                self->tc_descriptor_pool.free(tc_descriptor);                   
+            */
 
             }
-
-        } else {
-
-            self->tc_descriptor_pool.free(tc_descriptor);                   
-                    
         }
-           
-        return ret;
-
+    
+        return ret;            
     }
+
+        
+       
 
 
 };
