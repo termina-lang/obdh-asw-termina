@@ -1,4 +1,4 @@
-import{resources.epd_pus_services}
+import {modules.crc,resources.epd_pus_services.icuasw_pus_service1}
 
 resource tm_list_pool : Pool<TMDescriptorTList; 5>;
 

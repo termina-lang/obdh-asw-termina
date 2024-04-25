@@ -68,9 +68,8 @@ function get_packet_length(tc_bytes : &[u8 ; 256]) -> u16 {
 function get_packet_error_ctrl(tc_bytes : &[u8 ; 256]) -> u16 {
 
 	var packet_error_ctrl : u16 = 0 : u16;
-	let crc_offset : 16 = get_packet_length(tc_bytes) + 5 : u16;
-	packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[crc_offset as usize .. (crc_offset + 1 : u16) as usize]);
-	
+	let crc_offset : u16 = get_packet_length(tc_bytes) + 5 : u16;
+	packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[crc_offset as usize .. (crc_offset + 2) as usize]);	
 
 	return packet_error_ctrl;
 }

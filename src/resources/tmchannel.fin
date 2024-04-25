@@ -1,20 +1,21 @@
-import{modules.ccsds_pus_format, modules.serialize, resources.uart}
+import{modules.tm_ccsds_pus_format, modules.serialize}
 
 interface TMChannel {
 
     procedure get_next_tm_count(&priv self, count : &mut u16);
 
-    procedure send_tm(&priv self, tm_descriptor: dyn TMDescriptorT);
+    procedure insert_tm(&priv self, tm_descriptor: dyn TMDescriptorT);
 
 };
 
+const TM_QUEUE_MAX_NOE : u8 = 20 : u8;
+
 resource class CTMChannel provides TMChannel {
 
-   uart : access UARTDriver;
-   tm_count : u16;
-   tm_list_count : u8;
-   a_tm_list_pool: access Allocator<TMDescriptorTList>;
-   
+    tm_descriptor_queue : TMDescriptorQueue;
+    tm_count : u16;
+    tm_list_count : u8;
+    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
 
    procedure get_next_tm_count(&priv self, count : &mut u16) {
 
@@ -24,11 +25,43 @@ resource class CTMChannel provides TMChannel {
         return;
    }
 
-    procedure add_tm (&priv self, tm_descriptor: &TMDescriptorT) {
+   procedure init_system_tm_queue(&priv self){
 
-        var tm_list : TMDescriptorTList = self->a_tm_list_pool.get();
-        tm_list.add(tm_descriptor);
-        self->send_tm_list(tm_list);
+        self->tm_descriptor_queue.head_index = 0 : u8;
+    	self->tm_descriptor_queue.queued_tms = 0 : u8;
+    }
+
+    viewer tm_queue_is_full(&self) -> bool {
+
+        var is_full : u8 = (self->tm_descriptor_queue.queued_tms == TM_QUEUE_MAX_NOE);
+	    return is_full;
+    }
+
+    viewer tm_queue_is_empty(&self) -> bool {
+
+	    var is_empty : u8 = (self->tm_descriptor_queue.queued_tms) == 0 : u8;
+	    return is_empty;
+    }   
+
+    procedure insert_tm (&priv self, tm_descriptor: &TMDescriptorT, result : &mut Result) {
+
+        var is_full : bool = self->tm_queue_is_full();
+
+        if (false == is_full) {
+            
+            next_tail_index = (self->tm_descriptor_queue.head_index + self->tm_descriptor_queue.queued_tms) % TM_QUEUE_MAX_NOE;
+
+            self->tm_descriptor_queue.tm_descriptors[next_tail_index as usize] = tm_descriptor;
+
+            self->tm_descriptor_queue.queued_tms = self->tm_descriptor_queue.queued_tms + 1 : u8;
+
+            *result = Result::Ok;
+
+            self->a_tm_descriptor_pool.free(tm_descriptor);
+
+        } else { 
+            *result = Result::Error;
+        }
 
         return;
     }
@@ -36,9 +69,6 @@ resource class CTMChannel provides TMChannel {
     procedure send_tm_list(&priv self, tm_descriptor: dyn TMDescriptorT) {
 
         var frame_header : [u8;6] = [0 : u8;6];
-        let timeout : u32 = 0xAAAAA : u32;
-        var write_timeout : u32 = 0 : u32;
-        var check : bool = false;
 
         frame_header[0 : usize] = 0xBE : u8;
         frame_header[1 : usize] = 0xBA : u8;
@@ -48,57 +78,10 @@ resource class CTMChannel provides TMChannel {
     
         serialize_uint16(tm_descriptor.tm_num_bytes, &mut frame_header[4 : usize .. 6 : usize]);
 
-        var result : Result = Result::Ok;
-        var flag : bool = true;
-
-        for i : u8 in 0 : u8 .. 6 : u8 while flag{
-
-            self->uart.riscv_putchar(frame_header[i as usize], &mut result);
-
-            match result{
-                case Ok =>{
-                    flag = true;
-                }
-                case Error =>{
-                    flag = false;
-                    
-                }
-            }
-
-        }
-
-        for j : u16 in 0 : u16 .. tm_descriptor.tm_num_bytes while flag{
-
-            self->uart.riscv_putchar(tm_descriptor.tm_bytes[j as usize], &mut result);
-
-            match result{
-                case Ok =>{
-                    flag = true;
-                }
-                case Error =>{
-                    flag = false;
-                    
-                }
-            }
-
-        }
         
-        self->uart.riscv_uart_tf_is_empty(&mut check);
+        //HARDWARE DEPENDENT. Pending determination of the hardware where the code is to be tested.
+        
 
-        for k : u32 in 0 : u32 .. timeout while check == false {
-            
-            self->uart.riscv_uart_tf_is_empty(&mut check);
-            write_timeout = write_timeout + 1 : u32;
-
-        }
-
-        if (write_timeout < timeout){
-
-            //
-
-        }
-  
-        self->tm_descriptor_pool.free(tm_descriptor);
         
 
         return;

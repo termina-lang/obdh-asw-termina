@@ -1,5 +1,9 @@
 import{modules.serialize, modules.ccsds_pus_format,resources.tm_channel,modules.epd_pus_tmtc, modules.crc}
 
+struct TCStatus {
+		acceptation_status : TCAcceptationStatus;
+    	execution_status : TCExecutionCtrl;
+};
 
 task class TCEPDManager {
 
@@ -18,15 +22,17 @@ task class TCEPDManager {
 
         var ret : Result = Result::Ok;
 
-        self->pus_service_1.try_tc_acceptation(&tc_descriptor);
+        var tc_status : TCStatus;
 
-        match self->pus_service_1.acceptation_status {
+        self->pus_service_1.try_tc_acceptation(&tc_descriptor, &mut tc_status);
+
+        match tc_status.acceptation_status {
 
             case TCAcceptationOK => {
                 
-                //generar tm(1,1)
+                //generar TM(1,1)
 
-                match self->pus_service_1.tc_execution_status {
+                match tc_status.tc_execution_status {
 
                     case ExecCtrlReboot => {
                         //Ejecutar tc como prioritario
@@ -46,10 +52,8 @@ task class TCEPDManager {
             }
             idk => {  //Esto no está implementado en el lenguaje, pero sería muy útil y eficiente
                
-                //generar tm(1,2)
+                //generar TM(1,2)
 
-                //ojo, tengo en mente dos ideas diferentes para el tema de las listas de telemetrías
-                // consultar con Pablo cuál es la mejor opción
             
             /*
                 var tm_list : Option<TMDescriptorTList> = None;

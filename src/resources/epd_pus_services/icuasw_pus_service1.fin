@@ -1,4 +1,4 @@
-import{modules.tc_ccsds_pus_format,modules.tm_ccsds_pus_format,modules.crc}
+import {modules.tc_ccsds_pus_format,modules.tm_ccsds_pus_format,modules.crc} 
 
 
 enum TCAcceptationStatus {
@@ -14,6 +14,8 @@ enum TCAcceptationStatus {
 enum TCExecutionCtrl {
     ExecCtrlPrioTC, ExecCtrlReboot, ExecCtrlHK_FDIRTC, ExecCtrlBKGTC
 };
+
+
 
 interface PUSService1 {
 
@@ -51,10 +53,11 @@ interface PUSService1 {
 
 resource class RCPUSService1 provides PUSService1 {
 
-    acceptation_status : TCAcceptationStatus;
+	acceptation_status : TCAcceptationStatus;
     execution_status : TCExecutionCtrl;
 
-
+	tm_channel: access TMChannel;
+	
   viewer is_crc_valid(&self, tc_descriptor: &TCDescriptorT) -> bool {
 
 	let cal_crc_value : u16 = cal_crc_16(&(tc_descriptor->tc_bytes), (tc_descriptor->tc_num_bytes - 2 : u16));
@@ -92,7 +95,7 @@ resource class RCPUSService1 provides PUSService1 {
 	return is_valid;
   }
 
-  procedure try_tc_acceptation(&priv self, tc_descriptor: &TCDescriptorT) {
+  procedure try_tc_acceptation(&priv self, tc_descriptor: &TCDescriptorT, &mut tc_status) {
 
 	self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
 
@@ -188,7 +191,9 @@ resource class RCPUSService1 provides PUSService1 {
         }
 
 	}
-  
+
+		*tc_status.acceptation_status = self.acceptation_status;
+		*tc_status.execution_status = self.execution_status;
 
 		return;
 	}
@@ -232,6 +237,9 @@ resource class RCPUSService1 provides PUSService1 {
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	var res : Result = Result :: Error;
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
 
 	return;
 
@@ -309,6 +317,9 @@ procedure build_tm_1_2 (&priv self, p_tm_descriptor : &mut TMDescriptorT,
 
 		p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
+		var res : Result = Result :: Error;
+		self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+
 		return;
 }
 
@@ -353,6 +364,9 @@ procedure build_tm_1_7(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	var res : Result = Result :: Error;
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
 
 	return;
 
@@ -403,6 +417,9 @@ procedure build_tm_1_8_tc_3_X_SIDnotvalid(&priv self, p_tm_descriptor : &mut TMD
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
+	var res : Result = Result :: Error;
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+
 	return;
 
 }
@@ -451,6 +468,9 @@ procedure build_tm_1_8_tc_20_X_PIDnotvalid(&priv self, p_tm_descriptor : &mut TM
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	var res : Result = Result :: Error;
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
 
 	return;
 
@@ -501,6 +521,9 @@ procedure build_tm_1_8_tc_5_X_RIDunknown(&priv self, p_tm_descriptor : &mut TMDe
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
+	var res : Result = Result :: Error;
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+
 	return;
 
 }
@@ -550,6 +573,9 @@ procedure build_tm_1_8_tc_12_X_PMONIDundefined(&priv self, p_tm_descriptor : &mu
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
+	var res : Result = Result :: Error;
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+
 	return;
 
 }
@@ -597,6 +623,9 @@ procedure build_tm_1_8_tc_12_X_PMONIDdefined(&priv self, p_tm_descriptor : &mut 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	var res : Result = Result :: Error;
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
 
 	return;
 
@@ -646,6 +675,9 @@ procedure build_tm_1_8_tc_12_X_PMONIDnotvalid(&priv self, p_tm_descriptor : &mut
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	var res : Result = Result :: Error;
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
 
 	return;
 
