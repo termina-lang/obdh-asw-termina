@@ -1,13 +1,9 @@
 import{modules.serialize, modules.ccsds_pus_format,resources.tm_channel,modules.epd_pus_tmtc, modules.crc}
 
-struct TCStatus {
-		acceptation_status : TCAcceptationStatus;
-    	execution_status : TCExecutionCtrl;
-};
 
 task class TCEPDManager {
 
-    a_tm_list_pool: access Allocator<TMDescriptorTList>;
+    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     tc_descriptor_pool: access Allocator<TCDescriptorT>;
     hkfdir_message_queue_output: out dyn TCDescriptorT;
     bkg_message_queue_output: out dyn TCDescriptorT;
@@ -31,6 +27,11 @@ task class TCEPDManager {
             case TCAcceptationOK => {
                 
                 //generar TM(1,1)
+                var tm_descriptor : TMDescriptorT;
+                var tm_count : u16 = 0 : u16;
+                self->tm_channel.get_next_tm_count(&mut tm_count);
+                self->pus_service_1.build_tm_1_1(&mut descriptor, &tc_descriptor, tm_count, &mut ret);
+
 
                 match tc_status.tc_execution_status {
 
@@ -53,28 +54,11 @@ task class TCEPDManager {
             idk => {  //Esto no está implementado en el lenguaje, pero sería muy útil y eficiente
                
                 //generar TM(1,2)
-
-            
-            /*
-                var tm_list : Option<TMDescriptorTList> = None;
-                self->a_tm_list_pool.alloc(&mut tm_list);
-
-                match tm_list {
-
-                    case Some(list) => {
-
-                        var tm_descriptor : TMDescriptorT;
-                        var tm_count : u16 = 0 : u16;
-                        self->tm_channel.get_next_tm_count(&mut tm_count);
-
-                        self->pus_service_1.build_tm_1_2(&mut tm_descriptor, tm_count);
-
-                    }
-                    case None => {
-                        //error
-                    }
-                }
-            */
+                var tm_descriptor : TMDescriptorT;
+                var tm_count : u16 = 0 : u16;
+                self->tm_channel.get_next_tm_count(&mut tm_count);
+                self->pus_service_1.build_tm_1_2(&mut descriptor, tm_count, &tc_descriptor, &mut ret);
+                
 
             }
         }

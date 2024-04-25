@@ -1,7 +1,7 @@
 import {modules.serialize}
 
 
-struct CCSDSPUSTMTCPacketHeaderT {
+struct CCSDSPUSTMPacketHeaderT {
 
     packet_id : u16;
     packet_seq_ctrl : u16;
@@ -67,7 +67,7 @@ function ccsds_pus_tm_build_df_header_version(version : u8) -> u8 {
 
 
 function ccsds_pus_tm_set_fields(tm_bytes : &mut[u8 ; 10],
-		p_tm_packet_header : &CCSDSPUSTMTCPacketHeaderT,
+		p_tm_packet_header : &CCSDSPUSTMPacketHeaderT,
 		p_tm_df_header : &CCSDSPUSTMDFHeaderT) {
 
 	serialize_uint16(p_tm_packet_header->packet_id, &mut(*tm_bytes)[0 : usize .. 2 : usize]);

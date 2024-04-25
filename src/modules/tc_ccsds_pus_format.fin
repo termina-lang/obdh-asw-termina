@@ -2,7 +2,7 @@ import{modules.serialize}
 
 
 
-struct CCSDSPUSTMTCPacketHeaderT {
+struct CCSDSPUSTCPacketHeaderT {
 
     packet_id : u16;
     packet_seq_ctrl : u16;
@@ -65,11 +65,13 @@ function get_packet_length(tc_bytes : &[u8 ; 256]) -> u16 {
 	return (deserialize_uint16(&(*tc_bytes)[4 : usize .. 6 : usize]));
 }
 
-function get_packet_error_ctrl(tc_bytes : &[u8 ; 256]) -> u16 {
+function get_packet_seq_ctrl(tc_bytes : &[u8 ; 256]) -> u16 {
 
 	var packet_error_ctrl : u16 = 0 : u16;
-	let crc_offset : u16 = get_packet_length(tc_bytes) + 5 : u16;
-	packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[crc_offset as usize .. (crc_offset + 2) as usize]);	
+	//let crc_offset : u16 = get_packet_length(tc_bytes) + 5 : u16;
+	//packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[crc_offset as usize .. (crc_offset + 2) as usize]);	
+	packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[6 : usize .. 6 : usize]);	
+
 
 	return packet_error_ctrl;
 }
@@ -108,7 +110,7 @@ function get_source_id(tc_bytes : &[u8 ; 256]) -> u8 {
 
 
 function tc_get_fields(tc_bytes : &[u8 ; 256],
-		    p_tc_packet_header : &mut CCSDSPUSTMTCPacketHeaderT,
+		    p_tc_packet_header : &mut CCSDSPUSTCPacketHeaderT,
 		    p_tc_df_header : &mut CCSDSPUSTCDFHeaderT,
 		    p_tc_packet_err_ctrl : &mut u16) {
 

@@ -1,4 +1,4 @@
-import {modules.tc_ccsds_pus_format,modules.tm_ccsds_pus_format,modules.crc} 
+import {modules.tc_ccsds_pus_format,modules.tm_ccsds_pus_format,modules.crc, resources.tmchannel, modules.serialize} 
 
 
 enum TCAcceptationStatus {
@@ -13,6 +13,11 @@ enum TCAcceptationStatus {
 
 enum TCExecutionCtrl {
     ExecCtrlPrioTC, ExecCtrlReboot, ExecCtrlHK_FDIRTC, ExecCtrlBKGTC
+};
+
+struct TCStatus {
+		acceptation_status : TCAcceptationStatus;
+    	execution_status : TCExecutionCtrl;
 };
 
 
@@ -95,7 +100,7 @@ resource class RCPUSService1 provides PUSService1 {
 	return is_valid;
   }
 
-  procedure try_tc_acceptation(&priv self, tc_descriptor: &TCDescriptorT, &mut tc_status) {
+  procedure try_tc_acceptation(&priv self, tc_descriptor: &TCDescriptorT, tc_status : &mut TCStatus) {
 
 	self.acceptationStatus = TCAcceptationStatus::TCAcceptationOK;
 
@@ -192,20 +197,20 @@ resource class RCPUSService1 provides PUSService1 {
 
 	}
 
-		*tc_status.acceptation_status = self.acceptation_status;
-		*tc_status.execution_status = self.execution_status;
+		tc_status->acceptation_status = self.acceptation_status;
+		tc_status->execution_status = self.execution_status;
 
 		return;
 	}
 
 
 	procedure build_tm_1_1(&priv self, p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16) {
+					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, result : &mut Result) {
 
-	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
 	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
 	var df_header : CCSDSPUSTMDFHeaderT =
 										{version = 0 : u8,
 	 									type = 0 : u8,
@@ -238,8 +243,7 @@ resource class RCPUSService1 provides PUSService1 {
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	var res : Result = Result :: Error;
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -247,12 +251,12 @@ resource class RCPUSService1 provides PUSService1 {
 
 
 procedure build_tm_1_2 (&priv self, p_tm_descriptor : &mut TMDescriptorT,
-		tm_seq_counter : u16) {
+		tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, result : &mut Result) {
 
-		var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+		var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
 	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
 		var df_header : CCSDSPUSTMDFHeaderT =
 										{version = 0 : u8,
 	 									type = 0 : u8,
@@ -317,8 +321,7 @@ procedure build_tm_1_2 (&priv self, p_tm_descriptor : &mut TMDescriptorT,
 
 		p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-		var res : Result = Result :: Error;
-		self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+		self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
 
 		return;
 }
@@ -327,12 +330,12 @@ procedure build_tm_1_2 (&priv self, p_tm_descriptor : &mut TMDescriptorT,
 
 
 procedure build_tm_1_7(&priv self, p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16) {
+					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, result : &mut Result) {
 
-	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
 	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
 	var df_header : CCSDSPUSTMDFHeaderT =
 										{version = 0 : u8,
 	 									type = 0 : u8,
@@ -365,8 +368,7 @@ procedure build_tm_1_7(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	var res : Result = Result :: Error;
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -375,12 +377,12 @@ procedure build_tm_1_7(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 
 procedure build_tm_1_8_tc_3_X_SIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16,
-					SID : u16) {
+					SID : u16, tc_descriptor: &TCDescriptorT, result : &mut Result) {
 
-	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
 	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
 	var df_header : CCSDSPUSTMDFHeaderT =
 										{version = 0 : u8,
 	 									type = 0 : u8,
@@ -417,8 +419,7 @@ procedure build_tm_1_8_tc_3_X_SIDnotvalid(&priv self, p_tm_descriptor : &mut TMD
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	var res : Result = Result :: Error;
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -428,12 +429,12 @@ procedure build_tm_1_8_tc_3_X_SIDnotvalid(&priv self, p_tm_descriptor : &mut TMD
 
 procedure build_tm_1_8_tc_20_X_PIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16,
-					PID : u16) {
+					PID : u16,  tc_descriptor: &TCDescriptorT, result : &mut Result) {
 
-	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
 	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
 	var df_header : CCSDSPUSTMDFHeaderT =
 										{version = 0 : u8,
 	 									type = 0 : u8,
@@ -469,8 +470,7 @@ procedure build_tm_1_8_tc_20_X_PIDnotvalid(&priv self, p_tm_descriptor : &mut TM
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	var res : Result = Result :: Error;
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -479,12 +479,12 @@ procedure build_tm_1_8_tc_20_X_PIDnotvalid(&priv self, p_tm_descriptor : &mut TM
 
 procedure build_tm_1_8_tc_5_X_RIDunknown(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16,
-					RID : u16) {
+					RID : u16, tc_descriptor: &TCDescriptorT, result : &mut Result) {
 
-	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
 	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
 	var df_header : CCSDSPUSTMDFHeaderT =
 										{version = 0 : u8,
 	 									type = 0 : u8,
@@ -521,8 +521,7 @@ procedure build_tm_1_8_tc_5_X_RIDunknown(&priv self, p_tm_descriptor : &mut TMDe
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	var res : Result = Result :: Error;
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -531,12 +530,12 @@ procedure build_tm_1_8_tc_5_X_RIDunknown(&priv self, p_tm_descriptor : &mut TMDe
 
 procedure build_tm_1_8_tc_12_X_PMONIDundefined(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16,
-					PMONID : u16) {
+					PMONID : u16, tc_descriptor: &TCDescriptorT, result : &mut Result) {
 
-	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
 	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
 	var df_header : CCSDSPUSTMDFHeaderT =
 										{version = 0 : u8,
 	 									type = 0 : u8,
@@ -573,8 +572,7 @@ procedure build_tm_1_8_tc_12_X_PMONIDundefined(&priv self, p_tm_descriptor : &mu
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	var res : Result = Result :: Error;
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -582,12 +580,12 @@ procedure build_tm_1_8_tc_12_X_PMONIDundefined(&priv self, p_tm_descriptor : &mu
 
 procedure build_tm_1_8_tc_12_X_PMONIDdefined(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16,
-					PMONID : u16) {
+					PMONID : u16, tc_descriptor: &TCDescriptorT, result : &mut Result) {
 
-	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
 	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
 	var df_header : CCSDSPUSTMDFHeaderT =
 										{version = 0 : u8,
 	 									type = 0 : u8,
@@ -624,8 +622,7 @@ procedure build_tm_1_8_tc_12_X_PMONIDdefined(&priv self, p_tm_descriptor : &mut 
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	var res : Result = Result :: Error;
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -634,12 +631,12 @@ procedure build_tm_1_8_tc_12_X_PMONIDdefined(&priv self, p_tm_descriptor : &mut 
 
 procedure build_tm_1_8_tc_12_X_PMONIDnotvalid(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16,
-					PMONID : u16) {
+					PMONID : u16, tc_descriptor: &TCDescriptorT, result : &mut Result) {
 
-	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
 	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
 	var df_header : CCSDSPUSTMDFHeaderT =
 										{version = 0 : u8,
 	 									type = 0 : u8,
@@ -676,8 +673,7 @@ procedure build_tm_1_8_tc_12_X_PMONIDnotvalid(&priv self, p_tm_descriptor : &mut
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	var res : Result = Result :: Error;
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), &mut res);
+	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
 
 	return;
 
