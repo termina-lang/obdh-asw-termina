@@ -29,14 +29,6 @@ struct CCSDSPUSTMDFHeaderT {
 };
 
 
-struct TMDescriptorQueue {
-
-	tm_descriptors : [TMDescriptorT ; 20];
-	head_index: u8;
-	queued_tms : u8;
-
-};
-
 
 
 function ccsds_pus_tm_build_packet_id(apid : u16) -> u16 {

@@ -1,0 +1,116 @@
+import{modules.tm_ccsds_pus_format}
+
+const TM_QUEUE_MAX_NOE : u8 = 20 : u8;
+
+interface TMQueueIO {
+    procedure enqueue_back (&priv self, tm_descriptor: TMDescriptorT, result : &mut Result);
+    procedure enqueue_front (&priv self, tm_descriptor: TMDescriptorT, result : &mut Result);
+    procedure dequeue_front (&priv self, tm_descriptor: &mut TMDescriptorT, result : &mut Result);
+};
+
+interface TMQueueInit {
+    procedure init(&priv self);
+};
+
+resource class TMDescriptorQueue provides TMQueueIO, TMQueueInit{
+
+    tm_descriptors : [TMDescriptorT ; 20];
+	head_index: u8;
+	queued_tms : u8;
+
+    procedure init(&priv self){
+
+        self->head_index = 0 : u8;
+    	self->queued_tms = 0 : u8;
+
+        return;
+    }
+
+    viewer is_full(&self) -> bool {
+
+        var tm_queue_is_full : bool = (self->queued_tms == TM_QUEUE_MAX_NOE);
+	    return tm_queue_is_full;
+    }
+
+    viewer is_empty(&self) -> bool {
+
+	    var tm_queue_is_empty : bool = (self->queued_tms == 0 : u8);
+	    return tm_queue_is_empty;
+    }   
+
+    procedure enqueue_back (&priv self, tm_descriptor: TMDescriptorT, result : &mut Result) {
+
+        var queue_is_full : bool = self->is_full();
+
+        if (false == queue_is_full) {
+            
+            var next_tail_index : u8 = (self->head_index + self->queued_tms) % TM_QUEUE_MAX_NOE;
+
+            self->tm_descriptors[next_tail_index as usize] = tm_descriptor;
+
+            self->queued_tms = self->queued_tms + 1 : u8;
+
+            *result = Result::Ok;
+
+
+        } else { 
+
+            *result = Result::Error;
+        }
+
+
+        return;
+    }
+
+
+
+    procedure dequeue_front (&priv self, tm_descriptor: &mut TMDescriptorT, result : &mut Result) {
+
+        var queue_is_empty : bool = self->is_empty();
+
+        if (false == queue_is_empty) {
+            
+            *tm_descriptor = self->tm_descriptors[self->head_index as usize];
+
+            self->head_index = (self->head_index + 1) % TM_QUEUE_MAX_NOE;
+
+            self->queued_tms = self->queued_tms - 1 : u8;
+
+            *result = Result::Ok;
+
+        } else { 
+
+            *result = Result::Error;
+        }
+
+        return;
+    }
+
+
+    procedure enqueue_front (&priv self, tm_descriptor: TMDescriptorT, result : &mut Result) {
+
+        var queue_is_full : bool = self->is_full();
+
+        if (false == queue_is_full) {
+
+            self->head_index = (self->head_index - 1 + TM_QUEUE_MAX_NOE) % TM_QUEUE_MAX_NOE;
+
+            self->tm_descriptors[self->head_index as usize] = tm_descriptor;
+
+            self->queued_tms = self->queued_tms + 1 : u8;
+
+            *result = Result::Ok;
+
+
+        } else { 
+
+            *result = Result::Error;
+        }
+
+
+        return;
+    }
+
+
+
+};

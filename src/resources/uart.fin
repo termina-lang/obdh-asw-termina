@@ -1,0 +1,92 @@
+#[packed]
+struct UARTRegs {
+    data : u32;
+    status : u32;
+    control :  u32;
+    scaler : u32;
+};
+
+interface UARTDriver {
+
+    procedure enable_TX(&priv self);
+
+    procedure enable_RX(&priv self);
+
+    procedure enable_RI(&priv self);
+    
+    procedure putchar(&priv self, c : u8, ret : &mut bool);
+
+    procedure getchar(&priv self, uart_data : &mut u8, result : &mut Result);
+
+};
+
+
+resource class CRISCVUARTDriver provides UARTDriver {
+
+    regs: loc UARTRegs;
+
+    viewer tf_is_full(&self) -> bool {
+        let uart_tf : u32 = 0x00000200 : u32;
+        return ((self->regs.status & uart_tf) != 0 : u32);
+    }
+
+    viewer tf_is_empty(&self) -> bool {
+        let uart_te : u32 = 0x00000004 : u32;
+        return ((self->regs.status & uart_te) != 0 : u32);
+    }
+
+
+    procedure enable_TX(&priv self) {
+        let uart_txe : u32 = 0x00000002 : u32;
+        self->regs.control = self->regs.control | uart_txe;
+        return;
+    }
+
+    procedure enable_RX(&priv self) {
+        let uart_rxe : u32 = 0x00000001 : u32;
+        self->regs.control = self->regs.control | uart_rxe;
+        return;
+    }
+
+    procedure enable_RI(&priv self) {
+        let uart_ri : u32 = 0x00000004 : u32;
+        self->regs.control = self->regs.control | uart_ri;
+        return;
+    }
+
+    
+    procedure putchar(&priv self, c : u8, ret : &mut bool) {
+
+        *ret = self->tf_is_full();
+
+        if (*ret) {
+
+            // Not enough space in the TX FIFO
+
+        } else {
+        
+            self->regs.data = c as u32;
+        } 
+   
+        return;
+    }
+
+
+  procedure getchar(&priv self, uart_data : &mut u8, result : &mut Result) {
+        
+        let uart_dr : u32 = 0x00000001 : u32;
+
+        if ((self->regs.status & uart_dr) != 0 : u32) {
+            *uart_data = self->regs.data as u8;
+            *result = Result::Ok;
+        }
+        else{
+            *result = Result::Error;
+        }
+
+        return;
+
+    }
+
+
+};

@@ -1,4 +1,4 @@
-import {modules.tc_ccsds_pus_format,modules.tm_ccsds_pus_format,modules.crc, resources.tmchannel, modules.serialize} 
+import {modules.tc_ccsds_pus_format,modules.tm_ccsds_pus_format,modules.crc, resources.tmchannel.tmchannel, modules.serialize} 
 
 
 enum TCAcceptationStatus {
@@ -243,7 +243,7 @@ resource class RCPUSService1 provides PUSService1 {
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
+	self->tm_channel.send_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -321,7 +321,7 @@ procedure build_tm_1_2 (&priv self, p_tm_descriptor : &mut TMDescriptorT,
 
 		p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-		self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
+		self->tm_channel.send_tm(&(*p_tm_descriptor), result);
 
 		return;
 }
@@ -368,7 +368,7 @@ procedure build_tm_1_7(&priv self, p_tm_descriptor : &mut TMDescriptorT,
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
+	self->tm_channel.send_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -419,7 +419,7 @@ procedure build_tm_1_8_tc_3_X_SIDnotvalid(&priv self, p_tm_descriptor : &mut TMD
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
+	self->tm_channel.send_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -470,7 +470,7 @@ procedure build_tm_1_8_tc_20_X_PIDnotvalid(&priv self, p_tm_descriptor : &mut TM
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
+	self->tm_channel.send_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -521,7 +521,7 @@ procedure build_tm_1_8_tc_5_X_RIDunknown(&priv self, p_tm_descriptor : &mut TMDe
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
+	self->tm_channel.send_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -572,7 +572,7 @@ procedure build_tm_1_8_tc_12_X_PMONIDundefined(&priv self, p_tm_descriptor : &mu
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
+	self->tm_channel.send_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -622,7 +622,7 @@ procedure build_tm_1_8_tc_12_X_PMONIDdefined(&priv self, p_tm_descriptor : &mut 
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
+	self->tm_channel.send_tm(&(*p_tm_descriptor), result);
 
 	return;
 
@@ -673,7 +673,7 @@ procedure build_tm_1_8_tc_12_X_PMONIDnotvalid(&priv self, p_tm_descriptor : &mut
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
 
-	self->tm_channel.insert_tm(&(*p_tm_descriptor), result);
+	self->tm_channel.send_tm(&(*p_tm_descriptor), result);
 
 	return;
 

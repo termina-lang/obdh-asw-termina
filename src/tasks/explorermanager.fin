@@ -1,7 +1,7 @@
 import{modules.serialize, modules.ccsds_pus_format,resources.tm_channel,modules.epd_pus_tmtc, modules.crc}
 
 
-task class TCEPDManager {
+task class TCExplorerManager {
 
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     tc_descriptor_pool: access Allocator<TCDescriptorT>;
