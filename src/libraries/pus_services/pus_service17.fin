@@ -1,0 +1,50 @@
+/*
+PUS SERVICE 17 : TEST
+*/
+
+function PUS_service_17_execTC(tm_descriptor : &mut TMDescriptorT, tc_descriptor : &TCDescriptorT, tm_seq_counter: u16){
+
+    var subtype : u8 = get_subtype(&(tc_descriptor->bytes));
+    
+    if (subtype == 1){
+
+        build_tm_17_2(tm_descriptor, tm_seq_counter);
+    } 
+
+    return;
+}
+
+
+function build_tm_17_2(tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16) {
+
+	var tm_packet_header : CCSDSPUSTMTCPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMTCPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 3 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 17 : u8;
+	df_header.subtype = 2 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = 6 : u16 + tm_packet_header.packet_length + 1 : u16;
+
+	return;
+
+}

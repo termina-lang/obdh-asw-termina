@@ -1,3 +1,9 @@
-import {modules.crc,resources.pus_services.pus_service1, resources.tmchannel.tmchannel}
+import handlers.init;
+import handlers.uart_irq_handler;
+import resources.uart;
+import tasks.icu_manager;
+import tasks.tc_rx;
 
-resource tm_list_pool : Pool<TMDescriptorTList; 5>;
+
+
+

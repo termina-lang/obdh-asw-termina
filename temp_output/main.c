@@ -3,6 +3,10 @@
 
 #include <termina.h>
 
+#include "app.h"
+
+#include "resources/tmchannel/queue_u8.h"
+
 extern void __termina_app__init_globals();
 
 static void __rtems_app__enable_protection() {
@@ -18,6 +22,8 @@ static void __rtems_app__init_globals() {
     Result result;
 
     result.__variant = Result__Ok;
+
+    TMQueue.__resource.lock = __RTEMSResourceLock__None;
 
 }
 

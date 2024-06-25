@@ -1,4 +1,6 @@
-#[packed]
+import libraries.queue_u8;
+
+//#[packed]
 struct UARTRegs {
     data : u32;
     status : u32;
@@ -6,87 +8,246 @@ struct UARTRegs {
     scaler : u32;
 };
 
-interface UARTDriver {
 
-    procedure enable_TX(&priv self);
+enum CharDevResult {
+    Success,
+    TXFIFOFull
+};
 
-    procedure enable_RX(&priv self);
+const max_send_size : usize = 256;
 
-    procedure enable_RI(&priv self);
-    
-    procedure putchar(&priv self, c : u8, ret : &mut bool);
+interface CharDevSend {
+    procedure send(&mut self,
+                   output_bytes : & [u8; max_send_size], 
+                   nbytes : usize, 
+                   result : &mut CharDevResult);
+};
 
-    procedure getchar(&priv self, uart_data : &mut u8, result : &mut Result);
+interface CharDevInit {
+    procedure initialize(&mut self);
+};
 
+interface CharDevRelayIrq {
+     procedure release_tx(&mut self);
 };
 
 
-resource class CRISCVUARTDriver provides UARTDriver {
+resource class UARTDriver provides 
+        CharDevSend, CharDevInit, CharDevRelayIrq {
 
-    regs: loc UARTRegs;
+    // UART registers
+    registers: loc UARTRegs;
+
+    //Flag to indicate that there are bytes enqueued that must be sent
+    rem_bytes : bool;
+
+    // TX queue
+    uart_queue : QueueU8;
 
     viewer tf_is_full(&self) -> bool {
-        let uart_tf : u32 = 0x00000200 : u32;
-        return ((self->regs.status & uart_tf) != 0 : u32);
+        let riscv_uart_tf : u32 = 0x00000200 : u32;
+        return ((self->registers.status & riscv_uart_tf) != 0 : u32);
     }
 
     viewer tf_is_empty(&self) -> bool {
-        let uart_te : u32 = 0x00000004 : u32;
-        return ((self->regs.status & uart_te) != 0 : u32);
+        let riscv_uart_te : u32 = 0x00000004 : u32;
+        return ((self->registers.status & riscv_uart_te) != 0 : u32);
     }
 
 
-    procedure enable_TX(&priv self) {
-        let uart_txe : u32 = 0x00000002 : u32;
-        self->regs.control = self->regs.control | uart_txe;
+    method enable_TX(&mut self) {
+        let riscv_uart_txe : u32 = 0x00000002 : u32;
+        self->registers.control = self->registers.control | riscv_uart_txe;
         return;
     }
 
-    procedure enable_RX(&priv self) {
-        let uart_rxe : u32 = 0x00000001 : u32;
-        self->regs.control = self->regs.control | uart_rxe;
+    method enable_RX(&mut self) {
+        let riscv_uart_rxe : u32 = 0x00000001 : u32;
+        self->registers.control = self->registers.control | riscv_uart_rxe;
         return;
     }
 
-    procedure enable_RI(&priv self) {
-        let uart_ri : u32 = 0x00000004 : u32;
-        self->regs.control = self->regs.control | uart_ri;
+    method enable_RI(&mut self) {
+        let riscv_uart_ri : u32 = 0x00000004 : u32;
+        self->registers.control = self->registers.control | riscv_uart_ri;
         return;
     }
+
+    method enable_TI(&mut self) {
+        let riscv_uart_ti : u32 = 0x00000008 : u32;
+        self->registers.control = self->registers.control | riscv_uart_ti;
+        return;
+    }
+
+    method disable_TF(&mut self) {
+        let riscv_uart_tf : u32 = 0xFFFFFCFF : u32;
+        self->registers.control = self->registers.control & riscv_uart_tf;
+        return;
+    }
+
+    method disable_RF(&mut self) {
+        let riscv_uart_rf : u32 = 0xFFFFFBFF : u32;
+        self->registers.control = self->registers.control & riscv_uart_rf;
+        return;
+    }
+
+
+    procedure release_tx(&mut self) {
+
+        if(self->rem_bytes){
+
+            var num_elements : usize = 0;
+
+            get_num_enqueued_elems (&(self->uart_queue),&mut num_elements);
+
+            var sent_bytes : usize = 0;
+            var extracted_elem : Option<u8> = None;
 
     
-    procedure putchar(&priv self, c : u8, ret : &mut bool) {
 
-        *ret = self->tf_is_full();
+            for i : usize in 0 : usize .. 4 while (sent_bytes < num_elements) {
 
-        if (*ret) {
+                dequeue(&mut(self->uart_queue), &mut extracted_elem);
 
-            // Not enough space in the TX FIFO
+                match extracted_elem {
+                    case Some(elem) => {
+                        self->registers.data = elem as u32;
+                        sent_bytes = sent_bytes + 1;
+                    }
+                    case None => {
+                        //queue is empty
+                    }
+                }
+
+            }
+
+            
+
+            if (sent_bytes < num_elements) {
+                
+                self->rem_bytes = true;
+
+            } else {
+
+                self->rem_bytes = false;
+            }
+            
+
+        }
+
+        return;
+    }
+
+    procedure send(&mut self, output_bytes : & [u8; max_send_size], 
+                   nbytes : usize, 
+                   result : &mut CharDevResult) {
+
+        *result = CharDevResult::Success;
+
+        if (self->rem_bytes){
+
+            var num_elements : usize = 0;
+            get_num_enqueued_elems(&(self->uart_queue), &mut num_elements);
+
+            if ((queue_max_noe-num_elements) >= nbytes) {
+
+                var inner_queue_result : QueueResult = QueueResult::Success;
+                var queued_bytes : usize = 0;
+                var error : bool = false;
+
+                for i : usize in 0 : usize .. max_send_size while (queued_bytes < nbytes && error == false) {
+
+                    inner_queue_result = enqueue(&mut(self->uart_queue), (*output_bytes)[i]);
+
+                    if (inner_queue_result is QueueResult::QueueFull) {
+                        
+                        error = true;
+                        *result = CharDevResult::TXFIFOFull;
+                    
+                    } else {
+                        queued_bytes = queued_bytes + 1;
+                    }
+                    
+                    
+                }
+
+
+            } else {
+                
+                *result = CharDevResult::TXFIFOFull;
+            }
+
+
 
         } else {
-        
-            self->regs.data = c as u32;
-        } 
-   
+
+            var sent_bytes : usize = 0;
+
+            if (self->tf_is_empty()) {
+
+                for i : usize in 0 : usize .. 4 while (sent_bytes < nbytes) {
+
+                    self->registers.data = output_bytes[i] as u32;
+                    sent_bytes = sent_bytes + 1;
+                    
+                }
+
+            }
+
+            if (sent_bytes < nbytes) {
+
+                self->rem_bytes = true;
+
+                var left_bytes : usize = nbytes - sent_bytes;
+                var num_elements : usize = 0;
+
+                get_num_enqueued_elems(&(self-> uart_queue), &mut num_elements);
+
+                if ((queue_max_noe-num_elements) >= left_bytes) {
+
+                    var inner_queue_result : QueueResult = QueueResult::Success;
+                    var error : bool = false;
+
+                    for i : usize in 0 .. max_send_size while (i < left_bytes && error == false){
+
+                        inner_queue_result = enqueue(&mut(self->uart_queue), (*output_bytes)[i+sent_bytes]);
+
+                        if (inner_queue_result is QueueResult::QueueFull) {
+                        
+                        error = true;
+                        *result = CharDevResult::TXFIFOFull;
+                    
+                        } else {
+                            
+                        }
+                        
+                    }
+
+                } else {
+                    
+                    *result = CharDevResult::TXFIFOFull;
+                }
+
+            }
+
+        }
+
         return;
     }
 
 
-  procedure getchar(&priv self, uart_data : &mut u8, result : &mut Result) {
-        
-        let uart_dr : u32 = 0x00000001 : u32;
+    procedure initialize(&mut self) {
 
-        if ((self->regs.status & uart_dr) != 0 : u32) {
-            *uart_data = self->regs.data as u8;
-            *result = Result::Ok;
-        }
-        else{
-            *result = Result::Error;
-        }
+        self->enable_RX();
+        self->enable_TX();
+        self->enable_RI();
+        self->enable_TI();
+        self->disable_TF();
+        self->disable_RF();
 
         return;
 
     }
-
 
 };
+

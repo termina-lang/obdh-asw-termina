@@ -1,0 +1,32 @@
+import resources.uart;
+
+const riscv_uart_dr : u32 = 0x01;
+const riscv_uart_te : u32 = 0x04;
+
+handler class UARTIrqHandler {
+
+    irq_entry : sink u32 triggers irq_handler;
+
+    uart : access CharDevRelayIrq;
+    uart_registers : loc UARTRegs;
+    byte_message_queue_output: out u8;
+
+    action irq_handler(&mut self, _vector : u32) -> Result {
+
+        var ret : Result = Result::Ok;
+        let status : u32 = self->uart_registers.status;
+
+        if ((status & riscv_uart_dr) != 0 : u32) {
+
+            var byte : u8 = self->uart_registers.data as u8;
+            self->byte_message_queue_output.send(byte);
+            
+        }
+        if ((status & riscv_uart_te) != 0 : u32) {
+
+            self->uart.release_tx();
+        }
+
+        return ret;
+    }
+};

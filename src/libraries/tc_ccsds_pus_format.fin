@@ -1,6 +1,7 @@
 import{modules.serialize}
 
 
+const tc_max_size : u16 = 256 : u16;
 
 struct CCSDSPUSTCPacketHeaderT {
 
@@ -23,8 +24,8 @@ struct CCSDSPUSTCDFHeaderT {
 
  struct TCDescriptorT {
 
-	tc_bytes : [u8 ; 256];
-	tc_num_bytes : u16;
+	bytes : [u8 ; 256];
+	num_bytes : u16;
 
  };
 
@@ -68,10 +69,8 @@ function get_packet_length(tc_bytes : &[u8 ; 256]) -> u16 {
 function get_packet_seq_ctrl(tc_bytes : &[u8 ; 256]) -> u16 {
 
 	var packet_error_ctrl : u16 = 0 : u16;
-	//let crc_offset : u16 = get_packet_length(tc_bytes) + 5 : u16;
-	//packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[crc_offset as usize .. (crc_offset + 2) as usize]);	
-	packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[6 : usize .. 6 : usize]);	
-
+	let crc_offset : u16 = get_packet_length(tc_bytes) + 5 : u16;
+	packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[crc_offset as usize .. (crc_offset + 2) as usize]);	
 
 	return packet_error_ctrl;
 }
@@ -99,14 +98,6 @@ function get_source_id(tc_bytes : &[u8 ; 256]) -> u8 {
 	var sourceID : u8 = (*tc_bytes)[9 : usize];
 	return sourceID;
 }
-
-
-
-
-
-
-
-
 
 
 function tc_get_fields(tc_bytes : &[u8 ; 256],

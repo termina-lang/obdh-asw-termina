@@ -1,0 +1,15 @@
+import libraries.tc_ccsds_pus_format;
+
+function PUS_prio_exec_tc (tc_descriptor : & TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16){
+
+    tc_type : u8 = get_type(&(telecommnad->bytes));
+
+    if (tc_type == 17 : u8){
+
+        PUS_service_17_execTC(tm_descriptor, tc_descriptor);
+    
+    } 
+    
+
+    return;
+}

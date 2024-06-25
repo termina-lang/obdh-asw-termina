@@ -1,0 +1,99 @@
+import libraries.tc_ccsds_pus_format;
+
+enum RXStatus {
+    SyncBytesRx,
+    SyncLengthRx, 
+    TCBytesRx
+};
+
+
+task class TCRXBottomHalfTask {
+
+    start_tc : bool;
+    rx_status : RXStatus;
+    sync_word : [u8 ; 4]; //{0xBE, 0xBA, 0xBE, 0xEF}
+    aux_index : u8;
+    RX_tc_length : [u8 ; 2];
+    telecommand : TCDescriptorT;
+
+    byte_message_queue_input: in u8 triggers get_tc;
+    tc_message_queue_output: out dyn TCDescriptorT;
+    tc_descriptor_pool : access Allocator<TCDescriptorT>;
+
+
+    action get_tc (&mut self, data: u8) -> Result {
+
+        var ret : Result = Result::Ok;
+
+        match self->rx_status {
+
+            case SyncBytesRx => {
+
+                if (data == sync_word(aux_index)) {
+
+                    if (3 == self->aux_index){
+                        self->aux_index = 0;
+                        self->rx_status = RXStatus::SyncLengthRx
+                    } else {
+                        self->aux_index = self->aux_index + 1;
+                    }
+
+                } else {
+                    self->aux_index = 0;
+                }  
+            }
+
+            case SyncLengthRx => {
+
+                RX_tc_length[aux_index] = data;
+                self->aux_index = self->aux_index + 1;
+                
+                if (2 == self->aux_index){
+
+                    self->telecommand.num_bytes = deserialize_uint16(&self->RX_tc_length);
+
+                    if(self->telecommand.num_bytes < tc_max_size){
+
+                        self->rx_status = RXStatus::TCBytesRx;
+
+                    } else {
+
+                        self->rx_status = RXStatus::SyncBytesRX;
+                    }
+                    self->aux_index = 0;
+
+                } 
+            }
+
+            case TCBytesRx => {
+
+                self->telecommand.bytes[self->aux_index] = data;
+                self->aux_index = self->aux_index + 1;
+
+                if(aux_index == self->telecommand.num_bytes){
+
+                    self->rx_status = RXStatus::SyncBytesRX;
+
+                    var tc_descriptor : Option<dyn TCDescriptorT> = None;
+                    self->tc_descriptor_pool.alloc(&mut tc_descriptor);
+
+                    match tc_descriptor {
+
+                        case Some(descriptor) => {
+
+                            descriptor.bytes = self->telecommand.bytes;
+                            descriptor.num_bytes = self->telecommand.num_bytes;
+
+                            self->tc_message_queue_output.send(descriptor);
+                        }
+                        case None => {
+                            ret = Result::Error;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    
+};

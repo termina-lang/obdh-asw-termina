@@ -1,0 +1,107 @@
+import libraries.serialize;
+import libraries.ccsds_pus_format;
+import resources.tm_channel;
+import libraries.epd_pus_tmtc;
+import libraries.crc;
+
+
+task class ICUManager {
+
+    tc_message_queue_input: in dyn TCDescriptorT triggers process_tc;
+    a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
+    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
+    hkfdir_message_queue_output: out dyn TCDescriptorT;
+    bkg_message_queue_output: out dyn TCDescriptorT;
+    tm_channel: access TMChannel;
+    tm_counter: access TMCounterIface;
+
+    tc_status : TCStatus;
+
+
+    action process_tc(&mut self, tc_descriptor: dyn TCDescriptorT) -> Result {
+
+        var ret : Result = Result::Ok;
+
+        try_tc_acceptation(&tc_descriptor, &mut (self->tc_status));
+
+        match self->tc_status.acceptation_status {
+
+            case Accepted => {
+
+                var tm_descriptor : Option<dyn TMDescriptorT> = None;
+                self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
+                    match tm_descriptor {
+
+                        case Some(tm) => {
+
+                            var tm_count : u16 = 0 : u16;
+                            self->tm_counter.get_next_tm_count(&mut tm_count);
+                            //generar TM(1,1)
+                            build_tm_1_1(&tc_descriptor,&mut tm, tm_count);
+                            self->tm_channel.send_tm(tm);
+                        
+                            }
+                            case None => {
+                                //error
+                            }
+                        }
+
+                match self->tc_status.tc_execution_status {
+
+                    case ExecCtrlReboot => {
+
+                        
+                        
+                    }
+                    case  ExecCtrlHK_FDIRTC => {
+                    
+                        self->hk_message_queue_output.send(tc_descriptor);
+                    }
+                    case ExecCtrlBKGTC => {
+                        //Enviar tc a tarea bkg
+                    }
+                    case ExecCtrlPrioTC => {
+
+                        var tm_descriptor : Option<dyn TMDescriptorT> = None;
+                        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
+                        match tm_descriptor {
+
+                            case Some(tm) => {
+
+                                var tm_count : u16 = 0 : u16;
+                                self->tm_counter.get_next_tm_count(&mut tm_count);
+                                //Ejecutar tc como prioritario
+                                PUS_prio_exec_tc(&tc_descriptor,&mut tm, tm_count);
+                                self->tm_channel.send_tm(tm);
+                        
+                            }
+                            case None => {
+                                //error
+                            }
+                        }
+                    }
+
+                }
+            }
+            case Rejected => { 
+               
+                //generar TM(1,2)
+                var tm_descriptor : TMDescriptorT;
+                var tm_count : u16 = 0 : u16;
+                self->tm_channel.get_next_tm_count(&mut tm_count);
+                build_tm_1_2(&tc_status, &mut descriptor, tm_count, &tc_descriptor);
+                
+
+            }
+        }
+    
+        return ret;            
+    }
+
+        
+       
+
+
+};

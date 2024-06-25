@@ -16,7 +16,7 @@ interface TMChannel {
 
 
 
-resource class CTMChannel provides TMChannel {
+resource class TMChannel provides TMChannel {
 
     
     tm_count : u16;

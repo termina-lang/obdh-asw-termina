@@ -1,0 +1,17 @@
+import resources.uart;
+
+handler class InitUARTDriver {
+
+    uart : access CharDevInit;
+    system_init_ev : sink TimeVal triggers init;
+
+
+    action init(&mut self, _boot_time : TimeVal) -> Result {
+
+        var ret : Result = Result::Ok;
+
+        self->uart.initialize();
+
+        return ret;
+    }
+};
