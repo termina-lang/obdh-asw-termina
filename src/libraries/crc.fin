@@ -1,10 +1,11 @@
+import libraries.tc_ccsds_pus_format;
 
-function cal_crc_16 (data : & [u8; 256], nbytes : u16) -> u16  {
+function cal_crc_16 (data : & [u8; max_tc_size], nbytes : usize) -> u16  {
     
     var crc_value : u16 = 0xFFFF : u16;
-    var k : u16 = 0 : u16;
+    var k : usize = 0;
 
-    for i : usize in 0 : usize .. 256 : usize while k < nbytes {
+    for i : usize in 0 : usize .. max_tc_size while k < nbytes {
 
         crc_value = crc_value ^ ((*data)[i] as u16 << 8 : u16);
 
@@ -17,7 +18,7 @@ function cal_crc_16 (data : & [u8; 256], nbytes : u16) -> u16  {
             }
         }
 
-        k = k + 1 : u16;
+        k = k + 1;
     }
 
 	return crc_value;

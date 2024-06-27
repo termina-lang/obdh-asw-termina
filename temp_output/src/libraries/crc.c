@@ -1,13 +1,13 @@
 
 #include "libraries/crc.h"
 
-uint16_t cal_crc_16(const uint8_t data[256], uint16_t nbytes) {
+uint16_t cal_crc_16(const uint8_t data[max_tc_size], size_t nbytes) {
     
     uint16_t crc_value = 0xFFFF;
 
-    uint16_t k = 0;
+    size_t k = 0;
 
-    for (size_t i = 0; i < 256 && k < nbytes; i = i + 1) {
+    for (size_t i = 0; i < max_tc_size && k < nbytes; i = i + 1) {
         
         crc_value = crc_value ^ (uint16_t)((uint16_t)data[i] << 8);
 

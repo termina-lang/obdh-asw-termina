@@ -3,16 +3,58 @@ import handlers.init;
 import handlers.uart_irq_handler;
 import resources.uart;
 import tasks.icu_manager;
-import tasks.tc_rx;
+
 */
 
 import libraries.pus_services.pus_service17;
 import libraries.pus_services.pus_service1;
 import libraries.pus_services.pus_service3;
+import tasks.hkfdirmng;
+import libraries.tc_ccsds_pus_format;
 
 emitter hk_timer : PeriodicTimer = {
     period = {tv_sec = 1 : u32, tv_usec = 0 : u32} : TimeVal
 } : PeriodicTimer;
+
+//channel byte_message_queue : MsgQueue<u8;10>;
+//channel tc_message_queue : MsgQueue<dyn TCDescriptorT;10>;
+
+//resource tc_descriptor_pool : Pool<TCDescriptorT; 20>;
+
+task hk_fdir_manager : HK_FDIR_MNG = {
+    hk_config_table = {
+     {enabled = true, SID = 0, interval = 10, interval_control = 0, num_params = 5, params_def = {0, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+     {enabled = false, SID = 10, interval = 3600, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+     {enabled = false, SID = 100, interval = 1, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+     {enabled = false, SID = 101, interval = 60, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+     {enabled = false, SID = 110, interval = 60, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+     {enabled = false, SID = 5, interval = 1800, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+     {enabled = false, SID = 6, interval = 1, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+     {enabled = false, SID = 7, interval = 1, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+    }
+    //sync_word = {0xBE , 0xBA, 0xBE, 0xEF}
+} : HK_FDIR_MNG;
+
+/*
+task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
+    rx_status = RXStatus::SyncBytesRx,
+    sync_word = {0xBE, 0xBA, 0xBE, 0xEF},
+    aux_index = 0,
+    RX_tc_length = {0, 0},
+    telecommand = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0},
+    byte_message_queue_input <- byte_message_queue,
+    tc_message_queue_output -> tc_message_queue,
+    a_tc_descriptor_pool <-> tc_descriptor_pool
+} : TCRXBottomHalfTask;
+
+task icu_manager : ICUManagerTask = {
+    hk_timer = hk_timer,
+    tc_rx_bottom_half_task = tc_rx_bottom_half_task,
+    byte_message_queue_output -> byte_message_queue,
+    tc_message_queue_input <- tc_message_queue,
+    a_tc_descriptor_pool <-> tc_descriptor_pool
+} : ICUManagerTask;
+*/
 
 
 

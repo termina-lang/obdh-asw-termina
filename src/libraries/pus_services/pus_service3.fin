@@ -19,8 +19,6 @@ struct hk_configuration {
 };
 
 
-
-
 function get_SIDindex (hk_config_table : & [hk_configuration; max_num_of_SIDs], SID : u8, index : &mut usize)->bool{
 
     var found : bool = false;

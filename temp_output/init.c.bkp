@@ -11,6 +11,10 @@ void __termina_app__init_globals() {
     
     hk_timer.period.tv_sec = 1;
     hk_timer.period.tv_usec = 0;
+    hk_fdir_manager.sync_word[0] = 0xBE;
+    hk_fdir_manager.sync_word[1] = 0xBA;
+    hk_fdir_manager.sync_word[2] = 0xBE;
+    hk_fdir_manager.sync_word[3] = 0xEF;
 
     return;
 

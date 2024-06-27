@@ -1,0 +1,21 @@
+import libraries.pus_services.pus_service3;
+
+task class HK_FDIR_MNG {
+
+    hk_config_table : [hk_configuration; max_num_of_SIDs];
+    //sync_word : [u8 ; 4]; //{0xBE, 0xBA, 0xBE, 0xEF}
+
+
+    procedure trial(&mut self, data: u16, result : &mut Result) {
+
+        *result = Result::Error;
+
+        if data == self->hk_config_table[0].interval {
+
+            *result = Result::Ok;
+
+        }
+        
+        return;
+    }
+};

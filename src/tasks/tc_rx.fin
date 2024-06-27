@@ -1,4 +1,5 @@
 import libraries.tc_ccsds_pus_format;
+import libraries.serialize;
 
 enum RXStatus {
     SyncBytesRx,
@@ -7,18 +8,19 @@ enum RXStatus {
 };
 
 
+
 task class TCRXBottomHalfTask {
 
-    start_tc : bool;
+    //start_tc : bool;
     rx_status : RXStatus;
     sync_word : [u8 ; 4]; //{0xBE, 0xBA, 0xBE, 0xEF}
-    aux_index : u8;
+    aux_index : usize;
     RX_tc_length : [u8 ; 2];
     telecommand : TCDescriptorT;
 
     byte_message_queue_input: in u8 triggers get_tc;
     tc_message_queue_output: out dyn TCDescriptorT;
-    tc_descriptor_pool : access Allocator<TCDescriptorT>;
+    a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
 
 
     action get_tc (&mut self, data: u8) -> Result {
@@ -29,11 +31,11 @@ task class TCRXBottomHalfTask {
 
             case SyncBytesRx => {
 
-                if (data == sync_word(aux_index)) {
+                if (data == self->sync_word[self->aux_index]) {
 
                     if (3 == self->aux_index){
                         self->aux_index = 0;
-                        self->rx_status = RXStatus::SyncLengthRx
+                        //self->rx_status = RXStatus::SyncLengthRx
                     } else {
                         self->aux_index = self->aux_index + 1;
                     }
@@ -45,20 +47,20 @@ task class TCRXBottomHalfTask {
 
             case SyncLengthRx => {
 
-                RX_tc_length[aux_index] = data;
+                self->RX_tc_length[self->aux_index] = data;
                 self->aux_index = self->aux_index + 1;
                 
                 if (2 == self->aux_index){
 
-                    self->telecommand.num_bytes = deserialize_uint16(&self->RX_tc_length);
+                    self->telecommand.tc_num_bytes = deserialize_uint16(&self->RX_tc_length) as usize;
 
-                    if(self->telecommand.num_bytes < tc_max_size){
+                    if(self->telecommand.tc_num_bytes < max_tc_size){
 
                         self->rx_status = RXStatus::TCBytesRx;
 
                     } else {
 
-                        self->rx_status = RXStatus::SyncBytesRX;
+                        self->rx_status = RXStatus::SyncBytesRx;
                     }
                     self->aux_index = 0;
 
@@ -67,22 +69,22 @@ task class TCRXBottomHalfTask {
 
             case TCBytesRx => {
 
-                self->telecommand.bytes[self->aux_index] = data;
+                self->telecommand.tc_bytes[self->aux_index] = data;
                 self->aux_index = self->aux_index + 1;
 
-                if(aux_index == self->telecommand.num_bytes){
+                if(self->aux_index == self->telecommand.tc_num_bytes as usize){
 
-                    self->rx_status = RXStatus::SyncBytesRX;
+                    self->rx_status = RXStatus::SyncBytesRx;
 
                     var tc_descriptor : Option<dyn TCDescriptorT> = None;
-                    self->tc_descriptor_pool.alloc(&mut tc_descriptor);
+                    self->a_tc_descriptor_pool.alloc(&mut tc_descriptor);
 
                     match tc_descriptor {
 
                         case Some(descriptor) => {
 
-                            descriptor.bytes = self->telecommand.bytes;
-                            descriptor.num_bytes = self->telecommand.num_bytes;
+                            descriptor.tc_bytes = self->telecommand.tc_bytes;
+                            descriptor.tc_num_bytes = self->telecommand.tc_num_bytes;
 
                             self->tc_message_queue_output.send(descriptor);
                         }
@@ -93,7 +95,7 @@ task class TCRXBottomHalfTask {
                 }
             }
         }
-
+        return ret;
     }
     
 };

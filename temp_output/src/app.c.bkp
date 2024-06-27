@@ -2,3 +2,5 @@
 #include "app.h"
 
 PeriodicTimer hk_timer;
+
+HK_FDIR_MNG hk_fdir_manager;

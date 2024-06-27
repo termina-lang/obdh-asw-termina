@@ -1,7 +1,7 @@
 
 #include "libraries/tc_ccsds_pus_format.h"
 
-uint16_t get_packet_id(const uint8_t tc_bytes[256]) {
+uint16_t get_packet_id(const uint8_t tc_bytes[max_tc_size]) {
     
     uint16_t packet_id = 0;
 
@@ -11,7 +11,7 @@ uint16_t get_packet_id(const uint8_t tc_bytes[256]) {
 
 }
 
-uint16_t get_APID(const uint8_t tc_bytes[256]) {
+uint16_t get_APID(const uint8_t tc_bytes[max_tc_size]) {
     
     uint16_t packet_id = get_packet_id(tc_bytes);
 
@@ -31,13 +31,13 @@ uint16_t get_seq_count(uint16_t packet_seq_ctrl) {
 
 }
 
-uint16_t get_packet_length(const uint8_t tc_bytes[256]) {
+uint16_t get_packet_length(const uint8_t tc_bytes[max_tc_size]) {
     
     return deserialize_uint16(&tc_bytes[4]);
 
 }
 
-uint16_t get_packet_seq_ctrl(const uint8_t tc_bytes[256]) {
+uint16_t get_packet_seq_ctrl(const uint8_t tc_bytes[max_tc_size]) {
     
     uint16_t packet_error_ctrl = 0;
 
@@ -55,7 +55,7 @@ uint8_t get_ack(uint8_t flag_ver_ack) {
 
 }
 
-uint8_t get_type(const uint8_t tc_bytes[256]) {
+uint8_t get_type(const uint8_t tc_bytes[max_tc_size]) {
     
     uint8_t type = tc_bytes[7];
 
@@ -63,7 +63,7 @@ uint8_t get_type(const uint8_t tc_bytes[256]) {
 
 }
 
-uint8_t get_subtype(const uint8_t tc_bytes[256]) {
+uint8_t get_subtype(const uint8_t tc_bytes[max_tc_size]) {
     
     uint8_t subtype = tc_bytes[8];
 
@@ -71,7 +71,7 @@ uint8_t get_subtype(const uint8_t tc_bytes[256]) {
 
 }
 
-uint8_t get_source_id(const uint8_t tc_bytes[256]) {
+uint8_t get_source_id(const uint8_t tc_bytes[max_tc_size]) {
     
     uint8_t sourceID = tc_bytes[9];
 
@@ -79,7 +79,7 @@ uint8_t get_source_id(const uint8_t tc_bytes[256]) {
 
 }
 
-void tc_get_fields(const uint8_t tc_bytes[256],
+void tc_get_fields(const uint8_t tc_bytes[max_tc_size],
                    CCSDSPUSTCPacketHeaderT * p_tc_packet_header,
                    CCSDSPUSTCDFHeaderT * p_tc_df_header,
                    uint16_t * p_tc_packet_err_ctrl) {
