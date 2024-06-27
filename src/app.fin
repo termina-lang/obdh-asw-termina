@@ -1,8 +1,18 @@
+/*
 import handlers.init;
 import handlers.uart_irq_handler;
 import resources.uart;
 import tasks.icu_manager;
 import tasks.tc_rx;
+*/
+
+import libraries.pus_services.pus_service17;
+import libraries.pus_services.pus_service1;
+import libraries.pus_services.pus_service3;
+
+emitter hk_timer : PeriodicTimer = {
+    period = {tv_sec = 1 : u32, tv_usec = 0 : u32} : TimeVal
+} : PeriodicTimer;
 
 
 

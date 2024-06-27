@@ -1,4 +1,4 @@
-import{modules.serialize}
+import libraries.serialize;
 
 
 const tc_max_size : u16 = 256 : u16;
@@ -24,8 +24,8 @@ struct CCSDSPUSTCDFHeaderT {
 
  struct TCDescriptorT {
 
-	bytes : [u8 ; 256];
-	num_bytes : u16;
+	tc_bytes : [u8 ; 256];
+	tc_num_bytes : u16;
 
  };
 

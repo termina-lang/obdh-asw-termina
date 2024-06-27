@@ -1,0 +1,17 @@
+#ifndef __LIBRARIES__PUS_SERVICES__PUS_SERVICE3_H__
+#define __LIBRARIES__PUS_SERVICES__PUS_SERVICE3_H__
+
+#include <termina.h>
+
+#define max_num_of_SIDs UINT8_C(8)
+
+typedef struct {
+    _Bool enabled;
+    uint16_t SID;
+    uint8_t interval;
+    uint8_t interval_control;
+    uint8_t num_params;
+    uint8_t params_def[16];
+} hk_configuration;
+
+#endif

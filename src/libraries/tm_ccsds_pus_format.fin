@@ -1,4 +1,4 @@
-import {modules.serialize}
+import libraries.serialize;
 
 
 struct CCSDSPUSTMPacketHeaderT {

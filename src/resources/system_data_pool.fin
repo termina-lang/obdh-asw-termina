@@ -1,0 +1,32 @@
+import libraries.pus_services.pus_service3;
+
+const SDP_num_params : usize = 64;
+
+interface SDP_rw_init {
+
+    procedure init(&mut self);
+    procedure write_value (&mut self, index : usize, value : u16);
+    procedure read_value (&mut self, index : usize, r_value : &mut u16);
+
+};
+
+resource class SystemDataPool provides SDP_rw_init {
+
+    sdp_values : [u16; SDP_num_params];
+
+    procedure init(&mut self) {
+
+        for i : usize in 0 .. SDP_num_params {
+            self->sdp_values[i] = i as u16;
+        }
+    }
+
+    procedure write_value (&mut self, index : usize, value : u16) {
+        self->sdp_values[index] = value;
+    }
+
+    procedure read_value (&mut self, index : usize, r_value : &mut u16) {
+        *r_value = self->sdp_values[index];
+    }
+
+};

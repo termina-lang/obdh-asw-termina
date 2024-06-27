@@ -1,4 +1,4 @@
 
 #include "app.h"
 
-QueueU8 TMQueue;
+PeriodicTimer hk_timer;
