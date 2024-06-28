@@ -8,6 +8,7 @@ import libraries.pus_services.pus_service1;
 import libraries.serialize;
 
 const max_num_of_SIDs : usize = 8;
+const max_params_per_SID : usize = 16;
 
 struct hk_configuration {
     enabled : bool;
@@ -15,7 +16,7 @@ struct hk_configuration {
     interval : u16;
     interval_control : u16;
     num_params : u8;
-    params_def : [u8; 16];
+    params_def : [u8; max_params_per_SID];
 };
 
 
@@ -118,3 +119,4 @@ function PUS_service_3_execTC (tc_descriptor : &TCDescriptorT, tm_descriptor : &
 
     return;
 }
+

@@ -9,6 +9,8 @@
 
 #include "libraries/tc_ccsds_pus_format.h"
 
+#include "resources/system_data_pool.h"
+
 extern void __termina_app__init_globals();
 
 static rtems_task __rtems_task__HK_FDIR_MNG(rtems_task_argument arg) {

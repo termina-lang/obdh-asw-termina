@@ -2,6 +2,8 @@
 #define __LIBRARIES__TM_CCSDS_PUS_FORMAT_H__
 
 #include <termina.h>
+
+#include "option.h"
 #include "libraries/serialize.h"
 
 typedef struct {

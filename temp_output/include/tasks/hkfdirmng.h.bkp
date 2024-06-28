@@ -6,9 +6,9 @@
 
 typedef struct {
     __termina_task_t __task;
-    uint8_t sync_word[4];
+    hk_configuration hk_config_table[max_num_of_SIDs];
 } HK_FDIR_MNG;
 
-void HK_FDIR_MNG__trial(void * const __this, uint8_t data, Result * result);
+void HK_FDIR_MNG__trial(void * const __this, uint16_t data, Result * result);
 
 #endif

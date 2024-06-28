@@ -1,7 +1,7 @@
 
 #include "tasks/hkfdirmng.h"
 
-void HK_FDIR_MNG__trial(void * const __this, uint8_t data, Result * result) {
+void HK_FDIR_MNG__trial(void * const __this, uint16_t data, Result * result) {
     
     HK_FDIR_MNG * self = (HK_FDIR_MNG *)__this;
 
@@ -9,7 +9,7 @@ void HK_FDIR_MNG__trial(void * const __this, uint8_t data, Result * result) {
 
     (*result).__variant = Result__Error;
 
-    if (data == self->sync_word[0]) {
+    if (data == self->hk_config_table[0].interval) {
         
         (*result).__variant = Result__Ok;
 

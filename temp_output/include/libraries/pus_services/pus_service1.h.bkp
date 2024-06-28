@@ -2,6 +2,8 @@
 #define __LIBRARIES__PUS_SERVICES__PUS_SERVICE1_H__
 
 #include <termina.h>
+
+#include "option.h"
 #include "libraries/tc_ccsds_pus_format.h"
 #include "libraries/tm_ccsds_pus_format.h"
 #include "libraries/crc.h"

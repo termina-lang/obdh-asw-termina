@@ -9,18 +9,42 @@ import tasks.icu_manager;
 import libraries.pus_services.pus_service17;
 import libraries.pus_services.pus_service1;
 import libraries.pus_services.pus_service3;
-import tasks.hkfdirmng;
+//import tasks.hkfdirmng;
 import libraries.tc_ccsds_pus_format;
+import handlers.init;
+import resources.uart;
+import libraries.queue_u8;
 
-emitter hk_timer : PeriodicTimer = {
+
+
+emitter hk_fdir_timer : PeriodicTimer = {
     period = {tv_sec = 1 : u32, tv_usec = 0 : u32} : TimeVal
 } : PeriodicTimer;
+
+resource system_data_pool : AtomicArray<u16; 64>;
+
+resource uart_drv : UARTDriver = {
+    rem_bytes = false,
+    registers @ 0xFC001000,
+    uart_queue = {
+        elements = [0 ; queue_max_noe],
+        head_index = 0,
+        num_elements = 0
+    }: QueueU8
+} : UARTDriver;
+
+handler init : Init = {
+    uart <-> uart_drv,
+    system_data_pool <-> system_data_pool,
+    system_init_ev <- system_init
+} : Init;
+
 
 //channel byte_message_queue : MsgQueue<u8;10>;
 //channel tc_message_queue : MsgQueue<dyn TCDescriptorT;10>;
 
 //resource tc_descriptor_pool : Pool<TCDescriptorT; 20>;
-
+/*
 task hk_fdir_manager : HK_FDIR_MNG = {
     hk_config_table = {
      {enabled = true, SID = 0, interval = 10, interval_control = 0, num_params = 5, params_def = {0, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
@@ -30,10 +54,12 @@ task hk_fdir_manager : HK_FDIR_MNG = {
      {enabled = false, SID = 110, interval = 60, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
      {enabled = false, SID = 5, interval = 1800, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
      {enabled = false, SID = 6, interval = 1, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
-     {enabled = false, SID = 7, interval = 1, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+     {enabled = false, SID = 7, interval = 1, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
     }
-    //sync_word = {0xBE , 0xBA, 0xBE, 0xEF}
 } : HK_FDIR_MNG;
+*/
+
+
 
 /*
 task tc_rx_bottom_half_task : TCRXBottomHalfTask = {

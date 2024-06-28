@@ -1,8 +1,11 @@
 import resources.uart;
 
-handler class InitUARTDriver {
+const SDP_num_params : usize = 64;
+
+handler class Init {
 
     uart : access CharDevInit;
+    system_data_pool : access AtomicArrayAccess<u16; 64>;
     system_init_ev : sink TimeVal triggers init;
 
 
@@ -11,6 +14,11 @@ handler class InitUARTDriver {
         var ret : Result = Result::Ok;
 
         self->uart.initialize();
+
+        for i : usize in 0 .. 64 {
+            self->system_data_pool.store_index(i,i as u16);
+        }
+
 
         return ret;
     }

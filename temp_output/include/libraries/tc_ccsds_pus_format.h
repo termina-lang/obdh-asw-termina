@@ -2,6 +2,8 @@
 #define __LIBRARIES__TC_CCSDS_PUS_FORMAT_H__
 
 #include <termina.h>
+
+#include "option.h"
 #include "libraries/serialize.h"
 
 #define max_tc_size 256
