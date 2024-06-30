@@ -5,47 +5,33 @@
 
 #include "app.h"
 
+#include "handlers/init.h"
+
 #include "libraries/pus_services/pus_service3.h"
+
+#include "libraries/queue_u8.h"
 
 #include "libraries/tc_ccsds_pus_format.h"
 
-#include "resources/system_data_pool.h"
+#include "resources/uart.h"
 
 extern void __termina_app__init_globals();
 
-static rtems_task __rtems_task__HK_FDIR_MNG(rtems_task_argument arg) {
+_Atomic uint16_t system_data_pool[SDP_num_params];
+
+void __rtems_app__inital_event(TimeVal * current) {
     
-    HK_FDIR_MNG * self = (HK_FDIR_MNG *)arg;
-    rtems_status_code status = RTEMS_SUCCESSFUL;
-    uint32_t next_msg = 0;
-    size_t size = 0;
+    Init * self = &init;
 
     Result result;
+
     result.__variant = Result__Ok;
 
-    for (;;) {
-        
-        status = rtems_message_queue_receive(self->__task.msgq_id, &next_msg,
-                                             &size, RTEMS_WAIT,
-                                             RTEMS_NO_TIMEOUT);
+    result = Init__init(self, *current);
 
-        if (RTEMS_SUCCESSFUL != status) {
-            break;
-        }
-
-        switch (next_msg) {
-            
-            default:
-
-                rtems_shutdown_executive(1);
-
-                break;
-
-        }
-
+    if (result.__variant != Result__Ok) {
+        rtems_shutdown_executive(1);
     }
-
-    rtems_shutdown_executive(1);
 
     return;
 
@@ -57,6 +43,8 @@ static void __rtems_app__enable_protection() {
 
     result.__variant = Result__Ok;
 
+    uart_drv.__resource.lock = __RTEMSResourceLock__None;
+
 }
 
 static void __rtems_app__init_globals() {
@@ -65,14 +53,7 @@ static void __rtems_app__init_globals() {
 
     result.__variant = Result__Ok;
 
-    rtems_status_code status = RTEMS_SUCCESSFUL;
-
-    status = __rtems__create_msg_queue(1, sizeof(uint32_t),
-                                       &hk_fdir_manager.__task.msgq_id);
-
-    if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
-    }
+    uart_drv.__resource.lock = __RTEMSResourceLock__None;
 
 }
 
@@ -86,14 +67,6 @@ static void __rtems_app__create_tasks() {
     
     rtems_status_code status = RTEMS_SUCCESSFUL;
 
-    status = __rtems__create_task(255, 4096, __rtems_task__HK_FDIR_MNG,
-                                  (rtems_task_argument)&hk_fdir_manager,
-                                  &hk_fdir_manager.__task.task_id);
-
-    if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
-    }
-
 }
 
 rtems_task Init(rtems_task_argument _ignored) {
@@ -106,6 +79,8 @@ rtems_task Init(rtems_task_argument _ignored) {
 
     __rtems_app__init_globals();
 
+    __rtems_app__inital_event(&current);
+
     __rtems_app__enable_protection();
 
     __rtems_app__install_emitters(&current);
@@ -116,17 +91,10 @@ rtems_task Init(rtems_task_argument _ignored) {
 
 }
 
-#define CONFIGURE_MAXIMUM_TASKS 2
-#define CONFIGURE_MAXIMUM_MESSAGE_QUEUES 1
+#define CONFIGURE_MAXIMUM_TASKS 1
+#define CONFIGURE_MAXIMUM_MESSAGE_QUEUES 0
 #define CONFIGURE_MAXIMUM_TIMERS 0
 #define CONFIGURE_MAXIMUM_SEMAPHORES 0
-
-#define CONFIGURE_MESSAGE_BUFFER_MEMORY (  \
-        CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            1, \
-            sizeof(uint32_t) \
-        ) \
-    )
 
 #define CONFIGURE_APPLICATION_DOES_NOT_NEED_CONSOLE_DRIVER
 #define CONFIGURE_APPLICATION_NEEDS_CLOCK_DRIVER

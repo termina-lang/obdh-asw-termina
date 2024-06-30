@@ -39,7 +39,7 @@ function build_tm_17_2(tm_descriptor : &mut TMDescriptorT,
 
 }
 
-function PUS_service_17_execTC(tm_descriptor : &mut TMDescriptorT, tc_descriptor : &TCDescriptorT, tm_seq_counter: u16){
+function PUS_service_17_execTC(tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
 
     var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
     

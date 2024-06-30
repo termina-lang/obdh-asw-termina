@@ -1,0 +1,34 @@
+import resources.uart;
+
+
+task class TMChannel {
+
+    uart : access CharDevSend;
+    tm_message_queue_input : in dyn TMDescriptorT triggers send_tm;
+    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
+
+    
+   action send_tm(&mut self, tm_descriptor: dyn TMDescriptorT) -> Result {
+
+        var queue_state : CharDevResult = CharDevResult::Success;
+
+        self->uart.send(&(tm_descriptor.tm_bytes), tm_descriptor.tm_num_bytes, &mut queue_state)
+
+        var res : Result = Result :: Ok;
+
+        if (queue_state is CharDevSend::Success) {
+                    
+        } else {
+            res = Result :: Error;
+            
+        }
+
+        self->a_tm_descriptor_pool.free(tm_descriptor);
+
+        return res;
+   }
+
+         
+
+   
+   };

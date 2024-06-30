@@ -1,0 +1,152 @@
+/*
+PUS SERVICE 12 : ON-BOARD MONITORING
+*/
+
+const max_num_pmon_ids : usize = 8;
+
+enum CheckState {
+    MonitorUnselected,
+    MonitorUnchecked,
+    MonitorAboveHighLimit,
+    MonitorBelowLowLimit,
+    MonitorWithinLimits
+};
+
+struct ParamMonitoringConfiguration {
+    prev_state : CheckState;
+    state : CheckState;
+    transitionY2K : u32;
+    enabled : bool;
+    PID : u8;
+    interval : u8;
+    interval_control : u8;
+};
+
+
+struct ParamLimitCheckDefinition {
+    high_limit_rid : u16;
+    high_limit : u64;
+    low_limit_rid : u16;
+    low_limit : u64;
+};
+
+function exec12_1TC(tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16,
+                 param_mon_config_table: &mut [ParamMonitoringConfiguration; max_num_pmon_ids],
+                 param_limit_check_definition : &mut [ParamLimitCheckDefinition; max_num_pmon_ids]){
+
+    var PMONID : u8 = tc_descriptor->tc_bytes[10];
+
+    if (PMONID as usize) < max_num_pmon_ids {
+
+        if(param_mon_config_table[PMONID].state =! CheckState::MonitorUnselected){
+
+            param_mon_config_table[PMONID].enabled = true;
+            param_mon_config_table[PMONID].interval_control = 0;
+            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+        } else {
+
+            build_tm_1_8_tc_12_X_PMONIDundefined(tm_descriptor, tm_seq_counter, PMONID, tc_descriptor);
+        }
+    } else {
+
+        build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter, PMONID, tc_descriptor);
+    }
+    return;
+}
+
+
+function exec12_2TC(tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16,
+                 param_mon_config_table: &mut [ParamMonitoringConfiguration; max_num_pmon_ids],
+                 param_limit_check_definition : &mut [ParamLimitCheckDefinition; max_num_pmon_ids]){
+
+    var PMONID : u8 = tc_descriptor->tc_bytes[10];
+
+    if (PMONID as usize) < max_num_pmon_ids {
+
+        if(param_mon_config_table[PMONID].state =! CheckState::MonitorUnselected){
+
+            param_mon_config_table[PMONID].enabled = false;
+            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+            
+        } else {
+
+            build_tm_1_8_tc_12_X_PMONIDundefined(tm_descriptor, tm_seq_counter, PMONID, tc_descriptor);
+        }
+    } else {
+
+        build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter, PMONID, tc_descriptor);
+    }
+    return;
+}
+
+
+
+function exec12_5TC(tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16,
+                 param_mon_config_table: &mut [ParamMonitoringConfiguration; max_num_pmon_ids],
+                 param_limit_check_definition : &mut [ParamLimitCheckDefinition; max_num_pmon_ids]){
+
+    var PMONID : u8 = tc_descriptor->tc_bytes[10];
+
+    if (PMONID as usize) < max_num_pmon_ids {
+
+        if( param_mon_config_table[PMONID].state is ParamMonitoringConfiguration::MonitorUnselected) {
+
+            PID = deserialize_uint16(&(tc_descriptor->tc_bytes[11..13]));
+
+            if (PID as usize < SDP_num_params) {
+
+                param_mon_config_table[PMONID].interval = tc_descriptor->tc_bytes[13];
+                param_mon_config_table[PMONID].PID = PID;
+                param_mon_config_table[PMONID].interval_control = 0;
+                param_mon_config_table[PMONID].state = CheckState::MonitorUnchecked;
+
+                param_limit_check_definition[PMONID].low_limit = deserialize_uint16(&(tc_descriptor->tc_bytes[14..16]));
+                param_limit_check_definition[PMONID].low_limit_rid = deserialize_uint16(&(tc_descriptor->tc_bytes[16..18]));
+                param_limit_check_definition[PMONID].high_limit = deserialize_uint16(&(tc_descriptor->tc_bytes[18..20]));
+                param_limit_check_definition[PMONID].high_limit_rid = deserialize_uint16(&(tc_descriptor->tc_bytes[20..22]));
+
+                build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+
+            } else {
+
+                build_tm_1_8_tc_20_X_PIDnotvalid(tm_descriptor, tm_seq_counter, PID, tc_descriptor);
+            }
+        } else {
+
+            build_tm_1_8_tc_12_X_PMONIDdefined(tm_descriptor, tm_seq_counter, PMONID, tc_descriptor);
+        }
+    } else {
+
+        build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter, PMONID, tc_descriptor);
+    }
+
+    return;
+
+}
+
+
+function PUS_service_12_execTC (tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16,
+                                param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids]
+                                param_limit_check_definition : &mut [ParamLimitCheckDefinition; max_num_pmon_ids]){
+
+    var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
+    
+    if (subtype == 1){
+
+        exec12_1TC(tc_descriptor, tm_descriptor, tm_seq_counter, param_mon_config_table, param_limit_check_definition);
+    } 
+    else if (subtype == 2){
+
+        exec12_2TC(tc_descriptor, tm_descriptor, tm_seq_counter, param_mon_config_table, param_limit_check_definition);
+
+    } else if (subtype == 5){
+
+        exec12_5TC(tc_descriptor, tm_descriptor, tm_seq_counter, param_mon_config_table, param_limit_check_definition);
+
+    } else {
+
+        //This is an error in acceptance, could be modeled as an event
+    }
+
+    return;
+}

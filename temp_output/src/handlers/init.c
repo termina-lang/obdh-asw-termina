@@ -8,7 +8,7 @@ Result Init__init(Init * const self, TimeVal _boot_time) {
 
     (self->uart.initialize)(self->uart.__that);
 
-    for (size_t i = 0; i < 64; i = i + 1) {
+    for (size_t i = 0; i < SDP_num_params; i = i + 1) {
         
         atomic_store(&self->system_data_pool[i], (uint16_t)i);
 

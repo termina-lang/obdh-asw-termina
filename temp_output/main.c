@@ -17,7 +17,7 @@
 
 extern void __termina_app__init_globals();
 
-_Atomic uint16_t system_data_pool[64];
+_Atomic uint16_t system_data_pool[SDP_num_params];
 
 void __rtems_app__inital_event(TimeVal * current) {
     
@@ -42,8 +42,6 @@ static void __rtems_app__enable_protection() {
     Result result;
 
     result.__variant = Result__Ok;
-
-    system_data_pool.__resource.lock = __RTEMSResourceLock__None;
 
     uart_drv.__resource.lock = __RTEMSResourceLock__None;
 

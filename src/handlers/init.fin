@@ -5,7 +5,7 @@ const SDP_num_params : usize = 64;
 handler class Init {
 
     uart : access CharDevInit;
-    system_data_pool : access AtomicArrayAccess<u16; 64>;
+    system_data_pool : access AtomicArrayAccess<u16;SDP_num_params >;
     system_init_ev : sink TimeVal triggers init;
 
 
@@ -15,7 +15,7 @@ handler class Init {
 
         self->uart.initialize();
 
-        for i : usize in 0 .. 64 {
+        for i : usize in 0 .. SDP_num_params {
             self->system_data_pool.store_index(i,i as u16);
         }
 
