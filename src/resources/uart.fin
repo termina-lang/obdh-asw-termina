@@ -59,6 +59,7 @@ resource class UARTDriver provides
         let riscv_uart_txe : u32 = 0x00000002 : u32;
         self->registers.control = self->registers.control | riscv_uart_txe;
         return;
+        
     }
 
     method enable_RX(&mut self) {

@@ -11,7 +11,7 @@ task class HK_FDIR_MNG {
     hk_fdir_timer_ev : sink TimeVal triggers do_hk_fdir;
     hkfdir_message_queue_input: in dyn TCDescriptorT triggers exec_tc;
 
-    hk_config_table : [hk_configuration; max_num_of_SIDs];
+    hk_config_table : [HKConfiguration; max_num_of_SIDs];
     param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
     param_limit_check_definition : [ParamLimitCheckDefinition; max_num_pmon_ids];
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
@@ -107,11 +107,12 @@ task class HK_FDIR_MNG {
         return res;
     }
 
-
+/*
     method do_monitoring (&mut self) -> Result {
 
         
     }
+    */
 
 
 

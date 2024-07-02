@@ -1,0 +1,15 @@
+const event_aux_data_max_size : usize = 64;
+const max_num_events : usize = 16;
+
+struct EventInfo {
+    ev_RID : u16;
+    ev_aux_data : [u8; event_aux_data_max_size];
+    ev_aux_data_size : u8;
+};
+
+
+struct EventList {
+    events : [EventInfo; max_num_events];
+    head_index: usize;
+    num_events: usize;
+};
