@@ -1,15 +1,87 @@
 const event_aux_data_max_size : usize = 64;
 const max_num_events : usize = 16;
 
+enum ListResult {
+    Success,
+    ListFull
+};
+
 struct EventInfo {
     ev_RID : u16;
     ev_aux_data : [u8; event_aux_data_max_size];
-    ev_aux_data_size : u8;
+    ev_aux_data_size : usize;
 };
 
 
 struct EventList {
     events : [EventInfo; max_num_events];
-    head_index: usize;
     num_events: usize;
 };
+
+
+function is_full(list: &EventList) -> bool {
+    var list_is_full: bool = (list->num_events == max_num_events);
+    return list_is_full;
+}
+
+function is_empty(list : &EventList) -> bool {
+    var list_is_empty: bool = (list->num_events == 0: usize);
+    return list_is_empty;
+}
+
+function add_event(list: &mut EventList, new_event: EventInfo) -> ListResult {
+
+    var list_is_full: bool = is_full(&(*list)); 
+    var result: ListResult = ListResult::Success;
+
+    if (false == list_is_full) {
+
+        list->events[list->num_events].ev_RID = new_event.ev_RID;
+        list->num_events = list->num_events + 1: usize;
+
+        if (new_event.ev_aux_data_size > event_aux_data_max_size) {
+
+            list->events[list->num_events].ev_aux_data_size = event_aux_data_max_size;
+
+        } else {
+
+            list->events[list->num_events].ev_aux_data_size = new_event.ev_aux_data_size;
+        }
+
+        for i : usize in 0 : usize .. event_aux_data_max_size while (i < list->events[list->num_events].ev_aux_data_size) {
+
+            list->events[list->num_events].ev_aux_data[i] = new_event.ev_aux_data[i];
+        }
+
+    } else {
+        result = ListResult::ListFull;
+    }
+    return result;
+}
+
+function extract_event(list: &mut EventList, ext_event: &mut Option<EventInfo>) {
+
+    var list_is_empty: bool = is_empty(&(*list));
+
+    if (false == list_is_empty) {
+        var event: EventInfo = list->events[0];
+        *ext_event = Some(event);
+        for i : usize in 0 : usize .. max_num_events while i < list->num_events {
+            list->events[i] = list->events[i + 1];
+        }
+        list->num_events = list->num_events - 1: usize;
+    } else {
+        *ext_event = None;
+    }
+    return;
+}
+
+function clear_ev_list(list: &mut EventList) {
+    list->num_events = 0;
+    return;
+}
+
+function get_num_enListd_elems(list : &EventList, nelems: &mut usize) {
+    *nelems = list->num_events;
+    return;
+}

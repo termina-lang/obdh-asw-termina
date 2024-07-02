@@ -1,10 +1,13 @@
 import libraries.tc_ccsds_pus_format;
+import libraries.tm_ccsds_pus_format;
+import libraries.pus_services.pus_service17;
+import libraries.pus_services.pus_service3;
 
 function PUS_prio_exec_tc (tc_descriptor : & TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16){
 
-    tc_type : u8 = get_type(&(telecommnad->bytes));
+    var tc_type : u8 = get_type(&(tc_descriptor->tc_bytes));
 
-    if (tc_type == 17 : u8){
+    if (tc_type == 17){
 
         PUS_service_17_execTC(tc_descriptor, tm_descriptor, tm_seq_counter);
     
@@ -16,11 +19,11 @@ function PUS_prio_exec_tc (tc_descriptor : & TCDescriptorT, tm_descriptor : &mut
 
 
 function PUS_hk_fdir_exec_tc (tc_descriptor : & TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16,
-                            hk_config_table : &mut [hk_configuration; max_num_of_SIDs] ){
+                            hk_config_table : &mut [HKConfiguration; max_num_of_SIDs] ){
 
-    tc_type : u8 = get_type(&(telecommnad->bytes));
+    var tc_type : u8 = get_type(&(tc_descriptor->tc_bytes));
 
-    if (tc_type == 3 : u8){
+    if (tc_type == 3){
 
         PUS_service_3_execTC(tc_descriptor, tm_descriptor, tm_seq_counter, hk_config_table);
     
