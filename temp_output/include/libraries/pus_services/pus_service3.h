@@ -9,6 +9,8 @@
 #include "libraries/pus_services/pus_service1.h"
 #include "libraries/serialize.h"
 
+#define SDP_num_params 64
+
 #define max_num_of_SIDs 8
 
 #define max_params_per_SID 16
@@ -20,31 +22,31 @@ typedef struct {
     uint16_t interval_control;
     uint8_t num_params;
     uint8_t params_def[max_params_per_SID];
-} hk_configuration;
+} HKConfiguration;
 
-_Bool get_SIDindex(const hk_configuration hk_config_table[max_num_of_SIDs],
+_Bool get_SIDindex(const HKConfiguration hk_config_table[max_num_of_SIDs],
                    uint8_t SID, size_t * index);
 
 void enable_config(const TCDescriptorT * tc_descriptor,
                    TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-                   hk_configuration hk_config_table[max_num_of_SIDs],
+                   HKConfiguration hk_config_table[max_num_of_SIDs],
                    _Bool new_enable_config);
 
 void exec3_5TC(const TCDescriptorT * tc_descriptor,
                TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-               hk_configuration hk_config_table[max_num_of_SIDs]);
+               HKConfiguration hk_config_table[max_num_of_SIDs]);
 
 void exec3_6TC(const TCDescriptorT * tc_descriptor,
                TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-               hk_configuration hk_config_table[max_num_of_SIDs]);
+               HKConfiguration hk_config_table[max_num_of_SIDs]);
 
 void exec3_31TC(const TCDescriptorT * tc_descriptor,
                 TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-                hk_configuration hk_config_table[max_num_of_SIDs]);
+                HKConfiguration hk_config_table[max_num_of_SIDs]);
 
 void PUS_service_3_execTC(const TCDescriptorT * tc_descriptor,
                           TMDescriptorT * tm_descriptor,
                           uint16_t tm_seq_counter,
-                          hk_configuration hk_config_table[max_num_of_SIDs]);
+                          HKConfiguration hk_config_table[max_num_of_SIDs]);
 
 #endif

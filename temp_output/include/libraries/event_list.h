@@ -1,0 +1,51 @@
+#ifndef __LIBRARIES__EVENT_LIST_H__
+#define __LIBRARIES__EVENT_LIST_H__
+
+#include <termina.h>
+
+#include "option.h"
+
+#define event_aux_data_max_size 64
+
+#define max_num_events 16
+
+typedef enum {
+    ListResult__Success,
+    ListResult__ListFull
+} __enum_ListResult_t;
+
+typedef struct {
+    __enum_ListResult_t __variant;
+} ListResult;
+
+typedef struct {
+    uint16_t ev_RID;
+    uint8_t ev_aux_data[event_aux_data_max_size];
+    size_t ev_aux_data_size;
+} EventInfo;
+
+typedef struct {
+    EventInfo __0;
+} __option_EventInfo_params_t;
+
+typedef struct {
+    __option_EventInfo_params_t Some;
+    __enum_option_t __variant;
+} __option_EventInfo_t;
+
+typedef struct {
+    EventInfo events[max_num_events];
+    size_t num_events;
+} EventList;
+
+_Bool is_list_full(const EventList * list);
+
+_Bool is_list_empty(const EventList * list);
+
+ListResult add_event(EventList * list, EventInfo new_event);
+
+void extract_event(EventList * list, __option_EventInfo_t * ext_event);
+
+void clear_ev_list(EventList * list);
+
+#endif

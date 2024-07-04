@@ -1,6 +1,5 @@
 import resources.uart;
-
-const SDP_num_params : usize = 64;
+import libraries.pus_services.pus_service3;
 
 handler class Init {
 

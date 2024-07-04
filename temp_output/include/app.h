@@ -7,10 +7,13 @@
 #include "libraries/pus_services/pus_service17.h"
 #include "libraries/pus_services/pus_service1.h"
 #include "libraries/pus_services/pus_service3.h"
+#include "libraries/pus_services/pus_service5.h"
+#include "tasks/hkfdirmng.h"
 #include "libraries/tc_ccsds_pus_format.h"
 #include "handlers/init.h"
 #include "resources/uart.h"
 #include "libraries/queue_u8.h"
+#include "libraries/event_list.h"
 
 extern PeriodicTimer hk_fdir_timer;
 

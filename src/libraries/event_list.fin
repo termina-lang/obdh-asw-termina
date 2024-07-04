@@ -19,22 +19,22 @@ struct EventList {
 };
 
 
-function is_full(list: &EventList) -> bool {
+function is_list_full(list: &EventList) -> bool {
     var list_is_full: bool = (list->num_events == max_num_events);
     return list_is_full;
 }
 
-function is_empty(list : &EventList) -> bool {
+function is_list_empty(list : &EventList) -> bool {
     var list_is_empty: bool = (list->num_events == 0: usize);
     return list_is_empty;
 }
 
 function add_event(list: &mut EventList, new_event: EventInfo) -> ListResult {
 
-    var list_is_full: bool = is_full(&(*list)); 
+    var full: bool = is_list_full(&(*list)); 
     var result: ListResult = ListResult::Success;
 
-    if (false == list_is_full) {
+    if (false == full) {
 
         list->events[list->num_events].ev_RID = new_event.ev_RID;
         list->num_events = list->num_events + 1: usize;
@@ -61,9 +61,9 @@ function add_event(list: &mut EventList, new_event: EventInfo) -> ListResult {
 
 function extract_event(list: &mut EventList, ext_event: &mut Option<EventInfo>) {
 
-    var list_is_empty: bool = is_empty(&(*list));
+    var empty: bool = is_list_empty(&(*list));
 
-    if (false == list_is_empty) {
+    if (false == empty) {
         var event: EventInfo = list->events[0];
         *ext_event = Some(event);
         for i : usize in 0 : usize .. max_num_events while i < list->num_events {
@@ -81,7 +81,3 @@ function clear_ev_list(list: &mut EventList) {
     return;
 }
 
-function get_num_enListd_elems(list : &EventList, nelems: &mut usize) {
-    *nelems = list->num_events;
-    return;
-}

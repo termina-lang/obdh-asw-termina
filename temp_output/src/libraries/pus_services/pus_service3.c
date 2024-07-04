@@ -1,7 +1,7 @@
 
 #include "libraries/pus_services/pus_service3.h"
 
-_Bool get_SIDindex(const hk_configuration hk_config_table[max_num_of_SIDs],
+_Bool get_SIDindex(const HKConfiguration hk_config_table[max_num_of_SIDs],
                    uint8_t SID, size_t * index) {
     
     _Bool found = 0;
@@ -24,7 +24,7 @@ _Bool get_SIDindex(const hk_configuration hk_config_table[max_num_of_SIDs],
 
 void enable_config(const TCDescriptorT * tc_descriptor,
                    TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-                   hk_configuration hk_config_table[max_num_of_SIDs],
+                   HKConfiguration hk_config_table[max_num_of_SIDs],
                    _Bool new_enable_config) {
     
     size_t index = 0;
@@ -52,7 +52,7 @@ void enable_config(const TCDescriptorT * tc_descriptor,
 
 void exec3_5TC(const TCDescriptorT * tc_descriptor,
                TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-               hk_configuration hk_config_table[max_num_of_SIDs]) {
+               HKConfiguration hk_config_table[max_num_of_SIDs]) {
     
     enable_config(tc_descriptor, tm_descriptor, tm_seq_counter, hk_config_table,
                   1);
@@ -63,7 +63,7 @@ void exec3_5TC(const TCDescriptorT * tc_descriptor,
 
 void exec3_6TC(const TCDescriptorT * tc_descriptor,
                TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-               hk_configuration hk_config_table[max_num_of_SIDs]) {
+               HKConfiguration hk_config_table[max_num_of_SIDs]) {
     
     enable_config(tc_descriptor, tm_descriptor, tm_seq_counter, hk_config_table,
                   0);
@@ -74,7 +74,7 @@ void exec3_6TC(const TCDescriptorT * tc_descriptor,
 
 void exec3_31TC(const TCDescriptorT * tc_descriptor,
                 TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-                hk_configuration hk_config_table[max_num_of_SIDs]) {
+                HKConfiguration hk_config_table[max_num_of_SIDs]) {
     
     uint8_t SID = tc_descriptor->tc_bytes[10];
 
@@ -102,7 +102,7 @@ void exec3_31TC(const TCDescriptorT * tc_descriptor,
 void PUS_service_3_execTC(const TCDescriptorT * tc_descriptor,
                           TMDescriptorT * tm_descriptor,
                           uint16_t tm_seq_counter,
-                          hk_configuration hk_config_table[max_num_of_SIDs]) {
+                          HKConfiguration hk_config_table[max_num_of_SIDs]) {
     
     uint8_t subtype = get_subtype(tc_descriptor->tc_bytes);
 

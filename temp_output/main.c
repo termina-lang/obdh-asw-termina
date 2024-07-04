@@ -5,9 +5,13 @@
 
 #include "app.h"
 
-#include "handlers/init.h"
+#include "libraries/event_list.h"
+
+#include "libraries/pus_services/pus_service12.h"
 
 #include "libraries/pus_services/pus_service3.h"
+
+#include "libraries/pus_services/pus_service5.h"
 
 #include "libraries/queue_u8.h"
 

@@ -38,8 +38,8 @@ void build_tm_17_2(TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter) {
 
 }
 
-void PUS_service_17_execTC(TMDescriptorT * tm_descriptor,
-                           const TCDescriptorT * tc_descriptor,
+void PUS_service_17_execTC(const TCDescriptorT * tc_descriptor,
+                           TMDescriptorT * tm_descriptor,
                            uint16_t tm_seq_counter) {
     
     uint8_t subtype = get_subtype(tc_descriptor->tc_bytes);

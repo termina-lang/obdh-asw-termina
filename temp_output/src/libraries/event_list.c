@@ -1,0 +1,94 @@
+
+#include "libraries/event_list.h"
+
+_Bool is_list_full(const EventList * list) {
+    
+    _Bool list_is_full = list->num_events == max_num_events;
+
+    return list_is_full;
+
+}
+
+_Bool is_list_empty(const EventList * list) {
+    
+    _Bool list_is_empty = list->num_events == 0;
+
+    return list_is_empty;
+
+}
+
+ListResult add_event(EventList * list, EventInfo new_event) {
+    
+    _Bool full = is_list_full(&*list);
+
+    ListResult result;
+    result.__variant = ListResult__Success;
+
+    if (0 == full) {
+        
+        list->events[list->num_events].ev_RID = new_event.ev_RID;
+
+        list->num_events = list->num_events + 1;
+
+        if (new_event.ev_aux_data_size > event_aux_data_max_size) {
+            
+            list->events[list->num_events].ev_aux_data_size = event_aux_data_max_size;
+
+        } else {
+            
+            list->events[list->num_events].ev_aux_data_size = new_event.ev_aux_data_size;
+
+        }
+
+        for (size_t i = 0; i < event_aux_data_max_size && i < list->events[list->num_events].ev_aux_data_size; i = i + 1) {
+            
+            list->events[list->num_events].ev_aux_data[i] = new_event.ev_aux_data[i];
+
+        }
+
+    } else {
+        
+        result.__variant = ListResult__ListFull;
+
+    }
+
+    return result;
+
+}
+
+void extract_event(EventList * list, __option_EventInfo_t * ext_event) {
+    
+    _Bool empty = is_list_empty(&*list);
+
+    if (0 == empty) {
+        
+        EventInfo event = list->events[0];
+
+        (*ext_event).__variant = Some;
+        (*ext_event).Some.__0 = event;
+
+        for (size_t i = 0; i < max_num_events && i < list->num_events; i = i + 1) {
+            
+            list->events[i] = list->events[i + 1];
+
+        }
+
+        list->num_events = list->num_events - 1;
+
+    } else {
+        
+        (*ext_event).__variant = None;
+
+    }
+
+    return;
+
+}
+
+void clear_ev_list(EventList * list) {
+    
+    list->num_events = 0;
+
+    return;
+
+}

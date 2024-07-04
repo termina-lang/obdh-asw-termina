@@ -5,8 +5,7 @@
 
 #include "option.h"
 #include "resources/uart.h"
-
-#define SDP_num_params 64
+#include "libraries/pus_services/pus_service3.h"
 
 typedef struct {
     _Atomic uint16_t * system_data_pool;
