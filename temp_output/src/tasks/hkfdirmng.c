@@ -1,8 +1,27 @@
 
 #include "tasks/hkfdirmng.h"
 
-void HK_FDIR_Manager__pus_serv5_build_event_list_tms(HK_FDIR_Manager * const self) {
+Result HK_FDIR_Manager__do_hk_fdir(HK_FDIR_Manager * const self,
+                                   TimeVal _current_time) {
     
+    Result res;
+    res.__variant = Result__Ok;
+
+    res = HK_FDIR_Manager__pus_serv3_do_hk(self);
+
+    res = HK_FDIR_Manager__pus_serv12_do_monitoring(self);
+
+    res = HK_FDIR_Manager__pus_serv5_build_event_list_tms(self);
+
+    return res;
+
+}
+
+Result HK_FDIR_Manager__pus_serv5_build_event_list_tms(HK_FDIR_Manager * const self) {
+    
+    Result res;
+    res.__variant = Result__Ok;
+
     for (size_t i = 0; i < max_num_events && i < self->event_list.num_events; i = i + 1) {
         
         __option_EventInfo_t event_info;
@@ -12,6 +31,7 @@ void HK_FDIR_Manager__pus_serv5_build_event_list_tms(HK_FDIR_Manager * const sel
 
         if (event_info.__variant == None) {
             
+            res.__variant = Result__Error;
 
         } else {
             
@@ -21,7 +41,7 @@ void HK_FDIR_Manager__pus_serv5_build_event_list_tms(HK_FDIR_Manager * const sel
                 
                 size_t index = get_RID_enable_config_index(__Some.__0.ev_RID);
 
-                if (is_index_valid(index)) {
+                if (index < 4) {
                     
                     __option_dyn_t tm_descriptor;
                     tm_descriptor.__variant = None;
@@ -31,6 +51,7 @@ void HK_FDIR_Manager__pus_serv5_build_event_list_tms(HK_FDIR_Manager * const sel
 
                     if (tm_descriptor.__variant == None) {
                         
+                        res.__variant = Result__Error;
 
                     } else {
                         
@@ -56,59 +77,6 @@ void HK_FDIR_Manager__pus_serv5_build_event_list_tms(HK_FDIR_Manager * const sel
         }
 
     }
-
-    return;
-
-}
-
-Result HK_FDIR_Manager__exec_tc(HK_FDIR_Manager * const self,
-                                __termina_dyn_t tc_descriptor) {
-    
-    Result res;
-    res.__variant = Result__Ok;
-
-    __option_dyn_t tm_descriptor;
-    tm_descriptor.__variant = None;
-
-    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
-
-    if (tm_descriptor.__variant == None) {
-        
-        res.__variant = Result__Error;
-
-    } else {
-        
-        __option_dyn_params_t __Some = tm_descriptor.Some;
-
-        uint16_t tm_count = 0;
-
-        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
-                                             &tm_count);
-
-        PUS_hk_fdir_exec_tc((TCDescriptorT *)tc_descriptor.data,
-                            (TMDescriptorT *)__Some.__0.data, tm_count,
-                            self->hk_config_table);
-
-        __termina_msg_queue__send(self->tm_message_queue_output,
-                                  (void *)&__Some.__0);
-
-    }
-
-    __termina_pool__free(self->a_tc_descriptor_pool, tc_descriptor);
-
-    return res;
-
-}
-
-Result HK_FDIR_Manager__do_hk_fdir(HK_FDIR_Manager * const self,
-                                   TimeVal _current_time) {
-    
-    Result res;
-    res.__variant = Result__Ok;
-
-    res = HK_FDIR_Manager__pus_serv3_do_hk(self);
-
-    res = HK_FDIR_Manager__pus_serv12_do_monitoring(self);
 
     return res;
 
@@ -313,6 +281,67 @@ Result HK_FDIR_Manager__pus_serv12_do_monitoring(HK_FDIR_Manager * const self) {
         }
 
     }
+
+    return res;
+
+}
+
+Result HK_FDIR_Manager__PUS_hk_fdir_exec_tc(HK_FDIR_Manager * const self,
+                                            __termina_dyn_t tc_descriptor) {
+    
+    Result res;
+    res.__variant = Result__Ok;
+
+    __option_dyn_t tm_descriptor;
+    tm_descriptor.__variant = None;
+
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
+
+    if (tm_descriptor.__variant == None) {
+        
+        res.__variant = Result__Error;
+
+    } else {
+        
+        __option_dyn_params_t __Some = tm_descriptor.Some;
+
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        uint8_t tc_type = get_type((*(TCDescriptorT *)tc_descriptor.data).tc_bytes);
+
+        if (tc_type == 3) {
+            
+            PUS_service_3_execTC((TCDescriptorT *)tc_descriptor.data,
+                                 (TMDescriptorT *)__Some.__0.data, tm_count,
+                                 self->hk_config_table);
+
+        } else if (tc_type == 5) {
+            
+            PUS_service_5_execTC((TCDescriptorT *)tc_descriptor.data,
+                                 (TMDescriptorT *)__Some.__0.data, tm_count,
+                                 self->RID_enable_config);
+
+        } else if (tc_type == 12) {
+            
+            PUS_service_12_execTC((TCDescriptorT *)tc_descriptor.data,
+                                  (TMDescriptorT *)__Some.__0.data, tm_count,
+                                  self->param_mon_config_table,
+                                  self->param_limit_check_definition);
+
+        } else {
+            
+
+        }
+
+        __termina_msg_queue__send(self->tm_message_queue_output,
+                                  (void *)&__Some.__0);
+
+    }
+
+    __termina_pool__free(self->a_tc_descriptor_pool, tc_descriptor);
 
     return res;
 

@@ -14,6 +14,7 @@
 #include "resources/uart.h"
 #include "libraries/queue_u8.h"
 #include "libraries/event_list.h"
+#include "resources/system_data_pool.h"
 
 extern PeriodicTimer hk_fdir_timer;
 

@@ -8,8 +8,7 @@
 #include "libraries/tm_ccsds_pus_format.h"
 #include "libraries/pus_services/pus_service1.h"
 #include "libraries/serialize.h"
-
-#define SDP_num_params 64
+#include "resources/system_data_pool.h"
 
 #define max_num_of_SIDs 8
 

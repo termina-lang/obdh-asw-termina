@@ -13,6 +13,10 @@ const low_severity_anomaly_RIDs : u16 = 4;
 const medium_severity_anomaly_RIDs : u16 = 0;
 const high_severity_anomaly_RIDs : u16 = 16;
 
+const offset_mask : u16 = 0x001F; //Maximum RIDs of each type in the baseline configuration is 32,
+	                              //from 0xX000 to 0xX01F, where X is the RID type
+
+
 enum RIDType {
     Informative,
     LowSeverityAnomaly,
@@ -85,21 +89,13 @@ function get_RID_enable_config_index(RID : u16) -> usize {
     return index;
 }
 
-function get_RID_enable_config_offset(RID : u16) -> u8 {
-  return ((RID & 0x001F) as u8);
-}
-
-function is_index_valid(index : usize) -> bool {
-    return (index < 4);
-}
-
 function is_RID_enabled(RID : u16, RID_enable_config_table : &[u32;4]) -> bool {
 
     var enabled : bool = false;
     var index : usize = get_RID_enable_config_index(RID);
-    var offset : u8 = get_RID_enable_config_offset(RID);
+    var offset : u8 = (RID & offset_mask) as u8;
 
-    if (is_index_valid(index)){
+    if (index < 4){
 
         if(((RID_enable_config_table[index] >> offset) & 0x01) != 0){
             enabled = true;
@@ -115,9 +111,9 @@ function exec5_5TC(tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescript
 
     var RID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
     var index: usize = get_RID_enable_config_index(RID);
-    var offset : u8 = get_RID_enable_config_offset(RID);
+    var offset : u8 = (RID & offset_mask) as u8;
 
-    if(is_index_valid(index)) {
+    if(index < 4) {
 
         RID_enable_config_table[index] = RID_enable_config_table[index] | (1 << offset);
         build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
@@ -136,9 +132,9 @@ function exec5_6TC(tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescript
 
     var RID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
     var index: usize = get_RID_enable_config_index(RID);
-    var offset : u8 = get_RID_enable_config_offset(RID);
+    var offset : u8 = (RID & offset_mask) as u8;
 
-    if(is_index_valid(index)) {
+    if(index < 4) {
 
         RID_enable_config_table[index] = RID_enable_config_table[index] & (0xFFFFFFFE << offset);
         build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);

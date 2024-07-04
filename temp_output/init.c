@@ -15,6 +15,8 @@
 
 #include "libraries/tc_ccsds_pus_format.h"
 
+#include "resources/system_data_pool.h"
+
 #include "resources/uart.h"
 
 void __termina_app__init_globals() {

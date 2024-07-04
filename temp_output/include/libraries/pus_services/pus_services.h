@@ -8,12 +8,21 @@
 #include "libraries/tm_ccsds_pus_format.h"
 #include "libraries/pus_services/pus_service17.h"
 #include "libraries/pus_services/pus_service3.h"
+#include "libraries/pus_services/pus_service12.h"
+#include "libraries/pus_services/pus_service5.h"
 
 void PUS_prio_exec_tc(const TCDescriptorT * tc_descriptor,
                       TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter);
 
 void PUS_hk_fdir_exec_tc(const TCDescriptorT * tc_descriptor,
                          TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-                         HKConfiguration hk_config_table[max_num_of_SIDs]);
+                         HKConfiguration hk_config_table[max_num_of_SIDs],
+                         uint32_t RID_enable_config_table[4],
+                         ParamMonitoringConfiguration param_mon_config_table[max_num_pmon_ids],
+                         ParamLimitCheckDefinition param_limit_check_definition[max_num_pmon_ids]);
+
+void PUS_bkg_exec_tc(const TCDescriptorT * tc_descriptor,
+                     TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
+                     HKConfiguration hk_config_table[max_num_of_SIDs]);
 
 #endif

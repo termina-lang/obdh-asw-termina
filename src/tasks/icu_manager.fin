@@ -3,6 +3,7 @@ import libraries.ccsds_pus_format;
 import resources.tm_channel;
 import libraries.epd_pus_tmtc;
 import libraries.crc;
+import libraries.pus_services.pus_service17;
 
 
 task class ICUManager {
@@ -16,6 +17,19 @@ task class ICUManager {
     tm_counter: access TMCounterIface;
 
     tc_status : TCStatus;
+
+    viewer PUS_prio_exec_tc (&self, tc_descriptor : & TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16){
+
+        var tc_type : u8 = get_type(&(tc_descriptor->tc_bytes));
+
+        if (tc_type == 17){
+
+            PUS_service_17_execTC(tc_descriptor, tm_descriptor, tm_seq_counter);
+    
+        } 
+    
+        return;
+    }
 
 
     action process_tc(&mut self, tc_descriptor: dyn TCDescriptorT) -> Result {

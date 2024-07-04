@@ -10,6 +10,7 @@
 #include "libraries/pus_services/pus_service1.h"
 #include "libraries/pus_services/pus_service3.h"
 #include "libraries/event_list.h"
+#include "resources/system_data_pool.h"
 
 #define max_num_pmon_ids 8
 

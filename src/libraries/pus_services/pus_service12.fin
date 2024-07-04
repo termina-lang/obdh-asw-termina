@@ -8,6 +8,7 @@ import libraries.serialize;
 import libraries.pus_services.pus_service1;
 import libraries.pus_services.pus_service3;
 import libraries.event_list;
+import resources.system_data_pool;
 
 
 const max_num_pmon_ids : usize = 8;

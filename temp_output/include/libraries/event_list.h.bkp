@@ -25,6 +25,15 @@ typedef struct {
 } EventInfo;
 
 typedef struct {
+    EventInfo __0;
+} __option_EventInfo_params_t;
+
+typedef struct {
+    __option_EventInfo_params_t Some;
+    __enum_option_t __variant;
+} __option_EventInfo_t;
+
+typedef struct {
     EventInfo events[max_num_events];
     size_t num_events;
 } EventList;
@@ -38,7 +47,5 @@ ListResult add_event(EventList * list, EventInfo new_event);
 void extract_event(EventList * list, __option_EventInfo_t * ext_event);
 
 void clear_ev_list(EventList * list);
-
-void get_num_enListd_elems(const EventList * list, size_t * nelems);
 
 #endif

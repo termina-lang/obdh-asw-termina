@@ -18,7 +18,41 @@ void PUS_prio_exec_tc(const TCDescriptorT * tc_descriptor,
 
 void PUS_hk_fdir_exec_tc(const TCDescriptorT * tc_descriptor,
                          TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
-                         HKConfiguration hk_config_table[max_num_of_SIDs]) {
+                         HKConfiguration hk_config_table[max_num_of_SIDs],
+                         uint32_t RID_enable_config_table[4],
+                         ParamMonitoringConfiguration param_mon_config_table[max_num_pmon_ids],
+                         ParamLimitCheckDefinition param_limit_check_definition[max_num_pmon_ids]) {
+    
+    uint8_t tc_type = get_type(tc_descriptor->tc_bytes);
+
+    if (tc_type == 3) {
+        
+        PUS_service_3_execTC(tc_descriptor, tm_descriptor, tm_seq_counter,
+                             hk_config_table);
+
+    } else if (tc_type == 5) {
+        
+        PUS_service_5_execTC(tc_descriptor, tm_descriptor, tm_seq_counter,
+                             RID_enable_config_table);
+
+    } else if (tc_type == 12) {
+        
+        PUS_service_12_execTC(tc_descriptor, tm_descriptor, tm_seq_counter,
+                              param_mon_config_table,
+                              param_limit_check_definition);
+
+    } else {
+        
+
+    }
+
+    return;
+
+}
+
+void PUS_bkg_exec_tc(const TCDescriptorT * tc_descriptor,
+                     TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,
+                     HKConfiguration hk_config_table[max_num_of_SIDs]) {
     
     uint8_t tc_type = get_type(tc_descriptor->tc_bytes);
 

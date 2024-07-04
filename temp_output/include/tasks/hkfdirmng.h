@@ -7,13 +7,13 @@
 #include "libraries/pus_services/pus_service3.h"
 #include "libraries/pus_services/pus_service12.h"
 #include "libraries/pus_services/pus_service5.h"
-#include "libraries/pus_services/pus_services.h"
 #include "libraries/event_list.h"
 #include "libraries/tm_ccsds_pus_format.h"
 #include "libraries/tc_ccsds_pus_format.h"
 #include "libraries/serialize.h"
 #include "handlers/init.h"
 #include "resources/tm_counter.h"
+#include "resources/system_data_pool.h"
 
 typedef struct {
     __termina_task_t __task;
@@ -31,13 +31,10 @@ typedef struct {
     __termina_sink_port_t hk_fdir_timer_ev;
 } HK_FDIR_Manager;
 
-void HK_FDIR_Manager__pus_serv5_build_event_list_tms(HK_FDIR_Manager * const self);
-
-Result HK_FDIR_Manager__exec_tc(HK_FDIR_Manager * const self,
-                                __termina_dyn_t tc_descriptor);
-
 Result HK_FDIR_Manager__do_hk_fdir(HK_FDIR_Manager * const self,
                                    TimeVal _current_time);
+
+Result HK_FDIR_Manager__pus_serv5_build_event_list_tms(HK_FDIR_Manager * const self);
 
 Result HK_FDIR_Manager__pus_serv3_do_hk(HK_FDIR_Manager * const self);
 
@@ -47,5 +44,8 @@ void HK_FDIR_Manager__pus_serv3_build_tm_3_25(const HK_FDIR_Manager * const self
                                               size_t index);
 
 Result HK_FDIR_Manager__pus_serv12_do_monitoring(HK_FDIR_Manager * const self);
+
+Result HK_FDIR_Manager__PUS_hk_fdir_exec_tc(HK_FDIR_Manager * const self,
+                                            __termina_dyn_t tc_descriptor);
 
 #endif

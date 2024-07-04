@@ -92,11 +92,3 @@ void clear_ev_list(EventList * list) {
     return;
 
 }
-
-void get_num_enListd_elems(const EventList * list, size_t * nelems) {
-    
-    *nelems = list->num_events;
-
-    return;
-
-}

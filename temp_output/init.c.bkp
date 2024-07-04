@@ -9,9 +9,13 @@
 
 #include "libraries/pus_services/pus_service3.h"
 
+#include "libraries/pus_services/pus_service5.h"
+
 #include "libraries/queue_u8.h"
 
 #include "libraries/tc_ccsds_pus_format.h"
+
+#include "resources/system_data_pool.h"
 
 #include "resources/uart.h"
 
