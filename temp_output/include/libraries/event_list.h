@@ -46,6 +46,9 @@ ListResult add_event(EventList * list, EventInfo new_event);
 
 void extract_event(EventList * list, __option_EventInfo_t * ext_event);
 
+void get_event_info(const EventList * list, size_t index,
+                    __option_EventInfo_t * event);
+
 void clear_ev_list(EventList * list);
 
 #endif

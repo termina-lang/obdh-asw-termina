@@ -85,6 +85,22 @@ void extract_event(EventList * list, __option_EventInfo_t * ext_event) {
 
 }
 
+void get_event_info(const EventList * list, size_t index,
+                    __option_EventInfo_t * event) {
+    
+    (*event).__variant = None;
+
+    if (index < list->num_events) {
+        
+        (*event).__variant = Some;
+        (*event).Some.__0 = list->events[index];
+
+    }
+
+    return;
+
+}
+
 void clear_ev_list(EventList * list) {
     
     list->num_events = 0;

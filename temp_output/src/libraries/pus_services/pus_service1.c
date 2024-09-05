@@ -28,15 +28,15 @@ _Bool is_apid_valid(const TCDescriptorT * tc_descriptor) {
 
 _Bool is_sourceID_valid(const TCDescriptorT * tc_descriptor) {
     
-    uint8_t SOLO_Mission_TimeLine_SourceID = 110;
+    uint8_t Mission_TimeLine_SourceID = 110;
 
-    uint8_t SOLO_TC_Sequences_SourceID = 111;
+    uint8_t TC_Sequences_SourceID = 111;
 
-    uint8_t SOLO_Direct_Commands_SourceID = 120;
+    uint8_t Direct_Commands_SourceID = 120;
 
     uint8_t sourceID = get_source_id(tc_descriptor->tc_bytes);
 
-    _Bool is_valid = SOLO_Mission_TimeLine_SourceID == sourceID || SOLO_TC_Sequences_SourceID == sourceID || SOLO_Direct_Commands_SourceID == sourceID;
+    _Bool is_valid = Mission_TimeLine_SourceID == sourceID || TC_Sequences_SourceID == sourceID || Direct_Commands_SourceID == sourceID;
 
     return is_valid;
 
@@ -141,13 +141,113 @@ void try_tc_acceptation(TCStatus * status,
                 
                 (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
-                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlBKGTC;
 
             } else if (3 == subtype) {
                 
                 (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlBKGTC;
+
+            } else {
+                
+                (*status).error_code.__variant = TCErrorType__SubTypeError;
+
+            }
+
+        }
+
+        if (5 == type) {
+            
+            if (5 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
                 (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else if (6 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else {
+                
+                (*status).error_code.__variant = TCErrorType__SubTypeError;
+
+            }
+
+        }
+
+        if (12 == type) {
+            
+            if (1 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else if (5 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else if (6 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else {
+                
+                (*status).error_code.__variant = TCErrorType__SubTypeError;
+
+            }
+
+        }
+
+        if (19 == type) {
+            
+            if (1 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else if (2 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else if (4 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else if (5 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else {
+                
+                (*status).error_code.__variant = TCErrorType__SubTypeError;
+
+            }
+
+        }
+
+        if (128 == type) {
+            
+            if (1 == subtype) {
+                
+                (*status).acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                (*status).execution_status.__variant = TCExecutionCtrl__ExecCtrlReboot;
 
             } else {
                 
@@ -390,7 +490,7 @@ void build_tm_1_8_tc_3_X_SIDnotvalid(TMDescriptorT * p_tm_descriptor,
 
     serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
 
-    serialize_uint16(1, &p_tm_descriptor->tm_bytes[14]);
+    serialize_uint16(TM_1_8_TC_3_X_invalid_SID, &p_tm_descriptor->tm_bytes[14]);
 
     serialize_uint16(SID, &p_tm_descriptor->tm_bytes[16]);
 
@@ -441,7 +541,8 @@ void build_tm_1_8_tc_20_X_PIDnotvalid(TMDescriptorT * p_tm_descriptor,
 
     serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
 
-    serialize_uint16(2, &p_tm_descriptor->tm_bytes[14]);
+    serialize_uint16(TM_1_8_TC_20_X_invalid_PID,
+                     &p_tm_descriptor->tm_bytes[14]);
 
     serialize_uint16(PID, &p_tm_descriptor->tm_bytes[16]);
 
@@ -492,7 +593,7 @@ void build_tm_1_8_tc_5_X_RIDunknown(TMDescriptorT * p_tm_descriptor,
 
     serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
 
-    serialize_uint16(3, &p_tm_descriptor->tm_bytes[14]);
+    serialize_uint16(TM_1_8_TC_5_X_unknown_RID, &p_tm_descriptor->tm_bytes[14]);
 
     serialize_uint16(RID, &p_tm_descriptor->tm_bytes[16]);
 
@@ -544,7 +645,8 @@ void build_tm_1_8_tc_12_X_PMONIDundefined(TMDescriptorT * p_tm_descriptor,
 
     serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
 
-    serialize_uint16(4, &p_tm_descriptor->tm_bytes[14]);
+    serialize_uint16(TM_1_8_TC_12_X_PMONID_undefined,
+                     &p_tm_descriptor->tm_bytes[14]);
 
     serialize_uint16(PMONID, &p_tm_descriptor->tm_bytes[16]);
 
@@ -596,7 +698,8 @@ void build_tm_1_8_tc_12_X_PMONIDdefined(TMDescriptorT * p_tm_descriptor,
 
     serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
 
-    serialize_uint16(5, &p_tm_descriptor->tm_bytes[14]);
+    serialize_uint16(TM_1_8_TC_12_X_PMONID_defined,
+                     &p_tm_descriptor->tm_bytes[14]);
 
     serialize_uint16(PMONID, &p_tm_descriptor->tm_bytes[16]);
 
@@ -648,9 +751,222 @@ void build_tm_1_8_tc_12_X_PMONIDnotvalid(TMDescriptorT * p_tm_descriptor,
 
     serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
 
-    serialize_uint16(6, &p_tm_descriptor->tm_bytes[14]);
+    serialize_uint16(TM_1_8_TC_12_X_invalid_PMONID,
+                     &p_tm_descriptor->tm_bytes[14]);
 
     serialize_uint16(PMONID, &p_tm_descriptor->tm_bytes[16]);
+
+    p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7;
+
+    return;
+
+}
+
+void build_tm_1_8_tc_19_X_event_action_enabled(TMDescriptorT * p_tm_descriptor,
+                                               uint16_t tm_seq_counter,
+                                               uint16_t event_ID,
+                                               const TCDescriptorT * tc_descriptor) {
+    
+    CCSDSPUSTMPacketHeaderT tm_packet_header;
+    tm_packet_header.packet_id = 0;
+    tm_packet_header.packet_length = 0;
+    tm_packet_header.packet_seq_ctrl = 0;
+
+    CCSDSPUSTMDFHeaderT df_header;
+    df_header.destinationID = 0;
+    df_header.subtype = 0;
+    df_header.type = 0;
+    df_header.version = 0;
+
+    uint16_t tc_packet_id = get_packet_id(tc_descriptor->tc_bytes);
+
+    uint16_t tc_packet_seq_ctrl = get_packet_seq_ctrl(tc_descriptor->tc_bytes);
+
+    tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C);
+
+    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3,
+                                                                          tm_seq_counter);
+
+    tm_packet_header.packet_length = 11;
+
+    df_header.version = ccsds_pus_tm_build_df_header_version(0x1);
+
+    df_header.type = 1;
+
+    df_header.subtype = 8;
+
+    df_header.destinationID = 0x78;
+
+    ccsds_pus_tm_set_fields(&p_tm_descriptor->tm_bytes[0], &tm_packet_header,
+                            &df_header);
+
+    serialize_uint16(tc_packet_id, &p_tm_descriptor->tm_bytes[10]);
+
+    serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
+
+    serialize_uint16(TM_1_8_TC_19_X_ev_action_is_enabled,
+                     &p_tm_descriptor->tm_bytes[14]);
+
+    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16]);
+
+    p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7;
+
+    return;
+
+}
+
+void build_tm_1_8_tc_19_1_max_event_actions(TMDescriptorT * p_tm_descriptor,
+                                            uint16_t tm_seq_counter,
+                                            uint16_t event_ID,
+                                            const TCDescriptorT * tc_descriptor) {
+    
+    CCSDSPUSTMPacketHeaderT tm_packet_header;
+    tm_packet_header.packet_id = 0;
+    tm_packet_header.packet_length = 0;
+    tm_packet_header.packet_seq_ctrl = 0;
+
+    CCSDSPUSTMDFHeaderT df_header;
+    df_header.destinationID = 0;
+    df_header.subtype = 0;
+    df_header.type = 0;
+    df_header.version = 0;
+
+    uint16_t tc_packet_id = get_packet_id(tc_descriptor->tc_bytes);
+
+    uint16_t tc_packet_seq_ctrl = get_packet_seq_ctrl(tc_descriptor->tc_bytes);
+
+    tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C);
+
+    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3,
+                                                                          tm_seq_counter);
+
+    tm_packet_header.packet_length = 11;
+
+    df_header.version = ccsds_pus_tm_build_df_header_version(0x1);
+
+    df_header.type = 1;
+
+    df_header.subtype = 8;
+
+    df_header.destinationID = 0x78;
+
+    ccsds_pus_tm_set_fields(&p_tm_descriptor->tm_bytes[0], &tm_packet_header,
+                            &df_header);
+
+    serialize_uint16(tc_packet_id, &p_tm_descriptor->tm_bytes[10]);
+
+    serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
+
+    serialize_uint16(TM_1_8_TC_19_1_max_ev_actions_reached,
+                     &p_tm_descriptor->tm_bytes[14]);
+
+    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16]);
+
+    p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7;
+
+    return;
+
+}
+
+void build_tm_1_8_tc_19_1_event_action_rejected(TMDescriptorT * p_tm_descriptor,
+                                                uint16_t tm_seq_counter,
+                                                uint16_t event_ID,
+                                                const TCDescriptorT * tc_descriptor) {
+    
+    CCSDSPUSTMPacketHeaderT tm_packet_header;
+    tm_packet_header.packet_id = 0;
+    tm_packet_header.packet_length = 0;
+    tm_packet_header.packet_seq_ctrl = 0;
+
+    CCSDSPUSTMDFHeaderT df_header;
+    df_header.destinationID = 0;
+    df_header.subtype = 0;
+    df_header.type = 0;
+    df_header.version = 0;
+
+    uint16_t tc_packet_id = get_packet_id(tc_descriptor->tc_bytes);
+
+    uint16_t tc_packet_seq_ctrl = get_packet_seq_ctrl(tc_descriptor->tc_bytes);
+
+    tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C);
+
+    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3,
+                                                                          tm_seq_counter);
+
+    tm_packet_header.packet_length = 11;
+
+    df_header.version = ccsds_pus_tm_build_df_header_version(0x1);
+
+    df_header.type = 1;
+
+    df_header.subtype = 8;
+
+    df_header.destinationID = 0x78;
+
+    ccsds_pus_tm_set_fields(&p_tm_descriptor->tm_bytes[0], &tm_packet_header,
+                            &df_header);
+
+    serialize_uint16(tc_packet_id, &p_tm_descriptor->tm_bytes[10]);
+
+    serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
+
+    serialize_uint16(TM_1_8_TC_19_1_ev_action_rejected,
+                     &p_tm_descriptor->tm_bytes[14]);
+
+    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16]);
+
+    p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7;
+
+    return;
+
+}
+
+void build_tm_1_8_tc_19_X_event_action_not_defined(TMDescriptorT * p_tm_descriptor,
+                                                   uint16_t tm_seq_counter,
+                                                   uint16_t event_ID,
+                                                   const TCDescriptorT * tc_descriptor) {
+    
+    CCSDSPUSTMPacketHeaderT tm_packet_header;
+    tm_packet_header.packet_id = 0;
+    tm_packet_header.packet_length = 0;
+    tm_packet_header.packet_seq_ctrl = 0;
+
+    CCSDSPUSTMDFHeaderT df_header;
+    df_header.destinationID = 0;
+    df_header.subtype = 0;
+    df_header.type = 0;
+    df_header.version = 0;
+
+    uint16_t tc_packet_id = get_packet_id(tc_descriptor->tc_bytes);
+
+    uint16_t tc_packet_seq_ctrl = get_packet_seq_ctrl(tc_descriptor->tc_bytes);
+
+    tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C);
+
+    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3,
+                                                                          tm_seq_counter);
+
+    tm_packet_header.packet_length = 11;
+
+    df_header.version = ccsds_pus_tm_build_df_header_version(0x1);
+
+    df_header.type = 1;
+
+    df_header.subtype = 8;
+
+    df_header.destinationID = 0x78;
+
+    ccsds_pus_tm_set_fields(&p_tm_descriptor->tm_bytes[0], &tm_packet_header,
+                            &df_header);
+
+    serialize_uint16(tc_packet_id, &p_tm_descriptor->tm_bytes[10]);
+
+    serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12]);
+
+    serialize_uint16(TM_1_8_TC_19_X_ev_action_not_defined,
+                     &p_tm_descriptor->tm_bytes[14]);
+
+    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16]);
 
     p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7;
 

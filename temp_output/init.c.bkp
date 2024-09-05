@@ -5,7 +5,11 @@
 
 #include "libraries/event_list.h"
 
+#include "libraries/pus_services/pus_service1.h"
+
 #include "libraries/pus_services/pus_service12.h"
+
+#include "libraries/pus_services/pus_service19.h"
 
 #include "libraries/pus_services/pus_service3.h"
 

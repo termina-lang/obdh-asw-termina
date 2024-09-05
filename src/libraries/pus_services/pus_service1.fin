@@ -13,6 +13,7 @@ enum TCAcceptationStatus {
 	Rejected
 };
 
+//Error types for TM[1,2] packets
 enum TCErrorType {
 	CRCError,
 	APIDError,
@@ -26,11 +27,23 @@ enum TCExecutionCtrl {
 };
 
 struct TCStatus {
-		acceptation_status : TCAcceptationStatus;
-    	execution_status : TCExecutionCtrl;
-		error_code : TCErrorType;
+	acceptation_status : TCAcceptationStatus;
+    execution_status : TCExecutionCtrl;
+	error_code : TCErrorType;
 };
 
+//Error codes for TM[1,8] packets
+const TM_1_8_TC_3_X_invalid_SID : u16 = 1;
+const TM_1_8_TC_20_X_invalid_PID : u16 = 2;
+const TM_1_8_TC_5_X_unknown_RID : u16 = 3;
+const TM_1_8_TC_12_X_PMONID_undefined : u16 = 4;
+const TM_1_8_TC_12_X_PMONID_defined : u16 = 5;
+const TM_1_8_TC_12_X_invalid_PMONID : u16 = 6;
+const TM_1_8_TC_19_X_ev_action_is_enabled : u16 = 8;
+const TM_1_8_TC_19_1_max_ev_actions_reached  : u16 = 9;
+const TM_1_8_TC_19_1_ev_action_rejected  : u16 = 10;
+const TM_1_8_TC_19_X_ev_action_not_defined : u16 = 11;
+const TM_1_8_TC_2_X_device_not_valid : u16 = 12;
 
 	
 function is_crc_valid(tc_descriptor: &TCDescriptorT) -> bool {
@@ -57,15 +70,15 @@ function is_apid_valid(tc_descriptor: &TCDescriptorT) -> bool {
 
 function is_sourceID_valid( tc_descriptor: &TCDescriptorT) -> bool {
 	
-	let SOLO_Mission_TimeLine_SourceID : u8 = 110;
-	let SOLO_TC_Sequences_SourceID : u8 = 111;
-	let SOLO_Direct_Commands_SourceID : u8 = 120;
+	let Mission_TimeLine_SourceID : u8 = 110;
+	let TC_Sequences_SourceID : u8 = 111;
+	let Direct_Commands_SourceID : u8 = 120;
 
 	var sourceID : u8 = get_source_id(&(tc_descriptor->tc_bytes));
 
-	var is_valid : bool = ((SOLO_Mission_TimeLine_SourceID == sourceID)
-		 || (SOLO_TC_Sequences_SourceID == sourceID)
-		 || (SOLO_Direct_Commands_SourceID == sourceID));
+	var is_valid : bool = ((Mission_TimeLine_SourceID == sourceID)
+		 || (TC_Sequences_SourceID == sourceID)
+		 || (Direct_Commands_SourceID == sourceID));
 
 	return is_valid;
 }
@@ -153,11 +166,32 @@ function try_tc_acceptation(status : &mut TCStatus, tc_descriptor: &TCDescriptor
 			if (1 : u8 == subtype) {
 
 				(*status).acceptation_status = TCAcceptationStatus::Accepted;
-				(*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+				(*status).execution_status = TCExecutionCtrl::ExecCtrlBKGTC;
 
 			}
 
             else if (3 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+                (*status).execution_status = TCExecutionCtrl::ExecCtrlBKGTC;
+            }
+
+			else {
+                
+				(*status).error_code = TCErrorType::SubTypeError;
+			}
+        }
+
+		if (5 : u8 == type) {
+		
+			if (5 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+				(*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+
+			}
+
+            else if (6 : u8 == subtype) {
 
 				(*status).acceptation_status = TCAcceptationStatus::Accepted;
                 (*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
@@ -165,6 +199,75 @@ function try_tc_acceptation(status : &mut TCStatus, tc_descriptor: &TCDescriptor
 
 			else {
                 
+				(*status).error_code = TCErrorType::SubTypeError;
+			}
+        }
+		if (12 : u8 == type) {
+		
+			if (1 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+				(*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+
+			}
+
+            else if (5 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+                (*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+            }
+
+			else if (6 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+                (*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+            }
+
+			else {
+                
+				(*status).error_code = TCErrorType::SubTypeError;
+			}
+        }
+		if (19 : u8 == type) {
+		
+			if (1 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+				(*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+
+			}
+
+            else if (2 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+                (*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+            }
+
+			else if (4 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+                (*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+            }
+
+			else if (5 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+                (*status).execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+            }
+
+			else {
+                
+				(*status).error_code = TCErrorType::SubTypeError;
+			}
+        }
+		if (128 : u8 == type) {
+		
+			if (1 : u8 == subtype) {
+
+				(*status).acceptation_status = TCAcceptationStatus::Accepted;
+				(*status).execution_status = TCExecutionCtrl::ExecCtrlReboot;
+
+			} else {
 				(*status).error_code = TCErrorType::SubTypeError;
 			}
         }
@@ -375,7 +478,7 @@ function build_tm_1_8_tc_3_X_SIDnotvalid(p_tm_descriptor : &mut TMDescriptorT,
 	
 	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
 
-	serialize_uint16(1, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+	serialize_uint16(TM_1_8_TC_3_X_invalid_SID, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
 
 	serialize_uint16(SID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
 
@@ -424,7 +527,7 @@ function build_tm_1_8_tc_20_X_PIDnotvalid(p_tm_descriptor : &mut TMDescriptorT,
 	
 	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
 
-	serialize_uint16(2, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+	serialize_uint16(TM_1_8_TC_20_X_invalid_PID , &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
 
 	serialize_uint16(PID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
 
@@ -473,7 +576,7 @@ function build_tm_1_8_tc_5_X_RIDunknown(p_tm_descriptor : &mut TMDescriptorT,
 	
 	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
 
-	serialize_uint16(3, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+	serialize_uint16(TM_1_8_TC_5_X_unknown_RID, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
 
 	serialize_uint16(RID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
 
@@ -522,7 +625,7 @@ function build_tm_1_8_tc_12_X_PMONIDundefined(p_tm_descriptor : &mut TMDescripto
 	
 	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
 
-	serialize_uint16(4, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+	serialize_uint16(TM_1_8_TC_12_X_PMONID_undefined, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
 
 	serialize_uint16(PMONID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
 
@@ -570,7 +673,7 @@ function build_tm_1_8_tc_12_X_PMONIDdefined(p_tm_descriptor : &mut TMDescriptorT
 	
 	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
 
-	serialize_uint16(5, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+	serialize_uint16(TM_1_8_TC_12_X_PMONID_defined, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
 
 	serialize_uint16(PMONID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
 
@@ -619,7 +722,7 @@ function build_tm_1_8_tc_12_X_PMONIDnotvalid(p_tm_descriptor : &mut TMDescriptor
 	
 	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
 
-	serialize_uint16(6, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+	serialize_uint16(TM_1_8_TC_12_X_invalid_PMONID , &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
 
 	serialize_uint16(PMONID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
 
@@ -632,11 +735,200 @@ function build_tm_1_8_tc_12_X_PMONIDnotvalid(p_tm_descriptor : &mut TMDescriptor
 }
 
 
+function build_tm_1_8_tc_19_X_event_action_enabled(p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					event_ID : u16, tc_descriptor: &TCDescriptorT) {
 
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
 	
 
-    
+	tm_packet_header.packet_length = 11 : u16;
 
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(TM_1_8_TC_19_X_ev_action_is_enabled , &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(event_ID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}
+
+
+
+function build_tm_1_8_tc_19_1_max_event_actions(p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					event_ID : u16, tc_descriptor: &TCDescriptorT) {
+
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 11 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(TM_1_8_TC_19_1_max_ev_actions_reached, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(event_ID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}
+
+function build_tm_1_8_tc_19_1_event_action_rejected(p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					event_ID : u16, tc_descriptor: &TCDescriptorT) {
+
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 11 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(TM_1_8_TC_19_1_ev_action_rejected, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(event_ID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}	
+
+    
+function build_tm_1_8_tc_19_X_event_action_not_defined(p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16,
+					event_ID : u16, tc_descriptor: &TCDescriptorT) {
+
+	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
+	var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+
+	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
+	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+
+	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+	
+
+	tm_packet_header.packet_length = 11 : u16;
+
+	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	df_header.type = 1 : u8;
+	df_header.subtype = 8 : u8;
+	df_header.destinationID = 0x78 : u8;
+
+
+	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+			
+	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	
+	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+
+	serialize_uint16(TM_1_8_TC_19_X_ev_action_not_defined, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+
+	serialize_uint16(event_ID, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+
+	
+	// Calculate p_tm_descriptor->tm_num_bytes
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+
+	return;
+
+}	
 
 
 

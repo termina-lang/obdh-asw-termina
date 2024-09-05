@@ -18,10 +18,10 @@ const offset_mask : u16 = 0x001F; //Maximum RIDs of each type in the baseline co
 
 
 enum RIDType {
-    Informative,
-    LowSeverityAnomaly,
-    MediumSeverityAnomaly,
-    HighSeverityAnomaly,
+    Informative, //0x1XXX
+    LowSeverityAnomaly, //0x2XXX
+    MediumSeverityAnomaly, //0x3XXX
+    HighSeverityAnomaly, //0x4XXX
     RIDNotValid
 };
 
@@ -164,6 +164,7 @@ function PUS_service_5_execTC (tc_descriptor : &TCDescriptorT, tm_descriptor : &
     } else {
 
         //This is an error in acceptance, could be modeled as an event
+        /* If the acceptance process is correct, this point should not be reached */
     }
 
     return;

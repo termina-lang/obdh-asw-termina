@@ -1,6 +1,7 @@
 import libraries.pus_services.pus_service3;
 import libraries.pus_services.pus_service12;
 import libraries.pus_services.pus_service5;
+import libraries.pus_services.pus_service19;
 import libraries.event_list;
 import libraries.tm_ccsds_pus_format;
 import libraries.tc_ccsds_pus_format;
@@ -14,11 +15,28 @@ task class HK_FDIR_Manager {
     hk_fdir_timer_ev : sink TimeVal triggers do_hk_fdir;
     hkfdir_message_queue_input: in dyn TCDescriptorT triggers exec_tc;
 
-    hk_config_table : [HKConfiguration; max_num_of_SIDs];
-    param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
-    param_limit_check_definition : [ParamLimitCheckDefinition; max_num_pmon_ids];
+    //HK_FDIR Structures
+
+    pus_serv3_hk_config_table : [HKConfiguration; max_num_of_SIDs];
+    pus_serv12_param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
+    pus_serv12_param_limit_check_definition : [ParamLimitCheckDefinition; max_num_pmon_ids];
     event_list : EventList;
-    RID_enable_config : [u32; 4];
+    pus_serv5_RID_enable_config : [u32; 4];
+    pus_serv19_event_action_config : [EventActionConfig; max_event_action_definitions];
+    pus_serv19_event_action_packets : [TCDescriptorT; max_event_action_definitions];
+    //pus_serv19_priority_indexes : [usize; max_event_action_definitions];
+    //In C we use an array. We need 4 queues, one for each type of event depending on the severity
+    /*
+    pus_serv19_pending_action_queue_1I : [TCDescriptorT; event_action_queue_dimension];
+    pus_serv19_pending_action_queue_2LS : [TCDescriptorT; event_action_queue_dimension];
+    pus_serv19_pending_action_queue_3MS : [TCDescriptorT; event_action_queue_dimension];
+    pus_serv19_pending_action_queue_4HS : [TCDescriptorT; event_action_queue_dimension];
+    
+    
+    pus_serv19_pending_action_number : [u8; 4];
+    pus_serv19_pending_action_head : [u8; 4];
+    */  
+    //Do we really need queues?? It is not enough sending the action TC directly to the Manager task?
 
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
@@ -26,6 +44,7 @@ task class HK_FDIR_Manager {
     tm_counter : access TMCounterIface;
 
     tm_message_queue_output : out dyn TMDescriptorT;
+    action_tc_message_queue_output : out dyn TCDescriptorT;
 
     viewer pus_serv3_build_tm_3_25(&self, p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, index: usize) {
 
@@ -43,8 +62,8 @@ task class HK_FDIR_Manager {
 
 	    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
 
-    //Check this, I'm not sure it's correct
-	    tm_packet_header.packet_length = 4 + 2*(self->hk_config_table[index].num_params as u16); //Packet length dependent on SID
+        //Check this calculation, I'm not sure it's correct
+	    tm_packet_header.packet_length = 4 + 2*(self->pus_serv3_hk_config_table[index].num_params as u16); //Packet length dependent on SID
 
 	    df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
 	    df_header.type = 3 : u8;
@@ -53,14 +72,14 @@ task class HK_FDIR_Manager {
 
 	    ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
 
-	    p_tm_descriptor->tm_bytes[10 : usize] = self->hk_config_table[index].SID;
+	    p_tm_descriptor->tm_bytes[10 : usize] = self->pus_serv3_hk_config_table[index].SID;
 
         var PID : usize = 0;
         var SDP_value : u16 = 0;
 
-        for j : usize in 0 .. max_params_per_SID while (j < (self->hk_config_table[index].num_params as usize)) {
+        for j : usize in 0 .. max_params_per_SID while (j < (self->pus_serv3_hk_config_table[index].num_params as usize)) {
 
-            PID = self->hk_config_table[index].params_def[j] as usize;
+            PID = self->pus_serv3_hk_config_table[index].params_def[j] as usize;
             self->system_data_pool.load_index(PID, &mut SDP_value);
             serialize_uint16(SDP_value, &mut (p_tm_descriptor->tm_bytes[11 + j..13 + j]));
     
@@ -80,13 +99,13 @@ task class HK_FDIR_Manager {
 
         for i : usize in 0 .. max_num_of_SIDs {
 
-            if (self->hk_config_table[i].enabled == true){
+            if (self->pus_serv3_hk_config_table[i].enabled == true){
 
-                self->hk_config_table[i].interval_control = self->hk_config_table[i].interval_control + 1;
+                self->pus_serv3_hk_config_table[i].interval_control = self->pus_serv3_hk_config_table[i].interval_control + 1;
 
-                if (self->hk_config_table[i].interval_control == self->hk_config_table[i].interval){
+                if (self->pus_serv3_hk_config_table[i].interval_control == self->pus_serv3_hk_config_table[i].interval){
 
-                    self->hk_config_table[i].interval_control = 0;
+                    self->pus_serv3_hk_config_table[i].interval_control = 0;
 
                     var tm_descriptor : Option<dyn TMDescriptorT> = None;
                     self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
@@ -119,56 +138,56 @@ task class HK_FDIR_Manager {
 
         for i : usize in 0 .. max_num_pmon_ids {
 
-            if(self->param_mon_config_table[i].enabled == true){
+            if(self->pus_serv12_param_mon_config_table[i].enabled == true){
 
-                var PID : u16 = self->param_mon_config_table[i].PID;
+                var PID : u16 = self->pus_serv12_param_mon_config_table[i].PID;
                 var SDP_value : u16 = 0;
                 self->system_data_pool.load_index(PID as usize, &mut SDP_value);
 
-                if(self->param_mon_config_table[i].interval_control >= self->param_mon_config_table[i].interval){
+                if(self->pus_serv12_param_mon_config_table[i].interval_control >= self->pus_serv12_param_mon_config_table[i].interval){
 
-                    self->param_mon_config_table[i].interval_control = 0;
+                    self->pus_serv12_param_mon_config_table[i].interval_control = 0;
 
-                    if(self->param_mon_config_table[i].state is CheckState::MonitorUnselected == false){
+                    if(self->pus_serv12_param_mon_config_table[i].state is CheckState::MonitorUnselected == false){
 
-                        if (self->param_mon_config_table[i].state is CheckState::MonitorAboveHighLimit == false) &&
-                            (self->param_mon_config_table[i].state is CheckState::MonitorBelowLowLimit== false) {
+                        if (self->pus_serv12_param_mon_config_table[i].state is CheckState::MonitorAboveHighLimit == false) &&
+                            (self->pus_serv12_param_mon_config_table[i].state is CheckState::MonitorBelowLowLimit== false) {
 
-                            if (SDP_value > self->param_limit_check_definition[i].high_limit){
+                            if (SDP_value > self->pus_serv12_param_limit_check_definition[i].high_limit){
 
-                                trigger_event(&mut (self->event_list), self->param_limit_check_definition[i].high_limit_rid, PID, SDP_value,
-                                        self->param_limit_check_definition[i].high_limit, &mut res);
+                                trigger_event(&mut (self->event_list), self->pus_serv12_param_limit_check_definition[i].high_limit_rid, PID, SDP_value,
+                                        self->pus_serv12_param_limit_check_definition[i].high_limit, &mut res);
                                 var updated_state : CheckState = CheckState::MonitorAboveHighLimit;
-                                update_state(&mut (self->param_mon_config_table), i, updated_state);
+                                update_state(&mut (self->pus_serv12_param_mon_config_table), i, updated_state);
                             
-                            } else if (SDP_value < self->param_limit_check_definition[i].low_limit){
+                            } else if (SDP_value < self->pus_serv12_param_limit_check_definition[i].low_limit){
 
-                                trigger_event(&mut (self->event_list), self->param_limit_check_definition[i].low_limit_rid, PID, SDP_value,
-                                        self->param_limit_check_definition[i].low_limit, &mut res);
+                                trigger_event(&mut (self->event_list), self->pus_serv12_param_limit_check_definition[i].low_limit_rid, PID, SDP_value,
+                                        self->pus_serv12_param_limit_check_definition[i].low_limit, &mut res);
                                 var updated_state : CheckState = CheckState::MonitorBelowLowLimit;
-                                update_state(&mut (self->param_mon_config_table), i, updated_state);
+                                update_state(&mut (self->pus_serv12_param_mon_config_table), i, updated_state);
 
                             } else {
 
-                                if (self->param_mon_config_table[i].state is CheckState::MonitorUnchecked){
+                                if (self->pus_serv12_param_mon_config_table[i].state is CheckState::MonitorUnchecked){
 
                                     var updated_state : CheckState = CheckState::MonitorWithinLimits;
-                                    update_state(&mut (self->param_mon_config_table), i, updated_state);
+                                    update_state(&mut (self->pus_serv12_param_mon_config_table), i, updated_state);
 
                                 }
                             }
                         } else {
 
-                        if (SDP_value < self->param_limit_check_definition[i].high_limit) &&
-                            (SDP_value > self->param_limit_check_definition[i].low_limit){
+                        if (SDP_value < self->pus_serv12_param_limit_check_definition[i].high_limit) &&
+                            (SDP_value > self->pus_serv12_param_limit_check_definition[i].low_limit){
 
                                 var updated_state : CheckState = CheckState::MonitorWithinLimits;
-                                update_state(&mut (self->param_mon_config_table), i, updated_state);
+                                update_state(&mut (self->pus_serv12_param_mon_config_table), i, updated_state);
                             }
                         }
                     } else {
 
-                        self->param_mon_config_table[i].interval_control = self->param_mon_config_table[i].interval_control + 1;
+                        self->pus_serv12_param_mon_config_table[i].interval_control = self->pus_serv12_param_mon_config_table[i].interval_control + 1;
                     }
                 }
 
@@ -188,12 +207,13 @@ task class HK_FDIR_Manager {
 
             var event_info : Option<EventInfo> = None;
 
-            extract_event(&mut (self->event_list), &mut event_info);
+            get_event_info(&(self->event_list), i, &mut event_info);
 
             match event_info {
+                
                 case Some(event) => {
 
-                    if(is_RID_enabled(event.ev_RID, &(self->RID_enable_config))){
+                    if(is_RID_enabled(event.ev_RID, &(self->pus_serv5_RID_enable_config))){
 
                         var index : usize = get_RID_enable_config_index(event.ev_RID);
 
@@ -221,8 +241,7 @@ task class HK_FDIR_Manager {
                     }
                 }
                 case None => {
-                    //error, no event extracted
-                    res = Result::Error;
+                    //no events extracted
                 }
             }
 
@@ -231,6 +250,67 @@ task class HK_FDIR_Manager {
       return res; 
 
     }
+
+
+method pus_serv19_manage_event_actions(&mut self) -> Result {
+
+    var res : Result = Result::Ok;
+
+    for i : usize in 0 .. max_num_events while (i < self->event_list.num_events){
+            
+        var event_info : Option<EventInfo> = None;
+        get_event_info(&(self->event_list), i, &mut event_info);
+    
+        match event_info {
+    
+            case Some(event) => {
+
+                if(is_RID_enabled(event.ev_RID, &(self->pus_serv5_RID_enable_config))){
+
+                    var index : usize = 0;
+                    var enabled : bool = false;
+
+                    if (get_event_action_config(event.ev_RID, &mut index, &mut enabled, &(self->pus_serv19_event_action_config))){
+
+                        if(enabled){
+
+                            //new pending event action
+                            var tc_descriptor : Option<dyn TCDescriptorT> = None;
+                            self->a_tc_descriptor_pool.alloc(&mut tc_descriptor);
+
+                            match tc_descriptor {
+
+                                case Some(descriptor) => {
+
+                                    descriptor.tc_num_bytes = self->pus_serv19_event_action_packets[index].tc_num_bytes;
+
+                                    for j : usize in 0 .. event_action_max_bytes while (j < descriptor.tc_num_bytes) {
+                                        descriptor.tc_bytes[j] = self->pus_serv19_event_action_packets[index].tc_bytes[j];
+                                    }
+
+                                    
+                                    self->action_tc_message_queue_output.send(descriptor);
+                                }
+                                case None => {
+                                    res = Result::Error;
+                                }
+                            }
+
+
+                        }
+                    }
+                }
+            }
+            case None => {
+                //no events extracted
+            }
+        }
+    }
+
+    clear_ev_list(&mut (self->event_list));
+
+    return res;
+}
     
 
     action do_hk_fdir(&mut self, _current_time : TimeVal) -> Result {
@@ -263,15 +343,19 @@ task class HK_FDIR_Manager {
 
                 if (tc_type == 3){
 
-                    PUS_service_3_execTC(&tc_descriptor, &mut descriptor, tm_count, &mut (self->hk_config_table));
+                    PUS_service_3_execTC(&tc_descriptor, &mut descriptor, tm_count, &mut (self->pus_serv3_hk_config_table));
     
                 } else if (tc_type == 5){
 
-                    PUS_service_5_execTC(&tc_descriptor, &mut descriptor, tm_count,  &mut (self->RID_enable_config));
+                    PUS_service_5_execTC(&tc_descriptor, &mut descriptor, tm_count,  &mut (self->pus_serv5_RID_enable_config));
 
                 } else if (tc_type == 12){
 
-                    PUS_service_12_execTC(&tc_descriptor, &mut descriptor, tm_count,  &mut (self->param_mon_config_table),  &mut(self->param_limit_check_definition));
+                    PUS_service_12_execTC(&tc_descriptor, &mut descriptor, tm_count,  &mut (self->pus_serv12_param_mon_config_table),  &mut(self->pus_serv12_param_limit_check_definition));
+
+                } else if (tc_type == 19){
+
+                    PUS_service_19_execTC(&tc_descriptor, &mut descriptor, tm_count,  &mut (self->pus_serv19_event_action_config),  &mut (self->pus_serv19_event_action_packets));
 
                 } else {
 

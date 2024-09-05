@@ -1,19 +1,23 @@
 import libraries.serialize;
-import libraries.ccsds_pus_format;
-import resources.tm_channel;
-import libraries.epd_pus_tmtc;
+import libraries.tc_ccsds_pus_format;
+import libraries.tm_ccsds_pus_format;
 import libraries.crc;
 import libraries.pus_services.pus_service17;
-
+import libraries.pus_services.pus_service1;
+import libraries.pus_services.pus_service128;
+import libraries.pus_services.pus_service2;
+import libraries.pus_services.pus_service9;
+import resources.tm_counter;
 
 task class ICUManager {
 
     tc_message_queue_input: in dyn TCDescriptorT triggers process_tc;
+    action_tc_message_queue_input: in dyn TCDescriptorT triggers process_action_tc;
     a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     hkfdir_message_queue_output: out dyn TCDescriptorT;
     bkg_message_queue_output: out dyn TCDescriptorT;
-    tm_message_queue_output : out TMDescriptorT; 
+    tm_message_queue_output : out dyn TMDescriptorT; 
     tm_counter: access TMCounterIface;
 
     tc_status : TCStatus;
@@ -25,18 +29,34 @@ task class ICUManager {
         if (tc_type == 17){
 
             PUS_service_17_execTC(tc_descriptor, tm_descriptor, tm_seq_counter);
+    /*
+        } else if (tc_type == 2){
+
+            PUS_service_2_execTC(tc_descriptor, tm_descriptor, tm_seq_counter);
     
-        } 
+        } else if (tc_type == 9){
+
+            PUS_service_9_execTC(tc_descriptor, tm_descriptor, tm_seq_counter);
+    
+        } else if (tc_type == 128){
+
+            PUS_service_128_execTC(tc_descriptor, tm_descriptor, tm_seq_counter); */
+    
+        } else {
+
+            //error
+        }
     
         return;
     }
+
 
 
     action process_tc(&mut self, tc_descriptor: dyn TCDescriptorT) -> Result {
 
         var ret : Result = Result::Ok;
 
-        try_tc_acceptation(&tc_descriptor, &mut (self->tc_status));
+        try_tc_acceptation(&mut (self->tc_status), &tc_descriptor);
 
         match self->tc_status.acceptation_status {
 
@@ -52,43 +72,60 @@ task class ICUManager {
                             var tm_count : u16 = 0 : u16;
                             self->tm_counter.get_next_tm_count(&mut tm_count);
                             //generar TM(1,1)
-                            build_tm_1_1(&tc_descriptor,&mut descriptor, tm_count);
-                            self.tm_message_queue_output.send(descriptor);
+                            build_tm_1_1(&mut descriptor, tm_count, &tc_descriptor);
+                            self->tm_message_queue_output.send(descriptor);
                         
                             }
                             case None => {
                                 //error
                             }
-                        }
+                    }
 
-                match self->tc_status.tc_execution_status {
+                match self->tc_status.execution_status {
 
                     case ExecCtrlReboot => {
 
-                        
-                        
-                    }
-                    case  ExecCtrlHK_FDIRTC => {
-                    
-                        self->hk_message_queue_output.send(tc_descriptor);
-                    }
-                    case ExecCtrlBKGTC => {
-                        //Enviar tc a tarea bkg
-                    }
-                    case ExecCtrlPrioTC => {
+                        var tm_descriptor2 : Option<dyn TMDescriptorT> = None;
+                        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
 
-                        var tm_descriptor : Option<dyn TMDescriptorT> = None;
-                        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-                        match tm_descriptor {
+                        match tm_descriptor2 {
 
                             case Some(descriptor) => {
 
-                                var tm_count : u16 = 0 : u16;
-                                self->tm_counter.get_next_tm_count(&mut tm_count);
-                                //Ejecutar tc como prioritario
-                                PUS_prio_exec_tc(&tc_descriptor,&mut descriptor, tm_count);
-                                self.tm_message_queue_output.send(descriptor);
+                            var tm_count : u16 = 0 : u16;
+                            self->tm_counter.get_next_tm_count(&mut tm_count);
+                            //Ejecutar tc como prioritario
+                            self->PUS_prio_exec_tc(&tc_descriptor,&mut descriptor, tm_count);
+                            self->tm_message_queue_output.send(descriptor);
+                        
+                            }
+                            case None => {
+                                //error
+                            }
+                        }   
+                    }
+                    case  ExecCtrlHK_FDIRTC => {
+                    
+                        self->hkfdir_message_queue_output.send(tc_descriptor);
+                    }
+                    case ExecCtrlBKGTC => {
+                        
+                        self->bkg_message_queue_output.send(tc_descriptor);
+                    }
+                    case ExecCtrlPrioTC => {
+
+                        var tm_descriptor3 : Option<dyn TMDescriptorT> = None;
+                        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor3);
+
+                        match tm_descriptor3 {
+
+                            case Some(descriptor) => {
+
+                            var tm_count : u16 = 0 : u16;
+                            self->tm_counter.get_next_tm_count(&mut tm_count);
+                            //Ejecutar tc como prioritario
+                            self->PUS_prio_exec_tc(&tc_descriptor,&mut descriptor, tm_count);
+                            self->tm_message_queue_output.send(descriptor);
                         
                             }
                             case None => {
@@ -98,6 +135,9 @@ task class ICUManager {
                     }
 
                 }
+
+                
+                
             }
             case Rejected => { 
 
@@ -111,14 +151,16 @@ task class ICUManager {
                             var tm_count : u16 = 0 : u16;
                             self->tm_counter.get_next_tm_count(&mut tm_count);
                             //generar TM(1,2)
-                            build_tm_1_2(&tc_status, &mut descriptor, tm_count, &tc_descriptor);
-                            self.tm_message_queue_output.send(descriptor);
+                            build_tm_1_2(&(self->tc_status), &mut descriptor, tm_count, &tc_descriptor);
+                            self->tm_message_queue_output.send(descriptor);
                         
-                            }
-                            case None => {
-                                //error
-                            }
                         }
+                        case None => {
+                            //error
+                        }
+                    }
+                    
+                self->a_tc_descriptor_pool.free(tc_descriptor);
             }
         }
     

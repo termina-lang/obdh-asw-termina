@@ -85,6 +85,7 @@ function exec3_31TC(tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescr
     if(get_SIDindex(&(*hk_config_table), SID, &mut index)){
 
         hk_config_table[index].interval = deserialize_uint16(&(tc_descriptor->tc_bytes[11 : usize .. 13 : usize]));
+        //DESIGN DECISION : Óscar does not restart the control interval when receiving a TC[3,31]
         hk_config_table[index].interval_control = 0;
         build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
 
@@ -117,6 +118,7 @@ function PUS_service_3_execTC (tc_descriptor : &TCDescriptorT, tm_descriptor : &
     } else {
 
         //This is an error in acceptance, could be modeled as an event
+        /* If the acceptance process is correct, this point should not be reached */
     }
 
     return;
