@@ -42,6 +42,38 @@ _Bool is_sourceID_valid(const TCDescriptorT * tc_descriptor) {
 
 }
 
+TCExecutionCtrl handle_tc(const TCDescriptorT * tc_descriptor) {
+    
+    uint8_t type = get_type(tc_descriptor->tc_bytes);
+
+    TCExecutionCtrl exec_ctrl;
+    exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlReboot;
+
+    if (type == 9 || type == 17) {
+        
+        exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
+
+    } else if (type == 3 || type == 5 || type == 12 || type == 19) {
+        
+        exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+    } else if (type == 20) {
+        
+        exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlBKGTC;
+
+    } else if (type == 128) {
+        
+        exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlReboot;
+
+    } else {
+        
+
+    }
+
+    return exec_ctrl;
+
+}
+
 void try_tc_acceptation(TCStatus * status,
                         const TCDescriptorT * tc_descriptor) {
     

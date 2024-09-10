@@ -69,6 +69,8 @@ Result HK_FDIR_Manager__pus_serv19_manage_event_actions(HK_FDIR_Manager * const 
 
     }
 
+    clear_ev_list(&self->event_list);
+
     return res;
 
 }
@@ -402,6 +404,13 @@ Result HK_FDIR_Manager__PUS_hk_fdir_exec_tc(HK_FDIR_Manager * const self,
                                   (TMDescriptorT *)__Some.__0.data, tm_count,
                                   self->pus_serv12_param_mon_config_table,
                                   self->pus_serv12_param_limit_check_definition);
+
+        } else if (tc_type == 19) {
+            
+            PUS_service_19_execTC((TCDescriptorT *)tc_descriptor.data,
+                                  (TMDescriptorT *)__Some.__0.data, tm_count,
+                                  self->pus_serv19_event_action_config,
+                                  self->pus_serv19_event_action_packets);
 
         } else {
             

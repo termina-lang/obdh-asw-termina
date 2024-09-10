@@ -1,6 +1,9 @@
-import libraries.pus_services.pus_services;
+import libraries.pus_services.pus_service1;
 import libraries.serialize;
 import resources.system_data_pool;
+import libraries.tc_ccsds_pus_format;
+import libraries.tm_ccsds_pus_format;
+import resources.tm_counter;
 
 task class BkgTCExecutor {
 
@@ -10,6 +13,7 @@ task class BkgTCExecutor {
     a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
     system_data_pool : access AtomicArrayAccess<u16; SDP_num_params>; 
     tm_counter : access TMCounterIface;
+    telecommand : TCDescriptorT;
 
     tm_message_queue_output : out dyn TMDescriptorT;
 
@@ -55,13 +59,11 @@ task class BkgTCExecutor {
 
 
 
-
-
-    viewer pus_serv20_exec20_1TC(&self, tc_descriptor: &TCDescriptorT)-> Result{
+    method pus_serv20_exec20_1TC(&mut self) -> Result{
 
         var res : Result = Result::Ok;
 
-        var PID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10..12]));
+        var PID : u16 = deserialize_uint16(&(self->telecommand.tc_bytes[10..12]));
 
         if (PID < SDP_num_params){
 
@@ -92,7 +94,7 @@ task class BkgTCExecutor {
 
                 var tm_count2 : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count2);
-                build_tm_1_7(&tc_descriptor, &mut descriptor2, tm_count2);
+                build_tm_1_7(&(self->telecommand), &mut descriptor2, tm_count2);
                 self->tm_message_queue_output.send(descriptor2);
 
                 }
@@ -112,7 +114,7 @@ task class BkgTCExecutor {
 
                 var tm_count1 : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count1);
-                build_tm_1_8_tc_20_X_PIDnotvalid(&mut descriptor1, tm_count1, PID, tc_descriptor);
+                build_tm_1_8_tc_20_X_PIDnotvalid(&mut descriptor1, tm_count1, PID, &(self->telecommand));
                 self->tm_message_queue_output.send(descriptor1);
 
                 }
@@ -127,37 +129,40 @@ task class BkgTCExecutor {
     }
 
 
-    viewer pus_serv20_exec20_3TC(&self, tc_descriptor: &TCDescriptorT)-> Result{
+    method pus_serv20_exec20_3TC(&mut self)-> Result{
 
         var res : Result = Result::Ok;
 
-        var PID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10..12]));
-        var param_value : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[12..14]));
+        var PID : u16 = deserialize_uint16(&(self->telecommand.tc_bytes[10..12]));
+        var param_value : u16 = deserialize_uint16(&(self->telecommand.tc_bytes[12..14]));
 
         var tm_descriptor : Option<dyn TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
 
-        case Some(descriptor) => {
+        match tm_descriptor {
 
-            var tm_count : u16 = 0 : u16;
-            self->tm_counter.get_next_tm_count(&mut tm_count);
+            case Some(descriptor) => {
 
-            if (PID < SDP_num_params){
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                self->system_data_pool.store_index(PID as usize,param_value);
-                build_tm_1_7(&tc_descriptor, &mut descriptor, tm_count);
+                if (PID < SDP_num_params){
 
-            } else {
+                    self->system_data_pool.store_index(PID as usize,param_value);
+                    build_tm_1_7(&(self->telecommand), &mut descriptor, tm_count);
 
-                build_tm_1_8_tc_20_X_PIDnotvalid(&mut descriptor, tm_count, PID, tc_descriptor);
+                } else {
+
+                    build_tm_1_8_tc_20_X_PIDnotvalid(&mut descriptor, tm_count, PID, &(self->telecommand));
+
+                }
+
+                self->tm_message_queue_output.send(descriptor);
 
             }
-
-            self->tm_message_queue_output.send(descriptor);
-
-        }
-        case None => {
-            res = Result::Error;
+            case None => {
+                res = Result::Error;
+            }
         }
 
         return res;
@@ -168,20 +173,21 @@ task class BkgTCExecutor {
     action PUS_bkg_exec_tc(&mut self, tc_descriptor : dyn TCDescriptorT) -> Result {
 
         var res : Result = Result::Ok;
+        self->telecommand = tc_descriptor;
 
-        var tc_type : u8 = get_type(&(tc_descriptor->tc_bytes));
+        var tc_type : u8 = get_type(&(tc_descriptor.tc_bytes));
 
             if (tc_type == 20){
 
-                var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes)); 
+                var subtype : u8 = get_subtype(&(tc_descriptor.tc_bytes)); 
 
                 if (subtype == 1){
 
-                    res = exec20_1TC();
+                    res = pus_serv20_exec20_1TC();
     
                 } else if (subtype == 3){
 
-                    res = exec20_3TC();
+                    res = pus_serv20_exec20_3TC();
 
                 } else {
 

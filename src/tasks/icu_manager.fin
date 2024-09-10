@@ -87,6 +87,7 @@ task class ICUManager {
 
                         var tm_descriptor2 : Option<dyn TMDescriptorT> = None;
                         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                        self->a_tc_descriptor_pool.free(tc_descriptor);
 
                         match tm_descriptor2 {
 
@@ -116,6 +117,7 @@ task class ICUManager {
 
                         var tm_descriptor3 : Option<dyn TMDescriptorT> = None;
                         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor3);
+                        self->a_tc_descriptor_pool.free(tc_descriptor);
 
                         match tm_descriptor3 {
 
@@ -159,16 +161,82 @@ task class ICUManager {
                             //error
                         }
                     }
-                    
-                self->a_tc_descriptor_pool.free(tc_descriptor);
+                    self->a_tc_descriptor_pool.free(tc_descriptor);
             }
         }
+        
     
         return ret;            
     }
 
+
+action process_action_tc(&mut self, tc_descriptor: dyn TCDescriptorT) -> Result {
+
+    var ret : Result = Result::Ok;
+
+    var execution_status : TCExecutionCtrl = handle_tc(&tc_descriptor);
+
+    match execution_status {
+
+        case ExecCtrlReboot => {
+
+            var tm_descriptor2 : Option<dyn TMDescriptorT> = None;
+            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+            self->a_tc_descriptor_pool.free(tc_descriptor);
+
+            match tm_descriptor2 {
+
+                case Some(descriptor) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+                //Ejecutar tc como prioritario
+                self->PUS_prio_exec_tc(&tc_descriptor,&mut descriptor, tm_count);
+                self->tm_message_queue_output.send(descriptor);
+            
+                }
+                case None => {
+                    //error
+                }
+            }   
+        }
+        case  ExecCtrlHK_FDIRTC => {
         
-       
+            self->hkfdir_message_queue_output.send(tc_descriptor);
+        }
+        case ExecCtrlBKGTC => {
+            
+            self->bkg_message_queue_output.send(tc_descriptor);
+        }
+        case ExecCtrlPrioTC => {
+
+            var tm_descriptor3 : Option<dyn TMDescriptorT> = None;
+            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor3);
+            self->a_tc_descriptor_pool.free(tc_descriptor);
+
+            match tm_descriptor3 {
+
+                case Some(descriptor) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+                //Ejecutar tc como prioritario
+                self->PUS_prio_exec_tc(&tc_descriptor,&mut descriptor, tm_count);
+                self->tm_message_queue_output.send(descriptor);
+            
+                }
+                case None => {
+                    //error
+                }
+            }
+        }
+
+    }
+    
+    return ret;            
+}
+
+        
 
 
 };

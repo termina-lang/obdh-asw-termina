@@ -1,4 +1,5 @@
 import resources.uart;
+import libraries.tm_ccsds_pus_format;
 
 
 task class TMChannel {
@@ -12,11 +13,11 @@ task class TMChannel {
 
         var queue_state : CharDevResult = CharDevResult::Success;
 
-        self->uart.send(&(tm_descriptor.tm_bytes), tm_descriptor.tm_num_bytes, &mut queue_state)
+        self->uart.send(&(tm_descriptor.tm_bytes), tm_descriptor.tm_num_bytes, &mut queue_state);
 
-        var res : Result = Result :: Ok;
+        var res : Result = Result::Ok;
 
-        if (queue_state is CharDevSend::Success) {
+        if (queue_state is CharDevResult::Success) {
                     
         } else {
             res = Result :: Error;

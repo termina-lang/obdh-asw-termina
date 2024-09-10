@@ -206,7 +206,7 @@ function build_tm_5_x(p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16,
     }
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
     return;
 }

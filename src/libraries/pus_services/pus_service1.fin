@@ -83,6 +83,36 @@ function is_sourceID_valid( tc_descriptor: &TCDescriptorT) -> bool {
 	return is_valid;
 }
 
+function handle_tc(tc_descriptor: &TCDescriptorT) -> TCExecutionCtrl {
+
+	var type : u8 = get_type(&(tc_descriptor->tc_bytes));
+	var exec_ctrl : TCExecutionCtrl = TCExecutionCtrl::ExecCtrlReboot;
+
+	if (type == 9 || type == 17) {
+
+		exec_ctrl = TCExecutionCtrl::ExecCtrlPrioTC;
+
+	} else if (type == 3 || type == 5 || type == 12 || type == 19){
+
+		exec_ctrl = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+
+	} else if (type == 20) {
+
+		exec_ctrl = TCExecutionCtrl::ExecCtrlBKGTC;
+
+	} else if (type == 128) {
+
+		exec_ctrl = TCExecutionCtrl::ExecCtrlReboot;
+
+	} else {
+		// I shouldn't arrive to this branch, acceptation error
+	}
+
+	return exec_ctrl;
+
+
+} 
+
 function try_tc_acceptation(status : &mut TCStatus, tc_descriptor: &TCDescriptorT) {
 
 	(*status).acceptation_status = TCAcceptationStatus::Accepted;
@@ -315,7 +345,7 @@ function build_tm_1_1(p_tm_descriptor : &mut TMDescriptorT,
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 }
@@ -390,7 +420,7 @@ function build_tm_1_2 (status : &TCStatus, p_tm_descriptor : &mut TMDescriptorT,
 		serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
 		serialize_uint16(error_code ,&mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
 
-		p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+		p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 		return;
 }
@@ -435,7 +465,7 @@ function build_tm_1_7(p_tm_descriptor : &mut TMDescriptorT,
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -484,7 +514,7 @@ function build_tm_1_8_tc_3_X_SIDnotvalid(p_tm_descriptor : &mut TMDescriptorT,
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -533,7 +563,7 @@ function build_tm_1_8_tc_20_X_PIDnotvalid(p_tm_descriptor : &mut TMDescriptorT,
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -582,7 +612,7 @@ function build_tm_1_8_tc_5_X_RIDunknown(p_tm_descriptor : &mut TMDescriptorT,
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -631,7 +661,7 @@ function build_tm_1_8_tc_12_X_PMONIDundefined(p_tm_descriptor : &mut TMDescripto
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -679,7 +709,7 @@ function build_tm_1_8_tc_12_X_PMONIDdefined(p_tm_descriptor : &mut TMDescriptorT
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -728,7 +758,7 @@ function build_tm_1_8_tc_12_X_PMONIDnotvalid(p_tm_descriptor : &mut TMDescriptor
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -777,7 +807,7 @@ function build_tm_1_8_tc_19_X_event_action_enabled(p_tm_descriptor : &mut TMDesc
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -827,7 +857,7 @@ function build_tm_1_8_tc_19_1_max_event_actions(p_tm_descriptor : &mut TMDescrip
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -875,7 +905,7 @@ function build_tm_1_8_tc_19_1_event_action_rejected(p_tm_descriptor : &mut TMDes
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 
@@ -924,7 +954,7 @@ function build_tm_1_8_tc_19_X_event_action_not_defined(p_tm_descriptor : &mut TM
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
+	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 

@@ -33,7 +33,7 @@ function build_tm_17_2(tm_descriptor : &mut TMDescriptorT,
 	ccsds_pus_tm_set_fields(&mut tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
 			
 	// Calculate p_tm_descriptor->tm_num_bytes
-	tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7;
+	tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
 

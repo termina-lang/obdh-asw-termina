@@ -75,6 +75,8 @@ _Bool is_apid_valid(const TCDescriptorT * tc_descriptor);
 
 _Bool is_sourceID_valid(const TCDescriptorT * tc_descriptor);
 
+TCExecutionCtrl handle_tc(const TCDescriptorT * tc_descriptor);
+
 void try_tc_acceptation(TCStatus * status, const TCDescriptorT * tc_descriptor);
 
 void build_tm_1_1(TMDescriptorT * p_tm_descriptor, uint16_t tm_seq_counter,

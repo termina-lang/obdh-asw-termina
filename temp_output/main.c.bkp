@@ -11,11 +11,17 @@
 
 #include "libraries/pus_services/pus_service12.h"
 
+#include "libraries/pus_services/pus_service128.h"
+
 #include "libraries/pus_services/pus_service19.h"
+
+#include "libraries/pus_services/pus_service2.h"
 
 #include "libraries/pus_services/pus_service3.h"
 
 #include "libraries/pus_services/pus_service5.h"
+
+#include "libraries/pus_services/pus_service9.h"
 
 #include "libraries/queue_u8.h"
 

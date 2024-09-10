@@ -1,4 +1,5 @@
 import libraries.serialize;
+import resources.uart;
 
 
 struct CCSDSPUSTMPacketHeaderT {
@@ -23,8 +24,8 @@ struct CCSDSPUSTMDFHeaderT {
 
  struct TMDescriptorT {
 
-    tm_bytes : [u8 ; 256];
-    tm_num_bytes : u16;
+    tm_bytes : [u8 ; max_send_size];
+    tm_num_bytes : usize;
 
 };
 

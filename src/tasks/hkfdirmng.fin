@@ -86,7 +86,7 @@ task class HK_FDIR_Manager {
         }
 
 	    // Calculate p_tm_descriptor->tm_num_bytes
-	    p_tm_descriptor->tm_num_bytes = 6 : u16 + tm_packet_header.packet_length + 1 : u16;
+	    p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 
 	    return;

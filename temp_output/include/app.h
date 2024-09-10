@@ -5,6 +5,7 @@
 
 #include "option.h"
 #include "libraries/pus_services/pus_service17.h"
+#include "libraries/pus_services/pus_service19.h"
 #include "libraries/pus_services/pus_service1.h"
 #include "libraries/pus_services/pus_service3.h"
 #include "libraries/pus_services/pus_service5.h"
@@ -15,6 +16,7 @@
 #include "libraries/queue_u8.h"
 #include "libraries/event_list.h"
 #include "resources/system_data_pool.h"
+#include "tasks/icu_manager.h"
 
 extern PeriodicTimer hk_fdir_timer;
 
