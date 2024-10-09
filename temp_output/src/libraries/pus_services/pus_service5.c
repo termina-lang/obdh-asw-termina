@@ -1,5 +1,5 @@
 
-#include "libraries/pus_services/pus_service5.h"
+#include "service_libraries/pus_services/pus_service5.h"
 
 RIDType get_RID_type(uint16_t RID) {
     

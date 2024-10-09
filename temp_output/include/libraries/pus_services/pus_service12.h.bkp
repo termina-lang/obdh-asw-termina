@@ -4,12 +4,12 @@
 #include <termina.h>
 
 #include "option.h"
-#include "libraries/tc_ccsds_pus_format.h"
-#include "libraries/tm_ccsds_pus_format.h"
-#include "libraries/serialize.h"
-#include "libraries/pus_services/pus_service1.h"
-#include "libraries/pus_services/pus_service3.h"
-#include "libraries/event_list.h"
+#include "service_libraries/tc_ccsds_pus_format.h"
+#include "service_libraries/tm_ccsds_pus_format.h"
+#include "service_libraries/serialize.h"
+#include "service_libraries/pus_services/pus_service1.h"
+#include "service_libraries/pus_services/pus_service3.h"
+#include "service_libraries/event_list.h"
 #include "resources/system_data_pool.h"
 
 #define max_num_pmon_ids 8

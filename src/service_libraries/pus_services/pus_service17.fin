@@ -2,8 +2,8 @@
 PUS SERVICE 17 : TEST
 */
 
-import libraries.tm_ccsds_pus_format;
-import libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import service_libraries.tc_ccsds_pus_format;
 
 function build_tm_17_2(tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16) {

@@ -4,8 +4,8 @@
 #include <termina.h>
 
 #include "option.h"
-#include "libraries/tm_ccsds_pus_format.h"
-#include "libraries/tc_ccsds_pus_format.h"
+#include "service_libraries/tm_ccsds_pus_format.h"
+#include "service_libraries/tc_ccsds_pus_format.h"
 
 void build_tm_17_2(TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter);
 

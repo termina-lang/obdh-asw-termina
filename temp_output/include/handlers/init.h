@@ -5,7 +5,7 @@
 
 #include "option.h"
 #include "resources/uart.h"
-#include "libraries/pus_services/pus_service3.h"
+#include "service_libraries/pus_services/pus_service3.h"
 #include "resources/system_data_pool.h"
 
 typedef struct {

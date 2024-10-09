@@ -1,5 +1,5 @@
 
-#include "libraries/pus_services/pus_service17.h"
+#include "service_libraries/pus_services/pus_service17.h"
 
 void build_tm_17_2(TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter) {
     

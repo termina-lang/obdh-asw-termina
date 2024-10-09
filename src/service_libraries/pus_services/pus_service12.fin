@@ -2,12 +2,12 @@
 PUS SERVICE 12 : ON-BOARD MONITORING
 */
 
-import libraries.tc_ccsds_pus_format;
-import libraries.tm_ccsds_pus_format;
-import libraries.serialize;
-import libraries.pus_services.pus_service1;
-import libraries.pus_services.pus_service3;
-import libraries.event_list;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import service_libraries.serialize;
+import service_libraries.pus_services.pus_service1;
+import service_libraries.pus_services.pus_service3;
+import service_libraries.event_list;
 import resources.system_data_pool;
 
 
@@ -39,6 +39,41 @@ struct ParamLimitCheckDefinition {
     low_limit : u16;
 };
 
+interface PUSS12Iface {
+    procedure exec_tc (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
+};
+
+resource class PUSService12 provides PUSS12Iface {
+
+    pus_serv12_param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
+    pus_serv12_param_limit_check_definition : [ParamLimitCheckDefinition; max_num_pmon_ids];
+
+    procedure exec_tc (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+
+        var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
+        
+        if (subtype == 1){
+
+            self->exec12_1TC(tc_descriptor, tm_descriptor, tm_seq_counter);
+        } 
+        else if (subtype == 2){
+
+            self->exec12_2TC(tc_descriptor, tm_descriptor, tm_seq_counter);
+
+        } else if (subtype == 5){
+
+            self->exec12_5TC(tc_descriptor, tm_descriptor, tm_seq_counter);
+
+        } else {
+
+            //This is an error in acceptance, could be modeled as an event
+            /* If the acceptance process is correct, this point should not be reached */
+        }
+
+        return;
+    }
+     
+};
 
 function exec12_1TC(tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16,
                  param_mon_config_table: &mut [ParamMonitoringConfiguration; max_num_pmon_ids]){
@@ -135,32 +170,7 @@ function exec12_5TC(tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescri
 }
 
 
-function PUS_service_12_execTC (tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16,
-                                param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids],
-                                param_limit_check_definition : &mut [ParamLimitCheckDefinition; max_num_pmon_ids]){
 
-    var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
-    
-    if (subtype == 1){
-
-        exec12_1TC(tc_descriptor, tm_descriptor, tm_seq_counter, param_mon_config_table);
-    } 
-    else if (subtype == 2){
-
-        exec12_2TC(tc_descriptor, tm_descriptor, tm_seq_counter, param_mon_config_table);
-
-    } else if (subtype == 5){
-
-        exec12_5TC(tc_descriptor, tm_descriptor, tm_seq_counter, param_mon_config_table, param_limit_check_definition);
-
-    } else {
-
-        //This is an error in acceptance, could be modeled as an event
-        /* If the acceptance process is correct, this point should not be reached */
-    }
-
-    return;
-}
 
 
 function trigger_event(event_list : &mut EventList, RID: u16, PID: u16, PID_value: u16, limit: u16, res: &mut Result){

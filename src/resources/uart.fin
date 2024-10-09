@@ -1,4 +1,4 @@
-import libraries.queue_u8;
+import service_libraries.queue_u8;
 
 //#[packed]
 struct UARTRegs {
@@ -55,38 +55,38 @@ resource class UARTDriver provides
     }
 
 
-    method enable_TX(&mut self) {
+    method enable_TX(&priv self) {
         let riscv_uart_txe : u32 = 0x00000002 : u32;
         self->registers.control = self->registers.control | riscv_uart_txe;
         return;
         
     }
 
-    method enable_RX(&mut self) {
+    method enable_RX(&priv self) {
         let riscv_uart_rxe : u32 = 0x00000001 : u32;
         self->registers.control = self->registers.control | riscv_uart_rxe;
         return;
     }
 
-    method enable_RI(&mut self) {
+    method enable_RI(&priv self) {
         let riscv_uart_ri : u32 = 0x00000004 : u32;
         self->registers.control = self->registers.control | riscv_uart_ri;
         return;
     }
 
-    method enable_TI(&mut self) {
+    method enable_TI(&priv self) {
         let riscv_uart_ti : u32 = 0x00000008 : u32;
         self->registers.control = self->registers.control | riscv_uart_ti;
         return;
     }
 
-    method disable_TF(&mut self) {
+    method disable_TF(&priv self) {
         let riscv_uart_tf : u32 = 0xFFFFFCFF : u32;
         self->registers.control = self->registers.control & riscv_uart_tf;
         return;
     }
 
-    method disable_RF(&mut self) {
+    method disable_RF(&priv self) {
         let riscv_uart_rf : u32 = 0xFFFFFBFF : u32;
         self->registers.control = self->registers.control & riscv_uart_rf;
         return;

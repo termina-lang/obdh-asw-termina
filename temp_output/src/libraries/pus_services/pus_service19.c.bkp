@@ -1,5 +1,5 @@
 
-#include "libraries/pus_services/pus_service19.h"
+#include "service_libraries/pus_services/pus_service19.h"
 
 _Bool get_event_action_config(uint16_t evID, size_t * index, _Bool * enabled,
                               const EventActionConfig event_action_config_table[max_event_action_definitions]) {

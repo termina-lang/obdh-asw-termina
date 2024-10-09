@@ -1,0 +1,22 @@
+const tm_list_max_length : usize = 16;
+
+struct TMList {
+    tm_list : [TMDescriptorT; tm_list_max_length];
+    tm_number : usize;
+};
+
+function add_tm (list: &mut TMList, new_tm: &mut TMDescriptorT) -> Result {
+
+    var full: bool = (list->tm_number == tm_list_max_length);
+    var result: Result = Result::Ok;
+
+    if (false == full) {
+
+        list->tm_list[list->tm_number] = *new_tm;
+        list->tm_number = list->tm_number + 1;
+
+    } else {
+        result = Result::Error;
+    }
+    return result;
+}

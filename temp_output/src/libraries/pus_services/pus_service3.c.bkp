@@ -1,5 +1,5 @@
 
-#include "libraries/pus_services/pus_service3.h"
+#include "service_libraries/pus_services/pus_service3.h"
 
 _Bool get_SIDindex(const HKConfiguration hk_config_table[max_num_of_SIDs],
                    uint8_t SID, size_t * index) {

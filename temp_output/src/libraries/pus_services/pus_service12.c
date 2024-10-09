@@ -1,5 +1,5 @@
 
-#include "libraries/pus_services/pus_service12.h"
+#include "service_libraries/pus_services/pus_service12.h"
 
 void exec12_1TC(const TCDescriptorT * tc_descriptor,
                 TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter,

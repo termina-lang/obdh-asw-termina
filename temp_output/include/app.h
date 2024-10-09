@@ -2,28 +2,6 @@
 #define __APP_H__
 
 #include <termina.h>
-
-#include "option.h"
-#include "libraries/pus_services/pus_service17.h"
-#include "libraries/pus_services/pus_service19.h"
-#include "libraries/pus_services/pus_service1.h"
-#include "libraries/pus_services/pus_service3.h"
-#include "libraries/pus_services/pus_service5.h"
-#include "tasks/hkfdirmng.h"
-#include "libraries/tc_ccsds_pus_format.h"
-#include "handlers/init.h"
-#include "resources/uart.h"
-#include "libraries/queue_u8.h"
-#include "libraries/event_list.h"
-#include "resources/system_data_pool.h"
-#include "tasks/icu_manager.h"
-
-extern PeriodicTimer hk_fdir_timer;
-
-extern _Atomic uint16_t system_data_pool;
-
-extern UARTDriver uart_drv;
-
-extern Init init;
+#include "resources/tm_counter.h"
 
 #endif

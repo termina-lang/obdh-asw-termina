@@ -1,0 +1,6 @@
+app-file: app
+app-folder: app
+name: obdhlab-termina 
+output-folder: temp_output
+platform: rtems5-noel-spike
+source-modules: src

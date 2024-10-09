@@ -1,15 +1,15 @@
 import resources.uart;
-import libraries.tm_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
 
 
 task class TMChannel {
 
     uart : access CharDevSend;
-    tm_message_queue_input : in dyn TMDescriptorT triggers send_tm;
+    tm_message_queue_input : in box TMDescriptorT triggers send_tm;
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
 
     
-   action send_tm(&mut self, tm_descriptor: dyn TMDescriptorT) -> Result {
+   action send_tm(&priv self, tm_descriptor: box TMDescriptorT) -> Result {
 
         var queue_state : CharDevResult = CharDevResult::Success;
 

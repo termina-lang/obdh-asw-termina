@@ -4,12 +4,12 @@
 #include <termina.h>
 
 #include "option.h"
-#include "libraries/tc_ccsds_pus_format.h"
-#include "libraries/tm_ccsds_pus_format.h"
-#include "libraries/pus_services/pus_service17.h"
-#include "libraries/pus_services/pus_service3.h"
-#include "libraries/pus_services/pus_service12.h"
-#include "libraries/pus_services/pus_service5.h"
+#include "service_libraries/tc_ccsds_pus_format.h"
+#include "service_libraries/tm_ccsds_pus_format.h"
+#include "service_libraries/pus_services/pus_service17.h"
+#include "service_libraries/pus_services/pus_service3.h"
+#include "service_libraries/pus_services/pus_service12.h"
+#include "service_libraries/pus_services/pus_service5.h"
 
 void PUS_prio_exec_tc(const TCDescriptorT * tc_descriptor,
                       TMDescriptorT * tm_descriptor, uint16_t tm_seq_counter);

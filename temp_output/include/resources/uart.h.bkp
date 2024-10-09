@@ -4,7 +4,7 @@
 #include <termina.h>
 
 #include "option.h"
-#include "libraries/queue_u8.h"
+#include "service_libraries/queue_u8.h"
 
 typedef struct {
     uint32_t data;

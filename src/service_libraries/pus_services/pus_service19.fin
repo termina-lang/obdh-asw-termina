@@ -2,11 +2,11 @@
 PUS SERVICE 19 : EVENT-ACTION
 */
 
-import libraries.pus_services.pus_service5;
-import libraries.pus_services.pus_service1;
-import libraries.serialize;
-import libraries.tc_ccsds_pus_format;
-import libraries.tm_ccsds_pus_format;
+import service_libraries.pus_services.pus_service5;
+import service_libraries.pus_services.pus_service1;
+import service_libraries.serialize;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
 
 
 const max_event_action_definitions : usize = 16;

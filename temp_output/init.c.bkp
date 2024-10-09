@@ -3,27 +3,27 @@
 
 #include "app.h"
 
-#include "libraries/event_list.h"
+#include "service_libraries/event_list.h"
 
-#include "libraries/pus_services/pus_service1.h"
+#include "service_libraries/pus_services/pus_service1.h"
 
-#include "libraries/pus_services/pus_service12.h"
+#include "service_libraries/pus_services/pus_service12.h"
 
-#include "libraries/pus_services/pus_service128.h"
+#include "service_libraries/pus_services/pus_service128.h"
 
-#include "libraries/pus_services/pus_service19.h"
+#include "service_libraries/pus_services/pus_service19.h"
 
-#include "libraries/pus_services/pus_service2.h"
+#include "service_libraries/pus_services/pus_service2.h"
 
-#include "libraries/pus_services/pus_service3.h"
+#include "service_libraries/pus_services/pus_service3.h"
 
-#include "libraries/pus_services/pus_service5.h"
+#include "service_libraries/pus_services/pus_service5.h"
 
-#include "libraries/pus_services/pus_service9.h"
+#include "service_libraries/pus_services/pus_service9.h"
 
-#include "libraries/queue_u8.h"
+#include "service_libraries/queue_u8.h"
 
-#include "libraries/tc_ccsds_pus_format.h"
+#include "service_libraries/tc_ccsds_pus_format.h"
 
 #include "resources/system_data_pool.h"
 

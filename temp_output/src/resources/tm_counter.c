@@ -1,7 +1,7 @@
 
 #include "resources/tm_counter.h"
 
-void TMCounter__get_next_tm_count(void * const __this, uint16_t * count) {
+void TMCounter__get_next_tm_count(void * const __this, uint16_t * const count) {
     
     TMCounter * self = (TMCounter *)__this;
 

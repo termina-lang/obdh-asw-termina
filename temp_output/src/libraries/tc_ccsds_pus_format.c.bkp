@@ -1,5 +1,5 @@
 
-#include "libraries/tc_ccsds_pus_format.h"
+#include "service_libraries/tc_ccsds_pus_format.h"
 
 uint16_t get_packet_id(const uint8_t tc_bytes[max_tc_size]) {
     

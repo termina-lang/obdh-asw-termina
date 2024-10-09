@@ -4,15 +4,15 @@
 #include <termina.h>
 
 #include "option.h"
-#include "libraries/serialize.h"
-#include "libraries/tc_ccsds_pus_format.h"
-#include "libraries/tm_ccsds_pus_format.h"
-#include "libraries/crc.h"
-#include "libraries/pus_services/pus_service17.h"
-#include "libraries/pus_services/pus_service1.h"
-#include "libraries/pus_services/pus_service128.h"
-#include "libraries/pus_services/pus_service2.h"
-#include "libraries/pus_services/pus_service9.h"
+#include "service_libraries/serialize.h"
+#include "service_libraries/tc_ccsds_pus_format.h"
+#include "service_libraries/tm_ccsds_pus_format.h"
+#include "service_libraries/crc.h"
+#include "service_libraries/pus_services/pus_service17.h"
+#include "service_libraries/pus_services/pus_service1.h"
+#include "service_libraries/pus_services/pus_service128.h"
+#include "service_libraries/pus_services/pus_service2.h"
+#include "service_libraries/pus_services/pus_service9.h"
 #include "resources/tm_counter.h"
 
 typedef struct {

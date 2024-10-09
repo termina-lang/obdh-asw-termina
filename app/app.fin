@@ -5,22 +5,25 @@ import resources.uart;
 import tasks.icu_manager;
 
 */
-
-import libraries.pus_services.pus_service17;
-import libraries.pus_services.pus_service19;
-import libraries.pus_services.pus_service1;
-import libraries.pus_services.pus_service3;
-import libraries.pus_services.pus_service5;
+/*
+import service_libraries.pus_services.pus_service17;
+import service_libraries.pus_services.pus_service19;
+import service_libraries.pus_services.pus_service1;
+import service_libraries.pus_services.pus_service3;
+import service_libraries.pus_services.pus_service5;
 import tasks.hkfdirmng;
 import tasks.tc_rx;
 import tasks.tm_channel;
 import tasks.bkgtcexec;
-import libraries.tc_ccsds_pus_format;
+import service_libraries.tc_ccsds_pus_format;
 import handlers.init;
 import resources.uart;
-import libraries.queue_u8;
-import libraries.event_list;
+import service_libraries.queue_u8;
+import service_libraries.event_list;
 import resources.system_data_pool;
+import tasks.icu_manager;
+*/
+import service_libraries.pus_services.pus_service1;
 import tasks.icu_manager;
 
 
@@ -49,8 +52,8 @@ handler init : Init = {
 
 
 //channel byte_message_queue : MsgQueue<u8;10>;
-//channel tc_message_queue : MsgQueue<dyn TCDescriptorT;10>;
-//channel tm_message_queue : MsgQueue<dyn TMDescriptorT;10>;
+//channel tc_message_queue : MsgQueue<box TCDescriptorT;10>;
+//channel tm_message_queue : MsgQueue<box TMDescriptorT;10>;
 
 //resource tc_descriptor_pool : Pool<TCDescriptorT; 20>;
 /*

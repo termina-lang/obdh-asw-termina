@@ -1,0 +1,237 @@
+/*
+PUS SERVICE 3 : HOUSEKEEPING
+*/
+
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import service_libraries.pus_services.pus_service1;
+import service_libraries.serialize;
+import resources.system_data_pool;
+import service_libraries.tm_list;
+
+
+const max_num_of_SIDs : usize = 8;
+const max_params_per_SID : usize = 16;
+
+struct HKConfiguration {
+    enabled : bool;
+    SID : u8;
+    interval : u16;
+    interval_control : u16;
+    num_params : u8;
+    params_def : [u8; max_params_per_SID];
+};
+
+interface PUSS3Iface {
+
+    procedure do_hk (&mut self, tm_list : &mut TMList, result : &mut Result);    
+    procedure exec_tc (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
+
+
+};
+
+resource class PUSService3 provides PUSS3Iface {
+
+    hk_config_table : [HKConfiguration; max_num_of_SIDs];
+    system_data_pool : access AtomicArrayAccess<u16; SDP_num_params>; 
+
+
+    viewer get_SIDindex (&self, SID : u8, index : &mut usize)->bool{
+
+        var found : bool = false;
+
+        for i : usize in 0 .. max_num_of_SIDs while found == false {
+
+            if (SID == self->hk_config_table[i].SID){
+
+                *index = i;
+                found = true;
+            }
+        }
+        return found;
+
+    }
+
+    procedure enable_config (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16, new_enable_config : bool){
+
+        var index : usize = 0;
+        var SID : u8 = tc_descriptor->tc_bytes[10];
+
+        if (get_SIDindex(&(*hk_config_table), SID, &mut index)){
+
+            self->hk_config_table[index].enabled = new_enable_config;
+            self->hk_config_table[index].interval_control = 0;
+            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+
+        } else {
+
+            build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter, SID as u16, tc_descriptor);
+            
+        }    
+
+        return;
+    }
+
+
+    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+
+        self->enable_config(tc_descriptor, tm_descriptor, tm_seq_counter, true);
+
+        return;
+    }
+
+    procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+
+        self->enable_config(tc_descriptor, tm_descriptor, tm_seq_counter, false);
+
+        return;
+    }
+
+    procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+
+        var SID : u8 = tc_descriptor->tc_bytes[10];
+        var index : usize = 0;
+
+        if(self->get_SIDindex(SID, &mut index)){
+
+            self->hk_config_table[index].interval = deserialize_uint16(&(tc_descriptor->tc_bytes[11 : usize .. 13 : usize]));
+            //DESIGN DECISION : Óscar does not restart the control interval when receiving a TC[3,31]
+            self->hk_config_table[index].interval_control = 0;
+            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+
+        } else {
+
+            build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter, SID as u16, tc_descriptor);
+        }
+
+        return;
+    }
+
+
+    procedure exec_tc (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+
+        var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
+    
+        if (subtype == 5){
+
+            self->exec3_5TC(tc_descriptor, tm_descriptor, tm_seq_counter);
+        } 
+        else if (subtype == 6){
+
+            self->exec3_6TC(tc_descriptor, tm_descriptor, tm_seq_counter);
+
+        } else if (subtype == 31){
+
+            self->exec3_31TC(tc_descriptor, tm_descriptor, tm_seq_counter);
+
+        } else {
+
+            //This is an error in acceptance, could be modeled as an event
+            /* If the acceptance process is correct, this point should not be reached */
+        }
+
+        return;
+    }
+
+
+
+    viewer build_tm_3_25(&self, p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, index: usize, tm_list : &mut TMList) {
+
+        var tm_packet_header : CCSDSPUSTMPacketHeaderT =
+	                                     {packet_id = 0 : u16,
+	                                      packet_seq_ctrl = 0 : u16,
+	                                      packet_length = 0 : u16};
+	    var df_header : CCSDSPUSTMDFHeaderT =
+										{version = 0 : u8,
+	 									type = 0 : u8,
+	 									subtype = 0 : u8,
+	 									destinationID = 0 : u8};
+
+	    tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
+
+	    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+
+        //Check this calculation, I'm not sure it's correct
+	    tm_packet_header.packet_length = 4 + 2*(self->hk_config_table[index].num_params as u16); //Packet length dependent on SID
+
+	    df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
+	    df_header.type = 3 : u8;
+	    df_header.subtype = 25 : u8;
+	    df_header.destinationID = 0x78 : u8;
+
+	    ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+
+	    p_tm_descriptor->tm_bytes[10 : usize] = self->hk_config_table[index].SID;
+
+        var PID : usize = 0;
+        var SDP_value : u16 = 0;
+
+        for j : usize in 0 .. max_params_per_SID while (j < (self->hk_config_table[index].num_params as usize)) {
+
+            PID = self->hk_config_table[index].params_def[j] as usize;
+            self->system_data_pool.load_index(PID, &mut SDP_value);
+            serialize_uint16(SDP_value, &mut (p_tm_descriptor->tm_bytes[11 + j..13 + j]));
+    
+        }
+
+	    // Calculate p_tm_descriptor->tm_num_bytes
+	    p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
+
+        add_tm(tm_list, p_tm_descriptor);
+
+
+	    return;
+    }
+    
+
+    procedure do_hk (&mut self, tm_list : &mut TMList, result : &mut Result){
+
+        var res : Result = Result::Ok;
+
+        for i : usize in 0 .. max_num_of_SIDs {
+
+            if (self->hk_config_table[i].enabled == true){
+
+                self->hk_config_table[i].interval_control = self->hk_config_table[i].interval_control + 1;
+
+                if (self->hk_config_table[i].interval_control == self->hk_config_table[i].interval){
+
+                    self->hk_config_table[i].interval_control = 0;
+
+                    var tm_descriptor : Option<box TMDescriptorT> = None;
+                    self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
+                    match tm_descriptor {
+
+                        case Some(descriptor) => {
+
+                        var tm_count : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                        self->build_tm_3_25(&mut descriptor, tm_count, i, tm_list);
+                   
+                        }
+                        case None => {
+                            *result = Result::Error;
+                        }
+                    }       
+                }
+            }
+        }
+
+        return;
+    }
+
+
+
+};
+
+
+
+
+
+
+
+
+
+

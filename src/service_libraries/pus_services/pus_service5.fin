@@ -2,11 +2,11 @@
 PUS SERVICE 5 : EVENT REPORTING
 */
 
-import libraries.tc_ccsds_pus_format;
-import libraries.tm_ccsds_pus_format;
-import libraries.serialize;
-import libraries.pus_services.pus_service1;
-import libraries.event_list;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import service_libraries.serialize;
+import service_libraries.pus_services.pus_service1;
+import service_libraries.event_list;
 
 const informative_RIDs : u16 = 3;
 const low_severity_anomaly_RIDs : u16 = 4;

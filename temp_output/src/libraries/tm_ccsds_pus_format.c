@@ -1,5 +1,5 @@
 
-#include "libraries/tm_ccsds_pus_format.h"
+#include "service_libraries/tm_ccsds_pus_format.h"
 
 uint16_t ccsds_pus_tm_build_packet_id(uint16_t apid) {
     

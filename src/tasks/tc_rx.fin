@@ -1,5 +1,5 @@
-import libraries.tc_ccsds_pus_format;
-import libraries.serialize;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.serialize;
 
 enum RXStatus {
     SyncBytesRx,
@@ -19,11 +19,11 @@ task class TCRXBottomHalfTask {
     telecommand : TCDescriptorT;
 
     byte_message_queue_input: in u8 triggers get_tc;
-    tc_message_queue_output: out dyn TCDescriptorT;
+    tc_message_queue_output: out box TCDescriptorT;
     a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
 
 
-    action get_tc (&mut self, data: u8) -> Result {
+    action get_tc (&priv self, data: u8) -> Result {
 
         var ret : Result = Result::Ok;
 
@@ -76,7 +76,7 @@ task class TCRXBottomHalfTask {
 
                     self->rx_status = RXStatus::SyncBytesRx;
 
-                    var tc_descriptor : Option<dyn TCDescriptorT> = None;
+                    var tc_descriptor : Option<box TCDescriptorT> = None;
                     self->a_tc_descriptor_pool.alloc(&mut tc_descriptor);
 
                     match tc_descriptor {

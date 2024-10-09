@@ -3,77 +3,23 @@
 
 #include <termina.h>
 
-#include "app.h"
-
-#include "libraries/event_list.h"
-
-#include "libraries/pus_services/pus_service1.h"
-
-#include "libraries/pus_services/pus_service12.h"
-
-#include "libraries/pus_services/pus_service128.h"
-
-#include "libraries/pus_services/pus_service19.h"
-
-#include "libraries/pus_services/pus_service2.h"
-
-#include "libraries/pus_services/pus_service3.h"
-
-#include "libraries/pus_services/pus_service5.h"
-
-#include "libraries/pus_services/pus_service9.h"
-
-#include "libraries/queue_u8.h"
-
-#include "libraries/tc_ccsds_pus_format.h"
-
-#include "resources/system_data_pool.h"
-
-#include "resources/uart.h"
-
-extern void __termina_app__init_globals();
-
-_Atomic uint16_t system_data_pool[SDP_num_params];
-
-void __rtems_app__inital_event(TimeVal * current) {
-    
-    Init * self = &init;
-
-    Result result;
-
-    result.__variant = Result__Ok;
-
-    result = Init__init(self, *current);
-
-    if (result.__variant != Result__Ok) {
-        rtems_shutdown_executive(1);
-    }
-
-    return;
-
-}
+void __termina_app__init_globals();
 
 static void __rtems_app__enable_protection() {
     
     Result result;
-
     result.__variant = Result__Ok;
-
-    uart_drv.__resource.lock = __RTEMSResourceLock__None;
 
 }
 
 static void __rtems_app__init_globals() {
     
     Result result;
-
     result.__variant = Result__Ok;
-
-    uart_drv.__resource.lock = __RTEMSResourceLock__None;
 
 }
 
-static void __rtems_app__install_emitters(TimeVal * current) {
+static void __rtems_app__install_emitters(TimeVal * const current) {
     
     rtems_status_code status = RTEMS_SUCCESSFUL;
 
@@ -94,8 +40,6 @@ rtems_task Init(rtems_task_argument _ignored) {
     __termina_app__init_globals();
 
     __rtems_app__init_globals();
-
-    __rtems_app__inital_event(&current);
 
     __rtems_app__enable_protection();
 

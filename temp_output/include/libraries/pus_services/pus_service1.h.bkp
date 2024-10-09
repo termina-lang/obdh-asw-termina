@@ -4,10 +4,10 @@
 #include <termina.h>
 
 #include "option.h"
-#include "libraries/tc_ccsds_pus_format.h"
-#include "libraries/tm_ccsds_pus_format.h"
-#include "libraries/crc.h"
-#include "libraries/serialize.h"
+#include "service_libraries/tc_ccsds_pus_format.h"
+#include "service_libraries/tm_ccsds_pus_format.h"
+#include "service_libraries/crc.h"
+#include "service_libraries/serialize.h"
 
 typedef enum {
     TCAcceptationStatus__Accepted,

@@ -1,109 +1,151 @@
-import libraries.serialize;
-import libraries.tc_ccsds_pus_format;
-import libraries.tm_ccsds_pus_format;
-import libraries.crc;
-import libraries.pus_services.pus_service17;
-import libraries.pus_services.pus_service1;
-import libraries.pus_services.pus_service128;
-import libraries.pus_services.pus_service2;
-import libraries.pus_services.pus_service9;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import service_libraries.pus_services.pus_service1;
+import service_libraries.pus_services.pus_service2;
+import service_libraries.pus_services.pus_service9;
+import service_libraries.pus_services.pus_service17;
+import service_libraries.pus_services.pus_service128;
 import resources.tm_counter;
 
 task class ICUManager {
 
-    tc_message_queue_input: in dyn TCDescriptorT triggers process_tc;
-    action_tc_message_queue_input: in dyn TCDescriptorT triggers process_action_tc;
+    tc_message_queue_input: in box TCDescriptorT triggers process_tc;
+    action_tc_message_queue_input: in box TCDescriptorT triggers process_action_tc;
     a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
-    hkfdir_message_queue_output: out dyn TCDescriptorT;
-    bkg_message_queue_output: out dyn TCDescriptorT;
-    tm_message_queue_output : out dyn TMDescriptorT; 
+    hkfdir_message_queue_output: out box TCDescriptorT;
+    bkg_message_queue_output: out box TCDescriptorT;
+    tm_message_queue_output : out box TMDescriptorT; 
     tm_counter: access TMCounterIface;
 
-    tc_status : TCStatus;
 
-    viewer PUS_prio_exec_tc (&self, tc_descriptor : & TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16){
+    current_tc : TCDescriptorT;
+    current_tc_status : TCStatus;
 
-        var tc_type : u8 = get_type(&(tc_descriptor->tc_bytes));
+    method PUS_prio_exec_tc (&priv self) -> Result {
 
-        if (tc_type == 17){
+        var ret : Result = Result::Ok;
 
-            PUS_service_17_execTC(tc_descriptor, tm_descriptor, tm_seq_counter);
-    /*
-        } else if (tc_type == 2){
+        var tm_descriptor : Option<box TMDescriptorT> = None;
+        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        
+        match tm_descriptor {
 
-            PUS_service_2_execTC(tc_descriptor, tm_descriptor, tm_seq_counter);
-    
-        } else if (tc_type == 9){
+            case Some(descriptor) => {
 
-            PUS_service_9_execTC(tc_descriptor, tm_descriptor, tm_seq_counter);
-    
-        } else if (tc_type == 128){
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
 
-            PUS_service_128_execTC(tc_descriptor, tm_descriptor, tm_seq_counter); */
-    
-        } else {
+                var tc_type : u8 = get_type(&(self->current_tc.tc_bytes));
 
-            //error
+                if (tc_type == 17){
+
+                    PUS_service_17_execTC(&(self->current_tc), &mut descriptor, tm_count);
+            
+                } /*else if (tc_type == 2){
+
+                    PUS_service_2_execTC(&(self->current_tc), &mut descriptor, tm_count);
+            
+                } else if (tc_type == 9){
+
+                    PUS_service_9_execTC(&(self->current_tc), &mut descriptor, tm_count);
+            
+                } else if (tc_type == 128){
+
+                    PUS_service_128_execTC(&(self->current_tc), &mut descriptor, tm_count); 
+                
+                }*/ else {
+
+                    ret = Result::Error;
+                }
+
+                self->tm_message_queue_output.send(descriptor);
+        
+            }
+            case None => {
+                ret = Result::Error;
+            }
         }
-    
-        return;
+        
+        return ret;
+    }
+
+    method mng_tc_acceptation (&priv self) -> Result {
+
+        var tm_descriptor : Option<box TMDescriptorT> = None;
+        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
+        var ret : Result = Result::Ok;
+
+        match tm_descriptor {
+
+            case Some(descriptor) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+                //generar TM(1,1)
+                build_tm_1_1(&mut descriptor, tm_count, &(self->current_tc));
+                self->tm_message_queue_output.send(descriptor);
+                        
+            }
+            case None => {
+                ret = Result::Error;
+            }
+        }
+
+        return ret;
+    }
+
+
+    method mng_tc_rejection (&priv self) -> Result {
+
+        var tm_descriptor : Option<box TMDescriptorT> = None;
+        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
+        var ret : Result = Result::Ok;
+
+            match tm_descriptor {
+
+                case Some(descriptor) => {
+
+                    var tm_count : u16 = 0 : u16;
+                    self->tm_counter.get_next_tm_count(&mut tm_count);
+                    //generar TM(1,2)
+                    build_tm_1_2(&(self->current_tc_status), &mut descriptor, tm_count, &(self->current_tc));
+                    self->tm_message_queue_output.send(descriptor);
+                
+                }
+                case None => {
+                    ret = Result::Error;
+                }
+            }
+        return ret;
     }
 
 
 
-    action process_tc(&mut self, tc_descriptor: dyn TCDescriptorT) -> Result {
+    action process_tc(&priv self, tc_descriptor: box TCDescriptorT) -> Result {
 
         var ret : Result = Result::Ok;
 
-        try_tc_acceptation(&mut (self->tc_status), &tc_descriptor);
+        self->current_tc = tc_descriptor;
+        self->current_tc_status = try_tc_acceptation(&tc_descriptor);
 
-        match self->tc_status.acceptation_status {
+        match self->current_tc_status.acceptation_status {
 
             case Accepted => {
 
-                var tm_descriptor : Option<dyn TMDescriptorT> = None;
-                self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+                ret = self->mng_tc_acceptation();
 
-                    match tm_descriptor {
 
-                        case Some(descriptor) => {
-
-                            var tm_count : u16 = 0 : u16;
-                            self->tm_counter.get_next_tm_count(&mut tm_count);
-                            //generar TM(1,1)
-                            build_tm_1_1(&mut descriptor, tm_count, &tc_descriptor);
-                            self->tm_message_queue_output.send(descriptor);
-                        
-                            }
-                            case None => {
-                                //error
-                            }
-                    }
-
-                match self->tc_status.execution_status {
+                match self->current_tc_status.execution_status {
 
                     case ExecCtrlReboot => {
 
-                        var tm_descriptor2 : Option<dyn TMDescriptorT> = None;
-                        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                        //Ejecutar tc como prioritario
+                        ret = self->PUS_prio_exec_tc();
                         self->a_tc_descriptor_pool.free(tc_descriptor);
-
-                        match tm_descriptor2 {
-
-                            case Some(descriptor) => {
-
-                            var tm_count : u16 = 0 : u16;
-                            self->tm_counter.get_next_tm_count(&mut tm_count);
-                            //Ejecutar tc como prioritario
-                            self->PUS_prio_exec_tc(&tc_descriptor,&mut descriptor, tm_count);
-                            self->tm_message_queue_output.send(descriptor);
-                        
-                            }
-                            case None => {
-                                //error
-                            }
-                        }   
+                           
                     }
                     case  ExecCtrlHK_FDIRTC => {
                     
@@ -115,128 +157,57 @@ task class ICUManager {
                     }
                     case ExecCtrlPrioTC => {
 
-                        var tm_descriptor3 : Option<dyn TMDescriptorT> = None;
-                        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor3);
+                        //Ejecutar tc como prioritario
+                        ret = self->PUS_prio_exec_tc();
                         self->a_tc_descriptor_pool.free(tc_descriptor);
-
-                        match tm_descriptor3 {
-
-                            case Some(descriptor) => {
-
-                            var tm_count : u16 = 0 : u16;
-                            self->tm_counter.get_next_tm_count(&mut tm_count);
-                            //Ejecutar tc como prioritario
-                            self->PUS_prio_exec_tc(&tc_descriptor,&mut descriptor, tm_count);
-                            self->tm_message_queue_output.send(descriptor);
-                        
-                            }
-                            case None => {
-                                //error
-                            }
-                        }
                     }
 
-                }
-
-                
-                
+                }    
             }
             case Rejected => { 
 
-                var tm_descriptor : Option<dyn TMDescriptorT> = None;
-                self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-                    match tm_descriptor {
-
-                        case Some(descriptor) => {
-
-                            var tm_count : u16 = 0 : u16;
-                            self->tm_counter.get_next_tm_count(&mut tm_count);
-                            //generar TM(1,2)
-                            build_tm_1_2(&(self->tc_status), &mut descriptor, tm_count, &tc_descriptor);
-                            self->tm_message_queue_output.send(descriptor);
-                        
-                        }
-                        case None => {
-                            //error
-                        }
-                    }
-                    self->a_tc_descriptor_pool.free(tc_descriptor);
+                ret = self->mng_tc_rejection();
+                self->a_tc_descriptor_pool.free(tc_descriptor);
             }
         }
-        
-    
         return ret;            
     }
 
 
-action process_action_tc(&mut self, tc_descriptor: dyn TCDescriptorT) -> Result {
+    action process_action_tc(&priv self, tc_descriptor: box TCDescriptorT) -> Result {
 
-    var ret : Result = Result::Ok;
+        var ret : Result = Result::Ok;
 
-    var execution_status : TCExecutionCtrl = handle_tc(&tc_descriptor);
+        self->current_tc = tc_descriptor;
+        var execution_status : TCExecutionCtrl = handle_tc(&tc_descriptor);
 
-    match execution_status {
+        match execution_status {
 
-        case ExecCtrlReboot => {
+            case ExecCtrlReboot => {
 
-            var tm_descriptor2 : Option<dyn TMDescriptorT> = None;
-            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
-            self->a_tc_descriptor_pool.free(tc_descriptor);
-
-            match tm_descriptor2 {
-
-                case Some(descriptor) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
                 //Ejecutar tc como prioritario
-                self->PUS_prio_exec_tc(&tc_descriptor,&mut descriptor, tm_count);
-                self->tm_message_queue_output.send(descriptor);
-            
-                }
-                case None => {
-                    //error
-                }
-            }   
-        }
-        case  ExecCtrlHK_FDIRTC => {
-        
-            self->hkfdir_message_queue_output.send(tc_descriptor);
-        }
-        case ExecCtrlBKGTC => {
-            
-            self->bkg_message_queue_output.send(tc_descriptor);
-        }
-        case ExecCtrlPrioTC => {
-
-            var tm_descriptor3 : Option<dyn TMDescriptorT> = None;
-            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor3);
-            self->a_tc_descriptor_pool.free(tc_descriptor);
-
-            match tm_descriptor3 {
-
-                case Some(descriptor) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
-                //Ejecutar tc como prioritario
-                self->PUS_prio_exec_tc(&tc_descriptor,&mut descriptor, tm_count);
-                self->tm_message_queue_output.send(descriptor);
-            
-                }
-                case None => {
-                    //error
-                }
+                ret = self->PUS_prio_exec_tc();
+                self->a_tc_descriptor_pool.free(tc_descriptor); 
             }
+            case  ExecCtrlHK_FDIRTC => {
+            
+                self->hkfdir_message_queue_output.send(tc_descriptor);
+            }
+            case ExecCtrlBKGTC => {
+                
+                self->bkg_message_queue_output.send(tc_descriptor);
+            }
+            case ExecCtrlPrioTC => {
+
+            //Ejecutar tc como prioritario
+                ret = self->PUS_prio_exec_tc();
+                self->a_tc_descriptor_pool.free(tc_descriptor); 
+            }
+
         }
-
-    }
-    
-    return ret;            
-}
-
         
+        return ret;            
+    }
 
 
 };

@@ -1,5 +1,5 @@
 
-#include "libraries/pus_services/pus_service1.h"
+#include "service_libraries/pus_services/pus_service1.h"
 
 _Bool is_crc_valid(const TCDescriptorT * tc_descriptor) {
     

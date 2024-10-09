@@ -1,4 +1,4 @@
-import libraries.tc_ccsds_pus_format;
+import service_libraries.tc_ccsds_pus_format;
 
 function cal_crc_16 (data : & [u8; max_tc_size], nbytes : usize) -> u16  {
     

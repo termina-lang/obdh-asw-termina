@@ -2,8 +2,8 @@
 #define __TASKS__TC_RX_H__
 
 #include <termina.h>
-#include "libraries/tc_ccsds_pus_format.h"
-#include "libraries/serialize.h"
+#include "service_libraries/tc_ccsds_pus_format.h"
+#include "service_libraries/serialize.h"
 
 typedef enum {
     RXStatus__SyncBytesRx,
