@@ -1,0 +1,22 @@
+
+task class HouseKeeping {
+
+    hk_fdir_timer_ev : sink TimeVal triggers do_hk_fdir;
+    event_list : EventList; //Maybe it is better to create an event list for each do_hkfdir execution
+
+    PUS_service_3 : access PUSS3Iface;
+    PUS_service_12 : access PUSS12Iface;
+    PUS_service_5 : access PUSS5Iface;
+    //PUS_service_19 : access PUSS19Iface; //Under construction
+
+    action do_hk_fdir(&priv self, _current_time : TimeVal) -> Result {
+
+        var res : Result = Result::Ok;
+
+        res = self->PUS_service_3->do_hk(&mut res);
+        res = self->PUS_service_12->do_monitoring(&mut self->event_list);
+        res = self->pus_serv5_build_event_list_tms();
+
+        return res;
+    } 
+}

@@ -21,8 +21,8 @@ task class HK_FDIR_Manager {
 
     
     
-    event_list : EventList;
-    pus_serv5_RID_enable_config : [u32; 4];
+    event_list : EventList; //Maybe it is better to create an event list for each do_hkfdir execution
+    
     pus_serv19_event_action_config : [EventActionConfig; max_event_action_definitions];
     pus_serv19_event_action_packets : [TCDescriptorT; max_event_action_definitions];
     //pus_serv19_priority_indexes : [usize; max_event_action_definitions];
@@ -44,130 +44,13 @@ task class HK_FDIR_Manager {
     system_data_pool : access AtomicArrayAccess<u16; SDP_num_params>; 
     tm_counter : access TMCounterIface;
     PUS_service_3 : access PUSS3Iface;
+    PUS_service_12 : access PUSS12Iface;
+    PUS_service_5 : access PUSS5Iface;
 
     tm_message_queue_output : out box TMDescriptorT;
     action_tc_message_queue_output : out box TCDescriptorT;
 
     
-
-    method pus_serv12_do_monitoring (&priv self) -> Result {
-
-        var res : Result = Result::Ok;
-
-        for i : usize in 0 .. max_num_pmon_ids {
-
-            if(self->pus_serv12_param_mon_config_table[i].enabled == true){
-
-                var PID : u16 = self->pus_serv12_param_mon_config_table[i].PID;
-                var SDP_value : u16 = 0;
-                self->system_data_pool.load_index(PID as usize, &mut SDP_value);
-
-                if(self->pus_serv12_param_mon_config_table[i].interval_control >= self->pus_serv12_param_mon_config_table[i].interval){
-
-                    self->pus_serv12_param_mon_config_table[i].interval_control = 0;
-
-                    if(self->pus_serv12_param_mon_config_table[i].state is CheckState::MonitorUnselected == false){
-
-                        if (self->pus_serv12_param_mon_config_table[i].state is CheckState::MonitorAboveHighLimit == false) &&
-                            (self->pus_serv12_param_mon_config_table[i].state is CheckState::MonitorBelowLowLimit== false) {
-
-                            if (SDP_value > self->pus_serv12_param_limit_check_definition[i].high_limit){
-
-                                trigger_event(&mut (self->event_list), self->pus_serv12_param_limit_check_definition[i].high_limit_rid, PID, SDP_value,
-                                        self->pus_serv12_param_limit_check_definition[i].high_limit, &mut res);
-                                var updated_state : CheckState = CheckState::MonitorAboveHighLimit;
-                                update_state(&mut (self->pus_serv12_param_mon_config_table), i, updated_state);
-                            
-                            } else if (SDP_value < self->pus_serv12_param_limit_check_definition[i].low_limit){
-
-                                trigger_event(&mut (self->event_list), self->pus_serv12_param_limit_check_definition[i].low_limit_rid, PID, SDP_value,
-                                        self->pus_serv12_param_limit_check_definition[i].low_limit, &mut res);
-                                var updated_state : CheckState = CheckState::MonitorBelowLowLimit;
-                                update_state(&mut (self->pus_serv12_param_mon_config_table), i, updated_state);
-
-                            } else {
-
-                                if (self->pus_serv12_param_mon_config_table[i].state is CheckState::MonitorUnchecked){
-
-                                    var updated_state : CheckState = CheckState::MonitorWithinLimits;
-                                    update_state(&mut (self->pus_serv12_param_mon_config_table), i, updated_state);
-
-                                }
-                            }
-                        } else {
-
-                        if (SDP_value < self->pus_serv12_param_limit_check_definition[i].high_limit) &&
-                            (SDP_value > self->pus_serv12_param_limit_check_definition[i].low_limit){
-
-                                var updated_state : CheckState = CheckState::MonitorWithinLimits;
-                                update_state(&mut (self->pus_serv12_param_mon_config_table), i, updated_state);
-                            }
-                        }
-                    } else {
-
-                        self->pus_serv12_param_mon_config_table[i].interval_control = self->pus_serv12_param_mon_config_table[i].interval_control + 1;
-                    }
-                }
-
-            }
-
-        }
-
-        return res;   
-    }
-
-
-    method pus_serv5_build_event_list_tms(&priv self) -> Result {
-
-        var res : Result = Result::Ok;
-
-        for i : usize in 0 .. max_num_events while (i < self->event_list.num_events) {
-
-            var event_info : Option<EventInfo> = None;
-
-            get_event_info(&(self->event_list), i, &mut event_info);
-
-            match event_info {
-                
-                case Some(event) => {
-
-                    if(is_RID_enabled(event.ev_RID, &(self->pus_serv5_RID_enable_config))){
-
-                        var index : usize = get_RID_enable_config_index(event.ev_RID);
-
-                        if (index < 4){
-
-                            var tm_descriptor : Option<box TMDescriptorT> = None;
-                            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-                            match tm_descriptor {
-
-                                case Some(descriptor) => {
-
-                                    var tm_count : u16 = 0 : u16;
-                                    self->tm_counter.get_next_tm_count(&mut tm_count);
-
-                                    build_tm_5_x(&mut descriptor, tm_count, &event, index);
-                                    self->tm_message_queue_output.send(descriptor);
-                                }
-                                case None => {
-                                    res = Result::Error;
-                                }
-                            }
-
-                        }
-                    }
-                }
-                case None => {
-                    //no events extracted
-                }
-            }
-
-        }
-
-      return res; 
-
-    }
 
 
 method pus_serv19_manage_event_actions(&priv self) -> Result {
@@ -231,69 +114,12 @@ method pus_serv19_manage_event_actions(&priv self) -> Result {
 }
     
 
-    action do_hk_fdir(&priv self, _current_time : TimeVal) -> Result {
-
-        var res : Result = Result::Ok;
-
-        res = self->pus_serv3_do_hk();
-        res = self->pus_serv12_do_monitoring();
-        res = self->pus_serv5_build_event_list_tms();
-
-        return res;
-    } 
+   
 
 
-    action PUS_hk_fdir_exec_tc(&priv self, tc_descriptor : box TCDescriptorT) -> Result {
 
-        var res : Result = Result::Ok;
 
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-        match tm_descriptor {
-
-            case Some(descriptor) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
-    
-                var tc_type : u8 = get_type(&(tc_descriptor.tc_bytes));
-
-                if (tc_type == 3){
-
-                    PUS_service_3_execTC(&tc_descriptor, &mut descriptor, tm_count, &mut (self->pus_serv3_hk_config_table));
-    
-                } else if (tc_type == 5){
-
-                    PUS_service_5_execTC(&tc_descriptor, &mut descriptor, tm_count,  &mut (self->pus_serv5_RID_enable_config));
-
-                } else if (tc_type == 12){
-
-                    PUS_service_12_execTC(&tc_descriptor, &mut descriptor, tm_count,  &mut (self->pus_serv12_param_mon_config_table),  &mut(self->pus_serv12_param_limit_check_definition));
-
-                } else if (tc_type == 19){
-
-                    PUS_service_19_execTC(&tc_descriptor, &mut descriptor, tm_count,  &mut (self->pus_serv19_event_action_config),  &mut (self->pus_serv19_event_action_packets));
-
-                } else {
-
-                    //This is an error in acceptance, could be modeled as an event
-                }
-
-                self->tm_message_queue_output.send(descriptor);
-                        
-            }
-            case None => {
-                //error
-                res = Result::Error;
-            }
-
-        }
-
-        self->a_tc_descriptor_pool.free(tc_descriptor);
-
-        return res;
-    }
+        
 
         
     

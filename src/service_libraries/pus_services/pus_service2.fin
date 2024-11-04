@@ -1,1 +1,8 @@
 const num_params2 : usize = 64;
+
+
+/*Óscar tiene el servicio 2 no impementado, simplemente ejecuta un printf.
+Puesto que el objetivo es validar el código en la ARTYA7, creo que lo mejor sería implementar 
+el TC[2,1] que permita el encendido y apagado de dispositivos. Podemos simularlo mediante el encendido
+y apagado de LEDs*/
+

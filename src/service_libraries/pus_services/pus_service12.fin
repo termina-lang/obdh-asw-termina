@@ -6,7 +6,6 @@ import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.serialize;
 import service_libraries.pus_services.pus_service1;
-import service_libraries.pus_services.pus_service3;
 import service_libraries.event_list;
 import resources.system_data_pool;
 
@@ -40,135 +39,174 @@ struct ParamLimitCheckDefinition {
 };
 
 interface PUSS12Iface {
-    procedure exec_tc (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure do_monitoring (&mut self, event_list : &mut EventList);
+    procedure exec12_1TC(&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec12_2TC(&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec12_5TC(&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
 };
 
 resource class PUSService12 provides PUSS12Iface {
 
-    pus_serv12_param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
-    pus_serv12_param_limit_check_definition : [ParamLimitCheckDefinition; max_num_pmon_ids];
+    param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
+    param_limit_check_definition : [ParamLimitCheckDefinition; max_num_pmon_ids];
 
-    procedure exec_tc (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+    system_data_pool : access AtomicArrayAccess<u16; SDP_num_params>;
 
-        var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
-        
-        if (subtype == 1){
 
-            self->exec12_1TC(tc_descriptor, tm_descriptor, tm_seq_counter);
-        } 
-        else if (subtype == 2){
+    procedure do_monitoring (&mut self, event_list : &mut EventList) {
 
-            self->exec12_2TC(tc_descriptor, tm_descriptor, tm_seq_counter);
+        for i : usize in 0 .. max_num_pmon_ids {
 
-        } else if (subtype == 5){
+            if(self->param_mon_config_table[i].enabled == true){
 
-            self->exec12_5TC(tc_descriptor, tm_descriptor, tm_seq_counter);
+                var PID : u16 = self->param_mon_config_table[i].PID;
+                var SDP_value : u16 = 0;
+                self->system_data_pool.load_index(PID as usize, &mut SDP_value);
 
-        } else {
+                if(self->param_mon_config_table[i].interval_control >= self->param_mon_config_table[i].interval){
 
-            //This is an error in acceptance, could be modeled as an event
-            /* If the acceptance process is correct, this point should not be reached */
+                    self->param_mon_config_table[i].interval_control = 0;
+
+                    if(self->param_mon_config_table[i].state is CheckState::MonitorUnselected == false){
+
+                        if (self->param_mon_config_table[i].state is CheckState::MonitorAboveHighLimit == false) &&
+                            (self->param_mon_config_table[i].state is CheckState::MonitorBelowLowLimit== false) {
+
+                            if (SDP_value > self->param_limit_check_definition[i].high_limit){
+
+                                trigger_event(event_list, self->param_limit_check_definition[i].high_limit_rid, PID, SDP_value,
+                                        self->param_limit_check_definition[i].high_limit, &mut res);
+                                var updated_state : CheckState = CheckState::MonitorAboveHighLimit;
+                                update_state(&mut (self->param_mon_config_table), i, updated_state);
+                            
+                            } else if (SDP_value < self->param_limit_check_definition[i].low_limit){
+
+                                trigger_event(event_list, self->param_limit_check_definition[i].low_limit_rid, PID, SDP_value,
+                                        self->param_limit_check_definition[i].low_limit, &mut res);
+                                var updated_state : CheckState = CheckState::MonitorBelowLowLimit;
+                                update_state(&mut (self->param_mon_config_table), i, updated_state);
+
+                            } else {
+
+                                if (self->param_mon_config_table[i].state is CheckState::MonitorUnchecked){
+
+                                    var updated_state : CheckState = CheckState::MonitorWithinLimits;
+                                    update_state(&mut (self->param_mon_config_table), i, updated_state);
+
+                                }
+                            }
+                        } else {
+
+                        if (SDP_value < self->param_limit_check_definition[i].high_limit) &&
+                            (SDP_value > self->param_limit_check_definition[i].low_limit){
+
+                                var updated_state : CheckState = CheckState::MonitorWithinLimits;
+                                update_state(&mut (self->param_mon_config_table), i, updated_state);
+                            }
+                        }
+                    } else {
+
+                        self->param_mon_config_table[i].interval_control = self->param_mon_config_table[i].interval_control + 1;
+                    }
+                }
+
+            }
+
         }
 
-        return;
+        return;   
     }
-     
-};
 
-function exec12_1TC(tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16,
-                 param_mon_config_table: &mut [ParamMonitoringConfiguration; max_num_pmon_ids]){
+
+    procedure exec12_1TC(&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
                  
+        var PMONID : usize = tc_descriptor->tc_bytes[10] as usize;
 
-    var PMONID : usize = tc_descriptor->tc_bytes[10] as usize;
+        if (PMONID < max_num_pmon_ids) {
 
-    if (PMONID < max_num_pmon_ids) {
+            if(self->param_mon_config_table[PMONID].state is CheckState::MonitorUnselected == false){
 
-        if(param_mon_config_table[PMONID].state is CheckState::MonitorUnselected == false){
-
-            param_mon_config_table[PMONID].enabled = true;
-            param_mon_config_table[PMONID].interval_control = 0;
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
-        } else {
-
-            build_tm_1_8_tc_12_X_PMONIDundefined(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
-        }
-    } else {
-
-        build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
-    }
-    return;
-}
-
-
-
-function exec12_2TC(tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16,
-                 param_mon_config_table: &mut [ParamMonitoringConfiguration; max_num_pmon_ids]){
-
-    var PMONID : usize = tc_descriptor->tc_bytes[10] as usize;
-
-    if (PMONID < max_num_pmon_ids) {
-
-        if(param_mon_config_table[PMONID].state is CheckState::MonitorUnselected == false){
-
-            param_mon_config_table[PMONID].enabled = false;
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
-            
-        } else {
-
-            build_tm_1_8_tc_12_X_PMONIDundefined(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
-        }
-    } else {
-
-        build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
-    }
-    return;
-}
-
-
-
-function exec12_5TC(tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16,
-                 param_mon_config_table: &mut [ParamMonitoringConfiguration; max_num_pmon_ids],
-                 param_limit_check_definition : &mut [ParamLimitCheckDefinition; max_num_pmon_ids]){
-
-    var PMONID : usize = deserialize_uint16(&(tc_descriptor->tc_bytes[10..12])) as usize;
-
-    if (PMONID) < max_num_pmon_ids {
-
-        if(param_mon_config_table[PMONID].state is CheckState::MonitorUnselected) {
-
-            var PID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[12..14]));
-
-            if (PID as usize < SDP_num_params) {
-
-                param_mon_config_table[PMONID].interval = tc_descriptor->tc_bytes[14];
-                param_mon_config_table[PMONID].PID = PID;
-                param_mon_config_table[PMONID].interval_control = 0;
-                param_mon_config_table[PMONID].state = CheckState::MonitorUnchecked;
-
-                param_limit_check_definition[PMONID].low_limit = deserialize_uint16(&(tc_descriptor->tc_bytes[15..17]));
-                param_limit_check_definition[PMONID].low_limit_rid = deserialize_uint16(&(tc_descriptor->tc_bytes[17..19]));
-                param_limit_check_definition[PMONID].high_limit = deserialize_uint16(&(tc_descriptor->tc_bytes[19..21]));
-                param_limit_check_definition[PMONID].high_limit_rid = deserialize_uint16(&(tc_descriptor->tc_bytes[21..23]));
-
+                self->param_mon_config_table[PMONID].enabled = true;
+                self->param_mon_config_table[PMONID].interval_control = 0;
                 build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
-
             } else {
 
-                build_tm_1_8_tc_20_X_PIDnotvalid(tm_descriptor, tm_seq_counter, PID, tc_descriptor);
+                build_tm_1_8_tc_12_X_PMONIDundefined(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
             }
         } else {
 
-            build_tm_1_8_tc_12_X_PMONIDdefined(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
+            build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
         }
-    } else {
-
-        build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
+        return;
     }
 
-    return;
 
-}
+    function exec12_2TC(&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
 
+        var PMONID : usize = tc_descriptor->tc_bytes[10] as usize;
+
+        if (PMONID < max_num_pmon_ids) {
+
+            if(self->param_mon_config_table[PMONID].state is CheckState::MonitorUnselected == false){
+
+                self->param_mon_config_table[PMONID].enabled = false;
+                build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+                
+            } else {
+
+                build_tm_1_8_tc_12_X_PMONIDundefined(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
+            }
+        } else {
+
+            build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
+        }
+        return;
+    }
+
+
+    function exec12_5TC(&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
+
+        var PMONID : usize = deserialize_uint16(&(tc_descriptor->tc_bytes[10..12])) as usize;
+
+        if (PMONID) < max_num_pmon_ids {
+
+            if(self->param_mon_config_table[PMONID].state is CheckState::MonitorUnselected) {
+
+                var PID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[12..14]));
+
+                if (PID as usize < SDP_num_params) {
+
+                    self->param_mon_config_table[PMONID].interval = tc_descriptor->tc_bytes[14];
+                    self->param_mon_config_table[PMONID].PID = PID;
+                    self->param_mon_config_table[PMONID].interval_control = 0;
+                    self->param_mon_config_table[PMONID].state = CheckState::MonitorUnchecked;
+
+                    self->param_limit_check_definition[PMONID].low_limit = deserialize_uint16(&(tc_descriptor->tc_bytes[15..17]));
+                    self->param_limit_check_definition[PMONID].low_limit_rid = deserialize_uint16(&(tc_descriptor->tc_bytes[17..19]));
+                    self->param_limit_check_definition[PMONID].high_limit = deserialize_uint16(&(tc_descriptor->tc_bytes[19..21]));
+                    self->param_limit_check_definition[PMONID].high_limit_rid = deserialize_uint16(&(tc_descriptor->tc_bytes[21..23]));
+
+                    build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+
+                } else {
+
+                    build_tm_1_8_tc_20_X_PIDnotvalid(tm_descriptor, tm_seq_counter, PID, tc_descriptor);
+                }
+            } else {
+
+                build_tm_1_8_tc_12_X_PMONIDdefined(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
+            }
+        } else {
+
+            build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter, PMONID as u16, tc_descriptor);
+        }
+
+        return;
+
+    }
+
+     
+};
 
 
 
@@ -186,7 +224,7 @@ function trigger_event(event_list : &mut EventList, RID: u16, PID: u16, PID_valu
     serialize_uint16(limit, &mut (ev_info.ev_aux_data[4..6]));
 
     var result : ListResult = add_event(event_list, ev_info);
-
+    // Right now I am not doing anything with the result, but I could add a new state of non-triggerred. Ask Pablo
     if result is ListResult::ListFull {
 
         *res = Result::Error;

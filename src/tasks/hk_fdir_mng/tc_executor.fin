@@ -1,0 +1,136 @@
+
+
+task class PUSHKFDIRTCExcutor {
+
+    hkfdir_message_queue_input: in box TCDescriptorT triggers exec_tc;
+
+    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
+    a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
+    tm_channel: access TMChannelIface;
+    tm_counter : access TMCounterIface;
+    PUS_service_3 : access PUSS3Iface;
+    PUS_service_12 : access PUSS12Iface;
+    PUS_service_5 : access PUSS5Iface;
+    //PUS_service_19 : access PUSS19Iface; //Under construction
+
+    action exec_tc(&priv self, tc_descriptor : box TCDescriptorT)-> Result {
+
+        var res : Result = Result::Ok;
+
+        var tm_descriptor : Option<box TMDescriptorT> = None;
+        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
+        match tm_descriptor {
+
+            case Some(descriptor) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+    
+                var tc_type : u8 = get_type(&(tc_descriptor.tc_bytes));
+                var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
+
+                if (tc_type == 3){
+
+                    
+                    if (subtype == 5){
+
+                        self->PUS_service_3->exec3_5TC(tc_descriptor, &mut descriptor, tm_count);
+                    } 
+                    else if (subtype == 6){
+
+                        self->PUS_service_3->exec3_6TC(tc_descriptor, &mut descriptor, tm_count);
+
+                    } else if (subtype == 31){
+
+                        self->PUS_service_3->exec3_31TC(tc_descriptor, &mut descriptor, tm_count);
+
+                    } else {
+
+                        //This is an error in acceptance, could be modeled as an event
+                        /* If the acceptance process is correct, this point should not be reached */
+                    }
+
+    
+                } else if (tc_type == 5){
+
+                    if (subtype == 5){
+
+                        self->PUS_service_5->exec5_5TC(tc_descriptor, &mut descriptor, tm_count);
+                    } 
+                    else if (subtype == 6){
+
+                        self->PUS_service_5->exec5_6TC(tc_descriptor, &mut descriptor, tm_count);
+
+                    } else {
+
+                        //This is an error in acceptance, could be modeled as an event
+                        /* If the acceptance process is correct, this point should not be reached */
+                    }
+
+                } else if (tc_type == 12){
+
+                    if (subtype == 1){
+
+                        self->PUS_service_12->exec12_1TC(tc_descriptor, &mut descriptor, tm_count);
+                    } 
+                    else if (subtype == 2){
+
+                        self->PUS_service_12->exec12_2TC(tc_descriptor, &mut tm_descriptor, tm_count);
+
+                    } else if (subtype == 5){
+
+                        self->PUS_service_12->exec12_5TC(tc_descriptor, &mut tm_descriptor, tm_count);
+
+                    } else {
+
+                        //This is an error in acceptance, could be modeled as an event
+                        /* If the acceptance process is correct, this point should not be reached */
+                    }
+
+                } else if (tc_type == 19){
+
+                    if (subtype == 1){
+
+                        self->PUS_service_19->exec19_1TC(tc_descriptor, &mut descriptor, tm_count);
+                    } 
+                    else if (subtype == 2){
+
+                        self->PUS_service_19->exec19_2TC(tc_descriptor, &mut descriptor, tm_count);
+
+                    } else if (subtype == 4){
+
+                        self->PUS_service_19->exec19_4TC(tc_descriptor, &mut descriptor, tm_count);
+                    
+                    } else if (subtype == 5){
+
+                        self->PUS_service_19->exec19_5TC(tc_descriptor, &mut descriptor, tm_count);
+
+                    } else {
+
+                        //This is an error in acceptance, could be modeled as an event
+                        /* If the acceptance process is correct, this point should not be reached */
+                    }
+
+                } else {
+
+                    //This is an error in acceptance, could be modeled as an event
+                }
+
+                self->tm_channel.send_tm(descriptor); //This will have to be changed. TM_CHANNEL will be a resource
+                        
+            }
+            case None => {
+                //error
+                res = Result::Error;
+            }
+
+        }
+
+        self->a_tc_descriptor_pool.free(tc_descriptor);
+
+        return res;
+    }
+
+
+}

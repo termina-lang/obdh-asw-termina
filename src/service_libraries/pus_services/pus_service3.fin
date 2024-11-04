@@ -25,8 +25,9 @@ struct HKConfiguration {
 interface PUSS3Iface {
 
     procedure do_hk (&mut self, tm_list : &mut TMList, result : &mut Result);    
-    procedure exec_tc (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
-
+    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
 
 };
 
@@ -52,14 +53,15 @@ resource class PUSService3 provides PUSS3Iface {
 
     }
 
-    procedure enable_config (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16, new_enable_config : bool){
+
+    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
 
         var index : usize = 0;
         var SID : u8 = tc_descriptor->tc_bytes[10];
 
         if (get_SIDindex(&(*hk_config_table), SID, &mut index)){
 
-            self->hk_config_table[index].enabled = new_enable_config;
+            self->hk_config_table[index].enabled = true;
             self->hk_config_table[index].interval_control = 0;
             build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
 
@@ -67,24 +69,30 @@ resource class PUSService3 provides PUSS3Iface {
 
             build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter, SID as u16, tc_descriptor);
             
-        }    
-
-        return;
-    }
-
-
-    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
-
-        self->enable_config(tc_descriptor, tm_descriptor, tm_seq_counter, true);
+        }  
 
         return;
     }
 
     procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
 
-        self->enable_config(tc_descriptor, tm_descriptor, tm_seq_counter, false);
+        var index : usize = 0;
+        var SID : u8 = tc_descriptor->tc_bytes[10];
+
+        if (get_SIDindex(&(*hk_config_table), SID, &mut index)){
+
+            self->hk_config_table[index].enabled = false;
+            self->hk_config_table[index].interval_control = 0;
+            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+
+        } else {
+
+            build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter, SID as u16, tc_descriptor);
+            
+        }  
 
         return;
+
     }
 
     procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
@@ -102,32 +110,6 @@ resource class PUSService3 provides PUSS3Iface {
         } else {
 
             build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter, SID as u16, tc_descriptor);
-        }
-
-        return;
-    }
-
-
-    procedure exec_tc (&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
-
-        var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
-    
-        if (subtype == 5){
-
-            self->exec3_5TC(tc_descriptor, tm_descriptor, tm_seq_counter);
-        } 
-        else if (subtype == 6){
-
-            self->exec3_6TC(tc_descriptor, tm_descriptor, tm_seq_counter);
-
-        } else if (subtype == 31){
-
-            self->exec3_31TC(tc_descriptor, tm_descriptor, tm_seq_counter);
-
-        } else {
-
-            //This is an error in acceptance, could be modeled as an event
-            /* If the acceptance process is correct, this point should not be reached */
         }
 
         return;
@@ -177,14 +159,13 @@ resource class PUSService3 provides PUSS3Iface {
 	    // Calculate p_tm_descriptor->tm_num_bytes
 	    p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
-        add_tm(tm_list, p_tm_descriptor);
 
 
 	    return;
     }
     
 
-    procedure do_hk (&mut self, tm_list : &mut TMList, result : &mut Result){
+    procedure do_hk (&mut self, result : &mut Result){
 
         var res : Result = Result::Ok;
 
@@ -209,6 +190,7 @@ resource class PUSService3 provides PUSS3Iface {
                         self->tm_counter.get_next_tm_count(&mut tm_count);
 
                         self->build_tm_3_25(&mut descriptor, tm_count, i, tm_list);
+                        //Enviar telemetría a través del TM_CHANNEL
                    
                         }
                         case None => {
