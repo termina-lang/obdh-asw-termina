@@ -11,7 +11,7 @@ task class PUSHKFDIRTCExcutor {
     PUS_service_3 : access PUSS3Iface;
     PUS_service_12 : access PUSS12Iface;
     PUS_service_5 : access PUSS5Iface;
-    //PUS_service_19 : access PUSS19Iface; //Under construction
+    PUS_service_19 : access PUSS19Iface; 
 
     action exec_tc(&priv self, tc_descriptor : box TCDescriptorT)-> Result {
 

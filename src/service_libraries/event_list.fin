@@ -76,13 +76,10 @@ function extract_event(list: &mut EventList, ext_event: &mut Option<EventInfo>) 
     return;
 }
 
-//I thought about returning an Option<EventInfo> but it's not possible as it's not a simple type
-function get_event_info(list: &EventList, index: usize, event: &mut Option<EventInfo>) {
+function get_event_info(list: &EventList, index: usize, event: &mut EventInfo) {
     
-    *event = None;
-
     if (index < list->num_events) {
-        *event = Some(list->events[index]);
+        *event = list->events[index];
     }
 
     return;

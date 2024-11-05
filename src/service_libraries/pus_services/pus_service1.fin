@@ -9,7 +9,8 @@ import service_libraries.serialize;
 
 enum TCAcceptationStatus {
 	Accepted,
-	Rejected
+	Rejected,
+	Undefined
 };
 
 //Error types for TM[1,2] packets
@@ -18,11 +19,12 @@ enum TCErrorType {
 	APIDError,
 	SourceIDError,
 	TypeError,
-	SubTypeError
+	SubTypeError,
+	Undefined
 };
 
 enum TCExecutionCtrl {
-    ExecCtrlPrioTC, ExecCtrlReboot, ExecCtrlHK_FDIRTC, ExecCtrlBKGTC
+    ExecCtrlPrioTC, ExecCtrlReboot, ExecCtrlHK_FDIRTC, ExecCtrlBKGTC, Undefined
 };
 
 struct TCStatus {
@@ -113,9 +115,9 @@ function handle_tc(tc_descriptor: &TCDescriptorT) -> TCExecutionCtrl {
 
 function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
-	var status : TCStatus = {acceptation_status = TCAcceptationStatus::Accepted,
-								execution_status = TCExecutionCtrl::ExecCtrlPrioTC,
-								error_code = TCErrorType::CRCError};
+	var status : TCStatus = {acceptation_status = TCAcceptationStatus::Undefined,
+								execution_status = TCExecutionCtrl::Undefined,
+								error_code = TCErrorType::Undefined};
 
 	if (false == is_crc_valid(tc_descriptor)) {
 
@@ -134,9 +136,6 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
 	} else {
 
-		status.acceptation_status = TCAcceptationStatus::Rejected;
-		status.error_code = TCErrorType::TypeError;
-
 		var type : u8 = get_type(&(tc_descriptor->tc_bytes));
 		var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
 
@@ -148,11 +147,11 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 				status.execution_status = TCExecutionCtrl::ExecCtrlPrioTC;
 
 			} else {
+				status.acceptation_status = TCAcceptationStatus::Rejected;
 				status.error_code = TCErrorType::SubTypeError;
 			}
-        }
-			
-		if (17 : u8 == type) {
+
+        } else if (17 : u8 == type) {
 		
 			if (1 : u8 == subtype) {
 
@@ -160,11 +159,11 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 				status.execution_status = TCExecutionCtrl::ExecCtrlPrioTC;
 
 			} else {
+				status.acceptation_status = TCAcceptationStatus::Rejected;
 				status.error_code = TCErrorType::SubTypeError;
 			}
-        }
-			
-        if (3 : u8 == type) {
+
+        } else if (3 : u8 == type) {
 		
 			if (5 : u8 == subtype) {
 
@@ -187,11 +186,11 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
 			else {
 
+				status.acceptation_status = TCAcceptationStatus::Rejected;
 				status.error_code = TCErrorType::SubTypeError;
 			}
-        }
-		
-        if (20 : u8 == type) {
+
+        } else if (20 : u8 == type) {
 		
 			if (1 : u8 == subtype) {
 
@@ -208,11 +207,11 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
 			else {
                 
+				status.acceptation_status = TCAcceptationStatus::Rejected;
 				status.error_code = TCErrorType::SubTypeError;
 			}
-        }
 
-		if (5 : u8 == type) {
+        } else if (5 : u8 == type) {
 		
 			if (5 : u8 == subtype) {
 
@@ -229,10 +228,11 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
 			else {
                 
+				status.acceptation_status = TCAcceptationStatus::Rejected;
 				status.error_code = TCErrorType::SubTypeError;
 			}
-        }
-		if (12 : u8 == type) {
+
+        } else if (12 : u8 == type) {
 		
 			if (1 : u8 == subtype) {
 
@@ -255,10 +255,11 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
 			else {
                 
+				status.acceptation_status = TCAcceptationStatus::Rejected;
 				status.error_code = TCErrorType::SubTypeError;
 			}
-        }
-		if (19 : u8 == type) {
+
+        } else if (19 : u8 == type) {
 		
 			if (1 : u8 == subtype) {
 
@@ -287,10 +288,10 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
 			else {
                 
+				status.acceptation_status = TCAcceptationStatus::Rejected;
 				status.error_code = TCErrorType::SubTypeError;
 			}
-        }
-		if (128 : u8 == type) {
+        } else if (128 : u8 == type) {
 		
 			if (1 : u8 == subtype) {
 
@@ -298,9 +299,16 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 				status.execution_status = TCExecutionCtrl::ExecCtrlReboot;
 
 			} else {
+
+				status.acceptation_status = TCAcceptationStatus::Rejected;
 				status.error_code = TCErrorType::SubTypeError;
 			}
-        }
+        } else {
+
+			status.acceptation_status = TCAcceptationStatus::Rejected;
+			status.error_code = TCErrorType::TypeError;
+
+		}
 
 	}
 

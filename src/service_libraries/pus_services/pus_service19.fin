@@ -10,229 +10,311 @@ import service_libraries.tm_ccsds_pus_format;
 
 
 const max_event_action_definitions : usize = 16;
-const event_action_queue_dimension : usize = 8;
-const event_action_max_bytes : usize = 242;
+
 
 struct EventActionConfig {
     enabled: bool;
     event_ID: u16;
 };
-//I think not needed
-/*
-struct EventActionPacket {
-    action_packet_bytes: [u8; event_action_max_bytes];
-    tc_descriptor: TCDescriptorT;
+
+
+
+interface PUSS12Iface {
+
+    procedure exec19_1TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16)
+    procedure exec19_2TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16)
+    procedure exec19_4TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16)
+    procedure exec19_5TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16)
+    
 };
-*/
 
-function get_event_action_config (evID: u16, index: &mut usize, enabled: &mut bool, event_action_config_table: &[EventActionConfig; max_event_action_definitions]) -> bool {
+resource class PUSService19 provides PUSS19Iface {
 
-    var found: bool = false;
+    event_action_config : [EventActionConfig; max_event_action_definitions];
+    event_action_packets : [TCDescriptorT; max_event_action_definitions];
+    //pus_serv19_priority_indexes : [usize; max_event_action_definitions];
+    //In C we use an array. We need 4 queues, one for each type of event depending on the severity
+    /*
+    pus_serv19_pending_action_queue_1I : [TCDescriptorT; event_action_queue_dimension];
+    pus_serv19_pending_action_queue_2LS : [TCDescriptorT; event_action_queue_dimension];
+    pus_serv19_pending_action_queue_3MS : [TCDescriptorT; event_action_queue_dimension];
+    pus_serv19_pending_action_queue_4HS : [TCDescriptorT; event_action_queue_dimension];
+    
+    
+    pus_serv19_pending_action_number : [u8; 4];
+    pus_serv19_pending_action_head : [u8; 4];
+    */  
+    //Do we really need queues?? It is not enough sending the action TC directly to the Manager task?
 
-    for i : usize in 0 .. max_event_action_definitions while found == false {
 
-        if (event_action_config_table[i].event_ID == evID) {
+    viewer get_event_action_config (&self, evID: u16, index: &mut usize, enabled: &mut bool) -> bool {
+
+        var found: bool = false;
+
+        for i : usize in 0 .. max_event_action_definitions while found == false {
+
+            if (self->event_action_config_table[i].event_ID == evID) {
+
+                    *index = i;
+                    *enabled = self->event_action_config_table[i].enabled;
+                    found = true;
+            }
+        }
+        return found;
+    }
+
+    viewer get_free_event_action_index (&self, index: &mut usize)->bool {
+
+        var found: bool = false;
+
+        for i : usize in 0 .. max_event_action_definitions while found == false {
+
+            if (self->event_action_config_table[i].event_ID == 0) {
 
                 *index = i;
-                *enabled = event_action_config_table[i].enabled;
                 found = true;
+            }
         }
+        return found;
     }
-    return found;
-   
-}
 
-function get_free_event_action_index (index: &mut usize, event_action_config_table: &[EventActionConfig; max_event_action_definitions])->bool {
+    //TC[19,1] allows the addition of event-action definitions
+    procedure exec19_1TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
 
-    var found: bool = false;
+        var index : usize = 0;
+        var found : bool = false;
+        var enabled : bool = false;
+        var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
+        var event_type : RIDType = get_RID_type(evID);
 
-    for i : usize in 0 .. max_event_action_definitions while found == false {
+        if(event_type is RIDType::RIDNotValid){
 
-        if (event_action_config_table[i].event_ID == 0) {
-
-            *index = i;
-            found = true;
-        }
-    }
-    return found;
-}
-
-//TC[19,1] allows the addition of event-action definitions
-function exec19_1TC (tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16, event_action_config_table: &mut [EventActionConfig; max_event_action_definitions],
-                        event_action_packs: &mut [TCDescriptorT; max_event_action_definitions]){
-
-    var index : usize = 0;
-    var found : bool = false;
-    var enabled : bool = false;
-    var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-    var event_type : RIDType = get_RID_type(evID);
-
-    if(event_type is RIDType::RIDNotValid){
-
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
-					
-    } else {
-        /*Here a function is used as a value. I think this souldn't work as Termina is not a higher-order programming language
-        The transpilation is right*/
-        if (get_event_action_config(evID, &mut index, &mut enabled, &(*event_action_config_table))){
-
-            found = true;
-
-        } else if(get_free_event_action_index (&mut index, &(*event_action_config_table))){
-
-            found = true;
-            enabled = false;
-
+            build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+                        
         } else {
+            /*Here a function is used as a value. I think this souldn't work as Termina is not a higher-order programming language
+            The transpilation is right*/
+            if (self->get_event_action_config(evID, &mut index, &mut enabled)){
 
-           //Not found means the maximun of event-action definitions has been reached
-            build_tm_1_8_tc_19_1_max_event_actions(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+                found = true;
 
-        }
+            } else if(self->get_free_event_action_index(&mut index)){
 
-        if (found){
-
-            if (enabled){ //Event-action can't be redefined if it is enabled
-
-                build_tm_1_8_tc_19_X_event_action_enabled(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+                found = true;
+                enabled = false;
 
             } else {
 
-                var action_packet_length : usize = get_packet_length(&(tc_descriptor->tc_bytes)) as usize - 7;
-                //TO CHECK 
-                
-                for i : usize in 0 .. event_action_max_bytes while i < action_packet_length {
+            //Not found means the maximun of event-action definitions has been reached
+                build_tm_1_8_tc_19_1_max_event_actions(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
 
-                    (*event_action_packs)[index].tc_bytes[i] = tc_descriptor->tc_bytes[i + 12];
-
-                }
-
-                event_action_packs[index].tc_num_bytes = action_packet_length;
-                
-                var tc_status : TCStatus = {
-                    acceptation_status = TCAcceptationStatus::Rejected,
-                    execution_status = TCExecutionCtrl:: ExecCtrlPrioTC,
-                    error_code =  TCErrorType::CRCError
-                };
-
-                try_tc_acceptation(&mut tc_status, &(*event_action_packs)[index]);
-
-                if (tc_status.acceptation_status is TCAcceptationStatus::Accepted){
-                
-                    event_action_config_table[index].event_ID = evID;
-                    event_action_config_table[index].enabled = false;
-                    
-                    build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
-                   
-
-                } else {
-
-                    build_tm_1_8_tc_19_1_event_action_rejected(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
-
-                }
-            }         
-
-        }
-    }
-
-   return; 
-}
-
-
-//TC[19,2] allows the deletion of event-action definitions
-function exec19_2TC (tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16, event_action_config_table: &mut [EventActionConfig; max_event_action_definitions]){
-
-    var index : usize = 0;
-    var enabled : bool = false;
-    var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-    var event_type : RIDType = get_RID_type(evID);
-
-    if (event_type is RIDType::RIDNotValid){
-
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
-
-    } else {
-
-        if (get_event_action_config(evID, &mut index, &mut enabled, &(*event_action_config_table))){
-
-            if (enabled){
-                    
-                    build_tm_1_8_tc_19_X_event_action_enabled(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
-    
-                } else {
-    
-                    event_action_config_table[index].event_ID = 0;
-                    event_action_config_table[index].enabled = false;
-    
-                    build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
             }
 
-        } else {
+            if (found){
 
-            build_tm_1_8_tc_19_X_event_action_not_defined(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+                if (enabled){ //Event-action can't be redefined if it is enabled
 
+                    build_tm_1_8_tc_19_X_event_action_enabled(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+
+                } else {
+
+                    var action_packet_length : usize = get_packet_length(&(tc_descriptor->tc_bytes)) as usize - 7;
+                    //TO CHECK 
+                    
+                    for i : usize in 0 .. event_action_max_bytes while i < action_packet_length {
+
+                        self->event_action_packs[index].tc_bytes[i] = tc_descriptor->tc_bytes[i + 12];
+
+                    }
+
+                   self->event_action_packs[index].tc_num_bytes = action_packet_length;
+                    
+                    var tc_status : TCStatus = {
+                        acceptation_status = TCAcceptationStatus::Undefined,
+                        execution_status = TCExecutionCtrl::Undefined,
+                        error_code =  TCErrorType::Undefined
+                    };
+
+                    tc_status = try_tc_acceptation(&(self->event_action_packs)[index]); //This will generate an error. I have to use TCDescriptorT for events
+
+                    if (tc_status.acceptation_status is TCAcceptationStatus::Accepted){
+                    
+                        self->event_action_config_table[index].event_ID = evID;
+                        self->event_action_config_table[index].enabled = false;
+                        
+                        build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+                    
+
+                    } else {
+
+                        build_tm_1_8_tc_19_1_event_action_rejected(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+
+                    }
+                }         
+
+            }
         }
+
+    return; 
     }
 
-  return;              
-}
 
+    //TC[19,2] allows the deletion of event-action definitions
+    procedure exec19_2TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
 
-//TC[19,4] allows enabling event-action definitions
-function exec19_4TC (tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16, event_action_config_table: &mut [EventActionConfig; max_event_action_definitions]){
+        var index : usize = 0;
+        var enabled : bool = false;
+        var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
+        var event_type : RIDType = get_RID_type(evID);
 
-    var index : usize = 0;
-    var enabled : bool = false;
-    var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-    var event_type : RIDType = get_RID_type(evID);
+        if (event_type is RIDType::RIDNotValid){
 
-    if (event_type is RIDType::RIDNotValid){
-
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
-
-    } else {
-
-        if (get_event_action_config(evID, &mut index, &mut enabled, &(*event_action_config_table))){
-
-            event_action_config_table[index].enabled = true;
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+            build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
 
         } else {
 
-            build_tm_1_8_tc_19_X_event_action_not_defined(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+            if (self->get_event_action_config(evID, &mut index, &mut enabled)){
 
+                if (enabled){
+                        
+                        build_tm_1_8_tc_19_X_event_action_enabled(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+        
+                    } else {
+        
+                        self->event_action_config_table[index].event_ID = 0;
+                        self->event_action_config_table[index].enabled = false;
+        
+                        build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+                }
+
+            } else {
+
+                build_tm_1_8_tc_19_X_event_action_not_defined(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+
+            }
         }
+
+    return;              
     }
-    return;
-}
 
 
-//TC[19,5] allows disabling event-action definitions
-function exec19_5TC (tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16, event_action_config_table: &mut [EventActionConfig; max_event_action_definitions]){
+    //TC[19,4] allows enabling event-action definitions
+    procedure exec19_4TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
 
-    var index : usize = 0;
-    var enabled : bool = false;
-    var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-    var event_type : RIDType = get_RID_type(evID);
+        var index : usize = 0;
+        var enabled : bool = false;
+        var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
+        var event_type : RIDType = get_RID_type(evID);
 
-    if (event_type is RIDType::RIDNotValid){
+        if (event_type is RIDType::RIDNotValid){
 
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
-
-    } else {
-
-        if (get_event_action_config(evID, &mut index, &mut enabled, &(*event_action_config_table))){
-
-            event_action_config_table[index].enabled = true;
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+            build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
 
         } else {
 
-            build_tm_1_8_tc_19_X_event_action_not_defined(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+            if (self->get_event_action_config(evID, &mut index, &mut enabled)){
 
+                self->event_action_config_table[index].enabled = true;
+                build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+
+            } else {
+
+                build_tm_1_8_tc_19_X_event_action_not_defined(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+
+            }
         }
+        return;
     }
-    return;
-}
+
+
+    //TC[19,5] allows disabling event-action definitions
+    procedure exec19_5TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
+
+        var index : usize = 0;
+        var enabled : bool = false;
+        var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
+        var event_type : RIDType = get_RID_type(evID);
+
+        if (event_type is RIDType::RIDNotValid){
+
+            build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+
+        } else {
+
+            if (get_event_action_config(evID, &mut index, &mut enabled)){
+
+                self->event_action_config_table[index].enabled = false;
+                build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+
+            } else {
+
+                build_tm_1_8_tc_19_X_event_action_not_defined(tm_descriptor, tm_seq_counter, evID, tc_descriptor);
+
+            }
+        }
+        return;
+    }
+
+
+    procedure manage_event_actions(&mut self, event_list: &EventListT){
+
+        for i : usize in 0 .. max_num_events while (i < event_list->num_events){
+                
+            var event_info : EventInfo;
+            get_event_info(event_list, i, &mut event_info);
+        
+            if(is_RID_enabled(event_info.ev_RID, &(self->pus_serv5_RID_enable_config))){
+
+                var index : usize = 0;
+                var enabled : bool = false;
+
+                if (self->get_event_action_config(event_info.ev_RID, &mut index, &mut enabled)){
+
+                    if(enabled){
+
+                        //new pending event action
+                        var tc_descriptor : Option<box TCDescriptorT> = None;
+                        self->a_tc_descriptor_pool.alloc(&mut tc_descriptor);
+
+                        match tc_descriptor {
+
+                            case Some(descriptor) => {
+
+                                descriptor.tc_num_bytes = self->pus_serv19_event_action_packets[index].tc_num_bytes;
+
+                                for j : usize in 0 .. event_action_max_bytes while (j < descriptor.tc_num_bytes) {
+                                    descriptor.tc_bytes[j] = self->pus_serv19_event_action_packets[index].tc_bytes[j];
+                                }
+
+                                
+                                self->action_tc_message_queue_output.send(descriptor);
+                            }
+                            case None => {
+                                res = Result::Error;
+                            }
+                        }
+
+
+                    }
+                }
+            }
+        
+    }
+        
+
+        clear_ev_list(&mut (self->event_list));
+
+        return res;
+    }
+
+
+};
+
+
+
+
+
+
+
 
 

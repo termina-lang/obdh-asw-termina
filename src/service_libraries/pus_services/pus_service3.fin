@@ -7,7 +7,7 @@ import service_libraries.tm_ccsds_pus_format;
 import service_libraries.pus_services.pus_service1;
 import service_libraries.serialize;
 import resources.system_data_pool;
-import service_libraries.tm_list;
+
 
 
 const max_num_of_SIDs : usize = 8;
@@ -34,7 +34,11 @@ interface PUSS3Iface {
 resource class PUSService3 provides PUSS3Iface {
 
     hk_config_table : [HKConfiguration; max_num_of_SIDs];
-    system_data_pool : access AtomicArrayAccess<u16; SDP_num_params>; 
+    
+    system_data_pool : access AtomicArrayAccess<u16; SDP_num_params>;
+    tm_channel: access TMChannelIface;   
+    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
+    tm_counter : access TMCounterIface;
 
 
     viewer get_SIDindex (&self, SID : u8, index : &mut usize)->bool{
@@ -59,7 +63,7 @@ resource class PUSService3 provides PUSS3Iface {
         var index : usize = 0;
         var SID : u8 = tc_descriptor->tc_bytes[10];
 
-        if (get_SIDindex(&(*hk_config_table), SID, &mut index)){
+        if (self->get_SIDindex(&(self->hk_config_table), SID, &mut index)){
 
             self->hk_config_table[index].enabled = true;
             self->hk_config_table[index].interval_control = 0;
@@ -79,7 +83,7 @@ resource class PUSService3 provides PUSS3Iface {
         var index : usize = 0;
         var SID : u8 = tc_descriptor->tc_bytes[10];
 
-        if (get_SIDindex(&(*hk_config_table), SID, &mut index)){
+        if (self->get_SIDindex(&(self->hk_config_table), SID, &mut index)){
 
             self->hk_config_table[index].enabled = false;
             self->hk_config_table[index].interval_control = 0;
@@ -117,7 +121,7 @@ resource class PUSService3 provides PUSS3Iface {
 
 
 
-    viewer build_tm_3_25(&self, p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, index: usize, tm_list : &mut TMList) {
+    viewer build_tm_3_25(&self, p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, index: usize) {
 
         var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
@@ -175,7 +179,7 @@ resource class PUSService3 provides PUSS3Iface {
 
                 self->hk_config_table[i].interval_control = self->hk_config_table[i].interval_control + 1;
 
-                if (self->hk_config_table[i].interval_control == self->hk_config_table[i].interval){
+                if (self->hk_config_table[i].interval_control >= self->hk_config_table[i].interval){
 
                     self->hk_config_table[i].interval_control = 0;
 
@@ -189,12 +193,14 @@ resource class PUSService3 provides PUSS3Iface {
                         var tm_count : u16 = 0 : u16;
                         self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                        self->build_tm_3_25(&mut descriptor, tm_count, i, tm_list);
+                        self->build_tm_3_25(&mut descriptor, tm_count, i);
                         //Enviar telemetría a través del TM_CHANNEL
+                        self->tm_channel.send_tm(&descriptor);
                    
                         }
                         case None => {
                             *result = Result::Error;
+
                         }
                     }       
                 }
