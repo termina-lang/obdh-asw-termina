@@ -28,7 +28,8 @@ interface PUSS5Iface {
 
     procedure build_event_list_tms(&mut self, event_list : &mut EventList);
     procedure exec5_5TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
-    procedure exec5_6TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16)
+    procedure exec5_6TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure is_RID_enabled_ext(&mut self, RID: u16);
 
 };
 
@@ -54,6 +55,11 @@ resource class PUSService5 provides PUSS5Iface {
         }
 
         return enabled;
+    }
+
+    procedure is_RID_enabled_ext(&mut self, RID: u16) -> bool {
+
+        return (self->is_RID_enabled(RID));
     }
 
 

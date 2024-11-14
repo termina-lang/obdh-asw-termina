@@ -45,6 +45,7 @@ resource class PUSService19 provides PUSS19Iface {
     pus_serv19_pending_action_head : [u8; 4];
     */  
     //Do we really need queues?? It is not enough sending the action TC directly to the Manager task?
+    pus_service_5 : access PUSS5Iface;
 
 
     viewer get_event_action_config (&self, evID: u16, index: &mut usize, enabled: &mut bool) -> bool {
@@ -263,7 +264,7 @@ resource class PUSService19 provides PUSS19Iface {
             var event_info : EventInfo;
             get_event_info(event_list, i, &mut event_info);
         
-            if(is_RID_enabled(event_info.ev_RID, &(self->pus_serv5_RID_enable_config))){
+            if(self->pus_service_5.is_RID_enabled(event_info.ev_RID, &(self->pus_serv5_RID_enable_config))){
 
                 var index : usize = 0;
                 var enabled : bool = false;
@@ -309,7 +310,6 @@ resource class PUSService19 provides PUSS19Iface {
 
 
 };
-
 
 
 
