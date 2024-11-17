@@ -7,6 +7,8 @@ import service_libraries.pus_services.pus_service1;
 import service_libraries.serialize;
 import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
+import service_libraries.event_list;
+const event_action_max_bytes : usize = 242;
 
 
 const max_event_action_definitions : usize = 16;
@@ -19,12 +21,13 @@ struct EventActionConfig {
 
 
 
-interface PUSS12Iface {
+interface PUSS19Iface {
 
-    procedure exec19_1TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16)
-    procedure exec19_2TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16)
-    procedure exec19_4TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16)
-    procedure exec19_5TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16)
+    procedure exec19_1TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec19_2TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec19_4TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec19_5TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure manage_event_actions(&mut self, event_list: &EventList, flag : &mut bool);
     
 };
 
@@ -54,10 +57,10 @@ resource class PUSService19 provides PUSS19Iface {
 
         for i : usize in 0 .. max_event_action_definitions while found == false {
 
-            if (self->event_action_config_table[i].event_ID == evID) {
+            if (self->event_action_config[i].event_ID == evID) {
 
                     *index = i;
-                    *enabled = self->event_action_config_table[i].enabled;
+                    *enabled = self->event_action_config[i].enabled;
                     found = true;
             }
         }
@@ -70,7 +73,7 @@ resource class PUSService19 provides PUSS19Iface {
 
         for i : usize in 0 .. max_event_action_definitions while found == false {
 
-            if (self->event_action_config_table[i].event_ID == 0) {
+            if (self->event_action_config[i].event_ID == 0) {
 
                 *index = i;
                 found = true;
@@ -124,11 +127,11 @@ resource class PUSService19 provides PUSS19Iface {
                     
                     for i : usize in 0 .. event_action_max_bytes while i < action_packet_length {
 
-                        self->event_action_packs[index].tc_bytes[i] = tc_descriptor->tc_bytes[i + 12];
+                        self->event_action_packets[index].tc_bytes[i] = tc_descriptor->tc_bytes[i + 12];
 
                     }
 
-                   self->event_action_packs[index].tc_num_bytes = action_packet_length;
+                   self->event_action_packets[index].tc_num_bytes = action_packet_length;
                     
                     var tc_status : TCStatus = {
                         acceptation_status = TCAcceptationStatus::Undefined,
@@ -136,12 +139,12 @@ resource class PUSService19 provides PUSS19Iface {
                         error_code =  TCErrorType::Undefined
                     };
 
-                    tc_status = try_tc_acceptation(&(self->event_action_packs)[index]); //This will generate an error. I have to use TCDescriptorT for events
+                    tc_status = try_tc_acceptation(&(self->event_action_packets)[index]); //This will generate an error. I have to use TCDescriptorT for events
 
                     if (tc_status.acceptation_status is TCAcceptationStatus::Accepted){
                     
-                        self->event_action_config_table[index].event_ID = evID;
-                        self->event_action_config_table[index].enabled = false;
+                        self->event_action_config[index].event_ID = evID;
+                        self->event_action_config[index].enabled = false;
                         
                         build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
                     
@@ -182,8 +185,8 @@ resource class PUSService19 provides PUSS19Iface {
         
                     } else {
         
-                        self->event_action_config_table[index].event_ID = 0;
-                        self->event_action_config_table[index].enabled = false;
+                        self->event_action_config[index].event_ID = 0;
+                        self->event_action_config[index].enabled = false;
         
                         build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
                 }
@@ -215,7 +218,7 @@ resource class PUSService19 provides PUSS19Iface {
 
             if (self->get_event_action_config(evID, &mut index, &mut enabled)){
 
-                self->event_action_config_table[index].enabled = true;
+                self->event_action_config[index].enabled = true;
                 build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
 
             } else {
@@ -242,9 +245,9 @@ resource class PUSService19 provides PUSS19Iface {
 
         } else {
 
-            if (get_event_action_config(evID, &mut index, &mut enabled)){
+            if (self->get_event_action_config(evID, &mut index, &mut enabled)){
 
-                self->event_action_config_table[index].enabled = false;
+                self->event_action_config[index].enabled = false;
                 build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
 
             } else {
@@ -257,14 +260,17 @@ resource class PUSService19 provides PUSS19Iface {
     }
 
 
-    procedure manage_event_actions(&mut self, event_list: &EventListT){
+    procedure manage_event_actions(&mut self, event_list: &EventList, flag : &mut bool){
 
         for i : usize in 0 .. max_num_events while (i < event_list->num_events){
                 
-            var event_info : EventInfo;
+            var event_info : EventInfo = {ev_RID = 0, ev_aux_data = [0; event_aux_data_max_size], ev_aux_data_size = 0};
             get_event_info(event_list, i, &mut event_info);
+
+            var RIDenabled : bool = false;
+            self->pus_service_5.is_RID_enabled_ext(event_info.ev_RID, &mut RIDenabled);
         
-            if(self->pus_service_5.is_RID_enabled(event_info.ev_RID, &(self->pus_serv5_RID_enable_config))){
+            if(RIDenabled){
 
                 var index : usize = 0;
                 var enabled : bool = false;
@@ -274,6 +280,12 @@ resource class PUSService19 provides PUSS19Iface {
                     if(enabled){
 
                         //new pending event action
+                        *flag = true;
+                    } else {
+                        *flag = false;
+                    }
+                }   
+                /*
                         var tc_descriptor : Option<box TCDescriptorT> = None;
                         self->a_tc_descriptor_pool.alloc(&mut tc_descriptor);
 
@@ -296,16 +308,17 @@ resource class PUSService19 provides PUSS19Iface {
                         }
 
 
-                    }
-                }
+                    }*/
+            
+                
             }
         
     }
         
 
-        clear_ev_list(&mut (self->event_list));
+        //clear_ev_list(&mut (self->event_list));
 
-        return res;
+        return;
     }
 
 

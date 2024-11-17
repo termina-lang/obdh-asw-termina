@@ -7,6 +7,8 @@ import service_libraries.tm_ccsds_pus_format;
 import service_libraries.pus_services.pus_service1;
 import service_libraries.serialize;
 import resources.system_data_pool;
+import tasks.tm_channel;
+import resources.tm_counter;
 
 
 
@@ -24,7 +26,7 @@ struct HKConfiguration {
 
 interface PUSS3Iface {
 
-    procedure do_hk (&mut self, tm_list : &mut TMList, result : &mut Result);    
+    procedure do_hk (&mut self, result : &mut Result);    
     procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
     procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
     procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
@@ -63,7 +65,7 @@ resource class PUSService3 provides PUSS3Iface {
         var index : usize = 0;
         var SID : u8 = tc_descriptor->tc_bytes[10];
 
-        if (self->get_SIDindex(&(self->hk_config_table), SID, &mut index)){
+        if (self->get_SIDindex(SID, &mut index)){
 
             self->hk_config_table[index].enabled = true;
             self->hk_config_table[index].interval_control = 0;
@@ -83,7 +85,7 @@ resource class PUSService3 provides PUSS3Iface {
         var index : usize = 0;
         var SID : u8 = tc_descriptor->tc_bytes[10];
 
-        if (self->get_SIDindex(&(self->hk_config_table), SID, &mut index)){
+        if (self->get_SIDindex(SID, &mut index)){
 
             self->hk_config_table[index].enabled = false;
             self->hk_config_table[index].interval_control = 0;
@@ -171,8 +173,6 @@ resource class PUSService3 provides PUSS3Iface {
 
     procedure do_hk (&mut self, result : &mut Result){
 
-        var res : Result = Result::Ok;
-
         for i : usize in 0 .. max_num_of_SIDs {
 
             if (self->hk_config_table[i].enabled == true){
@@ -195,7 +195,7 @@ resource class PUSService3 provides PUSS3Iface {
 
                         self->build_tm_3_25(&mut descriptor, tm_count, i);
                         //Enviar telemetría a través del TM_CHANNEL
-                        self->tm_channel.send_tm(&descriptor);
+                        self->tm_channel.send_tm(descriptor, result);
                    
                         }
                         case None => {

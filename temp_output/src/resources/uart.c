@@ -1,17 +1,155 @@
 
 #include "resources/uart.h"
 
-_Bool UARTDriver__tf_is_full(const UARTDriver * const self) {
+void UARTDriver__disable_RF(UARTDriver * const self) {
     
-    uint32_t riscv_uart_tf = 0x200;
+    uint32_t riscv_uart_rf = 0xFFFFFBFF;
 
-    return (uint32_t)(self->registers->status & riscv_uart_tf) != 0;
+    self->registers->control = self->registers->control & riscv_uart_rf;
+
+    return;
+
+}
+
+void UARTDriver__disable_TF(UARTDriver * const self) {
+    
+    uint32_t riscv_uart_tf = 0xFFFFFCFF;
+
+    self->registers->control = self->registers->control & riscv_uart_tf;
+
+    return;
+
+}
+
+void UARTDriver__enable_RI(UARTDriver * const self) {
+    
+    uint32_t riscv_uart_ri = 0x4;
+
+    self->registers->control = self->registers->control | riscv_uart_ri;
+
+    return;
+
+}
+
+void UARTDriver__enable_RX(UARTDriver * const self) {
+    
+    uint32_t riscv_uart_rxe = 0x1;
+
+    self->registers->control = self->registers->control | riscv_uart_rxe;
+
+    return;
+
+}
+
+void UARTDriver__enable_TI(UARTDriver * const self) {
+    
+    uint32_t riscv_uart_ti = 0x8;
+
+    self->registers->control = self->registers->control | riscv_uart_ti;
+
+    return;
+
+}
+
+void UARTDriver__enable_TX(UARTDriver * const self) {
+    
+    uint32_t riscv_uart_txe = 0x2;
+
+    self->registers->control = self->registers->control | riscv_uart_txe;
+
+    return;
+
+}
+
+void UARTDriver__initialize(void * const __this) {
+    
+    UARTDriver * self = (UARTDriver *)__this;
+
+    __termina_resource__lock(&self->__resource);
+
+    UARTDriver__enable_RX(self);
+
+    UARTDriver__enable_TX(self);
+
+    UARTDriver__enable_RI(self);
+
+    UARTDriver__enable_TI(self);
+
+    UARTDriver__disable_TF(self);
+
+    UARTDriver__disable_RF(self);
+
+    __termina_resource__unlock(&self->__resource);
+
+    return;
+
+}
+
+void UARTDriver__release_tx(void * const __this) {
+    
+    UARTDriver * self = (UARTDriver *)__this;
+
+    __termina_resource__lock(&self->__resource);
+
+    if (self->rem_bytes) {
+        
+        size_t num_elements = 0;
+
+        get_num_enqueued_elems(&self->uart_queue, &num_elements);
+
+        size_t sent_bytes = 0;
+
+        __option_uint8_t extracted_elem;
+        extracted_elem.__variant = None;
+
+        for (size_t i = 0; i < 4 && sent_bytes < num_elements; i = i + 1) {
+            
+            dequeue(&self->uart_queue, &extracted_elem);
+
+            if (extracted_elem.__variant == None) {
+                
+
+            } else {
+                
+                __option_uint8_params_t __Some = extracted_elem.Some;
+
+                self->registers->data = (uint32_t)__Some.__0;
+
+                sent_bytes = sent_bytes + 1;
+
+            }
+
+        }
+
+        if (sent_bytes < num_elements) {
+            
+            self->rem_bytes = 1;
+
+        } else {
+            
+            self->rem_bytes = 0;
+
+        }
+
+    }
+
+    __termina_resource__unlock(&self->__resource);
+
+    return;
+
+}
+
+_Bool UARTDriver__tf_is_empty(const UARTDriver * const self) {
+    
+    uint32_t riscv_uart_te = 0x4;
+
+    return (uint32_t)(self->registers->status & riscv_uart_te) != 0;
 
 }
 
 void UARTDriver__send(void * const __this,
                       const uint8_t output_bytes[max_send_size], size_t nbytes,
-                      CharDevResult * result) {
+                      CharDevResult * const result) {
     
     UARTDriver * self = (UARTDriver *)__this;
 
@@ -126,148 +264,10 @@ void UARTDriver__send(void * const __this,
 
 }
 
-_Bool UARTDriver__tf_is_empty(const UARTDriver * const self) {
+_Bool UARTDriver__tf_is_full(const UARTDriver * const self) {
     
-    uint32_t riscv_uart_te = 0x4;
+    uint32_t riscv_uart_tf = 0x200;
 
-    return (uint32_t)(self->registers->status & riscv_uart_te) != 0;
-
-}
-
-void UARTDriver__release_tx(void * const __this) {
-    
-    UARTDriver * self = (UARTDriver *)__this;
-
-    __termina_resource__lock(&self->__resource);
-
-    if (self->rem_bytes) {
-        
-        size_t num_elements = 0;
-
-        get_num_enqueued_elems(&self->uart_queue, &num_elements);
-
-        size_t sent_bytes = 0;
-
-        __option_uint8_t extracted_elem;
-        extracted_elem.__variant = None;
-
-        for (size_t i = 0; i < 4 && sent_bytes < num_elements; i = i + 1) {
-            
-            dequeue(&self->uart_queue, &extracted_elem);
-
-            if (extracted_elem.__variant == None) {
-                
-
-            } else {
-                
-                __option_uint8_params_t __Some = extracted_elem.Some;
-
-                self->registers->data = (uint32_t)__Some.__0;
-
-                sent_bytes = sent_bytes + 1;
-
-            }
-
-        }
-
-        if (sent_bytes < num_elements) {
-            
-            self->rem_bytes = 1;
-
-        } else {
-            
-            self->rem_bytes = 0;
-
-        }
-
-    }
-
-    __termina_resource__unlock(&self->__resource);
-
-    return;
-
-}
-
-void UARTDriver__initialize(void * const __this) {
-    
-    UARTDriver * self = (UARTDriver *)__this;
-
-    __termina_resource__lock(&self->__resource);
-
-    UARTDriver__enable_RX(self);
-
-    UARTDriver__enable_TX(self);
-
-    UARTDriver__enable_RI(self);
-
-    UARTDriver__enable_TI(self);
-
-    UARTDriver__disable_TF(self);
-
-    UARTDriver__disable_RF(self);
-
-    __termina_resource__unlock(&self->__resource);
-
-    return;
-
-}
-
-void UARTDriver__enable_TX(UARTDriver * const self) {
-    
-    uint32_t riscv_uart_txe = 0x2;
-
-    self->registers->control = self->registers->control | riscv_uart_txe;
-
-    return;
-
-}
-
-void UARTDriver__enable_TI(UARTDriver * const self) {
-    
-    uint32_t riscv_uart_ti = 0x8;
-
-    self->registers->control = self->registers->control | riscv_uart_ti;
-
-    return;
-
-}
-
-void UARTDriver__enable_RX(UARTDriver * const self) {
-    
-    uint32_t riscv_uart_rxe = 0x1;
-
-    self->registers->control = self->registers->control | riscv_uart_rxe;
-
-    return;
-
-}
-
-void UARTDriver__enable_RI(UARTDriver * const self) {
-    
-    uint32_t riscv_uart_ri = 0x4;
-
-    self->registers->control = self->registers->control | riscv_uart_ri;
-
-    return;
-
-}
-
-void UARTDriver__disable_TF(UARTDriver * const self) {
-    
-    uint32_t riscv_uart_tf = 0xFFFFFCFF;
-
-    self->registers->control = self->registers->control & riscv_uart_tf;
-
-    return;
-
-}
-
-void UARTDriver__disable_RF(UARTDriver * const self) {
-    
-    uint32_t riscv_uart_rf = 0xFFFFFBFF;
-
-    self->registers->control = self->registers->control & riscv_uart_rf;
-
-    return;
+    return (uint32_t)(self->registers->status & riscv_uart_tf) != 0;
 
 }

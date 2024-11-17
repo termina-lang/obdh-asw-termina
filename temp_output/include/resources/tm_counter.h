@@ -3,6 +3,8 @@
 
 #include <termina.h>
 
+#include "option.h"
+
 typedef struct {
     void * __that;
     void (* get_next_tm_count)(void * const, uint16_t * const);

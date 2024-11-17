@@ -3,7 +3,7 @@ import service_libraries.tm_ccsds_pus_format;
 
 interface TMChannelIface {
 
-    procedure send_tm(&priv self, tm_descriptor: box TMDescriptorT, result : &mut Result);
+    procedure send_tm(&mut self, tm_descriptor: box TMDescriptorT, result : &mut Result);
 
 };
 
@@ -14,7 +14,7 @@ resource class TMChannel provides TMChannelIface {
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
 
     
-   procedure send_tm(&priv self, tm_descriptor: box TMDescriptorT, result : &mut Result) {
+   procedure send_tm(&mut self, tm_descriptor: box TMDescriptorT, result : &mut Result) {
 
         var queue_state : CharDevResult = CharDevResult::Success;
 
@@ -32,7 +32,7 @@ resource class TMChannel provides TMChannelIface {
 
         self->a_tm_descriptor_pool.free(tm_descriptor);
 
-        return res;
+        return;
    }
 
          

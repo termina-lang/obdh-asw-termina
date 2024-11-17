@@ -24,132 +24,6 @@ enum RIDType {
     RIDNotValid
 };
 
-interface PUSS5Iface {
-
-    procedure build_event_list_tms(&mut self, event_list : &mut EventList);
-    procedure exec5_5TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
-    procedure exec5_6TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
-    procedure is_RID_enabled_ext(&mut self, RID: u16);
-
-};
-
-resource class PUSService5 provides PUSS5Iface {
-
-    RID_enable_config : [u32; 4];
-
-    tm_channel : access TMChannelIface;
-    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
-    tm_counter : access TMCounterIface;
-
-    viewer is_RID_enabled(&self, RID : u16) -> bool {
-
-        var enabled : bool = false;
-        var index : usize = get_RID_enable_config_index(RID);
-        var offset : u8 = get_RID_enable_config_offset(RID);
-
-        if (index < 4){
-
-            if(((self->RID_enable_config[index] >> offset) & 0x01) != 0){
-                enabled = true;
-            }
-        }
-
-        return enabled;
-    }
-
-    procedure is_RID_enabled_ext(&mut self, RID: u16) -> bool {
-
-        return (self->is_RID_enabled(RID));
-    }
-
-
-    procedure build_event_list_tms(&mut self, event_list : &mut EventList){
-
-        for i : usize in 0 .. max_num_events while (i < event_list->num_events) {
-
-            var event_info : EventInfo = {ev_RID = 0, ev_aux_data = [0; event_aux_data_max_size], ev_aux_data_size = 0};
-
-            get_event_info(&(*event_list), i, &mut event_info);
- 
-            if(self->is_RID_enabled(event_info.ev_RID, &(self->pus_serv5_RID_enable_config))){
-
-                var index : usize = get_RID_enable_config_index(event_info.ev_RID);
-
-                if (index < 4){
-
-                    var tm_descriptor : Option<box TMDescriptorT> = None;
-                    self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-                    match tm_descriptor {
-
-                        case Some(descriptor) => {
-
-                            var tm_count : u16 = 0 : u16;
-                            self->tm_counter.get_next_tm_count(&mut tm_count);
-
-                            build_tm_5_x(&mut descriptor, tm_count, &event_ino, index);
-                            self->tm_channel.send_tm(descriptor);
-                        }
-                        case None => {
-                            res = Result::Error;
-                        }
-                    }
-
-                }
-            }
-                
-        }
-
-      return; 
-
-    }
-
-
-    procedure exec5_5TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
-
-        var RID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-        var index: usize = get_RID_enable_config_index(RID);
-        var offset : u8 = get_RID_enable_config_offset(RID);
-
-        if(index < 4) {
-
-            self->RID_enable_config[index] = self->RID_enable_config[index] | (1 << offset);
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
-
-        } else {
-
-            build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, RID, tc_descriptor);
-
-        }
-
-        return;
-    }
-
-
-    procedure exec5_6TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
-
-        var RID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-        var index: usize = get_RID_enable_config_index(RID);
-        var offset : u8 = get_RID_enable_config_offset(RID);
-
-        if(index < 4) {
-
-            self->RID_enable_config[index] = self->RID_enable_config[index] & (0xFFFFFFFE << offset);
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
-
-        } else {
-
-            build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, RID, tc_descriptor);
-
-        }
-
-        return;
-    }
-
-  
-};
-
-
 function get_RID_type(RID : u16) -> RIDType {
 
     var RID_type: RIDType = RIDType::RIDNotValid;
@@ -258,3 +132,133 @@ function build_tm_5_x(p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16,
 
     return;
 }
+
+interface PUSS5Iface {
+
+    procedure build_event_list_tms(&mut self, event_list : &mut EventList, result : &mut Result);
+    procedure exec5_5TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec5_6TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure is_RID_enabled_ext(&mut self, RID: u16, p_enabled: &mut bool);
+
+};
+
+resource class PUSService5 provides PUSS5Iface {
+
+    RID_enable_config : [u32; 4];
+
+    tm_channel : access TMChannelIface;
+    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
+    tm_counter : access TMCounterIface;
+
+    viewer is_RID_enabled(&self, RID : u16) -> bool {
+
+        var enabled : bool = false;
+        var index : usize = get_RID_enable_config_index(RID);
+        var offset : u8 = get_RID_enable_config_offset(RID);
+
+        if (index < 4){
+
+            if(((self->RID_enable_config[index] >> offset) & 0x01) != 0){
+                enabled = true;
+            }
+        }
+
+        return enabled;
+    }
+
+    procedure is_RID_enabled_ext(&mut self, RID: u16, p_enabled: &mut bool) {
+
+        *p_enabled = (self->is_RID_enabled(RID));
+
+        return;
+    }
+
+
+    procedure build_event_list_tms(&mut self, event_list : &mut EventList, result : &mut Result) {
+
+        for i : usize in 0 .. max_num_events while (i < event_list->num_events) {
+
+            var event_info : EventInfo = {ev_RID = 0, ev_aux_data = [0; event_aux_data_max_size], ev_aux_data_size = 0};
+
+            get_event_info(&(*event_list), i, &mut event_info);
+ 
+            if(self->is_RID_enabled(event_info.ev_RID)){
+
+                var index : usize = get_RID_enable_config_index(event_info.ev_RID);
+
+                if (index < 4){
+
+                    var tm_descriptor : Option<box TMDescriptorT> = None;
+                    self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
+                    match tm_descriptor {
+
+                        case Some(descriptor) => {
+
+                            var tm_count : u16 = 0 : u16;
+                            self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                            build_tm_5_x(&mut descriptor, tm_count, &event_info, index);
+                            self->tm_channel.send_tm(descriptor, result);
+                        }
+                        case None => {
+                            *result = Result::Error;
+                        }
+                    }
+
+                }
+            }
+                
+        }
+
+      return; 
+
+    }
+
+
+    procedure exec5_5TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
+
+        var RID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
+        var index: usize = get_RID_enable_config_index(RID);
+        var offset : u8 = get_RID_enable_config_offset(RID);
+
+        if(index < 4) {
+
+            self->RID_enable_config[index] = self->RID_enable_config[index] | (1 << offset);
+            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+
+        } else {
+
+            build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, RID, tc_descriptor);
+
+        }
+
+        return;
+    }
+
+
+    procedure exec5_6TC(&mut self, tc_descriptor: &TCDescriptorT, tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16){
+
+        var RID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
+        var index: usize = get_RID_enable_config_index(RID);
+        var offset : u8 = get_RID_enable_config_offset(RID);
+
+        if(index < 4) {
+
+            self->RID_enable_config[index] = self->RID_enable_config[index] & (0xFFFFFFFE << offset);
+            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+
+        } else {
+
+            build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, RID, tc_descriptor);
+
+        }
+
+        return;
+    }
+
+  
+};
+
+
+

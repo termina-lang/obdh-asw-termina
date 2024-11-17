@@ -24,7 +24,13 @@ import resources.system_data_pool;
 import tasks.icu_manager;
 */
 import service_libraries.pus_services.pus_service1;
-import tasks.icu_manager;
+import service_libraries.pus_services.pus_service2;
+import service_libraries.pus_services.pus_service3;
+import service_libraries.pus_services.pus_service5;
+import service_libraries.pus_services.pus_service9;
+import service_libraries.pus_services.pus_service12;
+import service_libraries.pus_services.pus_service17;
+import service_libraries.pus_services.pus_service19;
 
 
 
@@ -33,7 +39,7 @@ emitter hk_fdir_timer : PeriodicTimer = {
 } : PeriodicTimer;
 
 resource system_data_pool : AtomicArray<u16; SDP_num_params>;
-
+/*
 resource uart_drv : UARTDriver = {
     rem_bytes = false,
     registers @ 0xFC001000,
@@ -49,7 +55,7 @@ handler init : Init = {
     system_data_pool <-> system_data_pool,
     system_init_ev <- system_init
 } : Init;
-
+*/
 
 //channel byte_message_queue : MsgQueue<u8;10>;
 //channel tc_message_queue : MsgQueue<box TCDescriptorT;10>;

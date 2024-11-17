@@ -26,18 +26,17 @@ typedef struct {
 
 typedef struct {
     void * __that;
-    void (* send)(void * __this, const uint8_t output_bytes[max_send_size],
-                  size_t nbytes, CharDevResult * result);
+    void (* send)(void * const, const uint8_t *, size_t, CharDevResult * const);
 } CharDevSend;
 
 typedef struct {
     void * __that;
-    void (* initialize)(void * __this);
+    void (* initialize)(void * const);
 } CharDevInit;
 
 typedef struct {
     void * __that;
-    void (* release_tx)(void * __this);
+    void (* release_tx)(void * const);
 } CharDevRelayIrq;
 
 typedef struct {
@@ -47,28 +46,28 @@ typedef struct {
     volatile UARTRegs * registers;
 } UARTDriver;
 
-_Bool UARTDriver__tf_is_full(const UARTDriver * const self);
-
-void UARTDriver__send(void * const __this,
-                      const uint8_t output_bytes[max_send_size], size_t nbytes,
-                      CharDevResult * result);
-
-_Bool UARTDriver__tf_is_empty(const UARTDriver * const self);
-
-void UARTDriver__release_tx(void * const __this);
-
-void UARTDriver__initialize(void * const __this);
-
-void UARTDriver__enable_TX(UARTDriver * const self);
-
-void UARTDriver__enable_TI(UARTDriver * const self);
-
-void UARTDriver__enable_RX(UARTDriver * const self);
-
-void UARTDriver__enable_RI(UARTDriver * const self);
+void UARTDriver__disable_RF(UARTDriver * const self);
 
 void UARTDriver__disable_TF(UARTDriver * const self);
 
-void UARTDriver__disable_RF(UARTDriver * const self);
+void UARTDriver__enable_RI(UARTDriver * const self);
+
+void UARTDriver__enable_RX(UARTDriver * const self);
+
+void UARTDriver__enable_TI(UARTDriver * const self);
+
+void UARTDriver__enable_TX(UARTDriver * const self);
+
+void UARTDriver__initialize(void * const __this);
+
+void UARTDriver__release_tx(void * const __this);
+
+_Bool UARTDriver__tf_is_empty(const UARTDriver * const self);
+
+void UARTDriver__send(void * const __this,
+                      const uint8_t output_bytes[max_send_size], size_t nbytes,
+                      CharDevResult * const result);
+
+_Bool UARTDriver__tf_is_full(const UARTDriver * const self);
 
 #endif

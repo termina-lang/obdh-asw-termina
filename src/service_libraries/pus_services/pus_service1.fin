@@ -405,6 +405,10 @@ function build_tm_1_2 (status : &TCStatus, p_tm_descriptor : &mut TMDescriptorT,
 			build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 2, 1, 2);
 			error_code = 6;
 		}
+		case Undefined => {
+
+			//error
+		}
 	}
 
 	serialize_uint16(error_code ,&mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
