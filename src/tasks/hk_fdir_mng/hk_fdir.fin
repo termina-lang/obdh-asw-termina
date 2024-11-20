@@ -1,0 +1,110 @@
+import service_libraries.pus_services.pus_service3;
+import service_libraries.pus_services.pus_service5;
+import service_libraries.pus_services.pus_service12;
+import service_libraries.pus_services.pus_service19;
+
+const num_actions_per_second : usize = 2;
+
+
+task class HouseKeepingFDIR {
+
+
+    hk_fdir_timer_ev : sink TimeVal triggers do_hk_fdir;
+    action_tc_message_queue_output: out box TCDescriptorT;
+    a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
+    event_list : EventList; 
+    pending_actions : [u8; 4];
+
+    pus_service_3 : access PUSS3Iface;
+    pus_service_12 : access PUSS12Iface;
+    pus_service_5 : access PUSS5Iface;
+    pus_service_19 : access PUSS19Iface; 
+
+    action do_hk_fdir(&priv self, _current_time : TimeVal) -> Result {
+
+        var res : Result = Result::Ok;
+        var pending_actions : bool = false;
+
+        self->pus_service_3->do_hk(&mut res);
+        self->pus_service_12->do_monitoring(&mut self->event_list, &mut res);
+        self->pus_service_5->build_event_list_tms(&mut self->event_list, &mut res);
+        self->manage_actions();
+        
+        return res;
+    } 
+
+    method manage_actions (&priv self){
+
+        self->PUS_service_19->manage_event_actions(&mut self->event_list, &mut self->pending_actions);
+        var n : u8 = 0;
+
+        for i: usize in 0 .. 3 while n < 2{
+
+            if (self->pending_actions[3-i] >= 2){
+
+                var tc_descriptor1 : Option<box TCDescriptorT> = None;
+                self->a_tc_descriptor_pool.alloc(&mut tc_descriptor1);
+            
+                match tc_descriptor1 {
+
+                    case Some(descriptor) => {
+
+                        self->PUS_service_19->extract_action(3-i, &mut descriptor);
+                        self->action_tc_message_queue_output.send(descriptor);
+                        n = n + 1;
+
+                    }
+                    case None => {
+                    
+                    }
+
+                }
+
+                var tc_descriptor2 : Option<box TCDescriptorT> = None;
+                self->a_tc_descriptor_pool.alloc(&mut tc_descriptor2);
+            
+                match tc_descriptor2 {
+
+                    case Some(descriptor) => {
+
+                        self->PUS_service_19->extract_action(3-i, &mut descriptor);
+                        self->action_tc_message_queue_output.send(descriptor);
+                        n = n + 1;
+
+                    }
+                    case None => {
+                    
+                    }
+
+                }
+            } else if (self->pending_actions[3-i] == 1){
+
+                var tc_descriptor : Option<box TCDescriptorT> = None;
+                self->a_tc_descriptor_pool.alloc(&mut tc_descriptor);
+            
+                match tc_descriptor {
+
+                    case Some(descriptor) => {
+
+                        self->PUS_service_19->extract_action(3-i, &mut descriptor);
+                        self->action_tc_message_queue_output.send(descriptor);
+                        n = n + 1;
+
+                    }
+                    case None => {
+                    
+                    }
+
+                }
+            } else {
+                //Do nothing
+            }
+
+
+            
+
+        }
+
+        
+    }
+};

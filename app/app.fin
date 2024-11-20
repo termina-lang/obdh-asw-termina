@@ -31,6 +31,9 @@ import service_libraries.pus_services.pus_service9;
 import service_libraries.pus_services.pus_service12;
 import service_libraries.pus_services.pus_service17;
 import service_libraries.pus_services.pus_service19;
+import resources.uart;
+//import tasks.hk_fdir_mng.hk_fdir;
+import tasks.hk_fdir_mng.tc_executor;
 
 
 
