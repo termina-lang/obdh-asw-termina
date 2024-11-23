@@ -4,7 +4,7 @@ PUS SERVICE 3 : HOUSEKEEPING
 
 import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
-import service_libraries.pus_services.pus_service1;
+import service_libraries.pus_services.pus_service1.pus_service1;
 import service_libraries.serialize;
 import resources.system_data_pool;
 import tasks.tm_channel;
@@ -37,7 +37,7 @@ resource class PUSService3 provides PUSS3Iface {
 
     hk_config_table : [HKConfiguration; max_num_of_SIDs];
     
-    system_data_pool : access AtomicArrayAccess<u16; SDP_num_params>;
+    system_data_pool : access AtomicArrayAccess<u16; sdp_num_params>;
     tm_channel: access TMChannelIface;   
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     tm_counter : access TMCounterIface;

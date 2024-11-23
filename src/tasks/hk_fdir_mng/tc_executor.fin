@@ -1,5 +1,6 @@
 import service_libraries.tc_ccsds_pus_format;
-import service_libraries.pus_services.pus_service5;
+import service_libraries.pus_services.pus_service5.pus_service5;
+import service_libraries.pus_services.pus_service12.pus_service12;
 import service_libraries.pus_services.pus_service3;
 import service_libraries.pus_services.pus_service19;
 
@@ -11,10 +12,10 @@ task class PUSHKFDIRTCExcutor {
     a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
     tm_channel: access TMChannelIface;
     tm_counter : access TMCounterIface;
-    PUS_service_3 : access PUSS3Iface;
-    PUS_service_12 : access PUSS12Iface;
-    PUS_service_5 : access PUSS5Iface;
-    PUS_service_19 : access PUSS19Iface; 
+    pus_service_3 : access PUSS3Iface;
+    pus_service_12 : access PUSS12Iface;
+    pus_service_5 : access PUSS5Iface;
+    pus_service_19 : access PUSS19Iface; 
 
     action exec_tc(&priv self, tc_descriptor : box TCDescriptorT)-> Result {
 
@@ -38,15 +39,15 @@ task class PUSHKFDIRTCExcutor {
                     
                     if (subtype == 5){
 
-                        self->PUS_service_3->exec3_5TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_3.exec3_5TC(&tc_descriptor, &mut descriptor, tm_count);
                     } 
                     else if (subtype == 6){
 
-                        self->PUS_service_3->exec3_6TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_3.exec3_6TC(&tc_descriptor, &mut descriptor, tm_count);
 
                     } else if (subtype == 31){
 
-                        self->PUS_service_3->exec3_31TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_3.exec3_31TC(&tc_descriptor, &mut descriptor, tm_count);
 
                     } else {
 
@@ -59,11 +60,11 @@ task class PUSHKFDIRTCExcutor {
 
                     if (subtype == 5){
 
-                        self->PUS_service_5->exec5_5TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_5.exec5_5TC(&tc_descriptor, &mut descriptor, tm_count);
                     } 
                     else if (subtype == 6){
 
-                        self->PUS_service_5->exec5_6TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_5.exec5_6TC(&tc_descriptor, &mut descriptor, tm_count);
 
                     } else {
 
@@ -75,15 +76,15 @@ task class PUSHKFDIRTCExcutor {
 
                     if (subtype == 1){
 
-                        self->PUS_service_12->exec12_1TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_12.exec12_1TC(&tc_descriptor, &mut descriptor, tm_count);
                     } 
                     else if (subtype == 2){
 
-                        self->PUS_service_12->exec12_2TC(tc_descriptor, &mut tm_descriptor, tm_count);
+                        self->pus_service_12.exec12_2TC(&tc_descriptor, &mut descriptor, tm_count);
 
                     } else if (subtype == 5){
 
-                        self->PUS_service_12->exec12_5TC(tc_descriptor, &mut tm_descriptor, tm_count);
+                        self->pus_service_12.exec12_5TC(&tc_descriptor, &mut descriptor, tm_count);
 
                     } else {
 
@@ -95,19 +96,19 @@ task class PUSHKFDIRTCExcutor {
 
                     if (subtype == 1){
 
-                        self->PUS_service_19->exec19_1TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_19.exec19_1TC(&tc_descriptor, &mut descriptor, tm_count);
                     } 
                     else if (subtype == 2){
 
-                        self->PUS_service_19->exec19_2TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_19.exec19_2TC(&tc_descriptor, &mut descriptor, tm_count);
 
                     } else if (subtype == 4){
 
-                        self->PUS_service_19->exec19_4TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_19.exec19_4TC(&tc_descriptor, &mut descriptor, tm_count);
                     
                     } else if (subtype == 5){
 
-                        self->PUS_service_19->exec19_5TC(tc_descriptor, &mut descriptor, tm_count);
+                        self->pus_service_19.exec19_5TC(&tc_descriptor, &mut descriptor, tm_count);
 
                     } else {
 
@@ -120,7 +121,7 @@ task class PUSHKFDIRTCExcutor {
                     //This is an error in acceptance, could be modeled as an event
                 }
 
-                self->tm_channel.send_tm(descriptor); //This will have to be changed. TM_CHANNEL will be a resource
+                self->tm_channel.send_tm(descriptor, &mut res); //This will have to be changed. TM_CHANNEL will be a resource
                         
             }
             case None => {

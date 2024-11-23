@@ -1,1 +1,1 @@
-const SDP_num_params : usize = 64;
+const sdp_num_params : usize = 64;

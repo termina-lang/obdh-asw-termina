@@ -2,8 +2,8 @@
 PUS SERVICE 19 : EVENT-ACTION
 */
 
-import service_libraries.pus_services.pus_service5;
-import service_libraries.pus_services.pus_service1;
+import service_libraries.pus_services.pus_service5.pus_service5;
+import service_libraries.pus_services.pus_service1.pus_service1;
 import service_libraries.serialize;
 import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
@@ -28,7 +28,8 @@ interface PUSS19Iface {
     procedure exec19_2TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
     procedure exec19_4TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
     procedure exec19_5TC (&mut self, tc_descriptor: &TCDescriptorT , tm_descriptor: &mut TMDescriptorT, tm_seq_counter: u16);
-    procedure manage_event_actions(&mut self, event_list: &mut EventList, num_flag : &mut [u8;4]);
+    procedure manage_event_actions(&mut self, event_list: &mut EventList);
+    procedure get_pending_action_number(&mut self, paction_num : &mut[usize;4]);
     procedure extract_action (&mut self, index : usize, action_packet : &mut TCDescriptorT);
     
 };
@@ -267,7 +268,7 @@ resource class PUSService19 provides PUSS19Iface {
     
 
 
-    procedure manage_event_actions(&mut self, event_list: &mut EventList, num_flag : &mut [u8;4]){
+    procedure manage_event_actions(&mut self, event_list: &mut EventList){
 
         for i : usize in 0 .. max_num_events while (i < event_list->num_events){
                 
@@ -296,28 +297,28 @@ resource class PUSService19 provides PUSS19Iface {
                                 
                                 tail_index = (self->pending_action_head[0] + self->pending_action_number[0])%event_action_queue_dimension;
                                 self->pending_action_queue_1I[tail_index] = self->event_action_packets[index];
-                                num_flag[0] = num_flag[0] + 1;
+                                self->pending_action_number[0] = self->pending_action_number[0] + 1;
                             
                             }
                             case LowSeverityAnomaly => {
 
                                 tail_index = (self->pending_action_head[1] + self->pending_action_number[1])%event_action_queue_dimension;
                                 self->pending_action_queue_2LS[tail_index] = self->event_action_packets[index];
-                                num_flag[1] = num_flag[1] + 1;
+                                self->pending_action_number[1] = self->pending_action_number[1] + 1;
                                 
                             }
                             case MediumSeverityAnomaly => {
 
                                 tail_index = (self->pending_action_head[2] + self->pending_action_number[2])%event_action_queue_dimension;
                                 self->pending_action_queue_3MS[tail_index] = self->event_action_packets[index];
-                                num_flag[2] = num_flag[2] + 1;
+                                self->pending_action_number[2] = self->pending_action_number[2] +1;
                                 
                             }
                             case HighSeverityAnomaly => {
 
                                 tail_index = (self->pending_action_head[3] + self->pending_action_number[3])%event_action_queue_dimension;
                                 self->pending_action_queue_4HS[tail_index] = self->event_action_packets[index];
-                                num_flag[3] = num_flag[3] + 1;
+                                self->pending_action_number[3] = self->pending_action_number[3] +1;
                             
                             }
                             case RIDNotValid => {
@@ -343,6 +344,16 @@ resource class PUSService19 provides PUSS19Iface {
         return;
     }
 
+    procedure get_pending_action_number(&mut self, paction_num : &mut[usize;4]){
+
+        for i: usize in 0 .. 3 {
+
+            paction_num[i] = self->pending_action_number[i];
+
+        }
+
+        return;
+    }
 
     procedure extract_action (&mut self, index : usize, action_packet : &mut TCDescriptorT){
 
@@ -366,7 +377,11 @@ resource class PUSService19 provides PUSS19Iface {
             //error
         } 
 
+        return;
+
     }
+
+    
 
 
 };

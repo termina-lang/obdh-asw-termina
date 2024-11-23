@@ -1,140 +1,25 @@
-import service_libraries.pus_services.pus_service1;
+import service_libraries.pus_services.pus_service1.pus_service1;
+import service_libraries.pus_services.pus_service20;
 import service_libraries.serialize;
 import resources.system_data_pool;
 import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
 import resources.tm_counter;
 
-task class BkgTCExecutor {
+task class PUSBKGTCExecutor {
 
     bkg_message_queue_input: in box TCDescriptorT triggers exec_tc;
 
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
-    system_data_pool : access AtomicArrayAccess<u16; SDP_num_params>; 
+    tm_channel: access TMChannelIface;
     tm_counter : access TMCounterIface;
-    telecommand : TCDescriptorT;
+    pus_service_20 : access PUSS20Iface;
+  
 
-    tm_message_queue_output : out box TMDescriptorT;
-
-
-    viewer pus_serv20_build_tm_20_2(&self, PID: u16){
-
-        var tm_packet_header : CCSDSPUSTMPacketHeaderT =
-	                                     {packet_id = 0 : u16,
-	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16};
-        var df_header : CCSDSPUSTMDFHeaderT =
-                                            {version = 0 : u8,
-                                            type = 0 : u8,
-                                            subtype = 0 : u8,
-                                            destinationID = 0 : u8};
-
-        tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
-
-        tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
-            
-
-        tm_packet_header.packet_length = 7;
-
-        df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
-        df_header.type = 20 : u8;
-        df_header.subtype = 2;
-        df_header.destinationID = 0x78 : u8;
-
-
-        ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
-
-        serialize_uint16(PID, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
-        var param_value : u16 = 0;
-        self->system_data_pool.load_index(PID, &mut param_value);
-        serialize_uint16(param_value, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
-            
-        // Calculate p_tm_descriptor->tm_num_bytes
-        p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length + 7 : u16;
-
-        return;
-
-    }
-
-
-
-    method pus_serv20_exec20_1TC(&priv self) -> Result{
+    action exec_tc(&priv self, tc_descriptor : box TCDescriptorT)-> Result {
 
         var res : Result = Result::Ok;
-
-        var PID : u16 = deserialize_uint16(&(self->telecommand.tc_bytes[10..12]));
-
-        if (PID < SDP_num_params){
-
-            var tm_descriptor1 : Option<box TMDescriptorT> = None;
-            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor1);
-
-            match tm_descriptor1 {
-
-                case Some(descriptor1) => {
-
-                var tm_count1 : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count1);
-                pus_serv20_build_tm_20_2(PID);
-                self->tm_message_queue_output.send(descriptor1);
-
-                }
-                case None => {
-                    res = Result::Error;
-                }
-            }
-
-            var tm_descriptor2 : Option<box TMDescriptorT> = None;
-            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
-
-            match tm_descriptor2 {
-
-                case Some(descriptor2) => {
-
-                var tm_count2 : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count2);
-                build_tm_1_7(&(self->telecommand), &mut descriptor2, tm_count2);
-                self->tm_message_queue_output.send(descriptor2);
-
-                }
-                case None => {
-                    res = Result::Error;
-                }
-            }
-
-        } else {
-
-            var tm_descriptor1 : Option<box TMDescriptorT> = None;
-            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor1);
-
-            match tm_descriptor1 {
-
-                case Some(descriptor1) => {
-
-                var tm_count1 : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count1);
-                build_tm_1_8_tc_20_X_PIDnotvalid(&mut descriptor1, tm_count1, PID, &(self->telecommand));
-                self->tm_message_queue_output.send(descriptor1);
-
-                }
-                case None => {
-                    res = Result::Error;
-                }
-            }
-
-        }
-
-        return res;
-    }
-
-
-    method pus_serv20_exec20_3TC(&priv self)-> Result{
-
-        var res : Result = Result::Ok;
-
-        var PID : u16 = deserialize_uint16(&(self->telecommand.tc_bytes[10..12]));
-        var param_value : u16 = deserialize_uint16(&(self->telecommand.tc_bytes[12..14]));
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
@@ -145,64 +30,46 @@ task class BkgTCExecutor {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
-
-                if (PID < SDP_num_params){
-
-                    self->system_data_pool.store_index(PID as usize,param_value);
-                    build_tm_1_7(&(self->telecommand), &mut descriptor, tm_count);
-
-                } else {
-
-                    build_tm_1_8_tc_20_X_PIDnotvalid(&mut descriptor, tm_count, PID, &(self->telecommand));
-
-                }
-
-                self->tm_message_queue_output.send(descriptor);
-
-            }
-            case None => {
-                res = Result::Error;
-            }
-        }
-
-        return res;
-    }
-
-  
-
-    action PUS_bkg_exec_tc(&priv self, tc_descriptor : box TCDescriptorT) -> Result {
-
-        var res : Result = Result::Ok;
-        self->telecommand = tc_descriptor;
-
-        var tc_type : u8 = get_type(&(tc_descriptor.tc_bytes));
-
-            if (tc_type == 20){
-
-                var subtype : u8 = get_subtype(&(tc_descriptor.tc_bytes)); 
-
-                if (subtype == 1){
-
-                    res = pus_serv20_exec20_1TC();
     
-                } else if (subtype == 3){
+                var tc_type : u8 = get_type(&(tc_descriptor.tc_bytes));
+                var subtype : u8 = get_subtype(&(tc_descriptor.tc_bytes));
 
-                    res = pus_serv20_exec20_3TC();
+                if (tc_type == 20){
+
+                    if (subtype == 1){
+
+                        self->pus_service_20.exec20_1TC(&tc_descriptor, &mut descriptor, tm_count, &mut res);
+                    } 
+                    else if (subtype == 3){
+
+                        self->pus_service_20.exec20_3TC(&tc_descriptor, &mut descriptor, tm_count);
+
+                    } else {
+
+                        //This is an error in acceptance, could be modeled as an event
+                        /* If the acceptance process is correct, this point should not be reached */
+                    }
 
                 } else {
 
                     //This is an error in acceptance, could be modeled as an event
                 }
 
-            } else {
-
-                //This is an error in acceptance, could be modeled as an event
+                self->tm_channel.send_tm(descriptor, &mut res); //This will have to be changed. TM_CHANNEL will be a resource
+                        
+            }
+            case None => {
+                //error
+                res = Result::Error;
             }
 
-            return res;
-                        
-
         }
+
+        self->a_tc_descriptor_pool.free(tc_descriptor);
+
+        return res;
+    }
+
 
         
 

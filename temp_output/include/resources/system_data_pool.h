@@ -5,6 +5,6 @@
 
 #include "option.h"
 
-#define SDP_num_params 64
+#define sdp_num_params 64
 
 #endif

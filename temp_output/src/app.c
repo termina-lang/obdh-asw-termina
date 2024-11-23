@@ -1,6 +1,4 @@
 
 #include "app.h"
 
- PeriodicTimer hk_fdir_timer;
-
- _Atomic uint16_t system_data_pool;
+ _Atomic uint16_t system_data_pool[sdp_num_params];

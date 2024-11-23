@@ -106,16 +106,16 @@ void UARTDriver__release_tx(void * const __this) {
             
             dequeue(&self->uart_queue, &extracted_elem);
 
-            if (extracted_elem.__variant == None) {
+            if (extracted_elem.__variant == Some) {
                 
+                uint8_t elem = extracted_elem.Some.__0;
+
+                self->registers->data = (uint32_t)elem;
+
+                sent_bytes = sent_bytes + 1;
 
             } else {
                 
-                __option_uint8_params_t __Some = extracted_elem.Some;
-
-                self->registers->data = (uint32_t)__Some.__0;
-
-                sent_bytes = sent_bytes + 1;
 
             }
 

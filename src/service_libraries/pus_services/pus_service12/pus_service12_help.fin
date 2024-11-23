@@ -1,0 +1,75 @@
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import service_libraries.serialize;
+import service_libraries.pus_services.pus_service1.pus_service1;
+import service_libraries.event_list;
+import resources.system_data_pool;
+
+
+const max_num_pmon_ids : usize = 8;
+
+enum CheckState {
+    MonitorUnselected,
+    MonitorUnchecked,
+    MonitorAboveHighLimit,
+    MonitorBelowLowLimit,
+    MonitorWithinLimits
+};
+
+struct ParamMonitoringConfiguration {
+    prev_state : CheckState;
+    state : CheckState;
+    transitionY2K : TimeVal;
+    enabled : bool;
+    PID : u16;
+    interval : u8;
+    interval_control : u8;
+};
+
+
+struct ParamLimitCheckDefinition {
+    high_limit_rid : u16;
+    high_limit : u16;
+    low_limit_rid : u16;
+    low_limit : u16;
+};
+
+function trigger_event(event_list : &mut EventList, RID: u16, PID: u16, PID_value: u16, limit: u16, res: &mut Result){
+
+    var ev_info : EventInfo = {
+        ev_RID = RID,
+        ev_aux_data = [0;event_aux_data_max_size],
+        ev_aux_data_size = 6
+    };
+
+    serialize_uint16(PID, &mut (ev_info.ev_aux_data[0..2]));
+    serialize_uint16(PID_value, &mut (ev_info.ev_aux_data[2..4]));
+    serialize_uint16(limit, &mut (ev_info.ev_aux_data[4..6]));
+
+    var result : ListResult = add_event(event_list, ev_info);
+    // Right now I am not doing anything with the result, but I could add a new state of non-triggerred. Ask Pablo
+    if result is ListResult::ListFull {
+
+        *res = Result::Error;
+
+    } else {
+
+        *res = Result::Ok;
+
+    }
+    return;
+
+}
+
+
+function update_state (param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids], PMONID: usize, new_state : CheckState){
+
+    if (PMONID < max_num_pmon_ids){
+
+        param_mon_config_table[PMONID].prev_state = param_mon_config_table[PMONID].state;
+        param_mon_config_table[PMONID].state = new_state;
+        clock_get_uptime(&mut param_mon_config_table[PMONID].transitionY2K);
+    }
+
+    return;
+}

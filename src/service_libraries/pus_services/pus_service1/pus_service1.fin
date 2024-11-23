@@ -2,38 +2,8 @@
 PUS SERVICE 1 : REQUEST VERIFICATION SERVICE
 */
 
-import service_libraries.tc_ccsds_pus_format;
-import service_libraries.tm_ccsds_pus_format;
-import service_libraries.crc;
-import service_libraries.serialize;
+import service_libraries.pus_services.pus_service1.pus_service1_help;
 
-enum TCAcceptationStatus {
-	Accepted,
-	Rejected,
-	Undefined
-};
-
-//Error types for TM[1,2] packets
-enum TCErrorType {
-	CRCError,
-	APIDError,
-	SourceIDError,
-	TypeError,
-	SubTypeError,
-	Undefined
-};
-
-enum TCExecutionCtrl {
-    ExecCtrlPrioTC, ExecCtrlReboot, ExecCtrlHK_FDIRTC, ExecCtrlBKGTC, Undefined
-};
-
-struct TCStatus {
-	acceptation_status : TCAcceptationStatus;
-    execution_status : TCExecutionCtrl;
-	error_code : TCErrorType;
-};
-
-const base_length : u16 = 7;
 
 //Error codes for TM[1,8] packets
 const TM_1_8_TC_3_X_invalid_SID : u16 = 1;
@@ -48,43 +18,8 @@ const TM_1_8_TC_19_1_ev_action_rejected  : u16 = 10;
 const TM_1_8_TC_19_X_ev_action_not_defined : u16 = 11;
 const TM_1_8_TC_2_X_device_not_valid : u16 = 12;
 
-function is_crc_valid(tc_descriptor: &TCDescriptorT) -> bool {
 
-	let cal_crc_value : u16 = cal_crc_16(&(tc_descriptor->tc_bytes), (tc_descriptor->tc_num_bytes - 2));
-	var packet_error_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
-
-	var is_valid : bool = (cal_crc_value == packet_error_ctrl);
-
-	return is_valid;
-}
-
-
-function is_apid_valid(tc_descriptor: &TCDescriptorT) -> bool {
-	
-	let epd_apid : u16 = 0x32C : u16;
-	var tc_apid : u16 = get_APID(&(tc_descriptor->tc_bytes));
-	
-	var is_valid : bool = (epd_apid == tc_apid);
-
-	return is_valid;
-}
-
-
-function is_sourceID_valid( tc_descriptor: &TCDescriptorT) -> bool {
-	
-	let Mission_TimeLine_SourceID : u8 = 110;
-	let TC_Sequences_SourceID : u8 = 111;
-	let Direct_Commands_SourceID : u8 = 120;
-
-	var sourceID : u8 = get_source_id(&(tc_descriptor->tc_bytes));
-
-	var is_valid : bool = ((Mission_TimeLine_SourceID == sourceID)
-		 || (TC_Sequences_SourceID == sourceID)
-		 || (Direct_Commands_SourceID == sourceID));
-
-	return is_valid;
-}
-
+// Will I be using this function for action TCs???
 function handle_tc(tc_descriptor: &TCDescriptorT) -> TCExecutionCtrl {
 
 	var type : u8 = get_type(&(tc_descriptor->tc_bytes));
@@ -315,43 +250,7 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 	return status;
 }
 
-function build_tm (p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, tm_plength : u16, tm_type: u8, tm_subtype: u8) {
 
-    var tm_packet_header : CCSDSPUSTMPacketHeaderT =
-	                                     {packet_id = 0 : u16,
-	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16} : CCSDSPUSTMPacketHeaderT;
-	var df_header : CCSDSPUSTMDFHeaderT =
-										{version = 0 : u8,
-	 									type = 0 : u8,
-	 									subtype = 0 : u8,
-	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
-
-	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
-	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
-
-	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
-
-	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
-	
-
-	tm_packet_header.packet_length = tm_plength;
-
-	df_header.version = ccsds_pus_tm_build_df_header_version(0x1);
-    df_header.type = tm_type;
-	df_header.subtype = tm_subtype;
-	df_header.destinationID = 0x78 : u8;
-
-	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);	
-	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
-	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
-
-	
-	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
-
-	return;
-}
 
 
 function build_tm_1_1(p_tm_descriptor : &mut TMDescriptorT,
