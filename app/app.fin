@@ -1,28 +1,4 @@
-/*
-import handlers.init;
-import handlers.uart_irq_handler;
-import resources.uart;
-import tasks.icu_manager;
 
-*/
-/*
-import service_libraries.pus_services.pus_service17;
-import service_libraries.pus_services.pus_service19;
-import service_libraries.pus_services.pus_service1;
-import service_libraries.pus_services.pus_service3;
-import service_libraries.pus_services.pus_service5;
-import tasks.hkfdirmng;
-import tasks.tc_rx;
-import tasks.tm_channel;
-import tasks.bkgtcexec;
-import service_libraries.tc_ccsds_pus_format;
-import handlers.init;
-import resources.uart;
-import service_libraries.queue_u8;
-import service_libraries.event_list;
-import resources.system_data_pool;
-import tasks.icu_manager;
-*/
 import service_libraries.pus_services.pus_service1.pus_service1;
 import service_libraries.pus_services.pus_service2;
 import service_libraries.pus_services.pus_service3;
@@ -36,21 +12,32 @@ import resources.uart;
 import tasks.hk_fdir_mng.hk_fdir;
 import tasks.hk_fdir_mng.tc_executor;
 import tasks.bkgtcexec;
+import tasks.icu_manager.icu_manager;
+import handlers.init;
 
-/*
 
 emitter hk_fdir_timer : PeriodicTimer = {
     period = {tv_sec = 1 : u32, tv_usec = 0 : u32} : TimeVal
 } : PeriodicTimer;
-*/
+
+
+channel byte_message_queue : MsgQueue<u8;10>;
+channel tc_message_queue : MsgQueue<box TCDescriptorT;10>;
+channel hkfdir_message_queue : MsgQueue<box TCDescriptorT;10>;
+channel bkg_message_queue : MsgQueue<box TCDescriptorT;10>;
+channel action_tc_message_queue : MsgQueue<box TMDescriptorT;5>;
+
+resource tm_pool : Pool<TMDescriptorT; 20>;
+resource tc_pool : Pool<TCDescriptorT; 20>;
 
 resource system_data_pool : AtomicArray<u16; sdp_num_params> = {
     values = [0; sdp_num_params]
 } : AtomicArray<u16; sdp_num_params>;
-/*
+
+
 resource uart_drv : UARTDriver = {
-    rem_bytes = false,
     registers @ 0xFC001000,
+    rem_bytes = false,
     uart_queue = {
         elements = [0 ; queue_max_noe],
         head_index = 0,
@@ -58,36 +45,88 @@ resource uart_drv : UARTDriver = {
     }: QueueU8
 } : UARTDriver;
 
+
+resource telemetry_channel : TMChannel = {
+    uart <-> uart_drv,
+    a_tm_descriptor_pool <-> tm_pool
+} : TMChannel;
+
+
+resource telemetry_counter : TMCounter = {
+    tm_count = 0
+} : TMCounter;
+
+
+resource pus_service_3 : PUSService3 = {
+    /*hk_config_table =  {{enabled = true, SID = 0, interval = 2, interval_control = 0, num_params =5, params_def={0,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0}},
+                        {enabled = false, SID = 10, interval = 30, interval_control = 0, num_params = 3, params_def = {5,6,7,0,0,0,0,0,0,0,0,0,0,0,0,0}},
+                        {enabled = false, SID = 11, interval = 60, interval_control = 0, num_params = 3, params_def = {8,9,10,0,0,0,0,0,0,0,0,0,0,0,0,0}},
+                        {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
+                        {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
+                        {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
+                        {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
+                        {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}},*/
+    hk_config_table = [{enabled = true, SID = 0, interval = 2, interval_control = 0, num_params =5, params_def={0,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0}}; max_num_of_SIDs],
+    system_data_pool <-> system_data_pool,
+    tm_channel <-> telemetry_channel,   
+    a_tm_descriptor_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter
+} : PUSService3;
+
+
+
+resource pus_service_5 : PUSService5 = {
+    RID_enable_config = { 0x00000007, 0x0000000F, 0x00000000, 0x0000FFFF },
+    tm_channel <-> telemetry_channel,
+    a_tm_descriptor_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter
+} : PUSService5;
+
+
+resource pus_service_12 : PUSService12 = {
+    param_mon_config_table = [{ prev_state = CheckState::MonitorUnselected, state = CheckState::MonitorUnselected, 
+    transitionY2K = {tv_sec = 1 : u32, tv_usec = 0 : u32}, enabled = false, PID = 0, interval = 1, interval_control = 0 }; max_num_pmon_ids],
+    param_limit_check_definition = [{ high_limit_rid = 0, high_limit = 0, low_limit_rid = 0, low_limit = 0 }; max_num_pmon_ids],
+    system_data_pool <-> system_data_pool
+} : PUSService12;
+
+
+resource pus_service_19 : PUSService19 = {
+    event_action_config = [{enabled = false, event_ID = 0}; max_event_action_definitions],
+    event_action_packets = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; max_event_action_definitions],
+    pending_action_queue_1I  = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; event_action_queue_dimension],
+    pending_action_queue_2LS = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; event_action_queue_dimension],
+    pending_action_queue_3MS = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; event_action_queue_dimension],
+    pending_action_queue_4HS = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; event_action_queue_dimension],
+    pending_action_number = [0; 4],
+    pending_action_head = [0; 4],
+    pus_service_5 <-> pus_service_5
+}: PUSService19;
+
+
+resource pus_service_20 : PUSService20 = {
+    system_data_pool <-> system_data_pool,
+    tm_channel <-> telemetry_channel,
+    a_tm_descriptor_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter
+}: PUSService20;
+
+
 handler init : Init = {
     uart <-> uart_drv,
     system_data_pool <-> system_data_pool,
     system_init_ev <- system_init
 } : Init;
-*/
-
-//channel byte_message_queue : MsgQueue<u8;10>;
-//channel tc_message_queue : MsgQueue<box TCDescriptorT;10>;
-//channel tm_message_queue : MsgQueue<box TMDescriptorT;10>;
-
-//resource tc_descriptor_pool : Pool<TCDescriptorT; 20>;
-/*
-task hk_fdir_manager : HK_FDIR_MNG = {
-    hk_config_table = {
-     {enabled = true, SID = 0, interval = 10, interval_control = 0, num_params = 5, params_def = {0, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
-     {enabled = false, SID = 10, interval = 3600, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
-     {enabled = false, SID = 100, interval = 1, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
-     {enabled = false, SID = 101, interval = 60, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
-     {enabled = false, SID = 110, interval = 60, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
-     {enabled = false, SID = 5, interval = 1800, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
-     {enabled = false, SID = 6, interval = 1, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
-     {enabled = false, SID = 7, interval = 1, interval_control = 0, num_params = 0, params_def = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
-    }
-} : HK_FDIR_MNG;
-*/
 
 
+handler uart_hdlr : UARTIrqHandler = {
+    irq_entry <- irq_3,
+    uart <-> uart_drv,
+    uart_registers @ 0xFC001000,
+    byte_message_queue_output -> byte_message_queue
+} : UARTIrqHandler;
 
-/*
+
 task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
     rx_status = RXStatus::SyncBytesRx,
     sync_word = {0xBE, 0xBA, 0xBE, 0xEF},
@@ -96,17 +135,69 @@ task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
     telecommand = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0},
     byte_message_queue_input <- byte_message_queue,
     tc_message_queue_output -> tc_message_queue,
-    a_tc_descriptor_pool <-> tc_descriptor_pool
+    a_tc_descriptor_pool <-> tc_pool
 } : TCRXBottomHalfTask;
 
+
 task icu_manager : ICUManagerTask = {
-    hk_timer = hk_timer,
-    tc_rx_bottom_half_task = tc_rx_bottom_half_task,
-    byte_message_queue_output -> byte_message_queue,
     tc_message_queue_input <- tc_message_queue,
-    a_tc_descriptor_pool <-> tc_descriptor_pool
+    action_tc_message_queue_input <- action_tc_message_queue,
+    a_tc_descriptor_pool <-> tc_pool,
+    a_tm_descriptor_pool <-> tm_pool,
+    hkfdir_message_queue_output -> hk_fdir_message_queue,
+    bkg_message_queue_output -> bkg_message_queue,
+    tm_channel <-> telemetry_channel,
+    tm_counter <-> telemetry_counter,
+    current_tc = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0},
+    current_tc_status = {
+	    acceptation_status = TCAcceptationStatus::Undefined,
+        execution_status = TCExecutionCtrl::Undefined,
+	    error_code = TCErrorType::Undefined
+    }
 } : ICUManagerTask;
-*/
+
+
+task hk_fdir : HouseKeepingFDIR = {
+    hk_fdir_timer_ev <- hk_fdir_timer,
+    action_tc_message_queue_output -> action_tc_message_queue,
+    a_tc_descriptor_pool <-> tc_pool,
+    pus_service_3 <-> pus_service_3,
+    pus_service_12 <-> pus_service_12,
+    pus_service_5 <-> pus_service_5,
+    pus_service_19 <-> pus_service_19
+} : HouseKeepingFDIR;
+
+
+task pus_hk_fdir_tc_executor : PUSHKFDIRTCExcutor = {
+    hkfdir_message_queue_input <- hk_fdir_message_queue,
+    a_tm_descriptor_pool <-> tm_pool,
+    a_tc_descriptor_pool <-> tc_pool,
+    tm_channel <-> telemetry_channel,
+    tm_counter <-> telemetry_counter,
+    pus_service_3 <-> pus_service_3,
+    pus_service_12 <-> pus_service_12,
+    pus_service_5 <-> pus_service_5,
+    pus_service_19 <-> pus_service_19
+} : PUSHKFDIRTCExcutor;
+
+
+task pus_bkg_tc_executor : PUSBKGTCExecutor = {
+    bkg_message_queue_input <- bkg_message_queue,
+    a_tm_descriptor_pool <-> tm_pool,
+    a_tc_descriptor_pool  <-> tc_pool,
+    tm_channel <-> telemetry_channel,
+    tm_counter <-> telemetry_counter,
+    pus_service_20 <-> pus_service_20
+} : PUSBKGTCExecutor;
+
+
+
+
+
+
+
+
+
 
 
 

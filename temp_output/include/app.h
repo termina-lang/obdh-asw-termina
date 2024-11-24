@@ -17,6 +17,7 @@
 #include "tasks/hk_fdir_mng/hk_fdir.h"
 #include "tasks/hk_fdir_mng/tc_executor.h"
 #include "tasks/bkgtcexec.h"
+#include "tasks/icu_manager/icu_manager.h"
 
 extern _Atomic uint16_t system_data_pool[sdp_num_params];
 

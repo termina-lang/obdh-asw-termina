@@ -1,21 +1,20 @@
 import resources.uart;
-import service_libraries.pus_services.pus_service3;
 import resources.system_data_pool;
 
 handler class Init {
 
     uart : access CharDevInit;
-    system_data_pool : access AtomicArrayAccess<u16;SDP_num_params >;
+    system_data_pool : access AtomicArrayAccess<u16;sdp_num_params >;
     system_init_ev : sink TimeVal triggers init;
 
-
+    //This function should access to permanent memory and extract the real system_data_pool values
     action init(&priv self, _boot_time : TimeVal) -> Result {
 
         var ret : Result = Result::Ok;
 
         self->uart.initialize();
 
-        for i : usize in 0 .. SDP_num_params {
+        for i : usize in 0 .. sdp_num_params {
             self->system_data_pool.store_index(i,i as u16);
         }
 

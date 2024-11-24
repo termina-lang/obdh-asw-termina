@@ -15,6 +15,8 @@
 
 #include "service_libraries/pus_services/pus_service12/pus_service12_help.h"
 
+#include "service_libraries/pus_services/pus_service128.h"
+
 #include "service_libraries/pus_services/pus_service19.h"
 
 #include "service_libraries/pus_services/pus_service2.h"

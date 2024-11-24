@@ -35,7 +35,7 @@ task class TCRXBottomHalfTask {
 
                     if (3 == self->aux_index){
                         self->aux_index = 0;
-                        //self->rx_status = RXStatus::SyncLengthRx
+                        self->rx_status = RXStatus::SyncLengthRx
                     } else {
                         self->aux_index = self->aux_index + 1;
                     }
