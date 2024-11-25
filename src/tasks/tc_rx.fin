@@ -35,7 +35,7 @@ task class TCRXBottomHalfTask {
 
                     if (3 == self->aux_index){
                         self->aux_index = 0;
-                        self->rx_status = RXStatus::SyncLengthRx
+                        self->rx_status = RXStatus::SyncLengthRx;
                     } else {
                         self->aux_index = self->aux_index + 1;
                     }
@@ -83,7 +83,9 @@ task class TCRXBottomHalfTask {
 
                         case Some(descriptor) => {
 
-                            descriptor.tc_bytes = self->telecommand.tc_bytes;
+                            for i: usize in 0 .. max_tc_size while i < self->telecommand.tc_num_bytes {
+                                descriptor.tc_bytes[i] = self->telecommand.tc_bytes[i];
+                            }
                             descriptor.tc_num_bytes = self->telecommand.tc_num_bytes;
 
                             self->tc_message_queue_output.send(descriptor);

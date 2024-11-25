@@ -5,4 +5,8 @@ output-folder: temp_output
 platform: rtems5-noel-spike
 source-modules: src
 profile: release
-system-init : true
+enable-system-init: true
+platform-flags:
+    rtems5-noel-spike:
+        enable-irq-3: true
+        
