@@ -15,10 +15,62 @@
 #include "service_libraries/pus_services/pus_service20.h"
 #include "resources/uart.h"
 #include "tasks/hk_fdir_mng/hk_fdir.h"
-#include "tasks/hk_fdir_mng/tc_executor.h"
 #include "tasks/bkgtcexec.h"
 #include "tasks/icu_manager/icu_manager.h"
+#include "handlers/init.h"
+#include "handlers/uart_irq_handler.h"
+#include "tasks/tc_rx.h"
+#include "tasks/icu_manager/icu_manager.h"
+#include "tasks/hk_fdir_mng/hk_fdir.h"
+
+extern PeriodicTimer hk_fdir_timer;
+
+extern __termina_msg_queue_t byte_message_queue;
+
+extern __termina_msg_queue_t tc_message_queue;
+
+extern __termina_msg_queue_t hkfdir_message_queue;
+
+extern __termina_msg_queue_t bkg_message_queue;
+
+extern __termina_msg_queue_t action_tc_message_queue;
+
+extern __termina_pool_t tm_pool;
+
+extern __termina_pool_t tc_pool;
 
 extern _Atomic uint16_t system_data_pool[sdp_num_params];
+
+extern UARTDriver uart_drv;
+
+extern TMChannel telemetry_channel;
+
+extern TMCounter telemetry_counter;
+
+extern PUSService3 pus_service_3;
+
+extern PUSService5 pus_service_5;
+
+extern PUSService12 pus_service_12;
+
+extern PUSService19 pus_service_19;
+
+extern PUSService20 pus_service_20;
+
+extern PUSService17 pus_service_17;
+
+extern ManagerTCExecutor mng_tc_executor;
+
+extern Init init;
+
+extern UARTIrqHandler uart_hdlr;
+
+extern TCRXBottomHalfTask tc_rx_bottom_half_task;
+
+extern ICUManager icu_manager;
+
+extern HouseKeepingFDIR hk_fdir;
+
+extern PUSBKGTCExecutor pus_bkg_tc_executor;
 
 #endif

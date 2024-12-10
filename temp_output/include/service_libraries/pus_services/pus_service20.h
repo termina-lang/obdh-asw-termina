@@ -13,9 +13,9 @@
 typedef struct {
     void * __that;
     void (* exec20_1TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t, Result * const);
+                        Result * const);
     void (* exec20_3TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t);
+                        Result * const);
 } PUSS20Iface;
 
 typedef struct {
@@ -32,12 +32,10 @@ void PUSService20__build_tm_20_2(const PUSService20 * const self, size_t PID,
 
 void PUSService20__exec20_1TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter, Result * const res);
+                              Result * const result);
 
 void PUSService20__exec20_3TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter);
+                              Result * const result);
 
 #endif

@@ -17,25 +17,29 @@ Result TCRXBottomHalfTask__get_tc(TCRXBottomHalfTask * const self,
             
             self->rx_status.__variant = RXStatus__SyncBytesRx;
 
-            __option_dyn_t tc_descriptor;
+            __option_box_t tc_descriptor;
             tc_descriptor.__variant = None;
 
             __termina_pool__alloc(self->a_tc_descriptor_pool, &tc_descriptor);
 
-            if (tc_descriptor.__variant == None) {
+            if (tc_descriptor.__variant == Some) {
                 
-                ret.__variant = Result__Error;
+                __termina_box_t descriptor = tc_descriptor.Some.__0;
+
+                for (size_t i = 0; i < max_tc_size && i < self->telecommand.tc_num_bytes; i = i + 1) {
+                    
+                    (*(TCDescriptorT *)descriptor.data).tc_bytes[i] = self->telecommand.tc_bytes[i];
+
+                }
+
+                (*(TCDescriptorT *)descriptor.data).tc_num_bytes = self->telecommand.tc_num_bytes;
+
+                __termina_msg_queue__send(self->tc_message_queue_output,
+                                          (void *)&descriptor);
 
             } else {
                 
-                __option_dyn_params_t __Some = tc_descriptor.Some;
-
-                (*(TCDescriptorT *)__Some.__0.data).tc_bytes = self->telecommand.tc_bytes;
-
-                (*(TCDescriptorT *)__Some.__0.data).tc_num_bytes = self->telecommand.tc_num_bytes;
-
-                __termina_msg_queue__send(self->tc_message_queue_output,
-                                          (void *)&__Some.__0);
+                ret.__variant = Result__Error;
 
             }
 
@@ -72,6 +76,8 @@ Result TCRXBottomHalfTask__get_tc(TCRXBottomHalfTask * const self,
             if (3 == self->aux_index) {
                 
                 self->aux_index = 0;
+
+                self->rx_status.__variant = RXStatus__SyncLengthRx;
 
             } else {
                 

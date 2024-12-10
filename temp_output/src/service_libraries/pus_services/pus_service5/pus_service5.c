@@ -90,29 +90,51 @@ void PUSService5__build_event_list_tms(void * const __this,
 
 void PUSService5__exec5_5TC(void * const __this,
                             const TCDescriptorT * const tc_descriptor,
-                            TMDescriptorT * const tm_descriptor,
-                            uint16_t tm_seq_counter) {
+                            Result * const result) {
     
     PUSService5 * self = (PUSService5 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    uint16_t RID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    size_t index = get_RID_enable_config_index(RID);
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    uint8_t offset = get_RID_enable_config_offset(RID);
-
-    if (index < 4) {
+    if (tm_descriptor.__variant == Some) {
         
-        self->RID_enable_config[index] = self->RID_enable_config[index] | (uint32_t)(1 << offset);
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        uint16_t RID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+
+        size_t index = get_RID_enable_config_index(RID);
+
+        uint8_t offset = get_RID_enable_config_offset(RID);
+
+        if (index < 4) {
+            
+            self->RID_enable_config[index] = self->RID_enable_config[index] | (uint32_t)(1 << offset);
+
+            build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                         tc_descriptor);
+
+        } else {
+            
+            build_tm_1_8_tc_5_X_RIDunknown((TMDescriptorT *)descriptor.data,
+                                           tm_count, RID, tc_descriptor);
+
+        }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
 
     } else {
         
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, RID,
-                                       tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 
@@ -124,29 +146,51 @@ void PUSService5__exec5_5TC(void * const __this,
 
 void PUSService5__exec5_6TC(void * const __this,
                             const TCDescriptorT * const tc_descriptor,
-                            TMDescriptorT * const tm_descriptor,
-                            uint16_t tm_seq_counter) {
+                            Result * const result) {
     
     PUSService5 * self = (PUSService5 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    uint16_t RID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    size_t index = get_RID_enable_config_index(RID);
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    uint8_t offset = get_RID_enable_config_offset(RID);
-
-    if (index < 4) {
+    if (tm_descriptor.__variant == Some) {
         
-        self->RID_enable_config[index] = self->RID_enable_config[index] & (uint32_t)(0xFFFFFFFE << offset);
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        uint16_t RID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+
+        size_t index = get_RID_enable_config_index(RID);
+
+        uint8_t offset = get_RID_enable_config_offset(RID);
+
+        if (index < 4) {
+            
+            self->RID_enable_config[index] = self->RID_enable_config[index] & (uint32_t)(0xFFFFFFFE << offset);
+
+            build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                         tc_descriptor);
+
+        } else {
+            
+            build_tm_1_8_tc_5_X_RIDunknown((TMDescriptorT *)descriptor.data,
+                                           tm_count, RID, tc_descriptor);
+
+        }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
 
     } else {
         
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, RID,
-                                       tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 

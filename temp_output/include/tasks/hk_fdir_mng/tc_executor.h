@@ -16,10 +16,7 @@ typedef struct {
     PUSS5Iface pus_service_5;
     PUSS12Iface pus_service_12;
     PUSS3Iface pus_service_3;
-    TMCounterIface tm_counter;
-    TMChannelIface tm_channel;
     __termina_pool_t * a_tc_descriptor_pool;
-    __termina_pool_t * a_tm_descriptor_pool;
     __termina_in_port_t hkfdir_message_queue_input;
 } PUSHKFDIRTCExcutor;
 

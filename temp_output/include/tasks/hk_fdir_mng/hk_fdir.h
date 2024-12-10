@@ -19,12 +19,14 @@ typedef struct {
     PUSS3Iface pus_service_3;
     __termina_pool_t * a_tc_descriptor_pool;
     __termina_out_port_t action_tc_message_queue_output;
+    __termina_in_port_t hkfdir_message_queue_input;
     __termina_sink_port_t hk_fdir_timer_ev;
 } HouseKeepingFDIR;
 
-void HouseKeepingFDIR__manage_actions(HouseKeepingFDIR * const self);
-
 Result HouseKeepingFDIR__do_hk_fdir(HouseKeepingFDIR * const self,
                                     TimeVal _current_time);
+
+Result HouseKeepingFDIR__exec_tc(HouseKeepingFDIR * const self,
+                                 __termina_box_t tc_descriptor);
 
 #endif

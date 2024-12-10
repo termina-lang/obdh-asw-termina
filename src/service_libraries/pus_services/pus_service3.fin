@@ -27,9 +27,9 @@ struct HKConfiguration {
 interface PUSS3Iface {
 
     procedure do_hk (&mut self, result : &mut Result);    
-    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
-    procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
-    procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result);
+    procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result);
+    procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result);
 
 };
 
@@ -60,62 +60,115 @@ resource class PUSService3 provides PUSS3Iface {
     }
 
 
-    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result){
 
-        var index : usize = 0;
-        var SID : u8 = tc_descriptor->tc_bytes[10];
+        var tm_descriptor : Option<box TMDescriptorT> = None;
+        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
 
-        if (self->get_SIDindex(SID, &mut index)){
+        match tm_descriptor {
 
-            self->hk_config_table[index].enabled = true;
-            self->hk_config_table[index].interval_control = 0;
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+            case Some(descriptor) => {
 
-        } else {
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
 
-            build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter, SID as u16, tc_descriptor);
-            
-        }  
+                var index : usize = 0;
+                var SID : u8 = tc_descriptor->tc_bytes[10];
+
+                if (self->get_SIDindex(SID, &mut index)){
+
+                    self->hk_config_table[index].enabled = true;
+                    self->hk_config_table[index].interval_control = 0;
+                    build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+
+                } else {
+
+                    build_tm_1_8_tc_3_X_SIDnotvalid(&mut descriptor, tm_count, SID as u16, tc_descriptor);
+                    
+                }
+
+                self->tm_channel.send_tm(descriptor, result);
+            }
+            case None => {
+                //Error
+                *result = Result::Error;
+            }  
+        } 
 
         return;
     }
 
-    procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+    procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result){
 
-        var index : usize = 0;
-        var SID : u8 = tc_descriptor->tc_bytes[10];
+        var tm_descriptor : Option<box TMDescriptorT> = None;
+        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
 
-        if (self->get_SIDindex(SID, &mut index)){
+        match tm_descriptor {
 
-            self->hk_config_table[index].enabled = false;
-            self->hk_config_table[index].interval_control = 0;
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+            case Some(descriptor) => {
 
-        } else {
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
 
-            build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter, SID as u16, tc_descriptor);
-            
-        }  
+                var index : usize = 0;
+                var SID : u8 = tc_descriptor->tc_bytes[10];
+
+                if (self->get_SIDindex(SID, &mut index)){
+
+                    self->hk_config_table[index].enabled = false;
+                    self->hk_config_table[index].interval_control = 0;
+                    build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+
+                } else {
+
+                    build_tm_1_8_tc_3_X_SIDnotvalid(&mut descriptor, tm_count, SID as u16, tc_descriptor);
+                    
+                }
+
+                self->tm_channel.send_tm(descriptor, result);
+            }
+            case None => {
+                //Error
+                *result = Result::Error;
+            }  
+        } 
 
         return;
 
     }
 
-    procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+    procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result){
 
-        var SID : u8 = tc_descriptor->tc_bytes[10];
-        var index : usize = 0;
+        var tm_descriptor : Option<box TMDescriptorT> = None;
+        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
 
-        if(self->get_SIDindex(SID, &mut index)){
+        match tm_descriptor {
 
-            self->hk_config_table[index].interval = deserialize_uint16(&(tc_descriptor->tc_bytes[11 : usize .. 13 : usize]));
-            //DESIGN DECISION : Óscar does not restart the control interval when receiving a TC[3,31]
-            self->hk_config_table[index].interval_control = 0;
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+            case Some(descriptor) => {
 
-        } else {
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
 
-            build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter, SID as u16, tc_descriptor);
+                var SID : u8 = tc_descriptor->tc_bytes[10];
+                var index : usize = 0;
+
+                if(self->get_SIDindex(SID, &mut index)){
+
+                    self->hk_config_table[index].interval = deserialize_uint16(&(tc_descriptor->tc_bytes[11 : usize .. 13 : usize]));
+                    //DESIGN DECISION : Óscar does not restart the control interval when receiving a TC[3,31]
+                    self->hk_config_table[index].interval_control = 0;
+                    build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+
+                } else {
+
+                    build_tm_1_8_tc_3_X_SIDnotvalid(&mut descriptor, tm_count, SID as u16, tc_descriptor);
+                }
+
+                self->tm_channel.send_tm(descriptor, result);
+            }
+            case None => {
+                *result = Result::Error;
+            }
         }
 
         return;

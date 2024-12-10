@@ -15,10 +15,7 @@
 typedef struct {
     __termina_task_t __task;
     PUSS20Iface pus_service_20;
-    TMCounterIface tm_counter;
-    TMChannelIface tm_channel;
     __termina_pool_t * a_tc_descriptor_pool;
-    __termina_pool_t * a_tm_descriptor_pool;
     __termina_in_port_t bkg_message_queue_input;
 } PUSBKGTCExecutor;
 

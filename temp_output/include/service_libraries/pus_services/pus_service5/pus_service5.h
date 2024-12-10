@@ -11,9 +11,9 @@ typedef struct {
     void (* build_event_list_tms)(void * const, EventList * const,
                                   Result * const);
     void (* exec5_5TC)(void * const, const TCDescriptorT * const,
-                       TMDescriptorT * const, uint16_t);
+                       Result * const);
     void (* exec5_6TC)(void * const, const TCDescriptorT * const,
-                       TMDescriptorT * const, uint16_t);
+                       Result * const);
     void (* is_RID_enabled_ext)(void * const, uint16_t, _Bool * const);
 } PUSS5Iface;
 
@@ -33,13 +33,11 @@ void PUSService5__build_event_list_tms(void * const __this,
 
 void PUSService5__exec5_5TC(void * const __this,
                             const TCDescriptorT * const tc_descriptor,
-                            TMDescriptorT * const tm_descriptor,
-                            uint16_t tm_seq_counter);
+                            Result * const result);
 
 void PUSService5__exec5_6TC(void * const __this,
                             const TCDescriptorT * const tc_descriptor,
-                            TMDescriptorT * const tm_descriptor,
-                            uint16_t tm_seq_counter);
+                            Result * const result);
 
 void PUSService5__is_RID_enabled_ext(void * const __this, uint16_t RID,
                                      _Bool * const p_enabled);

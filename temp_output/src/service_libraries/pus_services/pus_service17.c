@@ -39,17 +39,46 @@ void build_tm_17_2(TMDescriptorT * const tm_descriptor,
 
 }
 
-void PUS_service_17_execTC(const TCDescriptorT * const tc_descriptor,
-                           TMDescriptorT * const tm_descriptor,
-                           uint16_t tm_seq_counter) {
+void PUSService17__exec17_1TC(void * const __this,
+                              const TCDescriptorT * const tc_descriptor,
+                              Result * const result) {
     
+    PUSService17 * self = (PUSService17 *)__this;
+
+    __termina_resource__lock(&self->__resource);
+
     uint8_t subtype = get_subtype(tc_descriptor->tc_bytes);
 
     if (subtype == 1) {
         
-        build_tm_17_2(tm_descriptor, tm_seq_counter);
+        __option_box_t tm_descriptor;
+        tm_descriptor.__variant = None;
+
+        __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
+
+        if (tm_descriptor.__variant == Some) {
+            
+            __termina_box_t descriptor = tm_descriptor.Some.__0;
+
+            uint16_t tm_count = 0;
+
+            (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                                 &tm_count);
+
+            build_tm_17_2((TMDescriptorT *)descriptor.data, tm_count);
+
+            (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor,
+                                       result);
+
+        } else {
+            
+            (*result).__variant = Result__Error;
+
+        }
 
     }
+
+    __termina_resource__unlock(&self->__resource);
 
     return;
 

@@ -9,7 +9,7 @@
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/serialize.h"
 #include "resources/system_data_pool.h"
-#include "tasks/tm_channel.h"
+#include "resources/tm_channel.h"
 #include "resources/tm_counter.h"
 
 #define max_num_of_SIDs 8
@@ -29,11 +29,11 @@ typedef struct {
     void * __that;
     void (* do_hk)(void * const, Result * const);
     void (* exec3_5TC)(void * const, const TCDescriptorT * const,
-                       TMDescriptorT * const, uint16_t);
+                       Result * const);
     void (* exec3_6TC)(void * const, const TCDescriptorT * const,
-                       TMDescriptorT * const, uint16_t);
+                       Result * const);
     void (* exec3_31TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t);
+                        Result * const);
 } PUSS3Iface;
 
 typedef struct {
@@ -56,17 +56,14 @@ _Bool PUSService3__get_SIDindex(const PUSService3 * const self, uint8_t SID,
 
 void PUSService3__exec3_31TC(void * const __this,
                              const TCDescriptorT * const tc_descriptor,
-                             TMDescriptorT * const tm_descriptor,
-                             uint16_t tm_seq_counter);
+                             Result * const result);
 
 void PUSService3__exec3_5TC(void * const __this,
                             const TCDescriptorT * const tc_descriptor,
-                            TMDescriptorT * const tm_descriptor,
-                            uint16_t tm_seq_counter);
+                            Result * const result);
 
 void PUSService3__exec3_6TC(void * const __this,
                             const TCDescriptorT * const tc_descriptor,
-                            TMDescriptorT * const tm_descriptor,
-                            uint16_t tm_seq_counter);
+                            Result * const result);
 
 #endif

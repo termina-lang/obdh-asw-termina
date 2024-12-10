@@ -1,148 +1,33 @@
-import service_libraries.tc_ccsds_pus_format;
-import service_libraries.tm_ccsds_pus_format;
-import service_libraries.pus_services.pus_service1.pus_service1;
-import service_libraries.pus_services.pus_service2;
-import service_libraries.pus_services.pus_service9;
-import service_libraries.pus_services.pus_service17;
-import service_libraries.pus_services.pus_service128;
-import resources.tm_counter;
+import tasks.icu_manager.mng_tc_executor;
 
 task class ICUManager {
 
     tc_message_queue_input: in box TCDescriptorT triggers process_tc;
     action_tc_message_queue_input: in box TCDescriptorT triggers process_action_tc;
     a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
-    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     hkfdir_message_queue_output: out box TCDescriptorT;
     bkg_message_queue_output: out box TCDescriptorT;
-    tm_channel: access TMChannelIface;
-    tm_counter: access TMCounterIface;
-
-    current_tc : TCDescriptorT;
-    current_tc_status : TCStatus;
-
-    method PUS_prio_exec_tc (&priv self) -> Result {
-
-        var ret : Result = Result::Ok;
-
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
-        
-        match tm_descriptor {
-
-            case Some(descriptor) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
-
-                var tc_type : u8 = get_type(&(self->current_tc.tc_bytes));
-
-                if (tc_type == 17){
-
-                    PUS_service_17_execTC(&(self->current_tc), &mut descriptor, tm_count);
-            
-                } /*else if (tc_type == 2){
-
-                    PUS_service_2_execTC(&(self->current_tc), &mut descriptor, tm_count);
-            
-                } else if (tc_type == 9){
-
-                    PUS_service_9_execTC(&(self->current_tc), &mut descriptor, tm_count);
-            
-                } else if (tc_type == 128){
-
-                    PUS_service_128_execTC(&(self->current_tc), &mut descriptor, tm_count); 
-                
-                }*/ else {
-
-                    ret = Result::Error;
-                }
-
-                self->tm_channel.send_tm(descriptor, &mut ret);
-        
-            }
-            case None => {
-                ret = Result::Error;
-            }
-        }
-        
-        return ret;
-    }
-
-    method mng_tc_acceptation (&priv self) -> Result {
-
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-        var ret : Result = Result::Ok;
-
-        match tm_descriptor {
-
-            case Some(descriptor) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
-                //generar TM(1,1)
-                build_tm_1_1(&mut descriptor, tm_count, &(self->current_tc));
-                self->tm_channel.send_tm(descriptor, &mut ret);
-                        
-            }
-            case None => {
-                ret = Result::Error;
-            }
-        }
-
-        return ret;
-    }
-
-
-    method mng_tc_rejection (&priv self) -> Result {
-
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
-
-        var ret : Result = Result::Ok;
-
-            match tm_descriptor {
-
-                case Some(descriptor) => {
-
-                    var tm_count : u16 = 0 : u16;
-                    self->tm_counter.get_next_tm_count(&mut tm_count);
-                    //generar TM(1,2)
-                    build_tm_1_2(&(self->current_tc_status), &mut descriptor, tm_count, &(self->current_tc));
-                    self->tm_channel.send_tm(descriptor, &mut ret);
-                
-                }
-                case None => {
-                    ret = Result::Error;
-                }
-            }
-        return ret;
-    }
-
+    tc_executor: access MngTCExecIface;
 
 
     action process_tc(&priv self, tc_descriptor: box TCDescriptorT) -> Result {
 
         var ret : Result = Result::Ok;
 
-        self->current_tc = tc_descriptor;
-        self->current_tc_status = try_tc_acceptation(&tc_descriptor);
+        var current_tc_status : TCStatus = try_tc_acceptation(&tc_descriptor);
 
-        match self->current_tc_status.acceptation_status {
+        match current_tc_status.acceptation_status {
 
             case Accepted => {
 
-                ret = self->mng_tc_acceptation();
+                self->tc_executor.mng_tc_acceptation(&tc_descriptor, &mut ret);
 
-
-                match self->current_tc_status.execution_status {
+                match current_tc_status.execution_status {
 
                     case ExecCtrlReboot => {
 
                         //Ejecutar tc como prioritario
-                        ret = self->PUS_prio_exec_tc();
+                        self->tc_executor.PUS_prio_exec_tc(&tc_descriptor, &mut ret);
                         self->a_tc_descriptor_pool.free(tc_descriptor);
                            
                     }
@@ -153,11 +38,12 @@ task class ICUManager {
                     case ExecCtrlBKGTC => {
                         
                         self->bkg_message_queue_output.send(tc_descriptor);
+                        
                     }
                     case ExecCtrlPrioTC => {
 
                         //Ejecutar tc como prioritario
-                        ret = self->PUS_prio_exec_tc();
+                        self->tc_executor.PUS_prio_exec_tc(&tc_descriptor, &mut ret);
                         self->a_tc_descriptor_pool.free(tc_descriptor);
                     }
                     case Undefined => {
@@ -169,7 +55,7 @@ task class ICUManager {
             }
             case Rejected => { 
 
-                ret = self->mng_tc_rejection();
+                self->tc_executor.mng_tc_rejection(&tc_descriptor, &mut ret);
                 self->a_tc_descriptor_pool.free(tc_descriptor);
             }
             case Undefined => {
@@ -185,7 +71,6 @@ task class ICUManager {
 
         var ret : Result = Result::Ok;
 
-        self->current_tc = tc_descriptor;
         var execution_status : TCExecutionCtrl = handle_tc(&tc_descriptor);
 
         match execution_status {
@@ -193,7 +78,7 @@ task class ICUManager {
             case ExecCtrlReboot => {
 
                 //Ejecutar tc como prioritario
-                ret = self->PUS_prio_exec_tc();
+                self->tc_executor.PUS_prio_exec_tc(&tc_descriptor, &mut ret);
                 self->a_tc_descriptor_pool.free(tc_descriptor); 
             }
             case  ExecCtrlHK_FDIRTC => {
@@ -203,11 +88,12 @@ task class ICUManager {
             case ExecCtrlBKGTC => {
                 
                 self->bkg_message_queue_output.send(tc_descriptor);
+             
             }
             case ExecCtrlPrioTC => {
 
             //Ejecutar tc como prioritario
-                ret = self->PUS_prio_exec_tc();
+                self->tc_executor.PUS_prio_exec_tc(&tc_descriptor, &mut ret);
                 self->a_tc_descriptor_pool.free(tc_descriptor); 
             }
             case Undefined => {

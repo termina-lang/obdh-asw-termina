@@ -25,13 +25,13 @@ typedef struct {
 typedef struct {
     void * __that;
     void (* exec19_1TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t);
+                        Result * const);
     void (* exec19_2TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t);
+                        Result * const);
     void (* exec19_4TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t);
+                        Result * const);
     void (* exec19_5TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t);
+                        Result * const);
     void (* manage_event_actions)(void * const, EventList * const);
     void (* get_pending_action_number)(void * const, size_t *);
     void (* extract_action)(void * const, size_t, TCDescriptorT * const);
@@ -39,6 +39,9 @@ typedef struct {
 
 typedef struct {
     __termina_resource_t __resource;
+    TMCounterIface tm_counter;
+    __termina_pool_t * a_tm_descriptor_pool;
+    TMChannelIface tm_channel;
     PUSS5Iface pus_service_5;
     size_t pending_action_head[4];
     size_t pending_action_number[4];
@@ -59,23 +62,19 @@ _Bool PUSService19__get_free_event_action_index(const PUSService19 * const self,
 
 void PUSService19__exec19_1TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter);
+                              Result * const result);
 
 void PUSService19__exec19_2TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter);
+                              Result * const result);
 
 void PUSService19__exec19_4TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter);
+                              Result * const result);
 
 void PUSService19__exec19_5TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter);
+                              Result * const result);
 
 void PUSService19__extract_action(void * const __this, size_t index,
                                   TCDescriptorT * const action_packet);

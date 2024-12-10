@@ -103,37 +103,60 @@ void PUSService12__do_monitoring(void * const __this,
 
 void PUSService12__exec12_1TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter) {
+                              Result * const result) {
     
     PUSService12 * self = (PUSService12 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t PMONID = (size_t)tc_descriptor->tc_bytes[10];
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    if (PMONID < max_num_pmon_ids) {
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
+
+    if (tm_descriptor.__variant == Some) {
         
-        if (self->param_mon_config_table[PMONID].state.__variant == CheckState__MonitorUnselected == 0) {
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
+
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t PMONID = (size_t)tc_descriptor->tc_bytes[10];
+
+        if (PMONID < max_num_pmon_ids) {
             
-            self->param_mon_config_table[PMONID].enabled = 1;
+            if (self->param_mon_config_table[PMONID].state.__variant == CheckState__MonitorUnselected == 0) {
+                
+                self->param_mon_config_table[PMONID].enabled = 1;
 
-            self->param_mon_config_table[PMONID].interval_control = 0;
+                self->param_mon_config_table[PMONID].interval_control = 0;
 
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+                build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                             tc_descriptor);
+
+            } else {
+                
+                build_tm_1_8_tc_12_X_PMONIDundefined((TMDescriptorT *)descriptor.data,
+                                                     tm_count, (uint16_t)PMONID,
+                                                     tc_descriptor);
+
+            }
 
         } else {
             
-            build_tm_1_8_tc_12_X_PMONIDundefined(tm_descriptor, tm_seq_counter,
-                                                 (uint16_t)PMONID,
-                                                 tc_descriptor);
+            build_tm_1_8_tc_12_X_PMONIDnotvalid((TMDescriptorT *)descriptor.data,
+                                                tm_count, (uint16_t)PMONID,
+                                                tc_descriptor);
 
         }
 
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
+
     } else {
         
-        build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter,
-                                            (uint16_t)PMONID, tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 
@@ -145,35 +168,58 @@ void PUSService12__exec12_1TC(void * const __this,
 
 void PUSService12__exec12_2TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter) {
+                              Result * const result) {
     
     PUSService12 * self = (PUSService12 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t PMONID = (size_t)tc_descriptor->tc_bytes[10];
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    if (PMONID < max_num_pmon_ids) {
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
+
+    if (tm_descriptor.__variant == Some) {
         
-        if (self->param_mon_config_table[PMONID].state.__variant == CheckState__MonitorUnselected == 0) {
-            
-            self->param_mon_config_table[PMONID].enabled = 0;
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t PMONID = (size_t)tc_descriptor->tc_bytes[10];
+
+        if (PMONID < max_num_pmon_ids) {
+            
+            if (self->param_mon_config_table[PMONID].state.__variant == CheckState__MonitorUnselected == 0) {
+                
+                self->param_mon_config_table[PMONID].enabled = 0;
+
+                build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                             tc_descriptor);
+
+            } else {
+                
+                build_tm_1_8_tc_12_X_PMONIDundefined((TMDescriptorT *)descriptor.data,
+                                                     tm_count, (uint16_t)PMONID,
+                                                     tc_descriptor);
+
+            }
 
         } else {
             
-            build_tm_1_8_tc_12_X_PMONIDundefined(tm_descriptor, tm_seq_counter,
-                                                 (uint16_t)PMONID,
-                                                 tc_descriptor);
+            build_tm_1_8_tc_12_X_PMONIDnotvalid((TMDescriptorT *)descriptor.data,
+                                                tm_count, (uint16_t)PMONID,
+                                                tc_descriptor);
 
         }
 
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
+
     } else {
         
-        build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter,
-                                            (uint16_t)PMONID, tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 
@@ -185,59 +231,84 @@ void PUSService12__exec12_2TC(void * const __this,
 
 void PUSService12__exec12_5TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter) {
+                              Result * const result) {
     
     PUSService12 * self = (PUSService12 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t PMONID = (size_t)deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    if (PMONID < max_num_pmon_ids) {
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
+
+    if (tm_descriptor.__variant == Some) {
         
-        if (self->param_mon_config_table[PMONID].state.__variant == CheckState__MonitorUnselected) {
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
+
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t PMONID = (size_t)deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+
+        if (PMONID < max_num_pmon_ids) {
             
-            uint16_t PID = deserialize_uint16(&tc_descriptor->tc_bytes[12]);
-
-            if ((size_t)PID < sdp_num_params) {
+            if (self->param_mon_config_table[PMONID].state.__variant == CheckState__MonitorUnselected) {
                 
-                self->param_mon_config_table[PMONID].interval = tc_descriptor->tc_bytes[14];
+                uint16_t PID = deserialize_uint16(&tc_descriptor->tc_bytes[12]);
 
-                self->param_mon_config_table[PMONID].PID = PID;
+                if ((size_t)PID < sdp_num_params) {
+                    
+                    self->param_mon_config_table[PMONID].interval = tc_descriptor->tc_bytes[14];
 
-                self->param_mon_config_table[PMONID].interval_control = 0;
+                    self->param_mon_config_table[PMONID].PID = PID;
 
-                self->param_mon_config_table[PMONID].state.__variant = CheckState__MonitorUnchecked;
+                    self->param_mon_config_table[PMONID].interval_control = 0;
 
-                self->param_limit_check_definition[PMONID].low_limit = deserialize_uint16(&tc_descriptor->tc_bytes[15]);
+                    self->param_mon_config_table[PMONID].state.__variant = CheckState__MonitorUnchecked;
 
-                self->param_limit_check_definition[PMONID].low_limit_rid = deserialize_uint16(&tc_descriptor->tc_bytes[17]);
+                    self->param_limit_check_definition[PMONID].low_limit = deserialize_uint16(&tc_descriptor->tc_bytes[15]);
 
-                self->param_limit_check_definition[PMONID].high_limit = deserialize_uint16(&tc_descriptor->tc_bytes[19]);
+                    self->param_limit_check_definition[PMONID].low_limit_rid = deserialize_uint16(&tc_descriptor->tc_bytes[17]);
 
-                self->param_limit_check_definition[PMONID].high_limit_rid = deserialize_uint16(&tc_descriptor->tc_bytes[21]);
+                    self->param_limit_check_definition[PMONID].high_limit = deserialize_uint16(&tc_descriptor->tc_bytes[19]);
 
-                build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+                    self->param_limit_check_definition[PMONID].high_limit_rid = deserialize_uint16(&tc_descriptor->tc_bytes[21]);
+
+                    build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                                 tc_descriptor);
+
+                } else {
+                    
+                    build_tm_1_8_tc_20_X_PIDnotvalid((TMDescriptorT *)descriptor.data,
+                                                     tm_count, PID,
+                                                     tc_descriptor);
+
+                }
 
             } else {
                 
-                build_tm_1_8_tc_20_X_PIDnotvalid(tm_descriptor, tm_seq_counter,
-                                                 PID, tc_descriptor);
+                build_tm_1_8_tc_12_X_PMONIDdefined((TMDescriptorT *)descriptor.data,
+                                                   tm_count, (uint16_t)PMONID,
+                                                   tc_descriptor);
 
             }
 
         } else {
             
-            build_tm_1_8_tc_12_X_PMONIDdefined(tm_descriptor, tm_seq_counter,
-                                               (uint16_t)PMONID, tc_descriptor);
+            build_tm_1_8_tc_12_X_PMONIDnotvalid((TMDescriptorT *)descriptor.data,
+                                                tm_count, (uint16_t)PMONID,
+                                                tc_descriptor);
 
         }
 
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
+
     } else {
         
-        build_tm_1_8_tc_12_X_PMONIDnotvalid(tm_descriptor, tm_seq_counter,
-                                            (uint16_t)PMONID, tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 

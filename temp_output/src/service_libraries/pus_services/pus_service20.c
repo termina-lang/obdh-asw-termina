@@ -50,49 +50,72 @@ void PUSService20__build_tm_20_2(const PUSService20 * const self, size_t PID,
 
 void PUSService20__exec20_1TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter, Result * const res) {
+                              Result * const result) {
     
     PUSService20 * self = (PUSService20 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t PID = (size_t)deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    if (PID < sdp_num_params) {
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
+
+    if (tm_descriptor.__variant == Some) {
         
-        __option_box_t tm_descriptor1;
-        tm_descriptor1.__variant = None;
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor1);
+        uint16_t tm_count = 0;
 
-        if (tm_descriptor1.__variant == Some) {
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t PID = (size_t)deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+
+        if (PID < sdp_num_params) {
             
-            __termina_box_t descriptor1 = tm_descriptor1.Some.__0;
+            __option_box_t tm_descriptor1;
+            tm_descriptor1.__variant = None;
 
-            uint16_t tm_count = 0;
+            __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor1);
 
-            (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
-                                                 &tm_count);
+            if (tm_descriptor1.__variant == Some) {
+                
+                __termina_box_t descriptor1 = tm_descriptor1.Some.__0;
 
-            PUSService20__build_tm_20_2(self, PID,
-                                        (TMDescriptorT *)descriptor1.data,
-                                        tm_count);
+                uint16_t tm_count1 = 0;
 
-            (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor1,
-                                       res);
+                (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                                     &tm_count1);
+
+                PUSService20__build_tm_20_2(self, PID,
+                                            (TMDescriptorT *)descriptor1.data,
+                                            tm_count1);
+
+                (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor1,
+                                           result);
+
+            } else {
+                
+
+            }
+
+            build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                         tc_descriptor);
 
         } else {
             
+            build_tm_1_8_tc_20_X_PIDnotvalid((TMDescriptorT *)descriptor.data,
+                                             tm_count, (uint16_t)PID,
+                                             tc_descriptor);
 
         }
 
-        build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
 
     } else {
         
-        build_tm_1_8_tc_20_X_PIDnotvalid(tm_descriptor, tm_seq_counter,
-                                         (uint16_t)PID, tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 
@@ -104,27 +127,50 @@ void PUSService20__exec20_1TC(void * const __this,
 
 void PUSService20__exec20_3TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter) {
+                              Result * const result) {
     
     PUSService20 * self = (PUSService20 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t PID = (size_t)deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    uint16_t param_value = deserialize_uint16(&tc_descriptor->tc_bytes[12]);
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    if (PID < sdp_num_params) {
+    if (tm_descriptor.__variant == Some) {
         
-        atomic_store(&self->system_data_pool[PID], param_value);
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t PID = (size_t)deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+
+        uint16_t param_value = deserialize_uint16(&tc_descriptor->tc_bytes[12]);
+
+        if (PID < sdp_num_params) {
+            
+            atomic_store(&self->system_data_pool[PID], param_value);
+
+            build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                         tc_descriptor);
+
+        } else {
+            
+            build_tm_1_8_tc_20_X_PIDnotvalid((TMDescriptorT *)descriptor.data,
+                                             tm_count, (uint16_t)PID,
+                                             tc_descriptor);
+
+        }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
 
     } else {
         
-        build_tm_1_8_tc_20_X_PIDnotvalid(tm_descriptor, tm_seq_counter,
-                                         (uint16_t)PID, tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 

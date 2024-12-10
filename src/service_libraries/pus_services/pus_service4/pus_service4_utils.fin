@@ -1,0 +1,16 @@
+const max_num_of_stats : usize = 4;
+
+struct StatsDef {
+    min : u16;
+    min_obt : TimeVal;
+    max : u16;
+    max_obt : TimeVal;
+    mean_value : u16;
+    samples : u32;
+};
+
+struct StatsConfig {
+    defined : [bool; max_num_of_stats];
+    PID : [u16; max_num_of_stats];
+    start_time : [TimeVal; max_num_of_stats];
+};

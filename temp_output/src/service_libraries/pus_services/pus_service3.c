@@ -135,29 +135,52 @@ _Bool PUSService3__get_SIDindex(const PUSService3 * const self, uint8_t SID,
 
 void PUSService3__exec3_31TC(void * const __this,
                              const TCDescriptorT * const tc_descriptor,
-                             TMDescriptorT * const tm_descriptor,
-                             uint16_t tm_seq_counter) {
+                             Result * const result) {
     
     PUSService3 * self = (PUSService3 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    uint8_t SID = tc_descriptor->tc_bytes[10];
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    size_t index = 0;
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    if (PUSService3__get_SIDindex(self, SID, &index)) {
+    if (tm_descriptor.__variant == Some) {
         
-        self->hk_config_table[index].interval = deserialize_uint16(&tc_descriptor->tc_bytes[11]);
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        self->hk_config_table[index].interval_control = 0;
+        uint16_t tm_count = 0;
 
-        build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        uint8_t SID = tc_descriptor->tc_bytes[10];
+
+        size_t index = 0;
+
+        if (PUSService3__get_SIDindex(self, SID, &index)) {
+            
+            self->hk_config_table[index].interval = deserialize_uint16(&tc_descriptor->tc_bytes[11]);
+
+            self->hk_config_table[index].interval_control = 0;
+
+            build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                         tc_descriptor);
+
+        } else {
+            
+            build_tm_1_8_tc_3_X_SIDnotvalid((TMDescriptorT *)descriptor.data,
+                                            tm_count, (uint16_t)SID,
+                                            tc_descriptor);
+
+        }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
 
     } else {
         
-        build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter,
-                                        (uint16_t)SID, tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 
@@ -169,29 +192,52 @@ void PUSService3__exec3_31TC(void * const __this,
 
 void PUSService3__exec3_5TC(void * const __this,
                             const TCDescriptorT * const tc_descriptor,
-                            TMDescriptorT * const tm_descriptor,
-                            uint16_t tm_seq_counter) {
+                            Result * const result) {
     
     PUSService3 * self = (PUSService3 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t index = 0;
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    uint8_t SID = tc_descriptor->tc_bytes[10];
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    if (PUSService3__get_SIDindex(self, SID, &index)) {
+    if (tm_descriptor.__variant == Some) {
         
-        self->hk_config_table[index].enabled = 1;
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        self->hk_config_table[index].interval_control = 0;
+        uint16_t tm_count = 0;
 
-        build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t index = 0;
+
+        uint8_t SID = tc_descriptor->tc_bytes[10];
+
+        if (PUSService3__get_SIDindex(self, SID, &index)) {
+            
+            self->hk_config_table[index].enabled = 1;
+
+            self->hk_config_table[index].interval_control = 0;
+
+            build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                         tc_descriptor);
+
+        } else {
+            
+            build_tm_1_8_tc_3_X_SIDnotvalid((TMDescriptorT *)descriptor.data,
+                                            tm_count, (uint16_t)SID,
+                                            tc_descriptor);
+
+        }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
 
     } else {
         
-        build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter,
-                                        (uint16_t)SID, tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 
@@ -203,29 +249,52 @@ void PUSService3__exec3_5TC(void * const __this,
 
 void PUSService3__exec3_6TC(void * const __this,
                             const TCDescriptorT * const tc_descriptor,
-                            TMDescriptorT * const tm_descriptor,
-                            uint16_t tm_seq_counter) {
+                            Result * const result) {
     
     PUSService3 * self = (PUSService3 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t index = 0;
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    uint8_t SID = tc_descriptor->tc_bytes[10];
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    if (PUSService3__get_SIDindex(self, SID, &index)) {
+    if (tm_descriptor.__variant == Some) {
         
-        self->hk_config_table[index].enabled = 0;
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        self->hk_config_table[index].interval_control = 0;
+        uint16_t tm_count = 0;
 
-        build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t index = 0;
+
+        uint8_t SID = tc_descriptor->tc_bytes[10];
+
+        if (PUSService3__get_SIDindex(self, SID, &index)) {
+            
+            self->hk_config_table[index].enabled = 0;
+
+            self->hk_config_table[index].interval_control = 0;
+
+            build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                         tc_descriptor);
+
+        } else {
+            
+            build_tm_1_8_tc_3_X_SIDnotvalid((TMDescriptorT *)descriptor.data,
+                                            tm_count, (uint16_t)SID,
+                                            tc_descriptor);
+
+        }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
 
     } else {
         
-        build_tm_1_8_tc_3_X_SIDnotvalid(tm_descriptor, tm_seq_counter,
-                                        (uint16_t)SID, tc_descriptor);
+        (*result).__variant = Result__Error;
 
     }
 

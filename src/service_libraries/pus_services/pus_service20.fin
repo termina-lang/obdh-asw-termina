@@ -6,8 +6,8 @@ import resources.system_data_pool;
 
 
 interface PUSS20Iface {
-    procedure exec20_1TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16, res : &mut Result);
-    procedure exec20_3TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16);
+    procedure exec20_1TC(&mut self, tc_descriptor : &TCDescriptorT, result : &mut Result);
+    procedure exec20_3TC(&mut self, tc_descriptor : &TCDescriptorT, result : &mut Result);
 };
 
 resource class PUSService20 provides PUSS20Iface {
@@ -58,38 +58,55 @@ resource class PUSService20 provides PUSS20Iface {
 
 
 
-    procedure exec20_1TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16, res : &mut Result) {
+    procedure exec20_1TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result){ 
 
+        var tm_descriptor : Option<box TMDescriptorT> = None;
+        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
 
-        var PID : usize = deserialize_uint16(&(tc_descriptor->tc_bytes[10..12])) as usize;
+        match tm_descriptor {
 
-        if (PID < sdp_num_params){
-
-            var tm_descriptor1 : Option<box TMDescriptorT> = None;
-            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor1);
-
-            match tm_descriptor1 {
-
-                case Some(descriptor1) => {
+            case Some(descriptor) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
-                self->build_tm_20_2(PID, &mut descriptor1, tm_count);
-                self->tm_channel.send_tm(descriptor1, res);
 
+
+                var PID : usize = deserialize_uint16(&(tc_descriptor->tc_bytes[10..12])) as usize;
+
+                if (PID < sdp_num_params){
+
+                    var tm_descriptor1 : Option<box TMDescriptorT> = None;
+                    self->a_tm_descriptor_pool.alloc(&mut tm_descriptor1);
+
+                    match tm_descriptor1 {
+
+                        case Some(descriptor1) => {
+
+                        var tm_count1 : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count1);
+                        self->build_tm_20_2(PID, &mut descriptor1, tm_count1);
+                        self->tm_channel.send_tm(descriptor1, result);
+
+                        }
+                        case None => {
+                            //Error
+                        }
+                    }
+
+                    
+                    build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+                        
+                } else {
+
+                    build_tm_1_8_tc_20_X_PIDnotvalid(&mut descriptor, tm_count, PID as u16, tc_descriptor);
+                    
                 }
-                case None => {
-                    //Error
-                }
+                self->tm_channel.send_tm(descriptor, result);
             }
-
-            
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
-                
-        } else {
-
-            build_tm_1_8_tc_20_X_PIDnotvalid(tm_descriptor, tm_seq_counter, PID as u16, tc_descriptor);
-              
+            case None => {
+                //Error
+                *result = Result::Error;
+            }
         }
 
 
@@ -97,21 +114,38 @@ resource class PUSService20 provides PUSS20Iface {
     }
 
 
-    procedure exec20_3TC(&mut self, tc_descriptor : &TCDescriptorT, tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16){
+    procedure exec20_3TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result){
 
-        var PID : usize = deserialize_uint16(&(tc_descriptor->tc_bytes[10..12])) as usize;
-        var param_value : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[12..14]));
+        var tm_descriptor : Option<box TMDescriptorT> = None;
+        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
 
-        
-        if (PID < sdp_num_params){
+        match tm_descriptor {
 
-            self->system_data_pool.store_index(PID,param_value);
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+            case Some(descriptor) => {
 
-        } else {
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
 
-            build_tm_1_8_tc_20_X_PIDnotvalid(tm_descriptor, tm_seq_counter, PID as u16, tc_descriptor);
+                var PID : usize = deserialize_uint16(&(tc_descriptor->tc_bytes[10..12])) as usize;
+                var param_value : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[12..14]));
 
+                
+                if (PID < sdp_num_params){
+
+                    self->system_data_pool.store_index(PID,param_value);
+                    build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+
+                } else {
+
+                    build_tm_1_8_tc_20_X_PIDnotvalid(&mut descriptor, tm_count, PID as u16, tc_descriptor);
+
+                }
+                self->tm_channel.send_tm(descriptor, result);
+            }
+            case None => {
+                //Error
+                *result = Result::Error;
+            }
         }
 
         return;

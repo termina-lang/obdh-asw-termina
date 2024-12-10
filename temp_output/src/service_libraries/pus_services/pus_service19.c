@@ -48,104 +48,126 @@ _Bool PUSService19__get_free_event_action_index(const PUSService19 * const self,
 
 void PUSService19__exec19_1TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter) {
+                              Result * const result) {
     
     PUSService19 * self = (PUSService19 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t index = 0;
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    _Bool found = 0;
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    _Bool enabled = 0;
-
-    uint16_t evID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
-
-    RIDType event_type = get_RID_type(evID);
-
-    if (event_type.__variant == RIDType__RIDNotValid) {
+    if (tm_descriptor.__variant == Some) {
         
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID,
-                                       tc_descriptor);
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-    } else {
-        
-        if (PUSService19__get_event_action_config(self, evID, &index,
-                                                  &enabled)) {
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t index = 0;
+
+        _Bool found = 0;
+
+        _Bool enabled = 0;
+
+        uint16_t evID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+
+        RIDType event_type = get_RID_type(evID);
+
+        if (event_type.__variant == RIDType__RIDNotValid) {
             
-            found = 1;
+            build_tm_1_8_tc_5_X_RIDunknown((TMDescriptorT *)descriptor.data,
+                                           tm_count, evID, tc_descriptor);
 
         } else {
             
-            if (PUSService19__get_free_event_action_index(self, &index)) {
+            if (PUSService19__get_event_action_config(self, evID, &index,
+                                                      &enabled)) {
                 
                 found = 1;
 
-                enabled = 0;
-
             } else {
                 
-                found = 0;
-
-            }
-
-        }
-
-        if (found) {
-            
-            if (enabled) {
-                
-                build_tm_1_8_tc_19_X_event_action_enabled(tm_descriptor,
-                                                          tm_seq_counter, evID,
-                                                          tc_descriptor);
-
-            } else {
-                
-                size_t action_packet_length = (size_t)get_packet_length(tc_descriptor->tc_bytes) - 7;
-
-                for (size_t i = 0; i < event_action_max_bytes && i < action_packet_length; i = i + 1) {
+                if (PUSService19__get_free_event_action_index(self, &index)) {
                     
-                    self->event_action_packets[index].tc_bytes[i] = tc_descriptor->tc_bytes[i + 12];
+                    found = 1;
 
-                }
-
-                self->event_action_packets[index].tc_num_bytes = action_packet_length;
-
-                TCStatus tc_status;
-                tc_status.acceptation_status.__variant = TCAcceptationStatus__Undefined;
-                tc_status.error_code.__variant = TCErrorType__Undefined;
-                tc_status.execution_status.__variant = TCExecutionCtrl__Undefined;
-
-                tc_status = try_tc_acceptation(&self->event_action_packets[index]);
-
-                if (tc_status.acceptation_status.__variant == TCAcceptationStatus__Accepted) {
-                    
-                    self->event_action_config[index].event_ID = evID;
-
-                    self->event_action_config[index].enabled = 0;
-
-                    build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+                    enabled = 0;
 
                 } else {
                     
-                    build_tm_1_8_tc_19_1_event_action_rejected(tm_descriptor,
-                                                               tm_seq_counter,
-                                                               evID,
-                                                               tc_descriptor);
+                    found = 0;
 
                 }
 
             }
 
-        } else {
-            
-            build_tm_1_8_tc_19_1_max_event_actions(tm_descriptor,
-                                                   tm_seq_counter, evID,
-                                                   tc_descriptor);
+            if (found) {
+                
+                if (enabled) {
+                    
+                    build_tm_1_8_tc_19_X_event_action_enabled((TMDescriptorT *)descriptor.data,
+                                                              tm_count, evID,
+                                                              tc_descriptor);
+
+                } else {
+                    
+                    size_t action_packet_length = (size_t)get_packet_length(tc_descriptor->tc_bytes) - 7;
+
+                    for (size_t i = 0; i < event_action_max_bytes && i < action_packet_length; i = i + 1) {
+                        
+                        self->event_action_packets[index].tc_bytes[i] = tc_descriptor->tc_bytes[i + 12];
+
+                    }
+
+                    self->event_action_packets[index].tc_num_bytes = action_packet_length;
+
+                    TCStatus tc_status;
+                    tc_status.acceptation_status.__variant = TCAcceptationStatus__Undefined;
+                    tc_status.error_code.__variant = TCErrorType__Undefined;
+                    tc_status.execution_status.__variant = TCExecutionCtrl__Undefined;
+
+                    tc_status = try_tc_acceptation(&self->event_action_packets[index]);
+
+                    if (tc_status.acceptation_status.__variant == TCAcceptationStatus__Accepted) {
+                        
+                        self->event_action_config[index].event_ID = evID;
+
+                        self->event_action_config[index].enabled = 0;
+
+                        build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                                     tc_descriptor);
+
+                    } else {
+                        
+                        build_tm_1_8_tc_19_1_event_action_rejected((TMDescriptorT *)descriptor.data,
+                                                                   tm_count,
+                                                                   evID,
+                                                                   tc_descriptor);
+
+                    }
+
+                }
+
+            } else {
+                
+                build_tm_1_8_tc_19_1_max_event_actions((TMDescriptorT *)descriptor.data,
+                                                       tm_count, evID,
+                                                       tc_descriptor);
+
+            }
 
         }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
+
+    } else {
+        
+        (*result).__variant = Result__Error;
 
     }
 
@@ -157,54 +179,76 @@ void PUSService19__exec19_1TC(void * const __this,
 
 void PUSService19__exec19_2TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter) {
+                              Result * const result) {
     
     PUSService19 * self = (PUSService19 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t index = 0;
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    _Bool enabled = 0;
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    uint16_t evID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
-
-    RIDType event_type = get_RID_type(evID);
-
-    if (event_type.__variant == RIDType__RIDNotValid) {
+    if (tm_descriptor.__variant == Some) {
         
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID,
-                                       tc_descriptor);
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-    } else {
-        
-        if (PUSService19__get_event_action_config(self, evID, &index,
-                                                  &enabled)) {
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t index = 0;
+
+        _Bool enabled = 0;
+
+        uint16_t evID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+
+        RIDType event_type = get_RID_type(evID);
+
+        if (event_type.__variant == RIDType__RIDNotValid) {
             
-            if (enabled) {
-                
-                build_tm_1_8_tc_19_X_event_action_enabled(tm_descriptor,
-                                                          tm_seq_counter, evID,
-                                                          tc_descriptor);
-
-            } else {
-                
-                self->event_action_config[index].event_ID = 0;
-
-                self->event_action_config[index].enabled = 0;
-
-                build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
-
-            }
+            build_tm_1_8_tc_5_X_RIDunknown((TMDescriptorT *)descriptor.data,
+                                           tm_count, evID, tc_descriptor);
 
         } else {
             
-            build_tm_1_8_tc_19_X_event_action_not_defined(tm_descriptor,
-                                                          tm_seq_counter, evID,
-                                                          tc_descriptor);
+            if (PUSService19__get_event_action_config(self, evID, &index,
+                                                      &enabled)) {
+                
+                if (enabled) {
+                    
+                    build_tm_1_8_tc_19_X_event_action_enabled((TMDescriptorT *)descriptor.data,
+                                                              tm_count, evID,
+                                                              tc_descriptor);
+
+                } else {
+                    
+                    self->event_action_config[index].event_ID = 0;
+
+                    self->event_action_config[index].enabled = 0;
+
+                    build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                                 tc_descriptor);
+
+                }
+
+            } else {
+                
+                build_tm_1_8_tc_19_X_event_action_not_defined((TMDescriptorT *)descriptor.data,
+                                                              tm_count, evID,
+                                                              tc_descriptor);
+
+            }
 
         }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
+
+    } else {
+        
+        (*result).__variant = Result__Error;
 
     }
 
@@ -216,42 +260,64 @@ void PUSService19__exec19_2TC(void * const __this,
 
 void PUSService19__exec19_4TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter) {
+                              Result * const result) {
     
     PUSService19 * self = (PUSService19 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t index = 0;
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    _Bool enabled = 0;
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    uint16_t evID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
-
-    RIDType event_type = get_RID_type(evID);
-
-    if (event_type.__variant == RIDType__RIDNotValid) {
+    if (tm_descriptor.__variant == Some) {
         
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID,
-                                       tc_descriptor);
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-    } else {
-        
-        if (PUSService19__get_event_action_config(self, evID, &index,
-                                                  &enabled)) {
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t index = 0;
+
+        _Bool enabled = 0;
+
+        uint16_t evID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+
+        RIDType event_type = get_RID_type(evID);
+
+        if (event_type.__variant == RIDType__RIDNotValid) {
             
-            self->event_action_config[index].enabled = 1;
-
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+            build_tm_1_8_tc_5_X_RIDunknown((TMDescriptorT *)descriptor.data,
+                                           tm_count, evID, tc_descriptor);
 
         } else {
             
-            build_tm_1_8_tc_19_X_event_action_not_defined(tm_descriptor,
-                                                          tm_seq_counter, evID,
-                                                          tc_descriptor);
+            if (PUSService19__get_event_action_config(self, evID, &index,
+                                                      &enabled)) {
+                
+                self->event_action_config[index].enabled = 1;
+
+                build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                             tc_descriptor);
+
+            } else {
+                
+                build_tm_1_8_tc_19_X_event_action_not_defined((TMDescriptorT *)descriptor.data,
+                                                              tm_count, evID,
+                                                              tc_descriptor);
+
+            }
 
         }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
+
+    } else {
+        
+        (*result).__variant = Result__Error;
 
     }
 
@@ -263,42 +329,64 @@ void PUSService19__exec19_4TC(void * const __this,
 
 void PUSService19__exec19_5TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter) {
+                              Result * const result) {
     
     PUSService19 * self = (PUSService19 *)__this;
 
     __termina_resource__lock(&self->__resource);
 
-    size_t index = 0;
+    __option_box_t tm_descriptor;
+    tm_descriptor.__variant = None;
 
-    _Bool enabled = 0;
+    __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
 
-    uint16_t evID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
-
-    RIDType event_type = get_RID_type(evID);
-
-    if (event_type.__variant == RIDType__RIDNotValid) {
+    if (tm_descriptor.__variant == Some) {
         
-        build_tm_1_8_tc_5_X_RIDunknown(tm_descriptor, tm_seq_counter, evID,
-                                       tc_descriptor);
+        __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-    } else {
-        
-        if (PUSService19__get_event_action_config(self, evID, &index,
-                                                  &enabled)) {
+        uint16_t tm_count = 0;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        size_t index = 0;
+
+        _Bool enabled = 0;
+
+        uint16_t evID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+
+        RIDType event_type = get_RID_type(evID);
+
+        if (event_type.__variant == RIDType__RIDNotValid) {
             
-            self->event_action_config[index].enabled = 0;
-
-            build_tm_1_7(tm_descriptor, tm_seq_counter, tc_descriptor);
+            build_tm_1_8_tc_5_X_RIDunknown((TMDescriptorT *)descriptor.data,
+                                           tm_count, evID, tc_descriptor);
 
         } else {
             
-            build_tm_1_8_tc_19_X_event_action_not_defined(tm_descriptor,
-                                                          tm_seq_counter, evID,
-                                                          tc_descriptor);
+            if (PUSService19__get_event_action_config(self, evID, &index,
+                                                      &enabled)) {
+                
+                self->event_action_config[index].enabled = 0;
+
+                build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
+                             tc_descriptor);
+
+            } else {
+                
+                build_tm_1_8_tc_19_X_event_action_not_defined((TMDescriptorT *)descriptor.data,
+                                                              tm_count, evID,
+                                                              tc_descriptor);
+
+            }
 
         }
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor, result);
+
+    } else {
+        
+        (*result).__variant = Result__Error;
 
     }
 

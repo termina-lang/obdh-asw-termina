@@ -2,6 +2,8 @@
 #define __TASKS__TC_RX_H__
 
 #include <termina.h>
+
+#include "option.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
 #include "service_libraries/serialize.h"
 

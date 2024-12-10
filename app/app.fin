@@ -10,7 +10,6 @@ import service_libraries.pus_services.pus_service19;
 import service_libraries.pus_services.pus_service20;
 import resources.uart;
 import tasks.hk_fdir_mng.hk_fdir;
-import tasks.hk_fdir_mng.tc_executor;
 import tasks.bkgtcexec;
 import tasks.icu_manager.icu_manager;
 import handlers.init;
@@ -18,9 +17,13 @@ import handlers.uart_irq_handler;
 import tasks.tc_rx;
 
 
+import tasks.icu_manager.icu_manager;
+import tasks.hk_fdir_mng.hk_fdir;
+
 emitter hk_fdir_timer : PeriodicTimer = {
     period = {tv_sec = 1 : u32, tv_usec = 0 : u32} : TimeVal
 } : PeriodicTimer;
+
 
 
 channel byte_message_queue : MsgQueue<u8;10>;
@@ -88,7 +91,10 @@ resource pus_service_12 : PUSService12 = {
     param_mon_config_table = [{ prev_state = CheckState::MonitorUnselected, state = CheckState::MonitorUnselected, 
     transitionY2K = {tv_sec = 1 : u32, tv_usec = 0 : u32}, enabled = false, PID = 0, interval = 1, interval_control = 0 }; max_num_pmon_ids],
     param_limit_check_definition = [{ high_limit_rid = 0, high_limit = 0, low_limit_rid = 0, low_limit = 0 }; max_num_pmon_ids],
-    system_data_pool <-> system_data_pool
+    system_data_pool <-> system_data_pool,
+    tm_channel <-> telemetry_channel,
+    a_tm_descriptor_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter
 } : PUSService12;
 
 
@@ -101,7 +107,10 @@ resource pus_service_19 : PUSService19 = {
     pending_action_queue_4HS = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; event_action_queue_dimension],
     pending_action_number = [0; 4],
     pending_action_head = [0; 4],
-    pus_service_5 <-> pus_service_5
+    pus_service_5 <-> pus_service_5,
+    tm_channel <-> telemetry_channel,
+    a_tm_descriptor_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter
 }: PUSService19;
 
 
@@ -111,6 +120,20 @@ resource pus_service_20 : PUSService20 = {
     a_tm_descriptor_pool <-> tm_pool,
     tm_counter <-> telemetry_counter
 }: PUSService20;
+
+
+resource pus_service_17 : PUSService17 = {
+    tm_channel <-> telemetry_channel,
+    a_tm_descriptor_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter
+}: PUSService17;
+
+resource mng_tc_executor : ManagerTCExecutor = {
+    tm_channel <-> telemetry_channel,
+    tm_counter <-> telemetry_counter,
+    a_tm_descriptor_pool <-> tm_pool,
+    pus_service_17 <-> pus_service_17
+} : ManagerTCExecutor;
 
 
 handler init : Init = {
@@ -144,22 +167,15 @@ task icu_manager : ICUManager = {
     tc_message_queue_input <- tc_message_queue,
     action_tc_message_queue_input <- action_tc_message_queue,
     a_tc_descriptor_pool <-> tc_pool,
-    a_tm_descriptor_pool <-> tm_pool,
     hkfdir_message_queue_output -> hkfdir_message_queue,
     bkg_message_queue_output -> bkg_message_queue,
-    tm_channel <-> telemetry_channel,
-    tm_counter <-> telemetry_counter,
-    current_tc = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0},
-    current_tc_status = {
-	    acceptation_status = TCAcceptationStatus::Undefined,
-        execution_status = TCExecutionCtrl::Undefined,
-	    error_code = TCErrorType::Undefined
-    }
+    tc_executor <-> mng_tc_executor
 } : ICUManager;
 
 
 task hk_fdir : HouseKeepingFDIR = {
     hk_fdir_timer_ev <- hk_fdir_timer,
+    hkfdir_message_queue_input <- hkfdir_message_queue,
     action_tc_message_queue_output -> action_tc_message_queue,
     a_tc_descriptor_pool <-> tc_pool,
     pus_service_3 <-> pus_service_3,
@@ -169,25 +185,9 @@ task hk_fdir : HouseKeepingFDIR = {
 } : HouseKeepingFDIR;
 
 
-task pus_hk_fdir_tc_executor : PUSHKFDIRTCExcutor = {
-    hkfdir_message_queue_input <- hkfdir_message_queue,
-    a_tm_descriptor_pool <-> tm_pool,
-    a_tc_descriptor_pool <-> tc_pool,
-    tm_channel <-> telemetry_channel,
-    tm_counter <-> telemetry_counter,
-    pus_service_3 <-> pus_service_3,
-    pus_service_12 <-> pus_service_12,
-    pus_service_5 <-> pus_service_5,
-    pus_service_19 <-> pus_service_19
-} : PUSHKFDIRTCExcutor;
-
-
 task pus_bkg_tc_executor : PUSBKGTCExecutor = {
     bkg_message_queue_input <- bkg_message_queue,
-    a_tm_descriptor_pool <-> tm_pool,
     a_tc_descriptor_pool  <-> tc_pool,
-    tm_channel <-> telemetry_channel,
-    tm_counter <-> telemetry_counter,
     pus_service_20 <-> pus_service_20
 } : PUSBKGTCExecutor;
 

@@ -10,15 +10,18 @@ typedef struct {
     void * __that;
     void (* do_monitoring)(void * const, EventList * const, Result * const);
     void (* exec12_1TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t);
+                        Result * const);
     void (* exec12_2TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t);
+                        Result * const);
     void (* exec12_5TC)(void * const, const TCDescriptorT * const,
-                        TMDescriptorT * const, uint16_t);
+                        Result * const);
 } PUSS12Iface;
 
 typedef struct {
     __termina_resource_t __resource;
+    TMCounterIface tm_counter;
+    __termina_pool_t * a_tm_descriptor_pool;
+    TMChannelIface tm_channel;
     _Atomic uint16_t * system_data_pool;
     ParamLimitCheckDefinition param_limit_check_definition[max_num_pmon_ids];
     ParamMonitoringConfiguration param_mon_config_table[max_num_pmon_ids];
@@ -30,17 +33,14 @@ void PUSService12__do_monitoring(void * const __this,
 
 void PUSService12__exec12_1TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter);
+                              Result * const result);
 
 void PUSService12__exec12_2TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter);
+                              Result * const result);
 
 void PUSService12__exec12_5TC(void * const __this,
                               const TCDescriptorT * const tc_descriptor,
-                              TMDescriptorT * const tm_descriptor,
-                              uint16_t tm_seq_counter);
+                              Result * const result);
 
 #endif
