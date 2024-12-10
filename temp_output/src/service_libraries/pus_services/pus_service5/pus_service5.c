@@ -10,9 +10,9 @@ _Bool PUSService5__is_RID_enabled(const PUSService5 * const self,
 
     uint8_t offset = get_RID_enable_config_offset(RID);
 
-    if (index < 4) {
+    if (index < 4U) {
         
-        if ((uint32_t)((uint32_t)(self->RID_enable_config[index] >> offset) & 0x1) != 0) {
+        if ((uint32_t)((uint32_t)(self->RID_enable_config[index] >> offset) & 0x1U) != 0U) {
             
             enabled = 1;
 
@@ -32,14 +32,14 @@ void PUSService5__build_event_list_tms(void * const __this,
 
     __termina_resource__lock(&self->__resource);
 
-    for (size_t i = 0; i < max_num_events && i < event_list->num_events; i = i + 1) {
+    for (size_t i = 0U; i < max_num_events && i < event_list->num_events; i = i + 1U) {
         
         EventInfo event_info;
-        event_info.ev_RID = 0;
-        for (size_t __i0 = 0; __i0 < event_aux_data_max_size; __i0 = __i0 + 1) {
-            event_info.ev_aux_data[__i0] = 0;
+        event_info.ev_RID = 0U;
+        for (size_t __i0 = 0U; __i0 < event_aux_data_max_size; __i0 = __i0 + 1U) {
+            event_info.ev_aux_data[__i0] = 0U;
         }
-        event_info.ev_aux_data_size = 0;
+        event_info.ev_aux_data_size = 0U;
 
         get_event_info(&*event_list, i, &event_info);
 
@@ -47,7 +47,7 @@ void PUSService5__build_event_list_tms(void * const __this,
             
             size_t index = get_RID_enable_config_index(event_info.ev_RID);
 
-            if (index < 4) {
+            if (index < 4U) {
                 
                 __option_box_t tm_descriptor;
                 tm_descriptor.__variant = None;
@@ -59,7 +59,7 @@ void PUSService5__build_event_list_tms(void * const __this,
                     
                     __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-                    uint16_t tm_count = 0;
+                    uint16_t tm_count = 0U;
 
                     (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
                                                          &tm_count);
@@ -105,20 +105,20 @@ void PUSService5__exec5_5TC(void * const __this,
         
         __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        uint16_t tm_count = 0;
+        uint16_t tm_count = 0U;
 
         (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
                                              &tm_count);
 
-        uint16_t RID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+        uint16_t RID = deserialize_uint16(&tc_descriptor->tc_bytes[10U]);
 
         size_t index = get_RID_enable_config_index(RID);
 
         uint8_t offset = get_RID_enable_config_offset(RID);
 
-        if (index < 4) {
+        if (index < 4U) {
             
-            self->RID_enable_config[index] = self->RID_enable_config[index] | (uint32_t)(1 << offset);
+            self->RID_enable_config[index] = self->RID_enable_config[index] | (uint32_t)(1U << offset);
 
             build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
                          tc_descriptor);
@@ -161,20 +161,20 @@ void PUSService5__exec5_6TC(void * const __this,
         
         __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        uint16_t tm_count = 0;
+        uint16_t tm_count = 0U;
 
         (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
                                              &tm_count);
 
-        uint16_t RID = deserialize_uint16(&tc_descriptor->tc_bytes[10]);
+        uint16_t RID = deserialize_uint16(&tc_descriptor->tc_bytes[10U]);
 
         size_t index = get_RID_enable_config_index(RID);
 
         uint8_t offset = get_RID_enable_config_offset(RID);
 
-        if (index < 4) {
+        if (index < 4U) {
             
-            self->RID_enable_config[index] = self->RID_enable_config[index] & (uint32_t)(0xFFFFFFFE << offset);
+            self->RID_enable_config[index] = self->RID_enable_config[index] & (uint32_t)(0xFFFFFFFEU << offset);
 
             build_tm_1_7((TMDescriptorT *)descriptor.data, tm_count,
                          tc_descriptor);

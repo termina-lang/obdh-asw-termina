@@ -11,7 +11,7 @@ void ManagerTCExecutor__PUS_prio_exec_tc(void * const __this,
 
     uint8_t tc_type = get_type(prio_tc->tc_bytes);
 
-    if (tc_type == 17) {
+    if (tc_type == 17U) {
         
         (self->pus_service_17.exec17_1TC)(self->pus_service_17.__that, prio_tc,
                                           ret);
@@ -45,7 +45,7 @@ void ManagerTCExecutor__mng_tc_acceptation(void * const __this,
         
         __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        uint16_t tm_count = 0;
+        uint16_t tm_count = 0U;
 
         (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
                                              &tm_count);
@@ -85,7 +85,7 @@ void ManagerTCExecutor__mng_tc_rejection(void * const __this,
         
         __termina_box_t descriptor = tm_descriptor.Some.__0;
 
-        uint16_t tm_count = 0;
+        uint16_t tm_count = 0U;
 
         (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
                                              &tm_count);

@@ -11,7 +11,7 @@ Result TCRXBottomHalfTask__get_tc(TCRXBottomHalfTask * const self,
         
         self->telecommand.tc_bytes[self->aux_index] = data;
 
-        self->aux_index = self->aux_index + 1;
+        self->aux_index = self->aux_index + 1U;
 
         if (self->aux_index == (size_t)self->telecommand.tc_num_bytes) {
             
@@ -26,7 +26,7 @@ Result TCRXBottomHalfTask__get_tc(TCRXBottomHalfTask * const self,
                 
                 __termina_box_t descriptor = tc_descriptor.Some.__0;
 
-                for (size_t i = 0; i < max_tc_size && i < self->telecommand.tc_num_bytes; i = i + 1) {
+                for (size_t i = 0U; i < max_tc_size && i < self->telecommand.tc_num_bytes; i = i + 1U) {
                     
                     (*(TCDescriptorT *)descriptor.data).tc_bytes[i] = self->telecommand.tc_bytes[i];
 
@@ -49,9 +49,9 @@ Result TCRXBottomHalfTask__get_tc(TCRXBottomHalfTask * const self,
         
         self->RX_tc_length[self->aux_index] = data;
 
-        self->aux_index = self->aux_index + 1;
+        self->aux_index = self->aux_index + 1U;
 
-        if (2 == self->aux_index) {
+        if (2U == self->aux_index) {
             
             self->telecommand.tc_num_bytes = (size_t)deserialize_uint16(self->RX_tc_length);
 
@@ -65,7 +65,7 @@ Result TCRXBottomHalfTask__get_tc(TCRXBottomHalfTask * const self,
 
             }
 
-            self->aux_index = 0;
+            self->aux_index = 0U;
 
         }
 
@@ -73,21 +73,21 @@ Result TCRXBottomHalfTask__get_tc(TCRXBottomHalfTask * const self,
         
         if (data == self->sync_word[self->aux_index]) {
             
-            if (3 == self->aux_index) {
+            if (3U == self->aux_index) {
                 
-                self->aux_index = 0;
+                self->aux_index = 0U;
 
                 self->rx_status.__variant = RXStatus__SyncLengthRx;
 
             } else {
                 
-                self->aux_index = self->aux_index + 1;
+                self->aux_index = self->aux_index + 1U;
 
             }
 
         } else {
             
-            self->aux_index = 0;
+            self->aux_index = 0U;
 
         }
 

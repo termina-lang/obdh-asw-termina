@@ -43,8 +43,8 @@ typedef struct {
     __termina_pool_t * a_tm_descriptor_pool;
     TMChannelIface tm_channel;
     PUSS5Iface pus_service_5;
-    size_t pending_action_head[4];
-    size_t pending_action_number[4];
+    size_t pending_action_head[4U];
+    size_t pending_action_number[4U];
     TCDescriptorT pending_action_queue_4HS[event_action_queue_dimension];
     TCDescriptorT pending_action_queue_3MS[event_action_queue_dimension];
     TCDescriptorT pending_action_queue_2LS[event_action_queue_dimension];
@@ -80,7 +80,7 @@ void PUSService19__extract_action(void * const __this, size_t index,
                                   TCDescriptorT * const action_packet);
 
 void PUSService19__get_pending_action_number(void * const __this,
-                                             size_t paction_num[4]);
+                                             size_t paction_num[4U]);
 
 void PUSService19__manage_event_actions(void * const __this,
                                         EventList * const event_list);

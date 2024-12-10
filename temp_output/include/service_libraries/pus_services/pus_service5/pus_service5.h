@@ -22,7 +22,7 @@ typedef struct {
     TMCounterIface tm_counter;
     __termina_pool_t * a_tm_descriptor_pool;
     TMChannelIface tm_channel;
-    uint32_t RID_enable_config[4];
+    uint32_t RID_enable_config[4U];
 } PUSService5;
 
 _Bool PUSService5__is_RID_enabled(const PUSService5 * const self, uint16_t RID);

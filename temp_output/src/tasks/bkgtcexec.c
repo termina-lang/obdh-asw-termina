@@ -11,15 +11,15 @@ Result PUSBKGTCExecutor__exec_tc(PUSBKGTCExecutor * const self,
 
     uint8_t subtype = get_subtype((*(TCDescriptorT *)tc_descriptor.data).tc_bytes);
 
-    if (tc_type == 20) {
+    if (tc_type == 20U) {
         
-        if (subtype == 1) {
+        if (subtype == 1U) {
             
             (self->pus_service_20.exec20_1TC)(self->pus_service_20.__that,
                                               (TCDescriptorT *)tc_descriptor.data,
                                               &res);
 
-        } else if (subtype == 3) {
+        } else if (subtype == 3U) {
             
             (self->pus_service_20.exec20_3TC)(self->pus_service_20.__that,
                                               (TCDescriptorT *)tc_descriptor.data,

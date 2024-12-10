@@ -11,7 +11,7 @@ _Bool is_full(const QueueU8 * const queue) {
 
 _Bool is_empty(const QueueU8 * const queue) {
     
-    _Bool queue_is_empty = queue->num_elements == 0;
+    _Bool queue_is_empty = queue->num_elements == 0U;
 
     return queue_is_empty;
 
@@ -30,7 +30,7 @@ QueueResult enqueue(QueueU8 * const queue, uint8_t new_elem) {
 
         queue->elements[next_tail_index] = new_elem;
 
-        queue->num_elements = queue->num_elements + 1;
+        queue->num_elements = queue->num_elements + 1U;
 
     } else {
         
@@ -53,9 +53,9 @@ void dequeue(QueueU8 * const queue, __option_uint8_t * const old_elem) {
         (*old_elem).__variant = Some;
         (*old_elem).Some.__0 = element;
 
-        queue->head_index = (size_t)(queue->head_index + 1) % queue_max_noe;
+        queue->head_index = (size_t)(queue->head_index + 1U) % queue_max_noe;
 
-        queue->num_elements = queue->num_elements - 1;
+        queue->num_elements = queue->num_elements - 1U;
 
     } else {
         

@@ -23,9 +23,9 @@ typedef struct {
     __termina_out_port_t tc_message_queue_output;
     __termina_in_port_t byte_message_queue_input;
     TCDescriptorT telecommand;
-    uint8_t RX_tc_length[2];
+    uint8_t RX_tc_length[2U];
     size_t aux_index;
-    uint8_t sync_word[4];
+    uint8_t sync_word[4U];
     RXStatus rx_status;
 } TCRXBottomHalfTask;
 

@@ -36,7 +36,7 @@ uint32_t ccsds_pus_tm_build_df_header(uint8_t service_type,
 
 uint8_t ccsds_pus_tm_build_df_header_version(uint8_t version);
 
-void ccsds_pus_tm_set_fields(uint8_t tm_bytes[10],
+void ccsds_pus_tm_set_fields(uint8_t tm_bytes[10U],
                              const CCSDSPUSTMPacketHeaderT * const p_tm_packet_header,
                              const CCSDSPUSTMDFHeaderT * const p_tm_df_header);
 

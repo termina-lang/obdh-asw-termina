@@ -5,14 +5,14 @@ Result HouseKeepingFDIR__do_hk_fdir(HouseKeepingFDIR * const self,
                                     TimeVal _current_time) {
     
     EventList event_list;
-    for (size_t __i0 = 0; __i0 < max_num_events; __i0 = __i0 + 1) {
-        event_list.events[__i0].ev_RID = 0;
-        for (size_t __i1 = 0; __i1 < event_aux_data_max_size; __i1 = __i1 + 1) {
-            event_list.events[__i0].ev_aux_data[__i1] = 0;
+    for (size_t __i0 = 0U; __i0 < max_num_events; __i0 = __i0 + 1U) {
+        event_list.events[__i0].ev_RID = 0U;
+        for (size_t __i1 = 0U; __i1 < event_aux_data_max_size; __i1 = __i1 + 1U) {
+            event_list.events[__i0].ev_aux_data[__i1] = 0U;
         }
-        event_list.events[__i0].ev_aux_data_size = 0;
+        event_list.events[__i0].ev_aux_data_size = 0U;
     }
-    event_list.num_events = 0;
+    event_list.num_events = 0U;
 
     Result res;
     res.__variant = Result__Ok;
@@ -28,38 +28,38 @@ Result HouseKeepingFDIR__do_hk_fdir(HouseKeepingFDIR * const self,
     (self->pus_service_19.manage_event_actions)(self->pus_service_19.__that,
                                                 &event_list);
 
-    size_t pending_actions[4];
-    for (size_t __i0 = 0; __i0 < 4; __i0 = __i0 + 1) {
-        pending_actions[__i0] = 0;
+    size_t pending_actions[4U];
+    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
+        pending_actions[__i0] = 0U;
     }
 
     (self->pus_service_19.get_pending_action_number)(self->pus_service_19.__that,
                                                      pending_actions);
 
-    size_t n = 4;
+    size_t n = 4U;
 
-    if (pending_actions[3] > 0) {
+    if (pending_actions[3U] > 0U) {
         
-        n = 3;
+        n = 3U;
 
-    } else if (pending_actions[2] > 0) {
+    } else if (pending_actions[2U] > 0U) {
         
-        n = 2;
+        n = 2U;
 
-    } else if (pending_actions[1] > 0) {
+    } else if (pending_actions[1U] > 0U) {
         
-        n = 1;
+        n = 1U;
 
-    } else if (pending_actions[0] > 0) {
+    } else if (pending_actions[0U] > 0U) {
         
-        n = 0;
+        n = 0U;
 
     } else {
         
 
     }
 
-    if (n < 4) {
+    if (n < 4U) {
         
         __option_box_t tc_descriptor;
         tc_descriptor.__variant = None;
@@ -101,21 +101,21 @@ Result HouseKeepingFDIR__exec_tc(HouseKeepingFDIR * const self,
 
     uint8_t subtype = get_subtype((*(TCDescriptorT *)tc_descriptor.data).tc_bytes);
 
-    if (tc_type == 3) {
+    if (tc_type == 3U) {
         
-        if (subtype == 5) {
+        if (subtype == 5U) {
             
             (self->pus_service_3.exec3_5TC)(self->pus_service_3.__that,
                                             (TCDescriptorT *)tc_descriptor.data,
                                             &res);
 
-        } else if (subtype == 6) {
+        } else if (subtype == 6U) {
             
             (self->pus_service_3.exec3_6TC)(self->pus_service_3.__that,
                                             (TCDescriptorT *)tc_descriptor.data,
                                             &res);
 
-        } else if (subtype == 31) {
+        } else if (subtype == 31U) {
             
             (self->pus_service_3.exec3_31TC)(self->pus_service_3.__that,
                                              (TCDescriptorT *)tc_descriptor.data,
@@ -126,15 +126,15 @@ Result HouseKeepingFDIR__exec_tc(HouseKeepingFDIR * const self,
 
         }
 
-    } else if (tc_type == 5) {
+    } else if (tc_type == 5U) {
         
-        if (subtype == 5) {
+        if (subtype == 5U) {
             
             (self->pus_service_5.exec5_5TC)(self->pus_service_5.__that,
                                             (TCDescriptorT *)tc_descriptor.data,
                                             &res);
 
-        } else if (subtype == 6) {
+        } else if (subtype == 6U) {
             
             (self->pus_service_5.exec5_6TC)(self->pus_service_5.__that,
                                             (TCDescriptorT *)tc_descriptor.data,
@@ -145,21 +145,21 @@ Result HouseKeepingFDIR__exec_tc(HouseKeepingFDIR * const self,
 
         }
 
-    } else if (tc_type == 12) {
+    } else if (tc_type == 12U) {
         
-        if (subtype == 1) {
+        if (subtype == 1U) {
             
             (self->pus_service_12.exec12_1TC)(self->pus_service_12.__that,
                                               (TCDescriptorT *)tc_descriptor.data,
                                               &res);
 
-        } else if (subtype == 2) {
+        } else if (subtype == 2U) {
             
             (self->pus_service_12.exec12_2TC)(self->pus_service_12.__that,
                                               (TCDescriptorT *)tc_descriptor.data,
                                               &res);
 
-        } else if (subtype == 5) {
+        } else if (subtype == 5U) {
             
             (self->pus_service_12.exec12_5TC)(self->pus_service_12.__that,
                                               (TCDescriptorT *)tc_descriptor.data,
@@ -170,27 +170,27 @@ Result HouseKeepingFDIR__exec_tc(HouseKeepingFDIR * const self,
 
         }
 
-    } else if (tc_type == 19) {
+    } else if (tc_type == 19U) {
         
-        if (subtype == 1) {
+        if (subtype == 1U) {
             
             (self->pus_service_19.exec19_1TC)(self->pus_service_19.__that,
                                               (TCDescriptorT *)tc_descriptor.data,
                                               &res);
 
-        } else if (subtype == 2) {
+        } else if (subtype == 2U) {
             
             (self->pus_service_19.exec19_2TC)(self->pus_service_19.__that,
                                               (TCDescriptorT *)tc_descriptor.data,
                                               &res);
 
-        } else if (subtype == 4) {
+        } else if (subtype == 4U) {
             
             (self->pus_service_19.exec19_4TC)(self->pus_service_19.__that,
                                               (TCDescriptorT *)tc_descriptor.data,
                                               &res);
 
-        } else if (subtype == 5) {
+        } else if (subtype == 5U) {
             
             (self->pus_service_19.exec19_5TC)(self->pus_service_19.__that,
                                               (TCDescriptorT *)tc_descriptor.data,

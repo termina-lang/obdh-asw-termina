@@ -20,16 +20,16 @@ void __termina_app__init_globals();
  _Atomic uint16_t system_data_pool[sdp_num_params];
 
 static uint8_t __pool_tc_pool_memory[__termina_pool__size(sizeof(TCDescriptorT),
-                                                          20)];
+                                                          20U)];
 static uint8_t __pool_tm_pool_memory[__termina_pool__size(sizeof(TMDescriptorT),
-                                                          20)];
+                                                          20U)];
 
 static rtems_task __rtems_task__HouseKeepingFDIR(rtems_task_argument arg) {
     
     HouseKeepingFDIR * self = (HouseKeepingFDIR *)arg;
     rtems_status_code status = RTEMS_SUCCESSFUL;
-    uint32_t next_msg = 0;
-    size_t size = 0;
+    uint32_t next_msg = 0U;
+    size_t size = 0U;
 
     Result result;
     result.__variant = Result__Ok;
@@ -57,14 +57,14 @@ static rtems_task __rtems_task__HouseKeepingFDIR(rtems_task_argument arg) {
                                                      RTEMS_NO_TIMEOUT);
 
                 if (RTEMS_SUCCESSFUL != status) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 result = HouseKeepingFDIR__do_hk_fdir(self,
                                                       do_hk_fdir__msg_data);
 
                 if (result.__variant != Result__Ok) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 break;
@@ -77,20 +77,20 @@ static rtems_task __rtems_task__HouseKeepingFDIR(rtems_task_argument arg) {
                                                      RTEMS_NO_TIMEOUT);
 
                 if (RTEMS_SUCCESSFUL != status) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 result = HouseKeepingFDIR__exec_tc(self, exec_tc__msg_data);
 
                 if (result.__variant != Result__Ok) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 break;
 
             default:
 
-                rtems_shutdown_executive(1);
+                rtems_shutdown_executive(1U);
 
                 break;
 
@@ -98,7 +98,7 @@ static rtems_task __rtems_task__HouseKeepingFDIR(rtems_task_argument arg) {
 
     }
 
-    rtems_shutdown_executive(1);
+    rtems_shutdown_executive(1U);
 
     return;
 
@@ -108,8 +108,8 @@ static rtems_task __rtems_task__ICUManager(rtems_task_argument arg) {
     
     ICUManager * self = (ICUManager *)arg;
     rtems_status_code status = RTEMS_SUCCESSFUL;
-    uint32_t next_msg = 0;
-    size_t size = 0;
+    uint32_t next_msg = 0U;
+    size_t size = 0U;
 
     Result result;
     result.__variant = Result__Ok;
@@ -137,13 +137,13 @@ static rtems_task __rtems_task__ICUManager(rtems_task_argument arg) {
                                                      RTEMS_NO_TIMEOUT);
 
                 if (RTEMS_SUCCESSFUL != status) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 result = ICUManager__process_tc(self, process_tc__msg_data);
 
                 if (result.__variant != Result__Ok) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 break;
@@ -156,21 +156,21 @@ static rtems_task __rtems_task__ICUManager(rtems_task_argument arg) {
                                                      RTEMS_NO_TIMEOUT);
 
                 if (RTEMS_SUCCESSFUL != status) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 result = ICUManager__process_action_tc(self,
                                                        process_action_tc__msg_data);
 
                 if (result.__variant != Result__Ok) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 break;
 
             default:
 
-                rtems_shutdown_executive(1);
+                rtems_shutdown_executive(1U);
 
                 break;
 
@@ -178,7 +178,7 @@ static rtems_task __rtems_task__ICUManager(rtems_task_argument arg) {
 
     }
 
-    rtems_shutdown_executive(1);
+    rtems_shutdown_executive(1U);
 
     return;
 
@@ -188,8 +188,8 @@ static rtems_task __rtems_task__PUSBKGTCExecutor(rtems_task_argument arg) {
     
     PUSBKGTCExecutor * self = (PUSBKGTCExecutor *)arg;
     rtems_status_code status = RTEMS_SUCCESSFUL;
-    uint32_t next_msg = 0;
-    size_t size = 0;
+    uint32_t next_msg = 0U;
+    size_t size = 0U;
 
     Result result;
     result.__variant = Result__Ok;
@@ -216,20 +216,20 @@ static rtems_task __rtems_task__PUSBKGTCExecutor(rtems_task_argument arg) {
                                                      RTEMS_NO_TIMEOUT);
 
                 if (RTEMS_SUCCESSFUL != status) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 result = PUSBKGTCExecutor__exec_tc(self, exec_tc__msg_data);
 
                 if (result.__variant != Result__Ok) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 break;
 
             default:
 
-                rtems_shutdown_executive(1);
+                rtems_shutdown_executive(1U);
 
                 break;
 
@@ -237,7 +237,7 @@ static rtems_task __rtems_task__PUSBKGTCExecutor(rtems_task_argument arg) {
 
     }
 
-    rtems_shutdown_executive(1);
+    rtems_shutdown_executive(1U);
 
     return;
 
@@ -247,8 +247,8 @@ static rtems_task __rtems_task__TCRXBottomHalfTask(rtems_task_argument arg) {
     
     TCRXBottomHalfTask * self = (TCRXBottomHalfTask *)arg;
     rtems_status_code status = RTEMS_SUCCESSFUL;
-    uint32_t next_msg = 0;
-    size_t size = 0;
+    uint32_t next_msg = 0U;
+    size_t size = 0U;
 
     Result result;
     result.__variant = Result__Ok;
@@ -275,20 +275,20 @@ static rtems_task __rtems_task__TCRXBottomHalfTask(rtems_task_argument arg) {
                                                      RTEMS_NO_TIMEOUT);
 
                 if (RTEMS_SUCCESSFUL != status) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 result = TCRXBottomHalfTask__get_tc(self, get_tc__msg_data);
 
                 if (result.__variant != Result__Ok) {
-                    rtems_shutdown_executive(1);
+                    rtems_shutdown_executive(1U);
                 }
 
                 break;
 
             default:
 
-                rtems_shutdown_executive(1);
+                rtems_shutdown_executive(1U);
 
                 break;
 
@@ -296,7 +296,7 @@ static rtems_task __rtems_task__TCRXBottomHalfTask(rtems_task_argument arg) {
 
     }
 
-    rtems_shutdown_executive(1);
+    rtems_shutdown_executive(1U);
 
     return;
 
@@ -319,7 +319,7 @@ void __rtems_periodic_timer__hk_fdir_timer(rtems_id _timer_id,
     }
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     __termina__add_timeval(&hk_fdir_timer.__timer.current,
@@ -330,7 +330,7 @@ void __rtems_periodic_timer__hk_fdir_timer(rtems_id _timer_id,
                                      __rtems_periodic_timer__hk_fdir_timer);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     return;
@@ -344,10 +344,10 @@ void __rtems_isr__irq_3(void * _ignored) {
     Result result;
     result.__variant = Result__Ok;
 
-    result = UARTIrqHandler__irq_handler(self, 3);
+    result = UARTIrqHandler__irq_handler(self, 3U);
 
     if (result.__variant != Result__Ok) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     return;
@@ -364,7 +364,7 @@ void __rtems_app__initial_event(TimeVal * const current) {
     result = Init__init(self, *current);
 
     if (result.__variant != Result__Ok) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     return;
@@ -397,7 +397,7 @@ static void __rtems_app__enable_protection() {
     result = __termina_resource__init(&tc_pool.__resource);
 
     if (result.__variant != Result__Ok) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     telemetry_channel.__resource.lock = __RTEMSResourceLock__Mutex;
@@ -407,7 +407,7 @@ static void __rtems_app__enable_protection() {
     result = __termina_resource__init(&telemetry_channel.__resource);
 
     if (result.__variant != Result__Ok) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     telemetry_counter.__resource.lock = __RTEMSResourceLock__Mutex;
@@ -417,7 +417,7 @@ static void __rtems_app__enable_protection() {
     result = __termina_resource__init(&telemetry_counter.__resource);
 
     if (result.__variant != Result__Ok) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     tm_pool.__resource.lock = __RTEMSResourceLock__Mutex;
@@ -427,7 +427,7 @@ static void __rtems_app__enable_protection() {
     result = __termina_resource__init(&tm_pool.__resource);
 
     if (result.__variant != Result__Ok) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     uart_drv.__resource.lock = __RTEMSResourceLock__Irq;
@@ -466,7 +466,7 @@ static void __rtems_app__init_globals() {
                                   sizeof(TCDescriptorT));
 
     if (result.__variant != Result__Ok) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     tm_pool.__resource.lock = __RTEMSResourceLock__None;
@@ -476,99 +476,99 @@ static void __rtems_app__init_globals() {
                                   sizeof(TMDescriptorT));
 
     if (result.__variant != Result__Ok) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     rtems_status_code status = RTEMS_SUCCESSFUL;
 
-    status = __rtems__create_msg_queue(1, sizeof(uint32_t),
+    status = __rtems__create_msg_queue(1U, sizeof(uint32_t),
                                        &hk_fdir.__task.msgq_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
-    status = __rtems__create_msg_queue(1, sizeof(TimeVal),
+    status = __rtems__create_msg_queue(1U, sizeof(TimeVal),
                                        &hk_fdir.hk_fdir_timer_ev);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
-    status = __rtems__create_msg_queue(1, sizeof(uint32_t),
+    status = __rtems__create_msg_queue(1U, sizeof(uint32_t),
                                        &icu_manager.__task.msgq_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
-    status = __rtems__create_msg_queue(1, sizeof(uint32_t),
+    status = __rtems__create_msg_queue(1U, sizeof(uint32_t),
                                        &pus_bkg_tc_executor.__task.msgq_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
-    status = __rtems__create_msg_queue(1, sizeof(uint32_t),
+    status = __rtems__create_msg_queue(1U, sizeof(uint32_t),
                                        &tc_rx_bottom_half_task.__task.msgq_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     tc_message_queue.task_msgq_id = icu_manager.__task.msgq_id;
     tc_message_queue.task_port = __ICUManager__tc_message_queue_input;
     tc_message_queue.message_size = sizeof(__termina_box_t);
 
-    status = __rtems__create_msg_queue(10, sizeof(__termina_box_t),
+    status = __rtems__create_msg_queue(10U, sizeof(__termina_box_t),
                                        &tc_message_queue.msgq_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     hkfdir_message_queue.task_msgq_id = hk_fdir.__task.msgq_id;
     hkfdir_message_queue.task_port = __HouseKeepingFDIR__hkfdir_message_queue_input;
     hkfdir_message_queue.message_size = sizeof(__termina_box_t);
 
-    status = __rtems__create_msg_queue(10, sizeof(__termina_box_t),
+    status = __rtems__create_msg_queue(10U, sizeof(__termina_box_t),
                                        &hkfdir_message_queue.msgq_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     byte_message_queue.task_msgq_id = tc_rx_bottom_half_task.__task.msgq_id;
     byte_message_queue.task_port = __TCRXBottomHalfTask__byte_message_queue_input;
     byte_message_queue.message_size = sizeof(uint8_t);
 
-    status = __rtems__create_msg_queue(10, sizeof(uint8_t),
+    status = __rtems__create_msg_queue(10U, sizeof(uint8_t),
                                        &byte_message_queue.msgq_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     bkg_message_queue.task_msgq_id = pus_bkg_tc_executor.__task.msgq_id;
     bkg_message_queue.task_port = __PUSBKGTCExecutor__bkg_message_queue_input;
     bkg_message_queue.message_size = sizeof(__termina_box_t);
 
-    status = __rtems__create_msg_queue(10, sizeof(__termina_box_t),
+    status = __rtems__create_msg_queue(10U, sizeof(__termina_box_t),
                                        &bkg_message_queue.msgq_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     action_tc_message_queue.task_msgq_id = icu_manager.__task.msgq_id;
     action_tc_message_queue.task_port = __ICUManager__action_tc_message_queue_input;
     action_tc_message_queue.message_size = sizeof(__termina_box_t);
 
-    status = __rtems__create_msg_queue(5, sizeof(__termina_box_t),
+    status = __rtems__create_msg_queue(5U, sizeof(__termina_box_t),
                                        &action_tc_message_queue.msgq_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
     hk_fdir_timer.__timer.task_msgq_id = hk_fdir.__task.msgq_id;
@@ -588,7 +588,7 @@ static void __rtems_app__init_globals() {
     status = __rtems__create_timer(&hk_fdir_timer.__timer.timer_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
 }
@@ -611,7 +611,7 @@ static void __rtems_app__install_emitters(TimeVal * const current) {
 
     if (RTEMS_SUCCESSFUL == status) {
         
-        status = __rtems__install_isr(3, __rtems_isr__irq_3);
+        status = __rtems__install_isr(3U, __rtems_isr__irq_3);
 
     }
 
@@ -621,36 +621,36 @@ static void __rtems_app__create_tasks() {
     
     rtems_status_code status = RTEMS_SUCCESSFUL;
 
-    status = __rtems__create_task(255, 4096, __rtems_task__HouseKeepingFDIR,
+    status = __rtems__create_task(255, 4096U, __rtems_task__HouseKeepingFDIR,
                                   (rtems_task_argument)&hk_fdir,
                                   &hk_fdir.__task.task_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
-    status = __rtems__create_task(255, 4096, __rtems_task__ICUManager,
+    status = __rtems__create_task(255, 4096U, __rtems_task__ICUManager,
                                   (rtems_task_argument)&icu_manager,
                                   &icu_manager.__task.task_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
-    status = __rtems__create_task(255, 4096, __rtems_task__PUSBKGTCExecutor,
+    status = __rtems__create_task(255, 4096U, __rtems_task__PUSBKGTCExecutor,
                                   (rtems_task_argument)&pus_bkg_tc_executor,
                                   &pus_bkg_tc_executor.__task.task_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
-    status = __rtems__create_task(255, 4096, __rtems_task__TCRXBottomHalfTask,
+    status = __rtems__create_task(255, 4096U, __rtems_task__TCRXBottomHalfTask,
                                   (rtems_task_argument)&tc_rx_bottom_half_task,
                                   &tc_rx_bottom_half_task.__task.task_id);
 
     if (RTEMS_SUCCESSFUL != status) {
-        rtems_shutdown_executive(1);
+        rtems_shutdown_executive(1U);
     }
 
 }
@@ -684,52 +684,52 @@ rtems_task Init(rtems_task_argument _ignored) {
 
 #define CONFIGURE_MESSAGE_BUFFER_MEMORY (  \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            1, \
+            1U, \
             sizeof(uint32_t) \
         ) \
     + \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            1, \
+            1U, \
             sizeof(TimeVal) \
         ) \
     + \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            1, \
+            1U, \
             sizeof(uint32_t) \
         ) \
     + \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            1, \
+            1U, \
             sizeof(uint32_t) \
         ) \
     + \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            1, \
+            1U, \
             sizeof(uint32_t) \
         ) \
     + \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            10, \
+            10U, \
             sizeof(__termina_box_t) \
         ) \
     + \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            10, \
+            10U, \
             sizeof(__termina_box_t) \
         ) \
     + \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            10, \
+            10U, \
             sizeof(uint8_t) \
         ) \
     + \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            10, \
+            10U, \
             sizeof(__termina_box_t) \
         ) \
     + \
         CONFIGURE_MESSAGE_BUFFERS_FOR_QUEUE( \
-            5, \
+            5U, \
             sizeof(__termina_box_t) \
         ) \
     )

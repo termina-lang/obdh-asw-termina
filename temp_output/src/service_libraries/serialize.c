@@ -1,61 +1,61 @@
 
 #include "service_libraries/serialize.h"
 
-uint16_t deserialize_uint16(const uint8_t data_bytes[2]) {
+uint16_t deserialize_uint16(const uint8_t data_bytes[2U]) {
     
-    uint16_t aux = 0;
+    uint16_t aux = 0U;
 
-    aux = (uint16_t)data_bytes[0];
+    aux = (uint16_t)data_bytes[0U];
 
-    aux = aux << 8;
+    aux = aux << 8U;
 
-    aux = aux | (uint16_t)data_bytes[1];
+    aux = aux | (uint16_t)data_bytes[1U];
 
     return aux;
 
 }
 
-uint32_t deserialize_uint32(const uint8_t data_bytes[4]) {
+uint32_t deserialize_uint32(const uint8_t data_bytes[4U]) {
     
-    uint32_t aux = 0;
+    uint32_t aux = 0U;
 
-    aux = (uint32_t)data_bytes[0];
+    aux = (uint32_t)data_bytes[0U];
 
-    aux = aux << 8;
+    aux = aux << 8U;
 
-    aux = aux | (uint32_t)data_bytes[1];
+    aux = aux | (uint32_t)data_bytes[1U];
 
-    aux = aux << 8;
+    aux = aux << 8U;
 
-    aux = aux | (uint32_t)data_bytes[2];
+    aux = aux | (uint32_t)data_bytes[2U];
 
-    aux = aux << 8;
+    aux = aux << 8U;
 
-    aux = aux | (uint32_t)data_bytes[3];
+    aux = aux | (uint32_t)data_bytes[3U];
 
     return aux;
 
 }
 
-void serialize_uint16(uint16_t aux, uint8_t data_bytes[2]) {
+void serialize_uint16(uint16_t aux, uint8_t data_bytes[2U]) {
     
-    data_bytes[0] = (uint8_t)((uint16_t)(aux & 0xFF00) >> 8);
+    data_bytes[0U] = (uint8_t)((uint16_t)(aux & 0xFF00U) >> 8U);
 
-    data_bytes[1] = (uint8_t)(aux & 0xFF);
+    data_bytes[1U] = (uint8_t)(aux & 0xFFU);
 
     return;
 
 }
 
-void serialize_uint32(uint32_t aux, uint8_t data_bytes[4]) {
+void serialize_uint32(uint32_t aux, uint8_t data_bytes[4U]) {
     
-    data_bytes[0] = (uint8_t)((uint32_t)(aux & 0xFF000000) >> 24);
+    data_bytes[0U] = (uint8_t)((uint32_t)(aux & 0xFF000000U) >> 24U);
 
-    data_bytes[1] = (uint8_t)((uint32_t)(aux & 0xFF0000) >> 16);
+    data_bytes[1U] = (uint8_t)((uint32_t)(aux & 0xFF0000U) >> 16U);
 
-    data_bytes[2] = (uint8_t)((uint32_t)(aux & 0xFF00) >> 8);
+    data_bytes[2U] = (uint8_t)((uint32_t)(aux & 0xFF00U) >> 8U);
 
-    data_bytes[3] = (uint8_t)(aux & 0xFF);
+    data_bytes[3U] = (uint8_t)(aux & 0xFFU);
 
     return;
 

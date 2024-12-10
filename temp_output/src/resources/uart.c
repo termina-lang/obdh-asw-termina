@@ -3,7 +3,7 @@
 
 void UARTDriver__disable_RF(UARTDriver * const self) {
     
-    uint32_t riscv_uart_rf = 0xFFFFFBFF;
+    uint32_t riscv_uart_rf = 0xFFFFFBFFU;
 
     self->registers->control = self->registers->control & riscv_uart_rf;
 
@@ -13,7 +13,7 @@ void UARTDriver__disable_RF(UARTDriver * const self) {
 
 void UARTDriver__disable_TF(UARTDriver * const self) {
     
-    uint32_t riscv_uart_tf = 0xFFFFFCFF;
+    uint32_t riscv_uart_tf = 0xFFFFFCFFU;
 
     self->registers->control = self->registers->control & riscv_uart_tf;
 
@@ -23,7 +23,7 @@ void UARTDriver__disable_TF(UARTDriver * const self) {
 
 void UARTDriver__enable_RI(UARTDriver * const self) {
     
-    uint32_t riscv_uart_ri = 0x4;
+    uint32_t riscv_uart_ri = 0x4U;
 
     self->registers->control = self->registers->control | riscv_uart_ri;
 
@@ -33,7 +33,7 @@ void UARTDriver__enable_RI(UARTDriver * const self) {
 
 void UARTDriver__enable_RX(UARTDriver * const self) {
     
-    uint32_t riscv_uart_rxe = 0x1;
+    uint32_t riscv_uart_rxe = 0x1U;
 
     self->registers->control = self->registers->control | riscv_uart_rxe;
 
@@ -43,7 +43,7 @@ void UARTDriver__enable_RX(UARTDriver * const self) {
 
 void UARTDriver__enable_TI(UARTDriver * const self) {
     
-    uint32_t riscv_uart_ti = 0x8;
+    uint32_t riscv_uart_ti = 0x8U;
 
     self->registers->control = self->registers->control | riscv_uart_ti;
 
@@ -53,7 +53,7 @@ void UARTDriver__enable_TI(UARTDriver * const self) {
 
 void UARTDriver__enable_TX(UARTDriver * const self) {
     
-    uint32_t riscv_uart_txe = 0x2;
+    uint32_t riscv_uart_txe = 0x2U;
 
     self->registers->control = self->registers->control | riscv_uart_txe;
 
@@ -93,16 +93,16 @@ void UARTDriver__release_tx(void * const __this) {
 
     if (self->rem_bytes) {
         
-        size_t num_elements = 0;
+        size_t num_elements = 0U;
 
         get_num_enqueued_elems(&self->uart_queue, &num_elements);
 
-        size_t sent_bytes = 0;
+        size_t sent_bytes = 0U;
 
         __option_uint8_t extracted_elem;
         extracted_elem.__variant = None;
 
-        for (size_t i = 0; i < 4 && sent_bytes < num_elements; i = i + 1) {
+        for (size_t i = 0U; i < 4U && sent_bytes < num_elements; i = i + 1U) {
             
             dequeue(&self->uart_queue, &extracted_elem);
 
@@ -112,7 +112,7 @@ void UARTDriver__release_tx(void * const __this) {
 
                 self->registers->data = (uint32_t)elem;
 
-                sent_bytes = sent_bytes + 1;
+                sent_bytes = sent_bytes + 1U;
 
             } else {
                 
@@ -141,9 +141,9 @@ void UARTDriver__release_tx(void * const __this) {
 
 _Bool UARTDriver__tf_is_empty(const UARTDriver * const self) {
     
-    uint32_t riscv_uart_te = 0x4;
+    uint32_t riscv_uart_te = 0x4U;
 
-    return (uint32_t)(self->registers->status & riscv_uart_te) != 0;
+    return (uint32_t)(self->registers->status & riscv_uart_te) != 0U;
 
 }
 
@@ -159,7 +159,7 @@ void UARTDriver__send(void * const __this,
 
     if (self->rem_bytes) {
         
-        size_t num_elements = 0;
+        size_t num_elements = 0U;
 
         get_num_enqueued_elems(&self->uart_queue, &num_elements);
 
@@ -168,11 +168,11 @@ void UARTDriver__send(void * const __this,
             QueueResult inner_queue_result;
             inner_queue_result.__variant = QueueResult__Success;
 
-            size_t queued_bytes = 0;
+            size_t queued_bytes = 0U;
 
             _Bool error = 0;
 
-            for (size_t i = 0; i < max_send_size && (queued_bytes < nbytes && error == 0); i = i + 1) {
+            for (size_t i = 0U; i < max_send_size && (queued_bytes < nbytes && error == 0); i = i + 1U) {
                 
                 inner_queue_result = enqueue(&self->uart_queue,
                                              output_bytes[i]);
@@ -185,7 +185,7 @@ void UARTDriver__send(void * const __this,
 
                 } else {
                     
-                    queued_bytes = queued_bytes + 1;
+                    queued_bytes = queued_bytes + 1U;
 
                 }
 
@@ -199,15 +199,15 @@ void UARTDriver__send(void * const __this,
 
     } else {
         
-        size_t sent_bytes = 0;
+        size_t sent_bytes = 0U;
 
         if (UARTDriver__tf_is_empty(self)) {
             
-            for (size_t i = 0; i < 4 && sent_bytes < nbytes; i = i + 1) {
+            for (size_t i = 0U; i < 4U && sent_bytes < nbytes; i = i + 1U) {
                 
                 self->registers->data = (uint32_t)output_bytes[i];
 
-                sent_bytes = sent_bytes + 1;
+                sent_bytes = sent_bytes + 1U;
 
             }
 
@@ -219,7 +219,7 @@ void UARTDriver__send(void * const __this,
 
             size_t left_bytes = nbytes - sent_bytes;
 
-            size_t num_elements = 0;
+            size_t num_elements = 0U;
 
             get_num_enqueued_elems(&self->uart_queue, &num_elements);
 
@@ -230,7 +230,7 @@ void UARTDriver__send(void * const __this,
 
                 _Bool error = 0;
 
-                for (size_t i = 0; i < max_send_size && (i < left_bytes && error == 0); i = i + 1) {
+                for (size_t i = 0U; i < max_send_size && (i < left_bytes && error == 0); i = i + 1U) {
                     
                     inner_queue_result = enqueue(&self->uart_queue,
                                                  output_bytes[i + sent_bytes]);
@@ -266,8 +266,8 @@ void UARTDriver__send(void * const __this,
 
 _Bool UARTDriver__tf_is_full(const UARTDriver * const self) {
     
-    uint32_t riscv_uart_tf = 0x200;
+    uint32_t riscv_uart_tf = 0x200U;
 
-    return (uint32_t)(self->registers->status & riscv_uart_tf) != 0;
+    return (uint32_t)(self->registers->status & riscv_uart_tf) != 0U;
 
 }

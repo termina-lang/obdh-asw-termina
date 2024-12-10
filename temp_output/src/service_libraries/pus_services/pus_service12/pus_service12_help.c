@@ -6,16 +6,16 @@ void trigger_event(EventList * const event_list, uint16_t RID, uint16_t PID,
     
     EventInfo ev_info;
     ev_info.ev_RID = RID;
-    for (size_t __i0 = 0; __i0 < event_aux_data_max_size; __i0 = __i0 + 1) {
-        ev_info.ev_aux_data[__i0] = 0;
+    for (size_t __i0 = 0U; __i0 < event_aux_data_max_size; __i0 = __i0 + 1U) {
+        ev_info.ev_aux_data[__i0] = 0U;
     }
-    ev_info.ev_aux_data_size = 6;
+    ev_info.ev_aux_data_size = 6U;
 
-    serialize_uint16(PID, &ev_info.ev_aux_data[0]);
+    serialize_uint16(PID, &ev_info.ev_aux_data[0U]);
 
-    serialize_uint16(PID_value, &ev_info.ev_aux_data[2]);
+    serialize_uint16(PID_value, &ev_info.ev_aux_data[2U]);
 
-    serialize_uint16(limit, &ev_info.ev_aux_data[4]);
+    serialize_uint16(limit, &ev_info.ev_aux_data[4U]);
 
     ListResult result = add_event(event_list, ev_info);
 

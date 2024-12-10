@@ -9,13 +9,13 @@ Result UARTIrqHandler__irq_handler(UARTIrqHandler * const self,
 
     uint32_t status = self->uart_registers->status;
 
-    if ((uint32_t)(status & riscv_uart_te) != 0) {
+    if ((uint32_t)(status & riscv_uart_te) != 0U) {
         
         (self->uart.release_tx)(self->uart.__that);
 
     }
 
-    if ((uint32_t)(status & riscv_uart_dr) != 0) {
+    if ((uint32_t)(status & riscv_uart_dr) != 0U) {
         
         uint8_t byte = (uint8_t)self->uart_registers->data;
 

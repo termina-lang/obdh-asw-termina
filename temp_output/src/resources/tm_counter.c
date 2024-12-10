@@ -9,7 +9,7 @@ void TMCounter__get_next_tm_count(void * const __this, uint16_t * const count) {
 
     *count = self->tm_count;
 
-    self->tm_count = (uint16_t)(self->tm_count + 1) & 0x3FFF;
+    self->tm_count = (uint16_t)(self->tm_count + 1U) & 0x3FFFU;
 
     __termina_resource__unlock(&self->__resource);
 

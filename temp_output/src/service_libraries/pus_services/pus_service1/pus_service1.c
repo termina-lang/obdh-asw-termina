@@ -8,19 +8,19 @@ TCExecutionCtrl handle_tc(const TCDescriptorT * const tc_descriptor) {
     TCExecutionCtrl exec_ctrl;
     exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlReboot;
 
-    if (type == 9 || type == 17) {
+    if (type == 9U || type == 17U) {
         
         exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
 
-    } else if (type == 3 || type == 5 || type == 12 || type == 19) {
+    } else if (type == 3U || type == 5U || type == 12U || type == 19U) {
         
         exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
-    } else if (type == 20) {
+    } else if (type == 20U) {
         
         exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlBKGTC;
 
-    } else if (type == 128) {
+    } else if (type == 128U) {
         
         exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlReboot;
 
@@ -64,9 +64,9 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
         uint8_t subtype = get_subtype(tc_descriptor->tc_bytes);
 
-        if (9 == type) {
+        if (9U == type) {
             
-            if (129 == subtype) {
+            if (129U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -80,9 +80,9 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
             }
 
-        } else if (17 == type) {
+        } else if (17U == type) {
             
-            if (1 == subtype) {
+            if (1U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -96,21 +96,21 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
             }
 
-        } else if (3 == type) {
+        } else if (3U == type) {
             
-            if (5 == subtype) {
+            if (5U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
-            } else if (6 == subtype) {
+            } else if (6U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
-            } else if (31 == subtype) {
+            } else if (31U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -124,15 +124,15 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
             }
 
-        } else if (20 == type) {
+        } else if (20U == type) {
             
-            if (1 == subtype) {
+            if (1U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 status.execution_status.__variant = TCExecutionCtrl__ExecCtrlBKGTC;
 
-            } else if (3 == subtype) {
+            } else if (3U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -146,15 +146,15 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
             }
 
-        } else if (5 == type) {
+        } else if (5U == type) {
             
-            if (5 == subtype) {
+            if (5U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
-            } else if (6 == subtype) {
+            } else if (6U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -168,21 +168,21 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
             }
 
-        } else if (12 == type) {
+        } else if (12U == type) {
             
-            if (1 == subtype) {
+            if (1U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
-            } else if (5 == subtype) {
+            } else if (5U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
-            } else if (6 == subtype) {
+            } else if (6U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -196,27 +196,27 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
             }
 
-        } else if (19 == type) {
+        } else if (19U == type) {
             
-            if (1 == subtype) {
+            if (1U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
-            } else if (2 == subtype) {
+            } else if (2U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
-            } else if (4 == subtype) {
+            } else if (4U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
-            } else if (5 == subtype) {
+            } else if (5U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -230,9 +230,9 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
             }
 
-        } else if (128 == type) {
+        } else if (128U == type) {
             
-            if (1 == subtype) {
+            if (1U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -264,7 +264,8 @@ void build_tm_1_1(TMDescriptorT * const p_tm_descriptor,
                   uint16_t tm_seq_counter,
                   const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length, 1, 1);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length, 1U,
+             1U);
 
     return;
 
@@ -275,7 +276,7 @@ void build_tm_1_2(const TCStatus * const status,
                   uint16_t tm_seq_counter,
                   const TCDescriptorT * const tc_descriptor) {
     
-    uint16_t error_code = 0;
+    uint16_t error_code = 0U;
 
     if ((*status).error_code.__variant == TCErrorType__Undefined) {
         
@@ -283,54 +284,54 @@ void build_tm_1_2(const TCStatus * const status,
     } else if ((*status).error_code.__variant == TCErrorType__TypeError) {
         
         build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor,
-                 base_length + 2, 1, 2);
+                 base_length + 2U, 1U, 2U);
 
-        error_code = 5;
+        error_code = 5U;
 
     } else if ((*status).error_code.__variant == TCErrorType__SubTypeError) {
         
         build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor,
-                 base_length + 2, 1, 2);
+                 base_length + 2U, 1U, 2U);
 
-        error_code = 6;
+        error_code = 6U;
 
     } else if ((*status).error_code.__variant == TCErrorType__SourceIDError) {
         
         build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor,
-                 base_length + 4, 1, 2);
+                 base_length + 4U, 1U, 2U);
 
-        error_code = 4;
+        error_code = 4U;
 
         uint8_t sourceID = get_source_id(tc_descriptor->tc_bytes);
 
-        serialize_uint16((uint16_t)sourceID, &p_tm_descriptor->tm_bytes[16]);
+        serialize_uint16((uint16_t)sourceID, &p_tm_descriptor->tm_bytes[16U]);
 
     } else if ((*status).error_code.__variant == TCErrorType__CRCError) {
         
         build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor,
-                 base_length + 6, 1, 2);
+                 base_length + 6U, 1U, 2U);
 
-        error_code = 2;
+        error_code = 2U;
 
         uint16_t packet_error_ctrl = get_packet_seq_ctrl(tc_descriptor->tc_bytes);
 
         uint16_t calculated_crc = cal_crc_16(tc_descriptor->tc_bytes,
-                                             tc_descriptor->tc_num_bytes - 2);
+                                             tc_descriptor->tc_num_bytes - 2U);
 
-        serialize_uint16(packet_error_ctrl, &p_tm_descriptor->tm_bytes[16]);
+        serialize_uint16(packet_error_ctrl, &p_tm_descriptor->tm_bytes[16U]);
 
-        serialize_uint16(calculated_crc, &p_tm_descriptor->tm_bytes[18]);
+        serialize_uint16(calculated_crc, &p_tm_descriptor->tm_bytes[18U]);
 
     } else {
         
         build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor,
-                 base_length + 2, 1, 2);
+                 base_length + 2U, 1U, 2U);
 
-        error_code = 3;
+        error_code = 3U;
 
     }
 
-    serialize_uint16(error_code, &p_tm_descriptor->tm_bytes[14]);
+    serialize_uint16(error_code, &p_tm_descriptor->tm_bytes[14U]);
 
     return;
 
@@ -340,7 +341,8 @@ void build_tm_1_7(TMDescriptorT * const p_tm_descriptor,
                   uint16_t tm_seq_counter,
                   const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length, 1, 7);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length, 1U,
+             7U);
 
     return;
 
@@ -350,12 +352,13 @@ void build_tm_1_8_tc_3_X_SIDnotvalid(TMDescriptorT * const p_tm_descriptor,
                                      uint16_t tm_seq_counter, uint16_t SID,
                                      const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
-    serialize_uint16(TM_1_8_TC_3_X_invalid_SID, &p_tm_descriptor->tm_bytes[14]);
+    serialize_uint16(TM_1_8_TC_3_X_invalid_SID,
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(SID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(SID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 
@@ -365,13 +368,13 @@ void build_tm_1_8_tc_20_X_PIDnotvalid(TMDescriptorT * const p_tm_descriptor,
                                       uint16_t tm_seq_counter, uint16_t PID,
                                       const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
     serialize_uint16(TM_1_8_TC_20_X_invalid_PID,
-                     &p_tm_descriptor->tm_bytes[14]);
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(PID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(PID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 
@@ -381,12 +384,13 @@ void build_tm_1_8_tc_5_X_RIDunknown(TMDescriptorT * const p_tm_descriptor,
                                     uint16_t tm_seq_counter, uint16_t RID,
                                     const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
-    serialize_uint16(TM_1_8_TC_5_X_unknown_RID, &p_tm_descriptor->tm_bytes[14]);
+    serialize_uint16(TM_1_8_TC_5_X_unknown_RID,
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(RID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(RID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 
@@ -397,13 +401,13 @@ void build_tm_1_8_tc_12_X_PMONIDundefined(TMDescriptorT * const p_tm_descriptor,
                                           uint16_t PMONID,
                                           const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
     serialize_uint16(TM_1_8_TC_12_X_PMONID_undefined,
-                     &p_tm_descriptor->tm_bytes[14]);
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(PMONID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(PMONID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 
@@ -414,13 +418,13 @@ void build_tm_1_8_tc_12_X_PMONIDdefined(TMDescriptorT * const p_tm_descriptor,
                                         uint16_t PMONID,
                                         const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
     serialize_uint16(TM_1_8_TC_12_X_PMONID_defined,
-                     &p_tm_descriptor->tm_bytes[14]);
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(PMONID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(PMONID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 
@@ -431,13 +435,13 @@ void build_tm_1_8_tc_12_X_PMONIDnotvalid(TMDescriptorT * const p_tm_descriptor,
                                          uint16_t PMONID,
                                          const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
     serialize_uint16(TM_1_8_TC_12_X_invalid_PMONID,
-                     &p_tm_descriptor->tm_bytes[14]);
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(PMONID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(PMONID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 
@@ -448,13 +452,13 @@ void build_tm_1_8_tc_19_X_event_action_enabled(TMDescriptorT * const p_tm_descri
                                                uint16_t event_ID,
                                                const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
     serialize_uint16(TM_1_8_TC_19_X_ev_action_is_enabled,
-                     &p_tm_descriptor->tm_bytes[14]);
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 
@@ -465,13 +469,13 @@ void build_tm_1_8_tc_19_1_max_event_actions(TMDescriptorT * const p_tm_descripto
                                             uint16_t event_ID,
                                             const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
     serialize_uint16(TM_1_8_TC_19_1_max_ev_actions_reached,
-                     &p_tm_descriptor->tm_bytes[14]);
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 
@@ -482,13 +486,13 @@ void build_tm_1_8_tc_19_1_event_action_rejected(TMDescriptorT * const p_tm_descr
                                                 uint16_t event_ID,
                                                 const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
     serialize_uint16(TM_1_8_TC_19_1_ev_action_rejected,
-                     &p_tm_descriptor->tm_bytes[14]);
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 
@@ -499,13 +503,13 @@ void build_tm_1_8_tc_19_X_event_action_not_defined(TMDescriptorT * const p_tm_de
                                                    uint16_t event_ID,
                                                    const TCDescriptorT * const tc_descriptor) {
     
-    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4, 1,
-             8);
+    build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 4U,
+             1U, 8U);
 
     serialize_uint16(TM_1_8_TC_19_X_ev_action_not_defined,
-                     &p_tm_descriptor->tm_bytes[14]);
+                     &p_tm_descriptor->tm_bytes[14U]);
 
-    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16]);
+    serialize_uint16(event_ID, &p_tm_descriptor->tm_bytes[16U]);
 
     return;
 

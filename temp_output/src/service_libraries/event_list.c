@@ -11,7 +11,7 @@ _Bool is_list_full(const EventList * const list) {
 
 _Bool is_list_empty(const EventList * const list) {
     
-    _Bool list_is_empty = list->num_events == 0;
+    _Bool list_is_empty = list->num_events == 0U;
 
     return list_is_empty;
 
@@ -28,7 +28,7 @@ ListResult add_event(EventList * const list, EventInfo new_event) {
         
         list->events[list->num_events].ev_RID = new_event.ev_RID;
 
-        list->num_events = list->num_events + 1;
+        list->num_events = list->num_events + 1U;
 
         if (new_event.ev_aux_data_size > event_aux_data_max_size) {
             
@@ -40,7 +40,7 @@ ListResult add_event(EventList * const list, EventInfo new_event) {
 
         }
 
-        for (size_t i = 0; i < event_aux_data_max_size && i < list->events[list->num_events].ev_aux_data_size; i = i + 1) {
+        for (size_t i = 0U; i < event_aux_data_max_size && i < list->events[list->num_events].ev_aux_data_size; i = i + 1U) {
             
             list->events[list->num_events].ev_aux_data[i] = new_event.ev_aux_data[i];
 
@@ -63,18 +63,18 @@ void extract_event(EventList * const list,
 
     if (0 == empty) {
         
-        EventInfo event = list->events[0];
+        EventInfo event = list->events[0U];
 
         (*ext_event).__variant = Some;
         (*ext_event).Some.__0 = event;
 
-        for (size_t i = 0; i < max_num_events && i < list->num_events; i = i + 1) {
+        for (size_t i = 0U; i < max_num_events && i < list->num_events; i = i + 1U) {
             
-            list->events[i] = list->events[i + 1];
+            list->events[i] = list->events[i + 1U];
 
         }
 
-        list->num_events = list->num_events - 1;
+        list->num_events = list->num_events - 1U;
 
     } else {
         
@@ -101,7 +101,7 @@ void get_event_info(const EventList * const list, size_t index,
 
 void clear_ev_list(EventList * const list) {
     
-    list->num_events = 0;
+    list->num_events = 0U;
 
     return;
 
