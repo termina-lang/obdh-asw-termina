@@ -9,6 +9,7 @@ import service_libraries.pus_services.pus_service17;
 import service_libraries.pus_services.pus_service19;
 import service_libraries.pus_services.pus_service20;
 import resources.uart;
+import resources.gpio_driver;
 import tasks.hk_fdir_mng.hk_fdir;
 import tasks.bkgtcexec;
 import tasks.icu_manager.icu_manager;
@@ -48,6 +49,10 @@ resource uart_drv : UARTDriver = {
         head_index = 0,
         num_elements = 0
     }: QueueU8
+} : UARTDriver;
+
+resource gpio_drv : GPIODriver = {
+    registers @ 0xFC083000
 } : UARTDriver;
 
 

@@ -1,8 +1,20 @@
 const num_params2 : usize = 64;
 
 
-/*Óscar tiene el servicio 2 no impementado, simplemente ejecuta un printf.
-Puesto que el objetivo es validar el código en la ARTYA7, creo que lo mejor sería implementar 
-el TC[2,1] que permita el encendido y apagado de dispositivos. Podemos simularlo mediante el encendido
-y apagado de LEDs*/
+/* Se pueden encender y apagar cuatros dispositivos, simulados mediante el uso de cuatro leds */
+// DISP 1 <--> LED 0
+// DISP 2 <--> LED 1
+// DISP 3 <--> LED 2
+// DISP 4 <--> LED 3
 
+resource class PUSService12 provides PUSS12Iface {
+
+    gpio_driver : access GPIODrvIface;
+
+    procedure exec2_1TC(&mut self, tc_descriptor: &TCDescriptorT, result: &mut Result){
+
+
+        return;
+    }
+
+};

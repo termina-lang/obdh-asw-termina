@@ -21,7 +21,8 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     tm_counter: access TMCounterIface;
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
 
-    pus_service_17 : access PUSS17Iface; 
+    pus_service_17 : access PUSS17Iface;
+    pus_service_2 : access PUSS2Iface;  
 
     procedure PUS_prio_exec_tc (&mut self, prio_tc : &TCDescriptorT, ret: &mut Result) {
 
@@ -31,11 +32,11 @@ resource class ManagerTCExecutor provides MngTCExecIface {
 
             self->pus_service_17.exec17_1TC(prio_tc, ret);
     
-        } /*else if (tc_type == 2){
+        } else if (tc_type == 2){
 
             PUS_service_2_execTC(prio_tc, &mut descriptor, tm_count);
     
-        } else if (tc_type == 9){
+        } /*else if (tc_type == 9){
 
             PUS_service_9_execTC(prio_tc, &mut descriptor, tm_count);
     

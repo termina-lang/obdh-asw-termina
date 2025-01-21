@@ -24,10 +24,15 @@ enum TCExecutionCtrl {
     ExecCtrlPrioTC, ExecCtrlReboot, ExecCtrlHK_FDIRTC, ExecCtrlBKGTC, Undefined
 };
 
+
 struct TCStatus {
 	acceptation_status : TCAcceptationStatus;
     execution_status : TCExecutionCtrl;
 	error_code : TCErrorType;
+};
+
+enum TCVerifyStage {
+	Acceptation, ExecStart, Progress, ExecCompletion
 };
 
 const base_length : u16 = 7;
@@ -105,5 +110,92 @@ function build_tm (p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, t
 	// Calculate p_tm_descriptor->tm_num_bytes
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
+	return;
+}
+
+function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
+
+	var subtype : u8 = 0;
+
+	match verify_stage {
+		case Acceptation => {
+			subtype = 2;
+		}
+		case ExecStart => {
+			subtype = 4;
+		}
+		case Progress => {
+			subtype = 6;
+		}
+		case ExecCompletion => {
+			subtype = 8;
+		}
+	}
+
+	return subtype;
+}
+
+function build_tm_1_X_no_failure_data(p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8) {
+
+	var subtype : u8 = get_failure_subtype(verify_stage);
+
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 2, 1, subtype);
+
+	p_tm_descriptor->tm_bytes[14] = failure_code;
+
+	return;
+}
+
+function build_tm_1_X_u8_failure_data(p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8) {
+
+	var subtype : u8 = get_failure_subtype(verify_stage);
+
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 2, 1, subtype);
+
+	p_tm_descriptor->tm_bytes[14] = failure_code;
+	p_tm_descriptor->tm_bytes[15] = failure_data;
+
+	return;
+}
+
+function build_tm_1_X_u16_failure_data(p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16){
+
+	var subtype : u8 = get_failure_subtype(verify_stage);
+
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 3, 1, subtype);
+
+	p_tm_descriptor->tm_bytes[14] = failure_code;
+	serialize_uint16(failure_data, &mut p_tm_descriptor->tm_bytes[15 : usize .. 17 : usize]);
+						
+	return;
+}
+
+function build_tm_1_X_u32_failure_data(p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32){
+
+	var subtype : u8 = get_failure_subtype(verify_stage);
+
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 5, 1, subtype);
+
+	p_tm_descriptor->tm_bytes[14] = failure_code;
+	serialize_uint32(failure_data, &mut p_tm_descriptor->tm_bytes[15 : usize .. 19 : usize]);
+						
+	return;
+}
+
+function build_tm_1_X_u8_u32_failure_data(p_tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32){
+
+	var subtype : u8 = get_failure_subtype(verify_stage);
+
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 6, 1, subtype);
+
+	p_tm_descriptor->tm_bytes[14] = failure_code;
+	p_tm_descriptor->tm_bytes[15] = failure_data1;
+	serialize_uint32(failure_data2, &mut p_tm_descriptor->tm_bytes[16 : usize .. 20 : usize]);
+						
 	return;
 }

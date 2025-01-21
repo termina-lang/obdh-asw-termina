@@ -4,8 +4,10 @@ import resources.system_data_pool;
 handler class Init {
 
     uart : access CharDevInit;
+    gpio_driver : access GPIODrvIface;
     system_data_pool : access AtomicArrayAccess<u16;sdp_num_params >;
     system_init_ev : sink TimeVal triggers init;
+
 
     //This function should access to permanent memory and extract the real system_data_pool values
     action init(&priv self, _boot_time : TimeVal) -> Result {
@@ -13,6 +15,7 @@ handler class Init {
         var ret : Result = Result::Ok;
 
         self->uart.initialize();
+        self->gpio_driver.init_gpio();
 
         for i : usize in 0 .. sdp_num_params {
             self->system_data_pool.store_index(i,i as u16);
