@@ -8,6 +8,7 @@ import service_libraries.pus_services.pus_service12.pus_service12;
 import service_libraries.pus_services.pus_service17;
 import service_libraries.pus_services.pus_service19;
 import service_libraries.pus_services.pus_service20;
+import service_libraries.pus_services.pus_tc_handler;
 import resources.uart;
 import resources.gpio_driver;
 import tasks.hk_fdir_mng.hk_fdir;
@@ -28,13 +29,13 @@ emitter hk_fdir_timer : PeriodicTimer = {
 
 
 channel byte_message_queue : MsgQueue<u8;10>;
-channel tc_message_queue : MsgQueue<box TCDescriptorT;10>;
-channel hkfdir_message_queue : MsgQueue<box TCDescriptorT;10>;
-channel bkg_message_queue : MsgQueue<box TCDescriptorT;10>;
-channel action_tc_message_queue : MsgQueue<box TCDescriptorT;5>;
+channel tc_message_queue : MsgQueue<box TCHandlerT;10>;
+channel hkfdir_message_queue : MsgQueue<box TCHandlerT;10>;
+channel bkg_message_queue : MsgQueue<box TCHandlerT;10>;
+channel action_tc_message_queue : MsgQueue<box TCHandlerT;5>;
 
 resource tm_pool : Pool<TMDescriptorT; 20>;
-resource tc_pool : Pool<TCDescriptorT; 20>;
+resource tc_pool : Pool<TCHandlerT; 20>;
 
 resource system_data_pool : AtomicArray<u16; sdp_num_params> = {
     values = [0; sdp_num_params]
@@ -164,14 +165,14 @@ task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
     telecommand = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0},
     byte_message_queue_input <- byte_message_queue,
     tc_message_queue_output -> tc_message_queue,
-    a_tc_descriptor_pool <-> tc_pool
+    a_tc_handler_pool <-> tc_pool
 } : TCRXBottomHalfTask;
 
 
 task icu_manager : ICUManager = {
     tc_message_queue_input <- tc_message_queue,
     action_tc_message_queue_input <- action_tc_message_queue,
-    a_tc_descriptor_pool <-> tc_pool,
+    a_tc_handler_pool <-> tc_pool,
     hkfdir_message_queue_output -> hkfdir_message_queue,
     bkg_message_queue_output -> bkg_message_queue,
     tc_executor <-> mng_tc_executor
@@ -182,7 +183,7 @@ task hk_fdir : HouseKeepingFDIR = {
     hk_fdir_timer_ev <- hk_fdir_timer,
     hkfdir_message_queue_input <- hkfdir_message_queue,
     action_tc_message_queue_output -> action_tc_message_queue,
-    a_tc_descriptor_pool <-> tc_pool,
+    a_tc_handler_pool <-> tc_pool,
     pus_service_3 <-> pus_service_3,
     pus_service_12 <-> pus_service_12,
     pus_service_5 <-> pus_service_5,
@@ -192,7 +193,7 @@ task hk_fdir : HouseKeepingFDIR = {
 
 task pus_bkg_tc_executor : PUSBKGTCExecutor = {
     bkg_message_queue_input <- bkg_message_queue,
-    a_tc_descriptor_pool  <-> tc_pool,
+    a_tc_handler_pool  <-> tc_pool,
     pus_service_20 <-> pus_service_20
 } : PUSBKGTCExecutor;
 

@@ -3,7 +3,7 @@ PUS SERVICE 1 : REQUEST VERIFICATION SERVICE
 */
 
 import service_libraries.pus_services.pus_service1.pus_service1_help;
-import service_libraries.pus_services.pus_service1.pus_service1_build_tm_1_x;
+import service_libraries.pus_services.pus_service1.pus_service_1_build_tm_1_x;
 
 // Will I be using this function for action TCs???
 function handle_tc(tc_descriptor: &TCDescriptorT) -> TCExecutionCtrl {

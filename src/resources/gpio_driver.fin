@@ -5,23 +5,23 @@ struct GPIO_registers {
     Direction : u32;
 };
 
-const GPIO_LED0_MASK (1 << 16);
-const GPIO_LED1_MASK (1 << 17);
-const GPIO_LED2_MASK (1 << 18);
-const GPIO_LED3_MASK (1 << 19);
+//const GPIO_LED0_MASK : u32 = (1 << 16);
+//const GPIO_LED1_MASK : u32 = (1 << 17);
+//const GPIO_LED2_MASK : u32 = (1 << 18);
+//const GPIO_LED3_MASK : u32 = (1 << 19);
 
-GPIODrvIface {
+interface GPIODrvIface {
     procedure init_gpio (&mut self);
     procedure write_led (&mut self, led : u8, value : u8);
 };
 
 resource class GPIODriver provides GPIODrvIface {
 
-    registers: loc GPIO_registers;
+    registers: loc GPIO_registers; //0xfc083000
 
     procedure init_gpio (&mut self) {
 
-        self->registers.Direction = self->registers.Direction | (GPIO_LED0_MASK | GPIO_LED1_MASK | GPIO_LED2_MASK | GPIO_LED3_MASK);
+        self->registers.Direction = self->registers.Direction | ((1 << 16 : u32) | (1 << 17 : u32) | (1 << 18 : u32) | (1 << 19 : u32));
 
         return;
     }
@@ -29,9 +29,10 @@ resource class GPIODriver provides GPIODrvIface {
     procedure write_led (&mut self, led : u8, value : u8) {
 
         if (led < 4) {
-            let bit = led + 16;
+            let bit : u8 = led + 16;
             if (value == 0) {
-                self->registers.Output = self->registers.Output & ~(1 << bit);
+                let mask : u32 = 0xFFFFFFFF ^ (1 << bit);
+                self->registers.Output = self->registers.Output & mask;
             } else {
                 self->registers.Output = self->registers.Output | (1 << bit);
             }

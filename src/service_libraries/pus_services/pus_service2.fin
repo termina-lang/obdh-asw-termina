@@ -1,3 +1,5 @@
+import resources.gpio_driver;
+
 const num_params2 : usize = 64;
 
 
@@ -7,14 +9,22 @@ const num_params2 : usize = 64;
 // DISP 3 <--> LED 2
 // DISP 4 <--> LED 3
 
-resource class PUSService12 provides PUSS12Iface {
+interface PUSS2Iface {
+
+    procedure exec2_1TC(&mut self, tc_descriptor: &TCDescriptorT, result: &mut Result);
+
+};
+
+resource class PUSService2 provides PUSS2Iface {
 
     gpio_driver : access GPIODrvIface;
 
+    
     procedure exec2_1TC(&mut self, tc_descriptor: &TCDescriptorT, result: &mut Result){
 
 
         return;
     }
+
 
 };

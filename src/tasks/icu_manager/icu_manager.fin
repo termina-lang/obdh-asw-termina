@@ -2,103 +2,103 @@ import tasks.icu_manager.mng_tc_executor;
 
 task class ICUManager {
 
-    tc_message_queue_input: in box TCDescriptorT triggers process_tc;
-    action_tc_message_queue_input: in box TCDescriptorT triggers process_action_tc;
-    a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
-    hkfdir_message_queue_output: out box TCDescriptorT;
-    bkg_message_queue_output: out box TCDescriptorT;
+    tc_message_queue_input: in box TCHandlerT triggers process_tc;
+    action_tc_message_queue_input: in box TCHandlerT triggers process_action_tc;
+    a_tc_handler_pool : access Allocator<TCHandlerT>;
+    hkfdir_message_queue_output: out box TCHandlerT;
+    bkg_message_queue_output: out box TCHandlerT;
     tc_executor: access MngTCExecIface;
 
 
-    action process_tc(&priv self, tc_descriptor: box TCDescriptorT) -> Result {
+    action process_tc(&priv self, tc_handler: box TCHandlerT) -> Result {
 
         var ret : Result = Result::Ok;
 
-        var current_tc_status : TCStatus = try_tc_acceptation(&tc_descriptor);
+        var current_tc_status : TCStatus = try_tc_acceptation(&(tc_handler.tc_descriptor));
 
         match current_tc_status.acceptation_status {
 
             case Accepted => {
 
-                self->tc_executor.mng_tc_acceptation(&tc_descriptor, &mut ret);
+                self->tc_executor.mng_tc_acceptation(&(tc_handler), &mut ret);
 
                 match current_tc_status.execution_status {
 
                     case ExecCtrlReboot => {
 
                         //Ejecutar tc como prioritario
-                        self->tc_executor.PUS_prio_exec_tc(&tc_descriptor, &mut ret);
-                        self->a_tc_descriptor_pool.free(tc_descriptor);
+                        self->tc_executor.PUS_prio_exec_tc(&tc_handler, &mut ret);
+                        self->a_tc_handler_pool.free(tc_handler);
                            
                     }
                     case  ExecCtrlHK_FDIRTC => {
                     
-                        self->hkfdir_message_queue_output.send(tc_descriptor);
+                        self->hkfdir_message_queue_output.send(&tc_handler);
                     }
                     case ExecCtrlBKGTC => {
                         
-                        self->bkg_message_queue_output.send(tc_descriptor);
+                        self->bkg_message_queue_output.send(&tc_handler);
                         
                     }
                     case ExecCtrlPrioTC => {
 
                         //Ejecutar tc como prioritario
-                        self->tc_executor.PUS_prio_exec_tc(&tc_descriptor, &mut ret);
-                        self->a_tc_descriptor_pool.free(tc_descriptor);
+                        self->tc_executor.PUS_prio_exec_tc(&tc_handler, &mut ret);
+                        self->a_tc_handler_pool.free(tc_handler);
                     }
                     case Undefined => {
                         ret = Result::Error;
-                        self->a_tc_descriptor_pool.free(tc_descriptor);
+                        self->a_tc_handler_pool.free(tc_handler);
                     }
 
                 }    
             }
             case Rejected => { 
 
-                self->tc_executor.mng_tc_rejection(&tc_descriptor, &mut ret);
-                self->a_tc_descriptor_pool.free(tc_descriptor);
+                self->tc_executor.mng_tc_rejection(&(tc_handler), &mut ret);
+                self->a_tc_handler_pool.free(tc_handler);
             }
             case Undefined => {
                 ret = Result::Error;
-                self->a_tc_descriptor_pool.free(tc_descriptor);
+                self->a_tc_handler_pool.free(tc_handler);
             }
         }
         return ret;            
     }
 
 
-    action process_action_tc(&priv self, tc_descriptor: box TCDescriptorT) -> Result {
+    action process_action_tc(&priv self, tc_handler: box TCHandlerT) -> Result {
 
         var ret : Result = Result::Ok;
 
-        var execution_status : TCExecutionCtrl = handle_tc(&tc_descriptor);
+        var execution_status : TCExecutionCtrl = handle_tc((tc_handler.tc_descriptor));
 
         match execution_status {
 
             case ExecCtrlReboot => {
 
                 //Ejecutar tc como prioritario
-                self->tc_executor.PUS_prio_exec_tc(&tc_descriptor, &mut ret);
-                self->a_tc_descriptor_pool.free(tc_descriptor); 
+                self->tc_executor.PUS_prio_exec_tc(&tc_handler, &mut ret);
+                self->a_tc_handler_pool.free(tc_handler); 
             }
             case  ExecCtrlHK_FDIRTC => {
             
-                self->hkfdir_message_queue_output.send(tc_descriptor);
+                self->hkfdir_message_queue_output.send(tc_handler);
             }
             case ExecCtrlBKGTC => {
                 
-                self->bkg_message_queue_output.send(tc_descriptor);
+                self->bkg_message_queue_output.send(tc_handler);
              
             }
             case ExecCtrlPrioTC => {
 
             //Ejecutar tc como prioritario
-                self->tc_executor.PUS_prio_exec_tc(&tc_descriptor, &mut ret);
-                self->a_tc_descriptor_pool.free(tc_descriptor); 
+                self->tc_executor.PUS_prio_exec_tc(&tc_handler, &mut ret);
+                self->a_tc_handler_pool.free(tc_handler); 
             }
             case Undefined => {
                 ret = Result::Error;
-                self->a_tc_descriptor_pool.free(tc_descriptor);
+                self->a_tc_handler_pool.free(tc_handler);
             }
 
         }

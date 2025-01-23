@@ -1,0 +1,79 @@
+import service_libraries.tc_ccsds_pus_format;
+
+
+struct TCHandlerT {
+
+    tc_descriptor : TCDescriptorT;
+    packet_header : CCSDSPUSTCPacketHeaderT;
+    df_header : CCSDSPUSTCDFHeaderT;
+    packet_error_ctrl : u16;
+    app_data_index : usize;
+
+};
+
+function tc_handler_build_from_descriptor (tc_handler : &mut TCHandlerT, telecommand : &TCDescriptorT) -> Result {
+
+    var res : Result = Result::Ok;
+
+    for i: usize in 0 .. max_tc_size while i < telecommand->tc_num_bytes {
+        tc_handler->tc_descriptor.tc_bytes[i] = telecommand->tc_bytes[i];
+    }
+    tc_handler->tc_descriptor.tc_num_bytes = telecommand->tc_num_bytes;
+
+    tc_get_fields(&(telecommand->tc_bytes), &mut (tc_handler->packet_header), &mut (tc_handler->df_header), &mut (tc_handler->packet_error_ctrl));
+
+    tc_handler->app_data_index = 10;
+
+    return res;
+
+}
+
+function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandlerT, field_size : usize) -> bool {
+
+	var res : bool = false;
+
+	var required_size : usize = tc_handler->app_data_index + field_size;
+
+	if (required_size <= tc_handler->tc_descriptor.tc_num_bytes){ 
+
+		res = true;
+
+	}
+
+	return res;
+
+}
+
+function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u8) -> Result {
+
+	var res : Result = Result::Ok;
+
+    if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 1)){
+
+        *data = tc_handler->tc_descriptor.tc_bytes[tc_handler->app_data_index];
+        tc_handler->app_data_index = tc_handler->app_data_index + 1;
+
+    } else {
+
+        res = Result::Error;
+
+    }
+
+}
+
+function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> Result {
+
+	var res : Result = Result::Ok;
+
+    if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 2)){
+
+        *data = deserialize_uint16(&tc_handler->tc_descriptor.tc_bytes[tc_handler->app_data_index..tc_handler->app_data_index + 2]);
+        tc_handler->app_data_index = tc_handler->app_data_index + 2;
+
+    } else {
+
+        res = Result::Error;
+
+    }
+
+}

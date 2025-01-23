@@ -10,9 +10,9 @@ import resources.tm_channel;
 
 
 interface MngTCExecIface {
-  procedure PUS_prio_exec_tc (&mut self, prio_tc : &TCDescriptorT, ret: &mut Result);
-  procedure mng_tc_acceptation (&mut self, tc_descriptor : &TCDescriptorT, ret: &mut Result);
-  procedure mng_tc_rejection (&mut self, tc_descriptor : &TCDescriptorT, ret: &mut Result);
+  procedure PUS_prio_exec_tc (&mut self, prio_tc : &TCHandlerT, ret: &mut Result);
+  procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Result);
+  procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Result);
 };
 
 resource class ManagerTCExecutor provides MngTCExecIface {
@@ -24,18 +24,33 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     pus_service_17 : access PUSS17Iface;
     pus_service_2 : access PUSS2Iface;  
 
-    procedure PUS_prio_exec_tc (&mut self, prio_tc : &TCDescriptorT, ret: &mut Result) {
+    procedure PUS_prio_exec_tc (&mut self, prio_tc : &TCHandlerT, ret: &mut Result) {
 
-        var tc_type : u8 = get_type(&(prio_tc->tc_bytes));
+        var tc_type : u8 = get_type(&(tc_handler.tc_descriptor.tc_bytes));
+        var subtype : u8 = get_subtype(&(tc_handler.tc_descriptor.tc_bytes));
 
         if (tc_type == 17){
 
-            self->pus_service_17.exec17_1TC(prio_tc, ret);
-    
+            if (subtype == 1){
+
+                self->pus_service_17.exec17_1TC(prio_tc, ret);
+
+            } else  {
+                
+                *ret = Result::Error;
+            }
+            
         } else if (tc_type == 2){
 
-            PUS_service_2_execTC(prio_tc, &mut descriptor, tm_count);
-    
+            if (subtype == 1){
+
+                sself->pus_service_2.exec2_1TC(prio_tc, ret);
+
+            } else  {
+                
+                *ret = Result::Error;
+            }
+
         } /*else if (tc_type == 9){
 
             PUS_service_9_execTC(prio_tc, &mut descriptor, tm_count);
@@ -52,7 +67,7 @@ resource class ManagerTCExecutor provides MngTCExecIface {
         return;
     }
 
-    procedure mng_tc_acceptation (&mut self, tc_descriptor : &TCDescriptorT, ret: &mut Result) {
+    procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Result) {
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
@@ -64,7 +79,7 @@ resource class ManagerTCExecutor provides MngTCExecIface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
                 //generar TM(1,1)
-                build_tm_1_1(&mut descriptor, tm_count, tc_descriptor);
+                build_tm_1_1(&mut descriptor, tm_count, tc_handler);
                 self->tm_channel.send_tm(descriptor, ret);
                         
             }
@@ -77,11 +92,11 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     }
 
 
-    procedure mng_tc_rejection (&mut self, tc_descriptor : &TCDescriptorT, ret: &mut Result) {
+    procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Result) {
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
-        var tc_status : TCStatus = try_tc_acceptation(tc_descriptor);
+        var tc_status : TCStatus = try_tc_acceptation(&(tc_handler->tc_descriptor));
 
         match tm_descriptor {
 
@@ -90,7 +105,7 @@ resource class ManagerTCExecutor provides MngTCExecIface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
                 //generar TM(1,2)
-                build_tm_1_2(&tc_status, &mut descriptor, tm_count, tc_descriptor);
+                build_tm_1_2(&tc_status, &mut descriptor, tm_count, tc_handler);
                 self->tm_channel.send_tm(descriptor, ret);
             
             }

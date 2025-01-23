@@ -8,43 +8,45 @@ import resources.tm_counter;
 
 task class PUSBKGTCExecutor {
 
-    bkg_message_queue_input: in box TCDescriptorT triggers exec_tc;
+    bkg_message_queue_input: in box TCHandlerT triggers exec_tc;
 
-    a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
+    a_tc_handler_pool : access Allocator<TCHandlerT>;
     pus_service_20 : access PUSS20Iface;
   
 
-    action exec_tc(&priv self, tc_descriptor : box TCDescriptorT)-> Result {
+    action exec_tc(&priv self, tc_handler : box TCHandlerT)-> Result {
 
         var res : Result = Result::Ok;
 
     
-        var tc_type : u8 = get_type(&(tc_descriptor.tc_bytes));
-        var subtype : u8 = get_subtype(&(tc_descriptor.tc_bytes));
+        var tc_type : u8 = get_type(&(tc_handler.tc_descriptor.tc_bytes));
+        var subtype : u8 = get_subtype(&(tc_handler.tc_descriptor.tc_bytes));
 
         if (tc_type == 20){
 
             if (subtype == 1){
 
-                self->pus_service_20.exec20_1TC(&tc_descriptor, &mut res);
+                self->pus_service_20.exec20_1TC(&tc_handler, &mut res);
             } 
             else if (subtype == 3){
 
-                self->pus_service_20.exec20_3TC(&tc_descriptor, &mut res);
+                self->pus_service_20.exec20_3TC(&tc_handler, &mut res);
 
             } else {
 
+                res = Result::Error;
                 //This is an error in acceptance, could be modeled as an event
                 /* If the acceptance process is correct, this point should not be reached */
             }
 
         } else {
 
+            res = Result::Error;
             //This is an error in acceptance, could be modeled as an event
         }
 
 
-        self->a_tc_descriptor_pool.free(tc_descriptor);
+        self->a_tc_handler_pool.free(tc_handler);
 
         return res;
     }

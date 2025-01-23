@@ -2,6 +2,7 @@ import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.crc;
 import service_libraries.serialize;
+import service_libraries.pus_services.pus_tc_handler;
 
 
 enum TCAcceptationStatus {
@@ -37,7 +38,7 @@ enum TCVerifyStage {
 
 const base_length : u16 = 7;
 
-function is_crc_valid(tc_descriptor: &TCDescriptorT) -> bool {
+function is_crc_valid(tc_descriptor : &TCDescriptorT) -> bool {
 
 	let cal_crc_value : u16 = cal_crc_16(&(tc_descriptor->tc_bytes), (tc_descriptor->tc_num_bytes - 2));
 	var packet_error_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
@@ -48,7 +49,7 @@ function is_crc_valid(tc_descriptor: &TCDescriptorT) -> bool {
 }
 
 
-function is_apid_valid(tc_descriptor: &TCDescriptorT) -> bool {
+function is_apid_valid(tc_descriptor : &TCDescriptorT) -> bool {
 	
 	let epd_apid : u16 = 0x32C : u16;
 	var tc_apid : u16 = get_APID(&(tc_descriptor->tc_bytes));
@@ -59,7 +60,7 @@ function is_apid_valid(tc_descriptor: &TCDescriptorT) -> bool {
 }
 
 
-function is_sourceID_valid( tc_descriptor: &TCDescriptorT) -> bool {
+function is_sourceID_valid(tc_descriptor : &TCDescriptorT) -> bool {
 	
 	let Mission_TimeLine_SourceID : u8 = 110;
 	let TC_Sequences_SourceID : u8 = 111;
@@ -75,7 +76,7 @@ function is_sourceID_valid( tc_descriptor: &TCDescriptorT) -> bool {
 }
 
 
-function build_tm (p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, tm_plength : u16, tm_type: u8, tm_subtype: u8) {
+function build_tm (p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, tc_handler: &TCHandlerT, tm_plength : u16, tm_type: u8, tm_subtype: u8) {
 
     var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
@@ -86,9 +87,6 @@ function build_tm (p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, t
 	 									type = 0 : u8,
 	 									subtype = 0 : u8,
 	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
-
-	var tc_packet_id : u16 = get_packet_id(&(tc_descriptor->tc_bytes));
-	var tc_packet_seq_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
 
 	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
 
@@ -103,8 +101,8 @@ function build_tm (p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, t
 	df_header.destinationID = 0x78 : u8;
 
 	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);	
-	serialize_uint16(tc_packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
-	serialize_uint16(tc_packet_seq_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
+	serialize_uint16(tc_handler->packet_header.packet_id, &mut p_tm_descriptor->tm_bytes[10 : usize .. 12 : usize]);
+	serialize_uint16(tc_handler->packet_error_ctrl, &mut p_tm_descriptor->tm_bytes[12 : usize .. 14 : usize]);
 
 	
 	// Calculate p_tm_descriptor->tm_num_bytes
@@ -136,11 +134,11 @@ function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
 }
 
 function build_tm_1_X_no_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8) {
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 2, 1, subtype);
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 2, 1, subtype);
 
 	p_tm_descriptor->tm_bytes[14] = failure_code;
 
@@ -148,11 +146,11 @@ function build_tm_1_X_no_failure_data(p_tm_descriptor : &mut TMDescriptorT,
 }
 
 function build_tm_1_X_u8_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8) {
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 2, 1, subtype);
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 2, 1, subtype);
 
 	p_tm_descriptor->tm_bytes[14] = failure_code;
 	p_tm_descriptor->tm_bytes[15] = failure_data;
@@ -161,11 +159,11 @@ function build_tm_1_X_u8_failure_data(p_tm_descriptor : &mut TMDescriptorT,
 }
 
 function build_tm_1_X_u16_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16){
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16){
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 3, 1, subtype);
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 3, 1, subtype);
 
 	p_tm_descriptor->tm_bytes[14] = failure_code;
 	serialize_uint16(failure_data, &mut p_tm_descriptor->tm_bytes[15 : usize .. 17 : usize]);
@@ -174,11 +172,11 @@ function build_tm_1_X_u16_failure_data(p_tm_descriptor : &mut TMDescriptorT,
 }
 
 function build_tm_1_X_u32_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32){
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32){
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 5, 1, subtype);
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 5, 1, subtype);
 
 	p_tm_descriptor->tm_bytes[14] = failure_code;
 	serialize_uint32(failure_data, &mut p_tm_descriptor->tm_bytes[15 : usize .. 19 : usize]);
@@ -187,11 +185,11 @@ function build_tm_1_X_u32_failure_data(p_tm_descriptor : &mut TMDescriptorT,
 }
 
 function build_tm_1_X_u8_u32_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_descriptor: &TCDescriptorT, verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32){
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32){
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_descriptor, base_length + 6, 1, subtype);
+	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 6, 1, subtype);
 
 	p_tm_descriptor->tm_bytes[14] = failure_code;
 	p_tm_descriptor->tm_bytes[15] = failure_data1;
