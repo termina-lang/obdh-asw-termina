@@ -24,7 +24,7 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     pus_service_17 : access PUSS17Iface;
     pus_service_2 : access PUSS2Iface;  
 
-    procedure PUS_prio_exec_tc (&mut self, prio_tc : &TCHandlerT, ret: &mut Result) {
+    procedure PUS_prio_exec_tc (&mut self, prio_tc : &mut TCHandlerT, ret: &mut Result) {
 
         var tc_type : u8 = get_type(&(tc_handler.tc_descriptor.tc_bytes));
         var subtype : u8 = get_subtype(&(tc_handler.tc_descriptor.tc_bytes));

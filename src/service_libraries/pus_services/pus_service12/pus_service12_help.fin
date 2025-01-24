@@ -8,31 +8,87 @@ import resources.system_data_pool;
 
 const max_num_pmon_ids : usize = 8;
 
-enum CheckState {
-    MonitorUnselected,
+
+
+enum MonitorCheckType {
+    ExpectedValue, //0
+    Limits,  //1
+    Delta,  //2
+    Unselected   //3
+};
+
+struct ParamValueCheckDefinition {
+    mask_value : u16;
+    expected_value : u16;
+    EvID : u16;
+};
+
+struct ParamLimitCheckDefinition {
+    low_limit : DataPoolItemType;
+    low_limit_evID : u16;
+    high_limit : DataPoolItemType;
+    high_limit_evID : u16;
+};
+
+struct ParamDeltaCheckDefinition {
+    low_delta_threshold : u16;
+    low_delta_EvID : u16;
+    high_delta_threshold : u16;
+    high_delta_EvID : u16;
+    consecutive_delta_values : u8;
+};
+
+enum MonitorDefinition {
+    ParamValueCheck(ParamValueCheckDefinition),
+    ParamLimitCheck(ParamLimitCheckDefinition),
+    ParamDeltaCheck(ParamDeltaCheckDefinition),
+    Unselected
+};
+
+enum CheckValueStatus {
+    MonitorUnchecked,
+    MonitorValueUnexpected,
+    MonitorValueExpected
+};
+
+enum CheckLimitsStatus {
     MonitorUnchecked,
     MonitorAboveHighLimit,
     MonitorBelowLowLimit,
     MonitorWithinLimits
 };
 
+enum CheckDeltaStatus {
+    MonitorUnchecked,
+    MonitorDeltaLow,
+    MonitorDeltaHigh,
+    MonitorDeltaWithin
+};
+
+enum CheckState {
+    ParamValueStatus(CheckValueStatus),
+    ParamLimitStatus(CheckLimitsStatus),
+    ParamDeltaStatus(CheckDeltaStatus),
+    Unselected
+};
+
+
 struct ParamMonitoringConfiguration {
-    prev_state : CheckState;
-    state : CheckState;
-    transitionY2K : TimeVal;
-    enabled : bool;
     PID : u16;
+    monitor_type : MonitorCheckType;
+    enabled : bool;
+    monitor_definition : MonitorDefinition;
+    repetition: u8;
+    repetition_control: u8;
     interval : u8;
     interval_control : u8;
+    transitionY2K : TimeVal;
+    temp_state : CheckState;
+    state : CheckState;
 };
 
 
-struct ParamLimitCheckDefinition {
-    high_limit_rid : u16;
-    high_limit : u16;
-    low_limit_rid : u16;
-    low_limit : u16;
-};
+
 
 function trigger_event(event_list : &mut EventList, RID: u16, PID: u16, PID_value: u16, limit: u16, res: &mut Result){
 
@@ -72,4 +128,116 @@ function update_state (param_mon_config_table : &mut [ParamMonitoringConfigurati
     }
 
     return;
+}
+
+function set_unchecked (param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids], valid_PMONID : usize) {
+
+    match (param_mon_config_table[valid_PMONID].state) {
+
+        case ParamValueStatus(CheckValueStatus) => {
+            param_mon_config_table[valid_PMONID].state = CheckValueStatus::MonitorUnchecked;
+        }
+        case ParamLimitStatus(CheckLimitsStatus) => {
+            param_mon_config_table[valid_PMONID].state = CheckLimitsStatus::MonitorUnselected;
+        }
+        case ParamDeltaStatus(CheckDeltaStatus) => {
+            param_mon_config_table[valid_PMONID].state = CheckDeltaStatus::MonitorUnchecked;
+        }
+        case Unselected => {
+            //Do nothing
+        }
+    }
+
+    param_mon_config_table[valid_PMONID].temp_state = param_mon_config_table[valid_PMONID].state;
+
+    return;
+}
+
+
+function get_check_type (aux : u8) -> MonitorCheckType {
+
+    var monitor_check : MonitorCheckType = MonitorCheckType::Unselected;
+
+    if (aux == 0) {
+
+        monitor_check = MonitorCheckType::ExpectedValue;
+
+    } else if (aux == 1) {
+
+        monitor_check = MonitorCheckType::Limits;
+
+    } else if (aux == 2) {
+
+        monitor_check = MonitorCheckType::Delta;
+
+    } else {
+
+        monitor_check = MonitorCheckType::Unselected;
+
+    }
+
+    return monitor_check;
+}
+
+function get_PMON_limit_check_definition (tc_handler : &mut TCHandlerT, PID : u16, param_limit_check_definition : &mut ParamLimitCheckDefinition) -> Result {
+
+    var res : Result = Result::Ok;
+
+    var type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+    match type {
+
+        case u8_t => {
+
+            //get low limit
+            res = tc_handler_get_u8_appdata_field(tc_handler, &mut param_limit_check_definition.low_limit);
+
+            //get low limit evID
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition.low_limit_evID);
+
+            //get high limit
+            res = tc_handler_get_u8_appdata_field(tc_handler, &mut param_limit_check_definition.high_limit);
+
+            //get high limit evID
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition.high_limit_evID);
+
+        }
+        case u32_t => {
+
+            //get low limit
+            res = tc_handler_get_u32_appdata_field(tc_handler, &mut param_limit_check_definition.low_limit);
+
+            //get low limit evID
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition.low_limit_evID);
+
+            //get high limit
+            res = tc_handler_get_32_appdata_field(tc_handler, &mut param_limit_check_definition.high_limit);
+
+            //get high limit evID
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition.high_limit_evID);
+
+        }
+        case NoValidPID => {
+            res = Result::Error;
+        }
+    }
+
+    
+    return res;
+
+}
+
+
+function is_valid_check_limit_def (param_limit_check_definition : &ParamLimitCheckDefinition) -> bool {
+
+    var res : bool = false;
+
+    if (param_limit_check_definition->low_limit < param_limit_check_definition->high_limit) {
+
+        res = true;
+
+    }
+
+    return res;
+
 }

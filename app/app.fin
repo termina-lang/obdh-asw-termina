@@ -37,9 +37,13 @@ channel action_tc_message_queue : MsgQueue<box TCHandlerT;5>;
 resource tm_pool : Pool<TMDescriptorT; 20>;
 resource tc_pool : Pool<TCHandlerT; 20>;
 
-resource system_data_pool : AtomicArray<u16; sdp_num_params> = {
-    values = [0; sdp_num_params]
-} : AtomicArray<u16; sdp_num_params>;
+resource u32_system_data_pool : AtomicArray<u32; sdp_num_u32_params> = {
+    values = [0; sdp_num_u32_params]
+} : AtomicArray<u32; sdp_num_u32_params>;
+
+resource u8_system_data_pool : AtomicArray<u8; sdp_num_u8_params> = {
+    values = [0; sdp_num_u8_params]
+} : AtomicArray<u8; sdp_num_u8_params>;
 
 
 resource uart_drv : UARTDriver = {

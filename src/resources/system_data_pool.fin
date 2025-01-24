@@ -1,1 +1,33 @@
-const sdp_num_params : usize = 64;
+const sdp_num_u32_params : usize = 12;
+const sdp_num_u8_params : usize = 18;
+//const sdp_last_u32_param_id : usize = sdp_num_u32_params - 1;
+//const sdp_last_u8_param_id : usize = (sdp_num_u32_params - 1) + sdp_num_u8_params - 1;
+const sdp_last_u32_param_id : usize = 11;
+const sdp_last_u8_param_id : usize = 28;
+
+enum DataPoolItemType {
+    u8_t,
+    u32_t,
+    NoValidPID
+};
+
+
+function sys_data_pool_get_item_type (PID : u16) -> DataPoolItemType {
+
+    var sdp_type : DataPoolItemType = DataPoolItemType::u8_t;
+
+    if PID as usize <= sdp_last_u32_param_id {
+
+        sdp_type = DataPoolItemType::u32_t;
+
+    } else if PID as usize <= sdp_last_u8_param_id {
+
+        sdp_type = DataPoolItemType::u8_t;
+  
+    } else {
+        
+        sdp_type = DataPoolItemType::NoValidPID;
+    }
+
+    return sdp_type;
+}

@@ -7,9 +7,9 @@ import service_libraries.pus_services.pus_service12.pus_service12_help;
 
 interface PUSS12Iface {
     procedure do_monitoring (&mut self, event_list : &mut EventList, result : &mut Result);
-    procedure exec12_1TC(&mut self, tc_handler: &TCHandlerT, result: &mut Result);
-    procedure exec12_2TC(&mut self, tc_handler: &TCHandlerT, result: &mut Result);
-    procedure exec12_5TC(&mut self, tc_handler: &TCHandlerT, result: &mut Result);
+    procedure exec12_1TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
+    procedure exec12_2TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
+    procedure exec12_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
 };
 
 
@@ -17,13 +17,13 @@ interface PUSS12Iface {
 resource class PUSService12 provides PUSS12Iface {
 
     param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
-    param_limit_check_definition : [ParamLimitCheckDefinition; max_num_pmon_ids];
 
     system_data_pool : access AtomicArrayAccess<u16; sdp_num_params>;
 
     tm_channel : access TMChannelIface;
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     tm_counter : access TMCounterIface;
+
 
 
     procedure do_monitoring (&mut self, event_list : &mut EventList, result : &mut Result){ 
@@ -91,7 +91,7 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
 
-    procedure exec12_1TC(&mut self, tc_handler: &TCHandlerT , result: &mut Result){
+    procedure exec12_1TC(&mut self, tc_handler: &mut TCHandlerT , result: &mut Result){
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
@@ -129,6 +129,7 @@ resource class PUSService12 provides PUSS12Iface {
                                 build_tm_1_3(&mut descriptor, tm_count, tc_handler);
                                 self->param_mon_config_table[PMONID as usize].enabled = true;
                                 self->param_mon_config_table[PMONID as usize].interval_control = 0;
+                                self->param_mon_config_table[PMONID as usize].repetition_control = 0;
 
                                 var tm_descriptor2 : Option<box TMDescriptorT> = None;
                                 self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
@@ -171,7 +172,7 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
 
-    procedure exec12_2TC(&mut self, tc_handler: &TCHandlerT , result: &mut Result){
+    procedure exec12_2TC(&mut self, tc_handler: &mut TCHandlerT , result: &mut Result){
         
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
@@ -208,6 +209,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                                 build_tm_1_3(&mut descriptor, tm_count, tc_handler);
                                 self->param_mon_config_table[PMONID as usize].enabled = false;
+                                set_unchecked(&mut (self->param_mon_config_table), PMONID as usize);
 
                                 var tm_descriptor2 : Option<box TMDescriptorT> = None;
                                 self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
@@ -250,7 +252,7 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
 
-    procedure exec12_5TC(&mut self, tc_handler: &TCHandlerT, result: &mut Result){
+    procedure exec12_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result){
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
@@ -264,54 +266,92 @@ resource class PUSService12 provides PUSS12Iface {
 
                 var N : u8 = 0;
                 var PMONID : u16 = 0;
-                var PID : u16 = 0;
-                var interval : u8 = 0;
+                var mon_config : ParamMonitoringConfiguration = {
+                    PID = 0,
+                    monitor_type = MonitorCheckType::Unselected,
+                    enabled = false,
+                    monitor_definition = MonitorDefinition::Unselected,
+                    repetition = 0,
+                    repetition_control = 0,
+                    interval = 0,
+                    interval_control = 0,
+                    transitionY2K = {0,0},
+                    temp_state = CheckState::Unselected,
+                    state = CheckState::Unselected
+                };
+                var aux : u8 = 0;
                
 
                 *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
                 *result = tc_handler_get_u16_appdata_field(tc_handler, &mut PMONID);
-                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut PID);
-                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut interval);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut mon_config.PID);
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut mon_config.interval);
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut mon_config.repetition);
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut aux);
+                mon_config.type = get_check_type(aux);
 
-            
+                if (result is Result::Error) {
 
-                if (PMONID) < max_num_pmon_ids {
+                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
 
-                    if(self->param_mon_config_table[PMONID].state is CheckState::MonitorUnselected) {
+                } else if (N != 1) {
 
+                    build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
 
-                        if (PID as usize < sdp_num_params) {
+                } else if (PID as usize > sdp_num_params) {
 
-                            self->param_mon_config_table[PMONID].interval = interval;
-                            self->param_mon_config_table[PMONID].PID = PID;
-                            self->param_mon_config_table[PMONID].interval_control = 0;
-                            self->param_mon_config_table[PMONID].state = CheckState::MonitorUnchecked;
+                    build_tm_1_4_PID_not_valid(&mut descriptor, tm_count, tc_handler, PID);
 
-                            self->param_limit_check_definition[PMONID].low_limit = deserialize_uint16(&(tc_handler->tc_bytes[15..17]));
-                            self->param_limit_check_definition[PMONID].low_limit_rid = deserialize_uint16(&(tc_handler->tc_bytes[17..19]));
-                            self->param_limit_check_definition[PMONID].high_limit = deserialize_uint16(&(tc_handler->tc_bytes[19..21]));
-                            self->param_limit_check_definition[PMONID].high_limit_rid = deserialize_uint16(&(tc_handler->tc_bytes[21..23]));
+                } else if (mon_config.type == Limits) {
 
-                            build_tm_1_7(&mut descriptor, tm_count, tc_handler);
+                    result = get_PMON_limit_check_definition(tc_handler, PID, &mut mon_config.limit_check_definition);
+
+                    if (result is Result::Error) {
+
+                        build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                    }
+                    else {
+
+                        if(is_valid_check_limit_def(&mon_config.limit_check_definition)){
+
+                            self->param_mon_config_table[PMONID as usize] = mon_config;
+                            build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+
+                            var tm_descriptor2 : Option<box TMDescriptorT> = None;
+                            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+
+                            match tm_descriptor2 {
+
+                                case Some(descriptor2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+
+                                    build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                }
+                                case None => {
+                                    *result = Result::Error;
+                                }
+                            }
 
                         } else {
 
-                            build_tm_1_8_tc_20_X_PIDnotvalid(&mut descriptor, tm_count, PID, tc_handler);
+                            build_tm_1_4_PMON_definition_invalid(&mut descriptor, tm_count, tc_handler, PMONID);
                         }
-                    } else {
 
-                        build_tm_1_8_tc_12_X_PMONIDdefined(&mut descriptor, tm_count, PMONID as u16, tc_handler);
+                          
+
                     }
-                } else {
 
-                    build_tm_1_8_tc_12_X_PMONIDnotvalid(&mut descriptor, tm_count, PMONID as u16, tc_handler);
+
                 }
-                self->tm_channel.send_tm(descriptor, result);
+            
+
             }
             case None => {
                 *result = Result::Error;
             }
-         }
+        }
 
         return;
 

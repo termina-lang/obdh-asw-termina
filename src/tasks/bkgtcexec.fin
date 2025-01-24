@@ -26,11 +26,11 @@ task class PUSBKGTCExecutor {
 
             if (subtype == 1){
 
-                self->pus_service_20.exec20_1TC(&tc_handler, &mut res);
+                self->pus_service_20.exec20_1TC(&mut tc_handler, &mut res);
             } 
             else if (subtype == 3){
 
-                self->pus_service_20.exec20_3TC(&tc_handler, &mut res);
+                self->pus_service_20.exec20_3TC(&mut tc_handler, &mut res);
 
             } else {
 

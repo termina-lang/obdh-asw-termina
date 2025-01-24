@@ -10,8 +10,8 @@ import service_libraries.pus_services.pus_service5.pus_service5_help;
 interface PUSS5Iface {
 
     procedure build_event_list_tms(&mut self, event_list : &mut EventList, result : &mut Result);
-    procedure exec5_5TC(&mut self, tc_handler: &TCHandlerT, result: &mut Result);
-    procedure exec5_6TC(&mut self, tc_handler: &TCHandlerT, result: &mut Result);
+    procedure exec5_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
+    procedure exec5_6TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
     procedure is_RID_enabled_ext(&mut self, RID: u16, p_enabled: &mut bool);
 
 };
@@ -90,7 +90,7 @@ resource class PUSService5 provides PUSS5Iface {
     }
 
 
-    procedure exec5_5TC(&mut self, tc_handler: &TCHandlerT, result: &mut Result) {
+    procedure exec5_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result) {
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
@@ -169,7 +169,7 @@ resource class PUSService5 provides PUSS5Iface {
     }
 
 
-    procedure exec5_6TC(&mut self, tc_handler: &TCHandlerT, result: &mut Result) {
+    procedure exec5_6TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result) {
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
