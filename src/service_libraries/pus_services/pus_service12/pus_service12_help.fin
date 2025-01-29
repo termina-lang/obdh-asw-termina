@@ -18,8 +18,8 @@ enum MonitorCheckType {
 };
 
 struct ParamValueCheckDefinition {
-    mask_value : u16;
-    expected_value : u16;
+    mask_value : DataPoolItemType;
+    expected_value : DataPoolItemType;
     EvID : u16;
 };
 
@@ -228,6 +228,53 @@ function get_PMON_limit_check_definition (tc_handler : &mut TCHandlerT, PID : u1
 }
 
 
+function get_PMON_value_check_definition (tc_handler : &mut TCHandlerT, PID : u16, expected_value_check_definition : &mut ParamValueCheckDefinition) -> Result {
+
+    var res : Result = Result::Ok;
+
+    var type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+    match type {
+
+        case u8_t => {
+
+            //get mask
+            res = tc_handler_get_u8_appdata_field(tc_handler, &mut expected_value_check_definition.mask_value);
+
+            //get expected value
+            res = tc_handler_get_u8_appdata_field(tc_handler, &mut expected_value_check_definition.expected_value);
+
+            //get EvID
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut expected_value_check_definition.EvID);
+
+          
+
+        }
+        case u32_t => {
+
+            //get mask
+            res = tc_handler_get_u32_appdata_field(tc_handler, &mut expected_value_check_definition.mask_value);
+
+            //get expected value
+            res = tc_handler_get_u32_appdata_field(tc_handler, &mut expected_value_check_definition.expected_value);
+
+            //get EvID
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut expected_value_check_definition.EvID);
+
+      
+
+        }
+        case NoValidPID => {
+            res = Result::Error;
+        }
+    }
+
+    
+    return res;
+
+}
+
+
 function is_valid_check_limit_def (param_limit_check_definition : &ParamLimitCheckDefinition) -> bool {
 
     var res : bool = false;
@@ -240,4 +287,16 @@ function is_valid_check_limit_def (param_limit_check_definition : &ParamLimitChe
 
     return res;
 
+}
+
+function add_valid_mng_mon_def (PMONID: usize, param_monit_config: &ParamMonitoringConfiguration,
+                                 param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids]){
+
+    *param_mon_config_table[PMONID] = *param_monit_config;
+
+    *param_mon_config_table[PMONID].enabled = false;
+
+    set_unchecked(param_mon_config_table, PMONID);
+
+    return;
 }

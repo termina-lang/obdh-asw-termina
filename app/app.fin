@@ -81,7 +81,8 @@ resource pus_service_3 : PUSService3 = {
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}},
-    system_data_pool <-> system_data_pool,
+    system_data_pool_u32 <-> u32_system_data_pool,
+    system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> telemetry_channel,   
     a_tm_descriptor_pool <-> tm_pool,
     tm_counter <-> telemetry_counter

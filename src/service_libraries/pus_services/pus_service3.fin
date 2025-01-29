@@ -27,9 +27,9 @@ struct HKConfiguration {
 interface PUSS3Iface {
 
     procedure do_hk (&mut self, result : &mut Result);    
-    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result);
-    procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result);
-    procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result);
+    procedure exec3_5TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
+    procedure exec3_6TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
+    procedure exec3_31TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
 
 };
 
@@ -37,7 +37,8 @@ resource class PUSService3 provides PUSS3Iface {
 
     hk_config_table : [HKConfiguration; max_num_of_SIDs];
     
-    system_data_pool : access AtomicArrayAccess<u16; sdp_num_params>;
+    system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
+    system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
     tm_channel: access TMChannelIface;   
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     tm_counter : access TMCounterIface;
@@ -60,10 +61,12 @@ resource class PUSService3 provides PUSS3Iface {
     }
 
 
-    procedure exec3_5TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result){
+    procedure exec3_5TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
+        var send_flag : bool = false;
 
         match tm_descriptor {
 
@@ -71,23 +74,68 @@ resource class PUSService3 provides PUSS3Iface {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
-
+                
+                var N : u8 = 0;
+                var SID: u16 = 0;
                 var index : usize = 0;
-                var SID : u8 = tc_descriptor->tc_bytes[10];
 
-                if (self->get_SIDindex(SID, &mut index)){
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut SID);
+    
+                if (*result is Result::Error){
 
-                    self->hk_config_table[index].enabled = true;
-                    self->hk_config_table[index].interval_control = 0;
-                    build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
 
                 } else {
 
-                    build_tm_1_8_tc_3_X_SIDnotvalid(&mut descriptor, tm_count, SID as u16, tc_descriptor);
-                    
+                    if(N != 1) {
+
+                        build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+                    } 
+                    else {
+
+                        if (self->get_SIDindex(SID, &mut index)){
+
+                            send_flag = true;
+
+                            build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+
+                            self->hk_config_table[index].enabled = true;
+                            self->hk_config_table[index].interval_control = 0;
+                            
+                            var tm_descriptor2 : Option<box TMDescriptorT> = None;
+                            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+
+                            match tm_descriptor2 {
+
+                                case Some(descriptor2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+
+                                    build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                }
+                                case None => {
+                                    *result = Result::Error;
+                                }
+                            }
+
+                        } else {
+
+                            build_tm_1_4_SIDnotvalid(&mut descriptor, tm_count, tc_handler, SID);
+                            
+                        }
+
+                    }
                 }
+                
 
                 self->tm_channel.send_tm(descriptor, result);
+
+                if (send_flag){
+
+                    self->tm_channel.send_tm(descriptor2, result);
+                }
             }
             case None => {
                 //Error
@@ -98,10 +146,12 @@ resource class PUSService3 provides PUSS3Iface {
         return;
     }
 
-    procedure exec3_6TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result){
+    procedure exec3_6TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
+        var send_flag : bool = false;
 
         match tm_descriptor {
 
@@ -109,23 +159,68 @@ resource class PUSService3 provides PUSS3Iface {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
-
+                
+                var N : u8 = 0;
+                var SID: u16 = 0;
                 var index : usize = 0;
-                var SID : u8 = tc_descriptor->tc_bytes[10];
 
-                if (self->get_SIDindex(SID, &mut index)){
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut SID);
+    
+                if (*result is Result::Error){
 
-                    self->hk_config_table[index].enabled = false;
-                    self->hk_config_table[index].interval_control = 0;
-                    build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
 
                 } else {
 
-                    build_tm_1_8_tc_3_X_SIDnotvalid(&mut descriptor, tm_count, SID as u16, tc_descriptor);
-                    
+                    if(N != 1) {
+
+                        build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+                    } 
+                    else {
+
+                        if (self->get_SIDindex(SID, &mut index)){
+
+                            send_flag = true;
+
+                            build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+
+                            self->hk_config_table[index].enabled = false;
+                            self->hk_config_table[index].interval_control = 0;
+                            
+                            var tm_descriptor2 : Option<box TMDescriptorT> = None;
+                            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+
+                            match tm_descriptor2 {
+
+                                case Some(descriptor2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+
+                                    build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                }
+                                case None => {
+                                    *result = Result::Error;
+                                }
+                            }
+
+                        } else {
+
+                            build_tm_1_4_SIDnotvalid(&mut descriptor, tm_count, tc_handler, SID);
+                            
+                        }
+
+                    }
                 }
+                
 
                 self->tm_channel.send_tm(descriptor, result);
+
+                if (send_flag){
+
+                    self->tm_channel.send_tm(descriptor2, result);
+                }
             }
             case None => {
                 //Error
@@ -134,13 +229,14 @@ resource class PUSService3 provides PUSS3Iface {
         } 
 
         return;
-
     }
 
-    procedure exec3_31TC(&mut self, tc_descriptor : &TCDescriptorT, result: &mut Result){
+
+    procedure exec3_31TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
 
         var tm_descriptor : Option<box TMDescriptorT> = None;
         self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+
 
         match tm_descriptor {
 
@@ -149,22 +245,67 @@ resource class PUSService3 provides PUSS3Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                var SID : u8 = tc_descriptor->tc_bytes[10];
+                var N : u8 = 0;
+                var SID : u16 = 0;
+                var collection_interval : u8 = 0;
                 var index : usize = 0;
 
-                if(self->get_SIDindex(SID, &mut index)){
+                var send_flag : bool = false;
 
-                    self->hk_config_table[index].interval = deserialize_uint16(&(tc_descriptor->tc_bytes[11 : usize .. 13 : usize]));
-                    //DESIGN DECISION : Óscar does not restart the control interval when receiving a TC[3,31]
-                    self->hk_config_table[index].interval_control = 0;
-                    build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut SID);
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut collection_interval);
+
+                if (*result is Result::Error) {
+
+                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
 
                 } else {
 
-                    build_tm_1_8_tc_3_X_SIDnotvalid(&mut descriptor, tm_count, SID as u16, tc_descriptor);
+                    if (N != 1) {
+
+                        build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+
+                    } else {
+
+                        if (self->get_SIDindex(SID, &mut index)){
+
+                            send_flag = true;
+                            build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+
+                            self->hk_config_table[index].interval = collection_interval;
+                            self->hk_config_table[index].interval_control = 0;
+
+                            var tm_descriptor2 : Option<box TMDescriptorT> = None;
+                            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+
+                            match tm_descriptor2 {
+
+                                case Some(descriptor2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+
+                                    build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                }
+                                case None => {
+                                    *result = Result::Error;
+                                }
+                            }
+
+                        } else {
+
+                            build_tm_1_4_SIDnotvalid(&mut descriptor, tm_count, tc_handler, SID);
+                        }
+                    }
                 }
 
                 self->tm_channel.send_tm(descriptor, result);
+
+                if (send_flag){
+
+                    self->tm_channel.send_tm(descriptor2, result);
+                }
             }
             case None => {
                 *result = Result::Error;

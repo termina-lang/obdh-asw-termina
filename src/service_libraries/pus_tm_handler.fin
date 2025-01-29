@@ -1,0 +1,122 @@
+import service_libraries.tm_ccsds_pus_format;
+import service_libraries.serialize;
+
+
+struct TMHandlerT {
+
+    tm_descriptor : TMDescriptorT;
+    packet_header : CCSDSPUSTMPacketHeaderT;
+    df_header : CCSDSPUSTMDFHeaderT;
+    app_data_index : usize;
+
+};
+
+const base_length : u16 = 7;
+const APID : u16 = 0x32C;
+const destinationID : u8 = 0x78;
+
+
+resource class TMHandlerR provides TMHandlerIface {
+
+    tm_counter : access TMCounterIface;
+    tm_channel : access TMChannelIface;
+
+    procedure append_u8_appdata_field (&mut self, tm_handler : &mut TMHandlerT, data : u8, result : &mut Result) {
+
+
+        if (tm_handler->app_data_index < max_send_size){
+
+            tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index] = data;
+            tm_handler->app_data_index = tm_handler->app_data_index + 1;
+            *result = Result::Ok;
+
+        } else {
+
+            *result = Result::Error;
+
+        }
+
+        return;
+
+    }
+
+    procedure append_u16_appdata_field (&mut self, tm_handler : &mut TMHandlerT, data : u16, result : &mut Result) {
+
+        if (tm_handler->app_data_index + 1 < max_send_size){
+
+            serialize_uint16(data, &mut tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index .. tm_handler->app_data_index + 2]);
+            tm_handler->app_data_index = tm_handler->app_data_index + 2;
+            *result = Result::Ok;
+
+        } else {
+
+            *result = Result::Error;
+        }
+
+        return;
+
+    }
+
+    procedure tm_handler_append_u32_appdata_field (tm_handler : &mut TMHandlerT, data : u32, result : &mut Result) {
+
+        if (tm_handler->app_data_index + 3 < max_send_size){
+
+            serialize_uint32(data, &mut tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index .. tm_handler->app_data_index + 4]);
+            tm_handler->app_data_index = tm_handler->app_data_index + 4;
+            *result = Result::Ok;
+
+        } else {
+
+            *result = Result::Error;
+
+        }
+
+        return;
+
+    }
+
+
+    procedure send_and_close_tm (tm_handler : &mut TMHandlerT, type : u8, subtype : u8, result : &mut Result) {
+
+        var tm_count : u16 = 0 : u16;
+        self->tm_counter.get_next_tm_count(&mut tm_count);
+
+        tm_handler_build_packet_header(tm_handler, tm_count);
+        tm_handler_build_df_header(tm_handler, type, subtype);
+
+        ccsds_pus_tm_set_fields(&mut (tm_handler->tm_descriptor->tm_bytes[0 : usize .. 10 : usize]), &(tm_handler->tm_packet_header), &(tm_handler->df_header));
+
+        tm_handler->tm_descriptor->tm_num_bytes = tm_handler->tm_packet_header.packet_length as usize + 7;
+
+        self->tm_channel.send_tm(&(tm_handler->tm_descriptor), result);
+
+        return;
+
+    }
+
+};
+
+
+function tm_handler_build_packet_header (tm_handler : &mut TMHandlerT, tm_seq_counter : u16) {
+
+    tm_handler->packet_header.packet_id = ccsds_pus_tm_build_packet_id(APID);
+
+    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
+
+	tm_packet_header.packet_length = (tm_handler->app_data_index) - 7 as u16; 
+
+    return;
+
+}
+
+function tm_handler_build_df_header (tm_handler : &mut TMHandlerT, tm_type : u8, tm_subtype : u8) {
+
+    tm_handler->df_header.version = ccsds_pus_tm_build_df_header_version(0x1);
+    tm_handler->df_header.type = tm_type;
+    tm_handler->df_header.subtype = tm_subtype;
+    tm_handler->df_header.destinationID = destinationID;
+
+    return;
+
+}
+
