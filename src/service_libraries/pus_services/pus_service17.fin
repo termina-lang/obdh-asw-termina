@@ -36,11 +36,28 @@ function build_tm_17_2(tm_descriptor : &mut TMDescriptorT,
 	tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
+}
+
+function build_tm_17_2(tm_descriptor : &mut TMDescriptorT,
+					tm_seq_counter : u16) {
+
+	var tm_handler : TMHandlerT = {
+            tm_descriptor = p_tm_descriptor,
+            app_data_index = 10,
+            packet_header = {packet_id = 0, packet_seq_ctrl = 0, packet_length = 0},
+            df_header = {version = 0, type = 0, subtype = 0, destinationID = 0},
+            packet_error_ctrl = 0
+    	};
+
+	close_tm(&mut tm_handler, 17, 2, result);
+
+
+	return;
 
 }
 
 interface PUSS17Iface {
-	procedure exec17_1TC(&mut self, tc_descriptor : &TCDescriptorT, result : &mut Result);
+	procedure exec17_1TC(&mut self, tc_handler : &TCHandlerT, result : &mut Result);
 };
 
 resource class PUSService17 provides PUSS17Iface {
@@ -49,7 +66,7 @@ resource class PUSService17 provides PUSS17Iface {
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
     tm_counter : access TMCounterIface;
 
-	procedure exec17_1TC(&mut self, tc_descriptor : &TCDescriptorT, result : &mut Result) {
+	procedure exec17_1TC(&mut self, tc_handler : &TCHandlerT, result : &mut Result) {
 
 		var subtype : u8 = get_subtype(&(tc_descriptor->tc_bytes));
 		

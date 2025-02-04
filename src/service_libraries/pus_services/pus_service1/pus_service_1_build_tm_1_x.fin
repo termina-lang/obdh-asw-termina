@@ -93,11 +93,20 @@ function build_tm_1_2 (status : &TCStatus, p_tm_descriptor : &mut TMDescriptorT,
 
 	return;
 }
-
+/*
 function build_tm_1_3(p_tm_descriptor : &mut TMDescriptorT,
 					tm_seq_counter : u16, tc_handler: &TCHandlerT) {
 	
 	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length, 1, 3);	
+
+	return;
+}
+*/
+
+function build_tm_1_3(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, result : &mut Result) {
+	
+	close_tm(p_tm_handler, 1, 3, tm_seq_counter, result);
 
 	return;
 }

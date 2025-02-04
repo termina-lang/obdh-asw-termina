@@ -2,7 +2,8 @@ import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.crc;
 import service_libraries.serialize;
-import service_libraries.pus_services.pus_tc_handler;
+import service_libraries.pus_tc_handler;
+import service_libraries.pus_tm_handler;
 
 
 enum TCAcceptationStatus {
@@ -36,7 +37,7 @@ enum TCVerifyStage {
 	Acceptation, ExecStart, Progress, ExecCompletion
 };
 
-const base_length : u16 = 7;
+//const base_length : u16 = 7;
 
 function is_crc_valid(tc_descriptor : &TCDescriptorT) -> bool {
 

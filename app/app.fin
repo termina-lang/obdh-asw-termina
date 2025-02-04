@@ -8,7 +8,7 @@ import service_libraries.pus_services.pus_service12.pus_service12;
 import service_libraries.pus_services.pus_service17;
 import service_libraries.pus_services.pus_service19;
 import service_libraries.pus_services.pus_service20;
-import service_libraries.pus_services.pus_tc_handler;
+import service_libraries.pus_tc_handler;
 import resources.uart;
 import resources.gpio_driver;
 import tasks.hk_fdir_mng.hk_fdir;
@@ -34,7 +34,7 @@ channel hkfdir_message_queue : MsgQueue<box TCHandlerT;10>;
 channel bkg_message_queue : MsgQueue<box TCHandlerT;10>;
 channel action_tc_message_queue : MsgQueue<box TCHandlerT;5>;
 
-resource tm_pool : Pool<TMDescriptorT; 20>;
+resource tm_pool : Pool<TMHandlerT; 20>;
 resource tc_pool : Pool<TCHandlerT; 20>;
 
 resource u32_system_data_pool : AtomicArray<u32; sdp_num_u32_params> = {
