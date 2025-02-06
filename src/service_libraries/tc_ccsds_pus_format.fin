@@ -17,7 +17,7 @@ struct CCSDSPUSTCDFHeaderT {
 	flag_ver_ack : u8;
 	type : u8;
 	subtype : u8;
-	sourceID : u8;
+	sourceID : u16;
 
 };
 
@@ -120,7 +120,7 @@ function tc_get_fields(tc_bytes : &[u8 ; max_tc_size],
 	//Read the remaining fields of the Data Field Header into the struct
 	p_tc_df_header->type = (*tc_bytes)[7 : usize];
 	p_tc_df_header->subtype = (*tc_bytes)[8 : usize];
-	p_tc_df_header->sourceID = (*tc_bytes)[9 : usize];
+	p_tc_df_header->sourceID = deserialize_uint16(&(*tc_bytes)[9 : usize .. 11 : usize]);
 
 	// Deserialize Packet Error Control and store it at p_tc_packet_err_ctrl
 
@@ -129,7 +129,7 @@ function tc_get_fields(tc_bytes : &[u8 ; max_tc_size],
 	packet_error_ctrl[1 : usize] = (*tc_bytes)[((*p_tc_packet_header).packet_length + 6 : u16) as usize];
 
 	*p_tc_packet_err_ctrl = deserialize_uint16(&packet_error_ctrl);
-
+	
 	return;
 
 }

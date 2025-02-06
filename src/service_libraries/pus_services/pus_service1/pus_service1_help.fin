@@ -37,7 +37,6 @@ enum TCVerifyStage {
 	Acceptation, ExecStart, Progress, ExecCompletion
 };
 
-//const base_length : u16 = 7;
 
 function is_crc_valid(tc_descriptor : &TCDescriptorT) -> bool {
 
@@ -76,7 +75,7 @@ function is_sourceID_valid(tc_descriptor : &TCDescriptorT) -> bool {
 	return is_valid;
 }
 
-
+/*
 function build_tm (p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, tc_handler: &TCHandlerT, tm_plength : u16, tm_type: u8, tm_subtype: u8) {
 
     var tm_packet_header : CCSDSPUSTMPacketHeaderT =
@@ -87,7 +86,7 @@ function build_tm (p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, t
 										{version = 0 : u8,
 	 									type = 0 : u8,
 	 									subtype = 0 : u8,
-	 									destinationID = 0 : u8} : CCSDSPUSTMDFHeaderT;
+	 									destinationID = 0 : u16} : CCSDSPUSTMDFHeaderT;
 
 	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
 
@@ -110,7 +109,8 @@ function build_tm (p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, t
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 	return;
-}
+}*/
+
 
 function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
 
@@ -134,67 +134,86 @@ function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
 	return subtype;
 }
 
-function build_tm_1_X_no_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8) {
+
+function build_tm_1_X_no_failure_data(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, result : &mut Result) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 2, 1, subtype);
-
-	p_tm_descriptor->tm_bytes[14] = failure_code;
+	startup_tm(p_tm_handler);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_header.packet_id, result);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl, result);
+	append_u8_appdata_field(p_tm_handler, failure_code, result);
+	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, result);
 
 	return;
 }
 
-function build_tm_1_X_u8_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8) {
+
+function build_tm_1_X_u8_failure_data(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8, result : &mut Result) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 2, 1, subtype);
-
-	p_tm_descriptor->tm_bytes[14] = failure_code;
-	p_tm_descriptor->tm_bytes[15] = failure_data;
+	startup_tm(p_tm_handler);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_header.packet_id, result);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl, result);
+	append_u8_appdata_field(p_tm_handler, failure_code, result);
+	append_u8_appdata_field(p_tm_handler, failure_data, result);
+	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, result);
 
 	return;
 }
 
-function build_tm_1_X_u16_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16){
+
+
+function build_tm_1_X_u16_failure_data(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16, result : &mut Result) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 3, 1, subtype);
+	startup_tm(p_tm_handler);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_header.packet_id, result);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl, result);
+	append_u8_appdata_field(p_tm_handler, failure_code, result);
+	append_u16_appdata_field(p_tm_handler, failure_data, result);
+	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, result);
 
-	p_tm_descriptor->tm_bytes[14] = failure_code;
-	serialize_uint16(failure_data, &mut p_tm_descriptor->tm_bytes[15 : usize .. 17 : usize]);
-						
 	return;
 }
 
-function build_tm_1_X_u32_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32){
+
+
+function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32, result : &mut Result) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 5, 1, subtype);
+	startup_tm(p_tm_handler);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_header.packet_id, result);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl, result);
+	append_u8_appdata_field(p_tm_handler, failure_code, result);
+	append_u32_appdata_field(p_tm_handler, failure_data, result);
+	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, result);
 
-	p_tm_descriptor->tm_bytes[14] = failure_code;
-	serialize_uint32(failure_data, &mut p_tm_descriptor->tm_bytes[15 : usize .. 19 : usize]);
-						
 	return;
 }
 
-function build_tm_1_X_u8_u32_failure_data(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32){
+
+function build_tm_1_X_u8_u32_failure_data(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32, result : &mut Result) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 6, 1, subtype);
+	startup_tm(p_tm_handler);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_header.packet_id, result);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl, result);
+	append_u8_appdata_field(p_tm_handler, failure_code, result);
+	append_u8_appdata_field(p_tm_handler, failure_data1, result);
+	append_u32_appdata_field(p_tm_handler, failure_data2, result);
+	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, result);
 
-	p_tm_descriptor->tm_bytes[14] = failure_code;
-	p_tm_descriptor->tm_bytes[15] = failure_data1;
-	serialize_uint32(failure_data2, &mut p_tm_descriptor->tm_bytes[16 : usize .. 20 : usize]);
-						
 	return;
 }
+
+

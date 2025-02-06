@@ -63,14 +63,14 @@ resource class PUSService3 provides PUSS3Iface {
 
     procedure exec3_5TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
 
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
 
         var send_flag : bool = false;
 
-        match tm_descriptor {
+        match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
@@ -84,13 +84,13 @@ resource class PUSService3 provides PUSS3Iface {
     
                 if (*result is Result::Error){
 
-                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
                 } else {
 
                     if(N != 1) {
 
-                        build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
                     } 
                     else {
 
@@ -98,22 +98,22 @@ resource class PUSService3 provides PUSS3Iface {
 
                             send_flag = true;
 
-                            build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
                             self->hk_config_table[index].enabled = true;
                             self->hk_config_table[index].interval_control = 0;
                             
-                            var tm_descriptor2 : Option<box TMDescriptorT> = None;
-                            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
-                            match tm_descriptor2 {
+                            match tm_handler2 {
 
-                                case Some(descriptor2) => {
+                                case Some(b_tm_handler2) => {
 
                                     var tm_count2 : u16 = 0 : u16;
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
-
-                                    build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                    self->tm_channel.send_tm(b_tm_handler, result);
                                 }
                                 case None => {
                                     *result = Result::Error;
@@ -122,20 +122,14 @@ resource class PUSService3 provides PUSS3Iface {
 
                         } else {
 
-                            build_tm_1_4_SIDnotvalid(&mut descriptor, tm_count, tc_handler, SID);
+                            build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), SID, result);
                             
                         }
-
                     }
                 }
                 
+                self->tm_channel.send_tm(b_tm_handler, result);
 
-                self->tm_channel.send_tm(descriptor, result);
-
-                if (send_flag){
-
-                    self->tm_channel.send_tm(descriptor2, result);
-                }
             }
             case None => {
                 //Error
@@ -148,14 +142,14 @@ resource class PUSService3 provides PUSS3Iface {
 
     procedure exec3_6TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
 
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
 
         var send_flag : bool = false;
 
-        match tm_descriptor {
+        match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
@@ -169,13 +163,13 @@ resource class PUSService3 provides PUSS3Iface {
     
                 if (*result is Result::Error){
 
-                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
                 } else {
 
                     if(N != 1) {
 
-                        build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
                     } 
                     else {
 
@@ -183,22 +177,22 @@ resource class PUSService3 provides PUSS3Iface {
 
                             send_flag = true;
 
-                            build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
                             self->hk_config_table[index].enabled = false;
                             self->hk_config_table[index].interval_control = 0;
                             
-                            var tm_descriptor2 : Option<box TMDescriptorT> = None;
-                            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
-                            match tm_descriptor2 {
+                            match tm_handler2 {
 
-                                case Some(descriptor2) => {
+                                case Some(b_tm_handler2) => {
 
                                     var tm_count2 : u16 = 0 : u16;
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
-
-                                    build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                    self->tm_channel.send_tm(b_tm_handler2, result);
                                 }
                                 case None => {
                                     *result = Result::Error;
@@ -207,7 +201,7 @@ resource class PUSService3 provides PUSS3Iface {
 
                         } else {
 
-                            build_tm_1_4_SIDnotvalid(&mut descriptor, tm_count, tc_handler, SID);
+                            build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), SID, result);
                             
                         }
 
@@ -215,12 +209,8 @@ resource class PUSService3 provides PUSS3Iface {
                 }
                 
 
-                self->tm_channel.send_tm(descriptor, result);
+                self->tm_channel.send_tm(b_tm_handler, result);
 
-                if (send_flag){
-
-                    self->tm_channel.send_tm(descriptor2, result);
-                }
             }
             case None => {
                 //Error
@@ -234,13 +224,13 @@ resource class PUSService3 provides PUSS3Iface {
 
     procedure exec3_31TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
 
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
 
 
-        match tm_descriptor {
+        match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
@@ -258,35 +248,36 @@ resource class PUSService3 provides PUSS3Iface {
 
                 if (*result is Result::Error) {
 
-                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
                 } else {
 
                     if (N != 1) {
 
-                        build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
 
                     } else {
 
                         if (self->get_SIDindex(SID, &mut index)){
 
                             send_flag = true;
-                            build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
                             self->hk_config_table[index].interval = collection_interval;
                             self->hk_config_table[index].interval_control = 0;
 
-                            var tm_descriptor2 : Option<box TMDescriptorT> = None;
-                            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
-                            match tm_descriptor2 {
+                            match tm_handler2 {
 
-                                case Some(descriptor2) => {
+                                case Some(b_tm_handler2) => {
 
                                     var tm_count2 : u16 = 0 : u16;
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
 
-                                    build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                    self->tm_channel.send_tm(b_tm_handler2, result);
                                 }
                                 case None => {
                                     *result = Result::Error;
@@ -295,17 +286,13 @@ resource class PUSService3 provides PUSS3Iface {
 
                         } else {
 
-                            build_tm_1_4_SIDnotvalid(&mut descriptor, tm_count, tc_handler, SID);
+                            build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), SID, result);
                         }
                     }
                 }
 
-                self->tm_channel.send_tm(descriptor, result);
+                self->tm_channel.send_tm(b_tm_handler, result);
 
-                if (send_flag){
-
-                    self->tm_channel.send_tm(descriptor2, result);
-                }
             }
             case None => {
                 *result = Result::Error;
@@ -317,7 +304,7 @@ resource class PUSService3 provides PUSS3Iface {
 
 
 /*
-    viewer build_tm_3_25(&self, p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter : u16, index: usize) {
+    viewer build_tm_3_25(&self, p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, index: usize) {
 
         var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
@@ -341,9 +328,9 @@ resource class PUSService3 provides PUSS3Iface {
 	    df_header.subtype = 25 : u8;
 	    df_header.destinationID = 0x78 : u8;
 
-	    ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
+	    ccsds_pus_tm_set_fields(&mut p_tm_handler->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
 
-	    p_tm_descriptor->tm_bytes[10 : usize] = self->hk_config_table[index].SID;
+	    p_tm_handler->tm_bytes[10 : usize] = self->hk_config_table[index].SID;
 
         var PID : usize = 0;
         var SDP_value : u16 = 0;
@@ -352,12 +339,12 @@ resource class PUSService3 provides PUSS3Iface {
 
             PID = self->hk_config_table[index].params_def[j] as usize;
             self->system_data_pool.load_index(PID, &mut SDP_value);
-            serialize_uint16(SDP_value, &mut (p_tm_descriptor->tm_bytes[11 + j..13 + j]));
+            serialize_uint16(SDP_value, &mut (p_tm_handler->tm_bytes[11 + j..13 + j]));
     
         }
 
-	    // Calculate p_tm_descriptor->tm_num_bytes
-	    p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
+	    // Calculate p_tm_handler->tm_num_bytes
+	    p_tm_handler->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
 
 	    return;
@@ -366,6 +353,7 @@ resource class PUSService3 provides PUSS3Iface {
 */
     viewer build_tm_3_25(&self, p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, index: usize, result: &mut Result) {
 
+        startup_tm(p_tm_handler);
         append_u16_appdata_field(p_tm_handler, self->hk_config_table[index].SID, result);
 
         var PID : usize = 0;
@@ -393,8 +381,6 @@ resource class PUSService3 provides PUSS3Iface {
     
         }
 
-	    // Calculate p_tm_descriptor->tm_num_bytes
-	    //p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
         close_tm(p_tm_handler, 3, 25, tm_seq_counter, result);
 
 
@@ -420,14 +406,14 @@ resource class PUSService3 provides PUSS3Iface {
 
                     match tm_handler {
 
-                        case Some(tm) => {
+                        case Some(b_tm_handler) => {
 
                         var tm_count : u16 = 0 : u16;
                         self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                        self->build_tm_3_25(&mut tm, tm_count, i, result);
+                        self->build_tm_3_25(&mut b_tm_handler, tm_count, i, result);
                         //Enviar telemetría a través del TM_CHANNEL
-                        self->tm_channel.send_tm(tm, result);
+                        self->tm_channel.send_tm(b_tm_handler, result);
                    
                         }
                         case None => {

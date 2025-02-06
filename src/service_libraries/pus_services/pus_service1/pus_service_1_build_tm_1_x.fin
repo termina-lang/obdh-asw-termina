@@ -34,54 +34,60 @@ const TM_1_8_TC_11_X_SCHED_TC_POOL_EMPTY	   : u8 = 5;
 const TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED    : u8 = 6;
 
 
-function build_tm_1_1(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT) {
-	
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length, 1, 1);	
+function build_tm_1_1(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, result : &mut Result) {
+
+    startup_tm(p_tm_handler);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_header.packet_id, result);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl, result);
+	close_tm(p_tm_handler, 1, 1, tm_seq_counter, result);	
 
 	return;
 }
 
-function build_tm_1_2 (status : &TCStatus, p_tm_descriptor : &mut TMDescriptorT,
-		tm_seq_counter : u16, tc_handler: &TCHandlerT) {
+function build_tm_1_2 (status : &TCStatus, p_tm_handler : &mut TMHandlerT,
+		tm_seq_counter : u16, tc_handler: &TCHandlerT, result : &mut Result) {
 
-	var error_code : u16 = 0;
+	var error_code : u8 = 0;
+
+	startup_tm(p_tm_handler);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_header.packet_id, result);
+	append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl, result);
 
 	match ((*status).error_code) {
 
 		case CRCError => {
 
-			build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 6, 1, 2);
 			error_code = 2;
+			append_u8_appdata_field(p_tm_handler, error_code, result);
 			var calculated_crc : u16 = cal_crc_16(&(tc_handler->tc_descriptor.tc_bytes), (tc_handler->tc_descriptor.tc_num_bytes - 2));
-			serialize_uint16(tc_handler->packet_error_ctrl, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
-			serialize_uint16(calculated_crc, &mut p_tm_descriptor->tm_bytes[18 : usize .. 20 : usize]);
+			append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl, result);
+			append_u16_appdata_field(p_tm_handler, calculated_crc, result);
 			
 		}
 		case APIDError => {
 
-			build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 2, 1, 2);
 			error_code = 3;
-			
+			append_u8_appdata_field(p_tm_handler, error_code, result);
+				
 		}
 		case SourceIDError => {
 
-			build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 4, 1, 2);
 			error_code = 4;
-			var sourceID : u8 = get_source_id(&(tc_handler->tc_descriptor.tc_bytes));
-			serialize_uint16(sourceID as u16, &mut p_tm_descriptor->tm_bytes[16 : usize .. 18 : usize]);
+			append_u8_appdata_field(p_tm_handler, error_code, result);
+			append_u16_appdata_field(p_tm_handler, tc_handler->df_header.sourceID as u16, result);
 			
 		}
 		case TypeError => {
 
-			build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 2, 1, 2);
 			error_code = 5;
+			append_u8_appdata_field(p_tm_handler, error_code, result);
 			
 		}
 		case SubTypeError => {
 
-			build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length + 2, 1, 2);
 			error_code = 6;
+			append_u8_appdata_field(p_tm_handler, error_code, result);
 		}
 		case Undefined => {
 
@@ -89,290 +95,284 @@ function build_tm_1_2 (status : &TCStatus, p_tm_descriptor : &mut TMDescriptorT,
 		}
 	}
 
-	serialize_uint16(error_code ,&mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
+	close_tm(p_tm_handler, 1, 2, tm_seq_counter, result);
 
 	return;
 }
-/*
-function build_tm_1_3(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT) {
-	
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length, 1, 3);	
 
-	return;
-}
-*/
 
 function build_tm_1_3(p_tm_handler : &mut TMHandlerT,
 					tm_seq_counter : u16, tc_handler: &TCHandlerT, result : &mut Result) {
 	
+	startup_tm(p_tm_handler);
 	close_tm(p_tm_handler, 1, 3, tm_seq_counter, result);
 
 	return;
 }
 
-function build_tm_1_4_short_pack_length(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT) {
+
+function build_tm_1_4_short_pack_length(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, result : &mut Result) {
 
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	var failure_data : u16 = (tc_handler->tc_descriptor.tc_num_bytes) as u16;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_X_Y_TC_SHORT_PACK_LENGTH, failure_data);	
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_X_Y_TC_SHORT_PACK_LENGTH, failure_data, result);	
 
 
 	return;
 }
 
-function build_tm_1_4_num_of_instr_not_valid(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, N : u8) {
+function build_tm_1_4_num_of_instr_not_valid(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, N : u8, result : &mut Result) {
 
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u8_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_X_Y_TC_NOT_VALID_NUM_OF_INSTR, N);	
+	build_tm_1_X_u8_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_X_Y_TC_NOT_VALID_NUM_OF_INSTR, N, result);	
 
 	return;
 }
 
-function build_tm_1_4_device_address_not_valid(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, device_address : u32) {
+function build_tm_1_4_device_address_not_valid(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, device_address : u32, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u32_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_2_X_DEVICE_ADDRESS_NOT_VALID, device_address);
+	build_tm_1_X_u32_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_2_X_DEVICE_ADDRESS_NOT_VALID, device_address, result);
 
 	return;
 }
 
-function build_tm_1_4_SID_not_valid(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, SID : u16) {
+function build_tm_1_4_SID_not_valid(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, SID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_3_X_INVALID_SID, SID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_3_X_INVALID_SID, SID, result);
 
 	return;
 }
 
-function build_tm_1_4_mem_address_not_valid (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, mem_id : u8, mem_address : u32) {
+function build_tm_1_4_mem_address_not_valid (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, mem_id : u8, mem_address : u32, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u8_u32_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_6_X_INVALID_MEMORY_ADDRESS, mem_id, mem_address);
+	build_tm_1_X_u8_u32_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_6_X_INVALID_MEMORY_ADDRESS, mem_id, mem_address, result);
 
 	return;
 }
 
-function build_tm_1_4_mem_id_read_only (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, mem_id : u8) {
+function build_tm_1_4_mem_id_read_only (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, mem_id : u8, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u8_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_6_X_MEMORY_ID_READ_ONLY, mem_id);
+	build_tm_1_X_u8_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_6_X_MEMORY_ID_READ_ONLY, mem_id, result);
 
 	return;
 }
 
-function build_tm_1_4_EvID_not_valid (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, EvID : u16) {
+function build_tm_1_4_EvID_not_valid (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, EvID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_5_X_INVALID_EV_ID, EvID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_5_X_INVALID_EV_ID, EvID, result);
 
 	return;
 }
 
-function build_tm_1_4_PID_not_valid (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, PID : u16) {
+function build_tm_1_4_PID_not_valid (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, PID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_20_X_INVALID_PID, PID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_20_X_INVALID_PID, PID, result);
 
 	return;
 }
 
-function build_tm_1_4_PMON_undefined (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16) {
+function build_tm_1_4_PMON_undefined (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_12_X_PMON_UNDEFINED, PMONID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_12_X_PMON_UNDEFINED, PMONID, result);
 
 	return;
 }
 
-function build_tm_1_4_PMON_defined (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16) {
+function build_tm_1_4_PMON_defined (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_12_X_PMON_DEFINED, PMONID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_12_X_PMON_DEFINED, PMONID, result);
 
 	return;
 }
 
-function build_tm_1_4_PMON_enabled (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16) {
+function build_tm_1_4_PMON_enabled (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_12_X_PMON_ENABLED, PMONID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_12_X_PMON_ENABLED, PMONID, result);
 
 	return;
 }
 
-function build_tm_1_4_PMONID_invalid (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16) {
+function build_tm_1_4_PMONID_invalid (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_12_X_INVALID_PMONID, PMONID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_12_X_INVALID_PMONID, PMONID, result);
 
 	return;
 }
 
-function build_tm_1_4_PMON_definition_invalid (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16) {
+function build_tm_1_4_PMON_definition_invalid (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, PMONID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_12_X_INVALID_PMON_DEFINITION, PMONID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_12_X_INVALID_PMON_DEFINITION, PMONID, result);
 
 	return;
 }
 
-function build_tm_1_4_ev_action_enabled (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, event_ID : u16) {
+function build_tm_1_4_ev_action_enabled (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, event_ID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_19_X_EV_ACTION_IS_ENABLED, event_ID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_19_X_EV_ACTION_IS_ENABLED, event_ID, result);
 
 	return;
 }
 
-function build_tm_1_4_ev_action_rejected (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, event_ID : u16) {
+function build_tm_1_4_ev_action_rejected (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, event_ID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_19_1_EV_ACTION_REJECTED, event_ID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_19_1_EV_ACTION_REJECTED, event_ID, result);
 
 	return;
 }
 
-function build_tm_1_4_ev_action_undefined (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, event_ID : u16) {
+function build_tm_1_4_ev_action_undefined (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, event_ID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_19_X_EV_ACTION_NOT_DEFINED, event_ID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_19_X_EV_ACTION_NOT_DEFINED, event_ID, result);
 
 	return;
 }
 
-function build_tm_1_4_PID_stats_undefined (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, PID : u16) {
+function build_tm_1_4_PID_stats_undefined (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, PID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_4_7_PID_STATS_UNDEFINED, PID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_4_7_PID_STATS_UNDEFINED, PID, result);
 
 	return;
 }
 
-function build_tm_1_4_PID_read_only_via_TC (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, PID : u16) {
+function build_tm_1_4_PID_read_only_via_TC (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, PID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC, PID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC, PID, result);
 
 	return;
 }
 
-function build_tm_1_7(p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT) {
+function build_tm_1_7(p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, result : &mut Result) {
 
-	build_tm(p_tm_descriptor, tm_seq_counter, tc_handler, base_length, 1, 7);
+	close_tm(p_tm_handler, 1, 7, tm_seq_counter, result);
 
 	return;
 }
 
 
-function build_tm_1_8_max_evactions_defined (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, evID: u16) {
+function build_tm_1_8_max_evactions_defined (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, evID: u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecCompletion;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED, evID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED, evID, result);
 
 	return;
 }
 
 
-function build_tm_1_8_tm_exceed_limit_appdata (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT) {
+function build_tm_1_8_tm_exceed_limit_appdata (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecCompletion;
 	
-	build_tm_1_X_no_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA);
+	build_tm_1_X_no_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA, result);
 
 	return;
 }
 
-function build_tm_1_8_device_command_exec_error (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, on_off_command : u32) {
+function build_tm_1_8_device_command_exec_error (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, on_off_command : u32, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecCompletion;
 	
-	build_tm_1_X_u32_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_8_TM_2_1_DEV_COMMAND_EXEC_ERROR, on_off_command);
+	build_tm_1_X_u32_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_8_TM_2_1_DEV_COMMAND_EXEC_ERROR, on_off_command, result);
 
 	return;
 }
 
 
-function build_tm_1_8_not_free_stats_config (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, PID : u16) {
+function build_tm_1_8_not_free_stats_config (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, PID : u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecCompletion;
 	
-	build_tm_1_X_u16_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_8_TC_4_1_NOT_FREE_PID_STATS_CONFIG, PID);
+	build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_8_TC_4_1_NOT_FREE_PID_STATS_CONFIG, PID, result);
 
 	return;
 }
 
-function build_tm_1_8_mem_access_error (p_tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16, tc_handler: &TCHandlerT, mem_ID: u8) {
+function build_tm_1_8_mem_access_error (p_tm_handler : &mut TMHandlerT,
+					tm_seq_counter : u16, tc_handler: &TCHandlerT, mem_ID: u8, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecCompletion;
 	
-	build_tm_1_X_u8_failure_data(p_tm_descriptor, tm_seq_counter, tc_handler, verify_stage,
-	    TM_1_8_TC_6_X_MEM_ACCESS_FAIL, mem_ID);
+	build_tm_1_X_u8_failure_data(p_tm_handler, tm_seq_counter, tc_handler, verify_stage,
+	    TM_1_8_TC_6_X_MEM_ACCESS_FAIL, mem_ID, result);
 
 	return;
 }

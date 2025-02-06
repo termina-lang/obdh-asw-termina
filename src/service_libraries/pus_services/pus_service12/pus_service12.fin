@@ -19,10 +19,11 @@ resource class PUSService12 provides PUSS12Iface {
 
     param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
 
-    system_data_pool : access AtomicArrayAccess<u16; sdp_num_params>;
+    system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
+    system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
     tm_channel : access TMChannelIface;
-    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
+    a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
 
 
@@ -106,12 +107,12 @@ resource class PUSService12 provides PUSS12Iface {
 
     procedure exec12_1TC(&mut self, tc_handler: &mut TCHandlerT , result: &mut Result){
 
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
 
-        match tm_descriptor {
+        match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
@@ -123,13 +124,13 @@ resource class PUSService12 provides PUSS12Iface {
 
                 if (result is Result::Error){
 
-                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                 } 
                 else {
 
                     if (N != 1) {
 
-                      build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+                      build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
                     }
                     else {
 
@@ -139,22 +140,22 @@ resource class PUSService12 provides PUSS12Iface {
 
                             if(self->param_mon_config_table[PMONID as usize].state is CheckState::MonitorUnselected == false){
 
-                                build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+                                build_tm_1_3(&mut b_tm_handler, tm_count, tc_handler, result);
                                 self->param_mon_config_table[PMONID as usize].enabled = true;
                                 self->param_mon_config_table[PMONID as usize].interval_control = 0;
                                 self->param_mon_config_table[PMONID as usize].repetition_control = 0;
 
-                                var tm_descriptor2 : Option<box TMDescriptorT> = None;
-                                self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                                var tm_handler2 : Option<box TMHandlerT> = None;
+                                self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
-                                match tm_descriptor2 {
+                                match tm_handler2 {
 
-                                    case Some(descriptor2) => {
+                                    case Some(b_tm_handler2) => {
 
                                         var tm_count2 : u16 = 0 : u16;
                                         self->tm_counter.get_next_tm_count(&mut tm_count2);
-
-                                        build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                        build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                        self->tm_channel.send_tm(b_tm_handler2, result);
                                     }
                                     case None => {
                                         *result = Result::Error;
@@ -163,18 +164,14 @@ resource class PUSService12 provides PUSS12Iface {
 
                             } else {
 
-                                build_tm_1_4_PMON_undefined(&mut descriptor, tm_count, tc_handler, PMONID);
+                                build_tm_1_4_PMON_undefined(&mut b_tm_handler, tm_count, &(*tc_handler), PMONID, result);
                             }
                         } else {
 
-                            build_tm_1_4_PMONID_invalid(&mut descriptor, tm_count, tc_handler, PMONID);
+                            build_tm_1_4_PMONID_invalid(&mut b_tm_handler, tm_count, &(*tc_handler), PMONID, result);
                         }
                     }
-                        self->tm_channel.send_tm(descriptor, result);
-
-                        if(is_valid_PMONID) {
-                            self->tm_channel.send_tm(descriptor2, result);
-                        }
+                        self->tm_channel.send_tm(b_tm_handler, result);
                 }
             }
             case None => {
@@ -187,12 +184,12 @@ resource class PUSService12 provides PUSS12Iface {
 
     procedure exec12_2TC(&mut self, tc_handler: &mut TCHandlerT , result: &mut Result){
         
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
 
-        match tm_descriptor {
+        match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
@@ -204,13 +201,13 @@ resource class PUSService12 provides PUSS12Iface {
 
                 if (result is Result::Error){
 
-                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                 } 
                 else {
 
                     if (N != 1) {
 
-                      build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+                      build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
                     }
                     else {
 
@@ -220,21 +217,21 @@ resource class PUSService12 provides PUSS12Iface {
 
                             if(self->param_mon_config_table[PMONID as usize].state is CheckState::MonitorUnselected == false){
 
-                                build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+                                build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                                 self->param_mon_config_table[PMONID as usize].enabled = false;
                                 set_unchecked(&mut (self->param_mon_config_table), PMONID as usize);
 
-                                var tm_descriptor2 : Option<box TMDescriptorT> = None;
-                                self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                                var tm_handler2 : Option<box TMHandlerT> = None;
+                                self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
-                                match tm_descriptor2 {
+                                match tm_handler2 {
 
-                                    case Some(descriptor2) => {
+                                    case Some(b_tm_handler2) => {
 
                                         var tm_count2 : u16 = 0 : u16;
                                         self->tm_counter.get_next_tm_count(&mut tm_count2);
-
-                                        build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                        build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                        self->tm_channel.send_tm(b_tm_handler2, result);
                                     }
                                     case None => {
                                         *result = Result::Error;
@@ -243,18 +240,15 @@ resource class PUSService12 provides PUSS12Iface {
 
                             } else {
 
-                                build_tm_1_4_PMON_undefined(&mut descriptor, tm_count, tc_handler, PMONID);
+                                build_tm_1_4_PMON_undefined(&mut b_tm_handler, tm_count, &(*tc_handler), PMONID, result);
                             }
                         } else {
 
-                            build_tm_1_4_PMONID_invalid(&mut descriptor, tm_count, tc_handler, PMONID);
+                            build_tm_1_4_PMONID_invalid(&mut b_tm_handler, tm_count, &(*tc_handler), PMONID, result);
                         }
                     }
-                        self->tm_channel.send_tm(descriptor, result);
+                        self->tm_channel.send_tm(b_tm_handler, result);
 
-                        if(is_valid_PMONID) {
-                            self->tm_channel.send_tm(descriptor2, result);
-                        }
                 }
             }
             case None => {
@@ -267,14 +261,12 @@ resource class PUSService12 provides PUSS12Iface {
 
     procedure exec12_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result){
 
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
 
-        var send_flag : bool = false;
+         match tm_handler {
 
-         match tm_descriptor {
-
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
@@ -307,15 +299,15 @@ resource class PUSService12 provides PUSS12Iface {
 
                 if (result is Result::Error) {
 
-                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
                 } else if (N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
 
                 } else if (mon_config.type is DataPoolItemType::NoValidPID) {
 
-                    build_tm_1_4_PID_not_valid(&mut descriptor, tm_count, tc_handler, PID);
+                    build_tm_1_4_PID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), PID, result);
 
                 } else if (mon_config.type == Limits) {
 
@@ -323,7 +315,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                     if (*result is Result::Error) {
 
-                        build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                        build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                     }
                     else {
 
@@ -331,20 +323,20 @@ resource class PUSService12 provides PUSS12Iface {
 
                             send_flag = true;
 
-                            build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                             add_valid_mng_mon_def (PMONID as usize, &mon_config, &mut self->param_monit_config_table);
                 
-                            var tm_descriptor2 : Option<box TMDescriptorT> = None;
-                            self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
-                            match tm_descriptor2 {
+                            match tm_handler2 {
 
-                                case Some(descriptor2) => {
+                                case Some(b_tm_handler2) => {
 
                                     var tm_count2 : u16 = 0 : u16;
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
 
-                                    build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
                                 }
                                 case None => {
                                     *result = Result::Error;
@@ -353,7 +345,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                         } else {
 
-                            build_tm_1_4_PMON_definition_invalid(&mut descriptor, tm_count, tc_handler, PMONID);
+                            build_tm_1_4_PMON_definition_invalid(&mut b_tm_handler, tm_count, &(*tc_handler), PMONID, result);
                         }
 
                     }
@@ -364,26 +356,24 @@ resource class PUSService12 provides PUSS12Iface {
 
                     if (result is Result::Error) {
 
-                        build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                        build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
                     } else {
 
-                        send_flag = true;
-
-                        build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+                        build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                         add_valid_mng_mon_def (PMONID as usize, &mon_config, &mut self->param_monit_config_table);
                 
-                        var tm_descriptor2 : Option<box TMDescriptorT> = None;
-                        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                        var tm_handler2 : Option<box TMHandlerT> = None;
+                        self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
-                        match tm_descriptor2 {
+                        match tm_handler2 {
 
-                            case Some(descriptor2) => {
+                            case Some(b_tm_handler2) => {
 
                                 var tm_count2 : u16 = 0 : u16;
                                 self->tm_counter.get_next_tm_count(&mut tm_count2);
-
-                                build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                self->tm_channel.send_tm(b_tm_handler2, result);
                             }
                             case None => {
                                 *result = Result::Error;
@@ -394,14 +384,11 @@ resource class PUSService12 provides PUSS12Iface {
             
                 } else {
 
-                    build_tm_1_4_PMON_definition_invalid(&mut descriptor, tm_count, tc_handler, PMONID);
+                    build_tm_1_4_PMON_definition_invalid(&mut b_tm_handler, tm_count, &(*tc_handler), PMONID, result);
                 }
 
-                self->tm_channel.send_tm(descriptor, result);
+                self->tm_channel.send_tm(b_tm_handler, result);
 
-                if(send_flag) {
-                    self->tm_channel.send_tm(descriptor2, result);
-                }
             }
             case None => {
                 *result = Result::Error;
@@ -415,14 +402,13 @@ resource class PUSService12 provides PUSS12Iface {
 
     procedure exec12_6TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result){
 
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
 
-        var send_flag : bool = false;
 
-         match tm_descriptor {
+         match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
@@ -434,11 +420,11 @@ resource class PUSService12 provides PUSS12Iface {
 
                 if (*result is Result::Error){
 
-                    build_tm_1_4_short_pack_length(&mut descriptor, tm_count, tc_handler);
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                 }
                 else if (N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut descriptor, tm_count, tc_handler, N);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
                 }
                 else {
                     
@@ -446,27 +432,26 @@ resource class PUSService12 provides PUSS12Iface {
 
                     if(PMON_tpye is MonitorCheckType::Unselected){
 
-                        build_tm_1_4_PMON_undefined(&mut descriptor, tm_count, tc_handler, PMONID);
+                        build_tm_1_4_PMON_undefined(&mut b_tm_handler, tm_count, &(*tc_handler), PMONID, result);
 
                     } else if (self->param_mon_config_table[PMONID as usize].enabled == false){ 
 
-                        send_flag = true;
 
-                        build_tm_1_3(&mut descriptor, tm_count, tc_handler);
+                        build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                       
                         self->param_mon_config_table[PMONID as usize].type = MonitorCheckType::Unselected;
 
-                        var tm_descriptor2 : Option<box TMDescriptorT> = None;
-                        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor2);
+                        var tm_handler2 : Option<box TMHandlerT> = None;
+                        self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
-                        match tm_descriptor2 {
+                        match tm_handler2 {
 
-                            case Some(descriptor2) => {
+                            case Some(b_tm_handler2) => {
 
                                 var tm_count2 : u16 = 0 : u16;
                                 self->tm_counter.get_next_tm_count(&mut tm_count2);
-
-                                build_tm_1_7(&mut descriptor2, tm_count2, tc_handler);
+                                build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                self->tm_channel.send_tm(b_tm_handler2, result);
                             }
                             case None => {
                                 *result = Result::Error;
@@ -474,14 +459,11 @@ resource class PUSService12 provides PUSS12Iface {
                         }
                     } else {
 
-                        build_tm_1_4_PMON_enabled(&mut descriptor, tm_count, tc_handler, PMONID);
+                        build_tm_1_4_PMON_enabled(&mut b_tm_handler, tm_count, &(*tc_handler), PMONID, result);
                     }
 
-                    self->tm_channel.send_tm(descriptor, result);
+                    self->tm_channel.send_tm(b_tm_handler, result);
 
-                    if(send_flag) {
-                        self->tm_channel.send_tm(descriptor2, result);
-                    }
                 }
 
                

@@ -16,7 +16,10 @@ struct CCSDSPUSTMDFHeaderT {
 	version : u8;
 	type : u8;
 	subtype : u8;
-	destinationID : u8;
+	msg_type_counter : u16;
+	destinationID : u16;
+	obt_secs : u32;
+	obt_finetime : u16;
 
 };
 
@@ -77,8 +80,11 @@ function ccsds_pus_tm_set_fields(tm_bytes : &mut[u8 ; 10],
 	//Store the remaining fields into their respective locations
 	(*tm_bytes)[7 : usize] = p_tm_df_header->type;
 	(*tm_bytes)[8 : usize] = p_tm_df_header->subtype;
-	(*tm_bytes)[9 : usize] = p_tm_df_header->destinationID;
-
+	serialize_uint16(p_tm_df_header->msg_type_counter, &mut(*tm_bytes)[9 : usize .. 11 : usize]);
+	serialize_uint16(p_tm_df_header->destinationID, &mut(*tm_bytes)[11 : usize .. 13 : usize]);
+	serialize_uint32(p_tm_df_header->obt_secs, &mut(*tm_bytes)[13 : usize .. 17 : usize]);
+	serialize_uint16(p_tm_df_header->obt_finetime, &mut(*tm_bytes)[17 : usize .. 19 : usize]);
+	
 	return;
 
 }
