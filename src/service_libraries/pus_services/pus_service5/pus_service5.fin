@@ -47,8 +47,8 @@ resource class PUSService5 provides PUSS5Iface {
         return;
     }
 
-
-    procedure build_event_list_tms(&mut self, event_list : &mut EventList, result : &mut Result) {
+/*
+    procedure build_event_list_tms(&mut self, event_list : &mut EventList, result : &mut Result){
 
         for i : usize in 0 .. max_num_events while (i < event_list->num_events) {
 
@@ -88,7 +88,7 @@ resource class PUSService5 provides PUSS5Iface {
       return; 
 
     }
-
+*/
 
     procedure exec5_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result) {
 
@@ -236,6 +236,35 @@ resource class PUSService5 provides PUSS5Iface {
                 *result = Result::Error;
             }
         }
+
+        return;
+    }
+
+
+    procedure build_tm_5_x_param_out_of_limit(&mut self, p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamOutOfLimitInfo, ev_ID : u16, result : &mut Result){
+
+        startup_tm(p_tm_handler);
+        append_u16_appdata_field(p_tm_handler, ev_ID,result);
+        append_u16_appdata_field(p_tm_handler, fault_info.PID,result);
+        append_u32_appdata_field(p_tm_handler, fault_info.PID_value,result);
+        append_u32_appdata_field(p_tm_handler, fault_info.PID_limit,result);
+        var subtype : u8 = get_RID_enable_config_index(ev_ID) as u8;
+        close_tm(p_tm_handler, 5, subtype, tm_seq_counter, result);
+
+        return;
+    }
+
+
+    procedure build_tm_5_x_param_check_value_fail(&mut self, p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamOutOfLimitInfo, ev_ID : u16, result : &mut Result){
+
+        startup_tm(p_tm_handler);
+        append_u16_appdata_field(p_tm_handler, ev_ID,result);
+        append_u16_appdata_field(p_tm_handler, fault_info.PID,result);
+        append_u32_appdata_field(p_tm_handler, fault_info.PID_value,result);
+        append_u32_appdata_field(p_tm_handler, fault_info.PID_mask,result);
+        append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value,result);
+        var subtype : u8 = get_RID_enable_config_index(ev_ID) as u8;
+        close_tm(p_tm_handler, 5, subtype, tm_seq_counter, result);
 
         return;
     }

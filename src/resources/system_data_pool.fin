@@ -4,6 +4,8 @@ const sdp_num_u8_params : usize = 18;
 //const sdp_last_u8_param_id : usize = (sdp_num_u32_params - 1) + sdp_num_u8_params - 1;
 const sdp_last_u32_param_id : usize = 11;
 const sdp_last_u8_param_id : usize = 28;
+const sdp_first_u32_param_id : usize = 0;
+const sdp_first_u8_param_id : usize = 11;
 
 enum DataPoolItemType {
     u8_t,
@@ -14,17 +16,18 @@ enum DataPoolItemType {
 
 function sys_data_pool_get_item_type (PID : usize) -> DataPoolItemType {
 
-    var sdp_type : DataPoolItemType = DataPoolItemType::u8_t;
+    var sdp_type : DataPoolItemType = DataPoolItemType::NoValidPID;
 
-    if PID <= sdp_last_u32_param_id {
+    if PID < sdp_last_u32_param_id {
 
         sdp_type = DataPoolItemType::u32_t;
 
-    } else if PID <= sdp_last_u8_param_id {
+    } else {
 
         sdp_type = DataPoolItemType::u8_t;
+    }
   
-    } else {
+    if (PID >= sdp_last_u8_param_id){
         
         sdp_type = DataPoolItemType::NoValidPID;
     }

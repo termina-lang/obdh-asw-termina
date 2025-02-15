@@ -20,6 +20,19 @@ enum RIDType {
     RIDNotValid
 };
 
+struct ParamOutOfLimitInfo {
+    PID : u16;
+    PID_value : u32;
+    PID_limit : u32;
+};
+
+struct ParamFaultValueInfo {
+    PID : u16;
+    PID_value : u32;
+    PID_mask : u32;
+    PID_expected_value : u32;
+};
+
 
 
 function get_RID_type(RID : u16) -> RIDType {
@@ -90,8 +103,8 @@ function get_RID_enable_config_offset(RID : u16) -> u8 {
     return (RID & offset_mask) as u8;
 } 
 
-
-function build_tm_5_x(p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16, event : &EventInfo, index : usize){
+/*
+function build_tm_5_x(p_tm_handler : &mut TMHandlerT,tm_seq_counter: u16, event : &EventInfo, index : usize){
 
     var tm_packet_header : CCSDSPUSTMPacketHeaderT =
 	                                     {packet_id = 0 : u16,
@@ -101,7 +114,7 @@ function build_tm_5_x(p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16,
 									{version = 0 : u8,
 	 								type = 0 : u8,
 	 								subtype = 0 : u8,
-	 								destinationID = 0 : u8};
+	 								destinationID = 0};
 
 	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
 
@@ -129,4 +142,5 @@ function build_tm_5_x(p_tm_descriptor : &mut TMDescriptorT, tm_seq_counter: u16,
 	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
 
     return;
-}
+}*/
+

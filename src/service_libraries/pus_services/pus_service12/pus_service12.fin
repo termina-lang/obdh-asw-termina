@@ -27,69 +27,388 @@ resource class PUSService12 provides PUSS12Iface {
     tm_counter : access TMCounterIface;
 
 
+    viewer PID_is_above_upper_limit(&self, PID : u16, limit_check_def : &ParamLimitCheckDefinition) -> bool {
 
-    procedure do_param_limits_monitoring (&mut self, event_list : &mut EventList, result : &mut Result){ 
+        var res : bool = false;
+        var SDP_value : u32 = 0;
+        var upper_limit : u32 = limit_check_def.high_limit;
+        var type : DataPoolItemType = sys_data_pool_get_item_type(PID as usize);
 
-        for i : usize in 0 .. max_num_pmon_ids {
+        match type {
 
-            if(self->param_mon_config_table[i].enabled == true){
+            case u32_t => {
+                self->system_data_pool_u32.load_index((PID as usize - sdp_first_u32_param_id), &mut SDP_value);
+            }
+            case u8_t => {
+                var SDP_value_u8 : u8 = 0;
+                self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut SDP_value_u8);
+                SDP_value = SDP_value_u8 as u32;
+            }
+            case NoValidPID => {
+               //Error
+            }
+        }
+        
+        if (SDP_value > upper_limit) {
 
-                var PID : u16 = self->param_mon_config_table[i].PID;
-                var SDP_value : u16 = 0;
-                self->system_data_pool.load_index(PID as usize, &mut SDP_value);
+            res = true;
+        }
 
-                if(self->param_mon_config_table[i].interval_control >= self->param_mon_config_table[i].interval){
+        return res;
+    }
 
-                    self->param_mon_config_table[i].interval_control = 0;
 
-                    if(self->param_mon_config_table[i].state is CheckState::MonitorUnselected == false){
+   viewer PID_is_above_upper_limit(&self, PID : u16, limit_check_def : &ParamLimitCheckDefinition) -> bool {
 
-                        if (self->param_mon_config_table[i].state is CheckState::MonitorAboveHighLimit == false) &&
-                            (self->param_mon_config_table[i].state is CheckState::MonitorBelowLowLimit == false) {
+        var res : bool = false;
+        var SDP_value : u32 = 0;
+        var lower_limit : u32 = limit_check_def.low_limit;
+        var type : DataPoolItemType = sys_data_pool_get_item_type(PID as usize);
 
-                            if (SDP_value > self->param_limit_check_definition[i].high_limit){
+        match type {
 
-                                trigger_event(event_list, self->param_limit_check_definition[i].high_limit_rid, PID, SDP_value,
-                                        self->param_limit_check_definition[i].high_limit, result);
-                                var updated_state : CheckState = CheckState::MonitorAboveHighLimit;
-                                update_state(&mut (self->param_mon_config_table), i, updated_state);
-                            
-                            } else if (SDP_value < self->param_limit_check_definition[i].low_limit){
+            case u32_t => {
+                self->system_data_pool_u32.load_index((PID as usize - sdp_first_u32_param_id), &mut SDP_value);
+            }
+            case u8_t => {
+                var SDP_value_u8 : u8 = 0;
+                self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut SDP_value_u8);
+                SDP_value = SDP_value_u8 as u32;
+            }
+            case NoValidPID => {
+               //Error
+            }
+        }
+        
+        if (SDP_value < lower_limit) {
 
-                                trigger_event(event_list, self->param_limit_check_definition[i].low_limit_rid, PID, SDP_value,
-                                        self->param_limit_check_definition[i].low_limit, result);
-                                var updated_state : CheckState = CheckState::MonitorBelowLowLimit;
-                                update_state(&mut (self->param_mon_config_table), i, updated_state);
+            res = true;
+        }
 
-                            } else {
+        return res;
+    }
 
-                                if (self->param_mon_config_table[i].state is CheckState::MonitorUnchecked){
+    
+    viewer PID_has_expected_masked_value(&self, PID: u16, expected_value_check_definition : &ExpectedValueCheckDefinition) -> bool {
 
-                                    var updated_state : CheckState = CheckState::MonitorWithinLimits;
-                                    update_state(&mut (self->param_mon_config_table), i, updated_state);
+        var res : bool = false;
+        var SDP_value : u32 = 0;
+        var type : DataPoolItemType = sys_data_pool_get_item_type(PID as usize);
 
-                                }
-                            }
-                        } else {
+        match type {
 
-                        if (SDP_value < self->param_limit_check_definition[i].high_limit) &&
-                            (SDP_value > self->param_limit_check_definition[i].low_limit){
+            case u32_t => {
+                self->system_data_pool_u32.load_index((PID as usize - sdp_first_u32_param_id), &mut SDP_value);
+            }
+            case u8_t => {
+                var SDP_value_u8 : u8 = 0;
+                self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut SDP_value_u8);
+                SDP_value = SDP_value_u8 as u32;
+            }
+            case NoValidPID => {
+               //Error
+            }
+        }
 
-                                var updated_state : CheckState = CheckState::MonitorWithinLimits;
-                                update_state(&mut (self->param_mon_config_table), i, updated_state);
-                            }
-                        }
-                    } else {
+        if ((SDP_value & expected_value_check_definition.mask_value) == expected_value_check_definition.expected_value & expected_value_check_definition.mask_value) {
 
-                        self->param_mon_config_table[i].interval_control = self->param_mon_config_table[i].interval_control + 1;
+            res = true;
+        }
+
+        return res;
+    }
+
+
+    viewer manage_unexpected_value (&self, PMONID : u16, fault_info : &mut ParamFaultValueInfo, ev_ID : &mut u16) -> bool {
+
+        var event_triggered : bool = false;
+
+        var new_status : CheckState = CheckState::ParamValueStatus(CheckValueStatus::UnexpectedValue);
+
+        match(self->param_mon_config_table[PMONID as usize].definition){
+
+            case(ParamValueCheck(check_definition)) => {
+
+                fault_info->PID = self->param_mon_config_table[PMONID as usize].PID; 
+                fault_info->PID_expected_value = check_definition.expected_value;
+                fault_info->PID_mask = check_definition.mask_value;
+
+                var type : DataPoolItemType = sys_data_pool_get_item_type(PID as usize);
+
+                match type {
+
+                    case u32_t => {
+                        self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
+                    }
+                    case u8_t => {
+                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut (fault_info->PID_value as u8));
+                    }
+                    case NoValidPID => {
+                    //Error
                     }
                 }
 
-            }
+                if(manage_new_status(PMONID as usize, new_status, &mut (self->param_mon_config_table))){
 
+                    event_triggered = true;
+                    *ev_ID = check_definition.EvID;
+                }
+
+            }
+            case(ParamLimitCheck(check_definition)) => {
+
+            }
+            case(ParamDeltaCheck(check_definition)) => {
+
+            }
+            case(Unselected) => {
+                
+            }
         }
 
-        return;   
+        return event_triggered;
+    }
+
+
+    viewer manage_param_above_upper_limit (&self, PMONID : u16, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16) -> bool {
+
+        var event_triggered : bool = false;
+
+        var new_status : CheckState = CheckState::ParamLimitStatus(CheckLimitsStatus:: MonitorAboveHighLimit);
+
+        match(self->param_mon_config_table[PMONID as usize].definition){
+
+            case(ParamValueCheck(check_definition)) => {
+
+            }
+            case(ParamLimitCheck(check_definition)) => {
+
+                fault_info->PID = self->param_mon_config_table[PMONID as usize].PID; 
+                fault_info->PID_limit = check_definition.high_limit;
+
+                var type : DataPoolItemType = sys_data_pool_get_item_type(PID as usize);
+
+                match type {
+
+                    case u32_t => {
+                        self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
+                    }
+                    case u8_t => {
+                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut (fault_info->PID_value as u8));
+                    }
+                    case NoValidPID => {
+                    //Error
+                    }
+                }
+
+                if(manage_new_status(PMONID as usize, new_status, &mut (self->param_mon_config_table))){
+
+                    event_triggered = true;
+                    *ev_ID = check_definition.high_limit_evID;
+                }
+
+            }
+            case(ParamDeltaCheck(check_definition)) => {
+
+            }
+            case(Unselected) => {
+                
+            }
+        }
+
+        return event_triggered;
+    }
+
+
+    viewer manage_param_below_lower_limit (&self, PMONID : u16, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16) -> bool {
+
+        var event_triggered : bool = false;
+
+        var new_status : CheckState = CheckState::ParamLimitStatus(CheckLimitsStatus:: MonitorBelowLowLimit);
+
+        match(self->param_mon_config_table[PMONID as usize].definition){
+
+            case(ParamValueCheck(check_definition)) => {
+
+            }
+            case(ParamLimitCheck(check_definition)) => {
+
+                fault_info->PID = self->param_mon_config_table[PMONID as usize].PID; 
+                fault_info->PID_limit = check_definition.low_limit;
+
+                var type : DataPoolItemType = sys_data_pool_get_item_type(PID as usize);
+
+                match type {
+
+                    case u32_t => {
+                        self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
+                    }
+                    case u8_t => {
+                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut (fault_info->PID_value as u8));
+                    }
+                    case NoValidPID => {
+                    //Error
+                    }
+                }
+
+                if(manage_new_status(PMONID as usize, new_status, &mut (self->param_mon_config_table))){
+
+                    event_triggered = true;
+                    *ev_ID = check_definition.low_limit_evID;
+                }
+
+            }
+            case(ParamDeltaCheck(check_definition)) => {
+
+            }
+            case(Unselected) => {
+                
+            }
+        }
+
+        return event_triggered;
+    }
+
+
+
+    procedure do_param_limits_monitoring (&mut self, PMONID : u16, result : &mut Result, event_triggered : &mut bool, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16){ 
+
+       
+        if (PMONID < max_num_pmon_ids && self->param_mon_config_table[PMONID as usize].enabled == true){
+
+            var PID : u16 = self->param_mon_config_table[PMONID as usize].PID;
+
+            match(self->param_mon_config_table[PMONID as usize].definition) {
+
+                case(ParamValueCheck(param_check_defintion))=> {
+                   //error
+                }
+                case(ParamLimitCheck(limit_check_def))=> {
+
+                    self->param_mon_config_table[PMONID as usize].interval_control = self->param_mon_config_table[PMONID as usize].interval_control + 1;
+
+                    if(self->param_mon_config_table[PMONID as usize].interval_control >= self->param_mon_config_table[PMONID as usize].interval){
+
+                        self->param_mon_config_table[PMONID as usize].interval_control = 0;
+
+                        if(self->PID_is_above_upper_limit(PID, &limit_check_def)){
+
+                            if(manage_param_above_upper_limit(PMONID, fault_info, ev_ID)){
+                                *event_triggered = true;
+                            }
+
+                        } else if (self->PID_is_below_lower_limit(PID, &limit_check_def)){
+
+                            if(manage_param_below_lower_limit(PMONID, fault_info, ev_ID)){
+                                *event_triggered = true;
+                            }
+
+                        } else {
+
+                            /*monitor within limits, update status */
+                            var new_status : CheckState = CheckState::ParamLimitStatus(CheckLimitsStatus::MonitorWithinLimits);
+                            var current_status : CheckState = self->param_mon_config_table[PMONID as usize].state;
+                            var item_value : u32 = 0;
+
+                            var type : DataPoolItemType = sys_data_pool_get_item_type(PID as usize);
+
+                            match type {
+
+                                case u32_t => {
+                                    self->system_data_pool_u32.load_index((PID as usize - sdp_first_u32_param_id), &mut item_value);
+                                }
+                                case u8_t => {
+                                    self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut (item_value as u8));
+                                }
+                                case NoValidPID => {
+                                //Error
+                                }
+                            }
+
+                            manage_new_status(PMONID as usize, new_status, &mut (self->param_mon_config_table));
+
+                        }
+                    }
+
+
+                }
+                case(ParamDeltaCheck(delta_check_definition))=> {
+                    //error
+                }
+                case (Unselected) => {
+                    //error
+                }
+            }  
+   
+        }
+        
+        return;
+    }
+
+
+    procedure do_check_value_monitoring (&mut self, PMONID : u16, result : &mut Result, event_triggered : &mut bool, fault_info : &mut ParamFaultValueInfo, ev_ID : &mut u16){
+
+            if (PMONID < max_num_pmon_ids && self->param_mon_config_table[PMONID as usize].enabled == true){
+
+            var PID : u16 = self->param_mon_config_table[PMONID as usize].PID;
+
+            match(self->param_mon_config_table[PMONID as usize].definition) {
+
+                case(ParamValueCheck(param_check_defintion))=> {
+
+                    self->param_mon_config_table[PMONID as usize].interval_control = self->param_mon_config_table[PMONID as usize].interval_control + 1;
+
+                    if(self->param_mon_config_table[PMONID as usize].interval_control >= self->param_mon_config_table[PMONID as usize].interval){
+
+                        self->param_mon_config_table[PMONID as usize].interval_control = 0;
+
+                        if(self->PID_has_expected_masked_value(PID, param_check_defintion)) {
+
+                            /*manage_new_status*/
+                            var new_status : CheckState = CheckState::ParamValueStatus(CheckValueStatus::ExpectedValue);
+                            var item_value : u32 = 0;
+
+                            var type : DataPoolItemType = sys_data_pool_get_item_type(PID as usize);
+
+                            match type {
+
+                                case u32_t => {
+                                    self->system_data_pool_u32.load_index((PID as usize - sdp_first_u32_param_id), &mut item_value);
+                                }
+                                case u8_t => {
+                                    self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut (item_value as u8));
+                                }
+                                case NoValidPID => {
+                                //Error
+                                }
+                            }
+
+                            manage_new_status(PMONID as usize, new_status, &mut (self->param_mon_config_table));
+
+                        } else {
+
+                            if(self->manage_unexpected_value(PMONID, fault_info, ev_ID)){
+                                *event_triggered = true;
+                            }
+
+                        }
+
+
+                    }
+                }
+                case(ParamLimitCheck(limit_check_def))=> {
+                    //error
+                }
+                case(ParamDeltaCheck(delta_check_definition))=> {
+                    //error
+                }
+                case (Unselected) => {
+                    //error
+                }
+            }
+        }
+
+        return; 
     }
 
 

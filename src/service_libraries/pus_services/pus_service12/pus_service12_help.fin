@@ -75,20 +75,20 @@ enum CheckState {
 
 struct ParamMonitoringConfiguration {
     PID : u16;
-    monitor_type : MonitorCheckType;
+    type : MonitorCheckType;
     enabled : bool;
-    monitor_definition : MonitorDefinition;
+    definition : MonitorDefinition;
     repetition: u8;
     repetition_control: u8;
     interval : u8;
     interval_control : u8;
-    transitionY2K : TimeVal;
+    transition_obt : TimeVal;
     temp_state : CheckState;
-    state : CheckState;
+    current_state : CheckState;
 };
 
 
-
+/*
 
 function trigger_event(event_list : &mut EventList, RID: u16, PID: u16, PID_value: u16, limit: u16, res: &mut Result){
 
@@ -116,7 +116,8 @@ function trigger_event(event_list : &mut EventList, RID: u16, PID: u16, PID_valu
     return;
 
 }
-
+*/
+/*
 
 function update_state (param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids], PMONID: usize, new_state : CheckState){
 
@@ -128,8 +129,9 @@ function update_state (param_mon_config_table : &mut [ParamMonitoringConfigurati
     }
 
     return;
-}
+}*/
 
+/*
 function set_unchecked (param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids], valid_PMONID : usize) {
 
     match (param_mon_config_table[valid_PMONID].state) {
@@ -152,7 +154,7 @@ function set_unchecked (param_mon_config_table : &mut [ParamMonitoringConfigurat
 
     return;
 }
-
+*/
 
 function get_check_type (aux : u8) -> MonitorCheckType {
 
@@ -299,4 +301,114 @@ function add_valid_mng_mon_def (PMONID: usize, param_monit_config: &ParamMonitor
     set_unchecked(param_mon_config_table, PMONID);
 
     return;
+}
+
+
+function manage_new_status (PMONID : u16, new_state : CheckState, r_param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids]) -> bool {
+
+    var transition : bool = false;
+
+    match (new_state) {
+
+        case (ParamValueStatus(check_val_state))=>{
+
+            if (r_param_mon_config_table[PMONID]->current_state is CheckState::ParamValueStatus(current_check_val_state)){
+
+                if (current_check_val_state != check_val_state){
+
+                    if (r_param_mon_config_table[PMONID]->temp_state is CheckState::ParamValueStatus(temp_check_val_state)) {
+
+                        if(temp_check_val_state == check_val_state){
+
+                            r_param_mon_config_table[PMONID]->repetition_control = r_param_mon_config_table[PMONID]->repetition_control + 1;
+
+                        } else {
+
+                            r_param_mon_config_table[PMONID]->temp_state = check_val_state;
+                            r_param_mon_config_table[PMONID]->repetition_control = 1;
+                            r_param_mon_config_table[PMONID]->transition_obt = /*get_current_time()*/;
+                        }
+
+                        if( r_param_mon_config_table[PMONID]->repetition_control >= r_param_mon_config_table[PMONID]->repetition){
+
+                            //add monitoring transtion ??
+                            r_param_mon_config_table[PMONID]->repetition_control = 0;
+                            r_param_mon_config_table[PMONID]->state = check_val_state;
+                            transition = true;
+                        }
+
+
+
+                    }
+
+                } else {
+                    
+                    r_param_mon_config_table[PMONID]->temp_state = check_val_state;
+                    r_param_mon_config_table[PMONID]->repetition_control = 0;
+
+                }
+
+            } else {
+                //Error
+                
+            }
+
+        }
+        case (ParamLimitStatus(check_limit_state))=>{
+
+            if (r_param_mon_config_table[PMONID]->current_state is CheckState::ParamLimitStatus(current_limit_val_state)){
+
+                if (current_limit_val_state != check_limit_state){
+
+                    if (r_param_mon_config_table[PMONID]->temp_state is CheckState::ParamLimitStatus(temp_limit_val_state)) {
+
+                        if(temp_limit_val_state == check_limit_state){
+
+                            r_param_mon_config_table[PMONID]->repetition_control = r_param_mon_config_table[PMONID]->repetition_control + 1;
+
+                        } else {
+
+                            r_param_mon_config_table[PMONID]->temp_state = check_limit_state;
+                            r_param_mon_config_table[PMONID]->repetition_control = 1;
+                            r_param_mon_config_table[PMONID]->transition_obt = /*get_current_time()*/;
+                        }
+
+                        if( r_param_mon_config_table[PMONID]->repetition_control >= r_param_mon_config_table[PMONID]->repetition){
+
+                            //add monitoring transtion ??
+                            r_param_mon_config_table[PMONID]->repetition_control = 0;
+                            r_param_mon_config_table[PMONID]->state = check_limit_state;
+                            transition = true;
+                        }
+
+
+
+                    }
+
+                } else {
+                    
+                    r_param_mon_config_table[PMONID]->temp_state = check_limit_state;
+                    r_param_mon_config_table[PMONID]->repetition_control = 0;
+
+                }
+
+            } else {
+                //Error
+                
+            }
+
+        }
+        case (ParamDeltaStatus(check_delta_state))=>{
+
+            //Not defined
+
+        }
+        case (Unselected)=>{
+
+        
+
+        }
+    }
+
+    return transition;
 }
