@@ -12,27 +12,27 @@ interface PUSS5Iface {
     procedure build_event_list_tms(&mut self, event_list : &mut EventList, result : &mut Result);
     procedure exec5_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
     procedure exec5_6TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
-    procedure is_RID_enabled_ext(&mut self, RID: u16, p_enabled: &mut bool);
+    procedure is_Ev_ID_enabled_ext(&mut self, Ev_ID: u16, p_enabled: &mut bool);
 
 };
 
 resource class PUSService5 provides PUSS5Iface {
 
-    RID_enable_config : [u32; 4];
+    Ev_ID_enable_config : [u32; 4];
 
     tm_channel : access TMChannelIface;
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
 
-    viewer is_RID_enabled(&self, RID : u16) -> bool {
+    viewer is_Ev_ID_enabled(&self, Ev_ID : u16) -> bool {
 
         var enabled : bool = false;
-        var index : usize = get_RID_enable_config_index(RID);
-        var offset : u8 = get_RID_enable_config_offset(RID);
+        var index : usize = get_Ev_ID_enable_config_index(Ev_ID);
+        var offset : u8 = get_Ev_ID_enable_config_offset(Ev_ID);
 
         if (index < 4){
 
-            if(((self->RID_enable_config[index] >> offset) & 0x01) != 0){
+            if(((self->Ev_ID_enable_config[index] >> offset) & 0x01) != 0){
                 enabled = true;
             }
         }
@@ -40,9 +40,9 @@ resource class PUSService5 provides PUSS5Iface {
         return enabled;
     }
 
-    procedure is_RID_enabled_ext(&mut self, RID: u16, p_enabled: &mut bool) {
+    procedure is_Ev_ID_enabled_ext(&mut self, Ev_ID: u16, p_enabled: &mut bool) {
 
-        *p_enabled = (self->is_RID_enabled(RID));
+        *p_enabled = (self->is_Ev_ID_enabled(Ev_ID));
 
         return;
     }
@@ -52,13 +52,13 @@ resource class PUSService5 provides PUSS5Iface {
 
         for i : usize in 0 .. max_num_events while (i < event_list->num_events) {
 
-            var event_info : EventInfo = {ev_RID = 0, ev_aux_data = [0; event_aux_data_max_size], ev_aux_data_size = 0};
+            var event_info : EventInfo = {ev_Ev_ID = 0, ev_aux_data = [0; event_aux_data_max_size], ev_aux_data_size = 0};
 
             get_event_info(&(*event_list), i, &mut event_info);
  
-            if(self->is_RID_enabled(event_info.ev_RID)){
+            if(self->is_Ev_ID_enabled(event_info.ev_Ev_ID)){
 
-                var index : usize = get_RID_enable_config_index(event_info.ev_RID);
+                var index : usize = get_Ev_ID_enable_config_index(event_info.ev_Ev_ID);
 
                 if (index < 4){
 
@@ -103,11 +103,11 @@ resource class PUSService5 provides PUSS5Iface {
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
                 var N : u8 = 0;
-                var RID : u16 = 0;
+                var Ev_ID : u16 = 0;
                 *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
-                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut RID);
-                var index: usize = get_RID_enable_config_index(RID);
-                var offset : u8 = get_RID_enable_config_offset(RID);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut Ev_ID);
+                var index: usize = get_Ev_ID_enable_config_index(Ev_ID);
+                var offset : u8 = get_Ev_ID_enable_config_offset(Ev_ID);
 
                 if (result is Result::Error){
 
@@ -127,7 +127,7 @@ resource class PUSService5 provides PUSS5Iface {
 
                             build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
-                            self->RID_enable_config[index] = self->RID_enable_config[index] | (1 << offset);
+                            self->Ev_ID_enable_config[index] = self->Ev_ID_enable_config[index] | (1 << offset);
 
                             var tm_handler2 : Option<box TMHandlerT> = None;
                             self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -148,7 +148,7 @@ resource class PUSService5 provides PUSS5Iface {
 
                         } else {
 
-                            build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), RID, result);
+                            build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), Ev_ID, result);
 
                         }
 
@@ -178,11 +178,11 @@ resource class PUSService5 provides PUSS5Iface {
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
                 var N : u8 = 0;
-                var RID : u16 = 0;
+                var Ev_ID : u16 = 0;
                 *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
-                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut RID);
-                var index: usize = get_RID_enable_config_index(RID);
-                var offset : u8 = get_RID_enable_config_offset(RID);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut Ev_ID);
+                var index: usize = get_Ev_ID_enable_config_index(Ev_ID);
+                var offset : u8 = get_Ev_ID_enable_config_offset(Ev_ID);
 
                 if (result is Result::Error){
 
@@ -202,7 +202,7 @@ resource class PUSService5 provides PUSS5Iface {
 
                             build_tm_1_3(&mut Handler, tm_count, &(*tc_handler), result);
 
-                            self->RID_enable_config[index] = self->RID_enable_config[index] & (0xFFFFFFFE << offset);
+                            self->Ev_ID_enable_config[index] = self->Ev_ID_enable_config[index] & (0xFFFFFFFE << offset);
 
                             var tm_handler2 : Option<box TMHandlerT> = None;
                             self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -223,7 +223,7 @@ resource class PUSService5 provides PUSS5Iface {
 
                         } else {
 
-                            build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), RID, result);
+                            build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), Ev_ID, result);
 
                         }
 
@@ -248,7 +248,7 @@ resource class PUSService5 provides PUSS5Iface {
         append_u16_appdata_field(p_tm_handler, fault_info.PID,result);
         append_u32_appdata_field(p_tm_handler, fault_info.PID_value,result);
         append_u32_appdata_field(p_tm_handler, fault_info.PID_limit,result);
-        var subtype : u8 = get_RID_enable_config_index(ev_ID) as u8;
+        var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
         close_tm(p_tm_handler, 5, subtype, tm_seq_counter, result);
 
         return;
@@ -263,7 +263,7 @@ resource class PUSService5 provides PUSS5Iface {
         append_u32_appdata_field(p_tm_handler, fault_info.PID_value,result);
         append_u32_appdata_field(p_tm_handler, fault_info.PID_mask,result);
         append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value,result);
-        var subtype : u8 = get_RID_enable_config_index(ev_ID) as u8;
+        var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
         close_tm(p_tm_handler, 5, subtype, tm_seq_counter, result);
 
         return;

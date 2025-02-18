@@ -18,6 +18,8 @@ interface PUSS12Iface {
 resource class PUSService12 provides PUSS12Iface {
 
     param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
+    monitoring_transition_counter : u16; 
+    param_mon_transitions_table : [ParamMonitoringTransition; max_num_transitions];
 
     system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
@@ -127,7 +129,7 @@ resource class PUSService12 provides PUSS12Iface {
 
         match(self->param_mon_config_table[PMONID as usize].definition){
 
-            case(ParamValueCheck(check_definition)) => {
+            case ParamValueCheck(check_definition) => {
 
                 fault_info->PID = self->param_mon_config_table[PMONID as usize].PID; 
                 fault_info->PID_expected_value = check_definition.expected_value;
@@ -141,7 +143,7 @@ resource class PUSService12 provides PUSS12Iface {
                         self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
                     }
                     case u8_t => {
-                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut (fault_info->PID_value as u8));
+                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut fault_info->PID_value);
                     }
                     case NoValidPID => {
                     //Error
@@ -155,13 +157,13 @@ resource class PUSService12 provides PUSS12Iface {
                 }
 
             }
-            case(ParamLimitCheck(check_definition)) => {
+            case ParamLimitCheck(check_definition) => {
 
             }
-            case(ParamDeltaCheck(check_definition)) => {
+            case ParamDeltaCheck(check_definition) => {
 
             }
-            case(Unselected) => {
+            case Unselected => {
                 
             }
         }
@@ -178,10 +180,10 @@ resource class PUSService12 provides PUSS12Iface {
 
         match(self->param_mon_config_table[PMONID as usize].definition){
 
-            case(ParamValueCheck(check_definition)) => {
+            case ParamValueCheck(check_definition) => {
 
             }
-            case(ParamLimitCheck(check_definition)) => {
+            case ParamLimitCheck(check_definition) => {
 
                 fault_info->PID = self->param_mon_config_table[PMONID as usize].PID; 
                 fault_info->PID_limit = check_definition.high_limit;
@@ -194,7 +196,8 @@ resource class PUSService12 provides PUSS12Iface {
                         self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
                     }
                     case u8_t => {
-                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut (fault_info->PID_value as u8));
+                        //self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut (fault_info->PID_value as u8));
+                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut fault_info->PID_value);
                     }
                     case NoValidPID => {
                     //Error
@@ -208,10 +211,10 @@ resource class PUSService12 provides PUSS12Iface {
                 }
 
             }
-            case(ParamDeltaCheck(check_definition)) => {
+            case ParamDeltaCheck(check_definition) => {
 
             }
-            case(Unselected) => {
+            case Unselected => {
                 
             }
         }
@@ -228,10 +231,10 @@ resource class PUSService12 provides PUSS12Iface {
 
         match(self->param_mon_config_table[PMONID as usize].definition){
 
-            case(ParamValueCheck(check_definition)) => {
+            case ParamValueCheck(check_definition) => {
 
             }
-            case(ParamLimitCheck(check_definition)) => {
+            case ParamLimitCheck(check_definition) => {
 
                 fault_info->PID = self->param_mon_config_table[PMONID as usize].PID; 
                 fault_info->PID_limit = check_definition.low_limit;
@@ -244,7 +247,8 @@ resource class PUSService12 provides PUSS12Iface {
                         self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
                     }
                     case u8_t => {
-                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut (fault_info->PID_value as u8));
+                        //self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut (fault_info->PID_value as u8));
+                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut fault_info->PID_value);
                     }
                     case NoValidPID => {
                     //Error
@@ -258,10 +262,10 @@ resource class PUSService12 provides PUSS12Iface {
                 }
 
             }
-            case(ParamDeltaCheck(check_definition)) => {
+            case ParamDeltaCheck(check_definition) => {
 
             }
-            case(Unselected) => {
+            case Unselected => {
                 
             }
         }
@@ -280,10 +284,10 @@ resource class PUSService12 provides PUSS12Iface {
 
             match(self->param_mon_config_table[PMONID as usize].definition) {
 
-                case(ParamValueCheck(param_check_defintion))=> {
+                case ParamValueCheck(param_check_defintion)=> {
                    //error
                 }
-                case(ParamLimitCheck(limit_check_def))=> {
+                case ParamLimitCheck(limit_check_def)=> {
 
                     self->param_mon_config_table[PMONID as usize].interval_control = self->param_mon_config_table[PMONID as usize].interval_control + 1;
 
@@ -318,7 +322,8 @@ resource class PUSService12 provides PUSS12Iface {
                                     self->system_data_pool_u32.load_index((PID as usize - sdp_first_u32_param_id), &mut item_value);
                                 }
                                 case u8_t => {
-                                    self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut (item_value as u8));
+                                    //self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut (item_value as u8));
+                                    self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut item_value);
                                 }
                                 case NoValidPID => {
                                 //Error
@@ -332,10 +337,10 @@ resource class PUSService12 provides PUSS12Iface {
 
 
                 }
-                case(ParamDeltaCheck(delta_check_definition))=> {
+                case ParamDeltaCheck(delta_check_definition) => {
                     //error
                 }
-                case (Unselected) => {
+                case Unselected => {
                     //error
                 }
             }  
@@ -354,7 +359,7 @@ resource class PUSService12 provides PUSS12Iface {
 
             match(self->param_mon_config_table[PMONID as usize].definition) {
 
-                case(ParamValueCheck(param_check_defintion))=> {
+                case ParamValueCheck(param_check_defintion)=> {
 
                     self->param_mon_config_table[PMONID as usize].interval_control = self->param_mon_config_table[PMONID as usize].interval_control + 1;
 
@@ -376,7 +381,8 @@ resource class PUSService12 provides PUSS12Iface {
                                     self->system_data_pool_u32.load_index((PID as usize - sdp_first_u32_param_id), &mut item_value);
                                 }
                                 case u8_t => {
-                                    self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut (item_value as u8));
+                                    //self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut (item_value as u8));
+                                    self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut item_value);
                                 }
                                 case NoValidPID => {
                                 //Error
@@ -396,13 +402,13 @@ resource class PUSService12 provides PUSS12Iface {
 
                     }
                 }
-                case(ParamLimitCheck(limit_check_def))=> {
+                case ParamLimitCheck(limit_check_def) => {
                     //error
                 }
-                case(ParamDeltaCheck(delta_check_definition))=> {
+                case ParamDeltaCheck(delta_check_definition) => {
                     //error
                 }
-                case (Unselected) => {
+                case Unselected => {
                     //error
                 }
             }

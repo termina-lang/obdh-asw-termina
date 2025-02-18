@@ -37,7 +37,7 @@ interface PUSS19Iface {
 resource class PUSService19 provides PUSS19Iface {
 
     event_action_config : [EventActionConfig; max_event_action_definitions];
-    event_action_packets : [TCDescriptorT; max_event_action_definitions];
+    event_action_packets : [TCHandlerT; max_event_action_definitions];
    
     pending_action_queue_1I : [TCDescriptorT; event_action_queue_dimension];
     pending_action_queue_2LS : [TCDescriptorT; event_action_queue_dimension];
@@ -52,6 +52,49 @@ resource class PUSService19 provides PUSS19Iface {
     tm_channel: access TMChannelIface;   
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
+
+
+//I obviosuly know the following functions can't be viewers
+    viewer disable_event_action (&self, evID: u16, ev_action_ID : u16) -> Result {
+
+        var result : Result = Result::Error;
+        if(evID == self->event_action_config[ev_action_ID].event_ID){
+
+            self->event_action_config[ev_action_ID].enabled = false;
+            result = Result::Ok;
+
+        } 
+
+        return result;
+    }
+
+
+    viewer enable_event_action (&self, evID: u16, ev_action_ID : u16) -> Result {
+
+        var result : Result = Result::Error;
+        if(evID == self->event_action_config[ev_action_ID].event_ID){
+
+            self->event_action_config[ev_action_ID].enabled = true;
+            result = Result::Ok;
+
+        } 
+
+        return result;
+    }
+
+    viewer delete_event_action (&self, evID: u16, ev_action_ID : u16) -> Result {
+
+        var result : Result = Result::Error;
+        if(evID == self->event_action_config[ev_action_ID].event_ID){
+
+            self->event_action_config[ev_action_ID].event_ID = 0;
+            self->event_action_config[ev_action_ID].enabled = false;
+            result = Result::Ok;
+
+        } 
+
+        return result;
+    }
 
 
     viewer get_event_action_config (&self, evID: u16, index: &mut usize, enabled: &mut bool) -> bool {
@@ -85,6 +128,25 @@ resource class PUSService19 provides PUSS19Iface {
         return found;
     }
 
+
+    viewer is_ev_action_defined (&self, evID: u16, ev_action_ID : &mut u16, enabled : &mut u16) -> bool {
+
+        var found: bool = false;
+
+        for i : usize in 0 .. max_event_action_definitions while found == false {
+
+            if (self->event_action_config[i].event_ID == evID) {
+
+                *ev_action_ID = i;
+                *enabled = self->event_action_config[i].enabled;
+                found = true;
+            }
+        }
+        return found;
+
+    }
+
+
     //TC[19,1] allows the addition of event-action definitions
     procedure exec19_1TC (&mut self, tc_handler: &mut TCHandlerT , result: &mut Result){
 
@@ -93,155 +155,224 @@ resource class PUSService19 provides PUSS19Iface {
 
         match tm_handler {
 
-            case Some(telemetry) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                var index : usize = 0;
-                var found : bool = false;
-                var enabled : bool = false;
-                var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-                var event_type : RIDType = get_RID_type(evID);
+                var N : u8 = 0;
+                var EvID : u16 = 0;
 
-                if(event_type is RIDType::RIDNotValid){
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut EvID);
 
-                    build_tm_1_8_tc_5_X_RIDunknown(&mut telemetry, tm_count, evID, tc_descriptor);
-                                
-                } else {
-                    /*Here a function is used as a value. I think this souldn't work as Termina is not a higher-order programming language
-                    The transpilation is right*/
-                    if (self->get_event_action_config(evID, &mut index, &mut enabled)){
+                if (*result is Result::Error){
 
-                        found = true;
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+                } 
+                else {
 
-                    } else {
-                            
-                        if (self->get_free_event_action_index(&mut index)){
+                    if (N != 1) {
 
-                            found = true;
-                            enabled = false;
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
+                    }
+                    else {
 
-                        } else {
+                        if (is_Ev_ID_valid(EvID)) {
 
-                            found = false;
+                            var event_action_ID : u16 = 0;
+                            var is_enabled : bool = false;
+                            var is_defined : bool = false;
 
-                        }
-                    } 
+                            is_defined = self->is_ev_action_defined(EvID, &mut event_action_ID, &mut is_enabled);
 
-                    if (found){
+                            if (is_defined){
 
-                        if (enabled){ //Event-action can't be redefined if it is enabled
+                                if (is_enabled){
 
-                            build_tm_1_8_tc_19_X_event_action_enabled(&mut descriptor, tm_count, evID, tc_descriptor);
-
-                        } else {
-
-                            var action_packet_length : usize = get_packet_length(&(tc_descriptor->tc_bytes)) as usize - 7;
-                            //TO CHECK 
-                            
-                            for i : usize in 0 .. event_action_max_bytes while i < action_packet_length {
-
-                                self->event_action_packets[index].tc_bytes[i] = tc_descriptor->tc_bytes[i + 12];
-
-                            }
-
-                        self->event_action_packets[index].tc_num_bytes = action_packet_length;
-                            
-                            var tc_status : TCStatus = {
-                                acceptation_status = TCAcceptationStatus::Undefined,
-                                execution_status = TCExecutionCtrl::Undefined,
-                                error_code =  TCErrorType::Undefined
-                            };
-
-                            tc_status = try_tc_acceptation(&(self->event_action_packets)[index]); //This will generate an error. I have to use TCDescriptorT for events
-
-                            if (tc_status.acceptation_status is TCAcceptationStatus::Accepted){
-                            
-                                self->event_action_config[index].event_ID = evID;
-                                self->event_action_config[index].enabled = false;
-                                
-                                build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
-                            
+                                    build_tm_1_4_event_action_enabled(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+                                }
 
                             } else {
 
-                                build_tm_1_8_tc_19_1_event_action_rejected(&mut descriptor, tm_count, evID, tc_descriptor);
+                                if(self->get_free_event_action_index(&mut ev_action_ID)){
+
+                                    var action_tc_packet : TCDescriptorT = {
+                                        tc_bytes = [0; event_action_max_bytes],
+                                        tc_num_bytes = 0
+                                    };
+                                    action_tc_packet.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes - 2 - tc_handler->app_data_index;
+                                    
+                                    for i : usize in 0 .. event_action_max_bytes while i < action_packet_length {
+
+                                        action_tc_packet.tc_bytes[i] = tc_descriptor->tc_bytes[i + 12];
+
+                                    }
+
+                                   var action_tc_handler : TCHandlerT = tc_handler_init();
+
+                                   *result = tc_handler_build_from_descriptor (&mut action_tc_handler, &action_tc_packet);
+                                
+                                    var tc_status : TCStatus = {
+                                        acceptation_status = TCAcceptationStatus::Undefined,
+                                        execution_status = TCExecutionCtrl::Undefined,
+                                        error_code =  TCErrorType::Undefined
+                                    };
+
+                                    tc_status = try_tc_acceptation(&action_tc_packet); 
+
+                                    if (tc_status.acceptation_status is TCAcceptationStatus::Accepted){
+
+                                        build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+                                    
+                                        self->event_action_config[index].event_ID = evID;
+                                        self->event_action_config[index].enabled = false;
+
+                                        *result = self->disable_event_action(EvID, event_action_ID);
+
+                                        var tm_handler2 : Option<box TMHandlerT> = None;
+                                        self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                                        match tm_handler2 {
+
+                                            case Some(b_tm_handler2) => {
+
+                                                var tm_count2 : u16 = 0 : u16;
+                                                self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                                build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                                self->tm_channel.send_tm(b_tm_handler2, result);
+                                            }
+                                            case None => {
+                                                *result = Result::Error;
+                                            }
+                                        }
+
+                                    } else {
+
+                                        build_tm_1_4_ev_action_rejected (&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+                                        
+                                    }
+
+
+                                }
+                                else {
+
+                                    build_tm_1_8_tc_19_1_max_event_actions(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+                                }
 
                             }
-                        }         
+                            
 
-                    } else {
+                        } else {
 
-                        //Not found means the maximun of event-action definitions has been reached
-                        build_tm_1_8_tc_19_1_max_event_actions(&mut descriptor, tm_count, evID, tc_descriptor);
+                            build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+
+                        }
 
                     }
+
+                    self->tm_channel.send_tm(b_tm_handler, result);
                 }
-                self->tm_channel.send_tm(descriptor, result);
+
+
             }
             case None => {
-                //Error
                 *result = Result::Error;
             }
         }
 
-    return; 
+        return;
     }
 
 
-    //TC[19,2] allows the deletion of event-action definitions
-    procedure exec19_2TC (&mut self, tc_handler: &mut TCHandlerT , result: &mut Result){
+//TC[19,2] allows the deletion of event-action definitions
+    procedure exec19_2TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result){
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
 
         match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                var index : usize = 0;
-                var enabled : bool = false;
-                var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-                var event_type : RIDType = get_RID_type(evID);
+                var N : u8 = 0;
+                var EvID : u16 = 0;
 
-                if (event_type is RIDType::RIDNotValid){
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut EvID);
 
-                    build_tm_1_8_tc_5_X_RIDunknown(&mut descriptor, tm_count, evID, tc_descriptor);
+                if (*result is Result::Error){
 
-                } else {
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+                } 
+                else {
 
-                    if (self->get_event_action_config(evID, &mut index, &mut enabled)){
+                    if (N != 1) {
 
-                        if (enabled){
-                                
-                                build_tm_1_8_tc_19_X_event_action_enabled(&mut descriptor, tm_count, evID, tc_descriptor);
-                
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
+                    }
+                    else {
+
+                        if (is_Ev_ID_valid(EvID)) {
+
+                            var event_action_ID : u16 = 0;
+                            var is_enabled : bool = false;
+                            var is_defined : bool = false;
+
+                            is_defined = self->is_ev_action_defined(EvID, &mut event_action_ID, &mut is_enabled);
+
+                            if (is_defined){
+
+                                if (is_enabled){
+
+                                    build_tm_1_4_event_action_enabled(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+
+                                } else {
+
+                                    build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+
+                                    *result = self->disable_event_action(EvID, event_action_ID);
+
+                                    var tm_handler2 : Option<box TMHandlerT> = None;
+                                    self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                                    match tm_handler2 {
+
+                                        case Some(b_tm_handler2) => {
+
+                                            var tm_count2 : u16 = 0 : u16;
+                                            self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                            build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                            self->tm_channel.send_tm(b_tm_handler2, result);
+                                        }
+                                        case None => {
+                                            *result = Result::Error;
+                                        }
+                                    }
+
+                                }
+
                             } else {
-                
-                                self->event_action_config[index].event_ID = 0;
-                                self->event_action_config[index].enabled = false;
-                
-                                build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+
+                                built_tm_1_4_ev_action_not_defined(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+                            }
+                        } else {
+                            
+                            build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
                         }
-
-                    } else {
-
-                        build_tm_1_8_tc_19_X_event_action_not_defined(&mut descriptor, tm_count, evID, tc_descriptor);
-
                     }
                 }
-                self->tm_channel.send_tm(descriptor, result);
+
+                self->tm_channel.send_tm(b_tm_handler, result);
             }
             case None => {
                 *result = Result::Error;
             }
-        }
-
-    return;              
+        } 
+        return;
     }
 
 
@@ -253,85 +384,160 @@ resource class PUSService19 provides PUSS19Iface {
 
         match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                var index : usize = 0;
-                var enabled : bool = false;
-                var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-                var event_type : RIDType = get_RID_type(evID);
+                var N : u8 = 0;
+                var EvID : u16 = 0;
 
-                if (event_type is RIDType::RIDNotValid){
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut EvID);
 
-                    build_tm_1_8_tc_5_X_RIDunknown(&mut descriptor, tm_count, evID, tc_descriptor);
+                if (*result is Result::Error){
 
-                } else {
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+                } 
+                else {
 
-                    if (self->get_event_action_config(evID, &mut index, &mut enabled)){
+                    if (N != 1) {
 
-                        self->event_action_config[index].enabled = true;
-                        build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
+                    }
+                    else {
 
-                    } else {
+                        if (is_Ev_ID_valid(EvID)) {
 
-                        build_tm_1_8_tc_19_X_event_action_not_defined(&mut descriptor, tm_count, evID, tc_descriptor);
+                            var event_action_ID : u16 = 0;
+                            var is_enabled : bool = false;
+                            var is_defined : bool = false;
 
+                            is_defined = self->is_ev_action_defined(EvID, &mut event_action_ID, &mut is_enabled);
+
+                            if (is_defined){
+
+                                    build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+
+                                    *result = self->enable_event_action(EvID, event_action_ID);
+
+                                    var tm_handler2 : Option<box TMHandlerT> = None;
+                                    self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                                    match tm_handler2 {
+
+                                        case Some(b_tm_handler2) => {
+
+                                            var tm_count2 : u16 = 0 : u16;
+                                            self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                            build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                            self->tm_channel.send_tm(b_tm_handler2, result);
+                                        }
+                                        case None => {
+                                            *result = Result::Error;
+                                        }
+                                    }
+
+                            } else {
+
+                                built_tm_1_4_ev_action_not_defined(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+                            }
+                        } else {
+                            
+                            build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+                        }
                     }
                 }
-                self->tm_channel.send_tm(descriptor, result);
+                self->tm_channel.send_tm(b_tm_handler, result);
             }
             case None => {
                 *result = Result::Error;
             }
         }
-        return;
+
+        return; 
     }
 
-
     //TC[19,5] allows disabling event-action definitions
-    procedure exec19_5TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result){
+    procedure exec19_5TC (&mut self, tc_handler: &mut TCHandlerT , result: &mut Result){
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
 
         match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                var index : usize = 0;
-                var enabled : bool = false;
-                var evID : u16 = deserialize_uint16(&(tc_descriptor->tc_bytes[10 : usize .. 12 : usize]));
-                var event_type : RIDType = get_RID_type(evID);
+                var N : u8 = 0;
+                var EvID : u16 = 0;
 
-                if (event_type is RIDType::RIDNotValid){
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut EvID);
 
-                    build_tm_1_8_tc_5_X_RIDunknown(&mut descriptor, tm_count, evID, tc_descriptor);
+                if (*result is Result::Error){
 
-                } else {
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+                } 
+                else {
 
-                    if (self->get_event_action_config(evID, &mut index, &mut enabled)){
+                    if (N != 1) {
 
-                        self->event_action_config[index].enabled = false;
-                        build_tm_1_7(&mut descriptor, tm_count, tc_descriptor);
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
+                    }
+                    else {
 
-                    } else {
+                        if (is_Ev_ID_valid(EvID)) {
 
-                        build_tm_1_8_tc_19_X_event_action_not_defined(&mut descriptor, tm_count, evID, tc_descriptor);
+                            var event_action_ID : u16 = 0;
+                            var is_enabled : bool = false;
+                            var is_defined : bool = false;
 
+                            is_defined = self->is_ev_action_defined(EvID, &mut event_action_ID, &mut is_enabled);
+
+                            if (is_defined){
+
+                                    build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+
+                                    *result = self->disable_event_action(EvID, event_action_ID);
+
+                                    var tm_handler2 : Option<box TMHandlerT> = None;
+                                    self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                                    match tm_handler2 {
+
+                                        case Some(b_tm_handler2) => {
+
+                                            var tm_count2 : u16 = 0 : u16;
+                                            self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                            build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                            self->tm_channel.send_tm(b_tm_handler2, result);
+                                        }
+                                        case None => {
+                                            *result = Result::Error;
+                                        }
+                                    }
+
+                            } else {
+
+                                built_tm_1_4_ev_action_not_defined(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+                            }
+                        } else {
+                            
+                            build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), EvID, result);
+                        }
                     }
                 }
-                self->tm_channel.send_tm(descriptor, result);
+                self->tm_channel.send_tm(b_tm_handler, result);
             }
             case None => {
                 *result = Result::Error;
             }
         }
-        return;
+
+        return; 
     }
 
     
