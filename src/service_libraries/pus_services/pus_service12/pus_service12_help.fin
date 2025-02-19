@@ -204,38 +204,38 @@ function get_PMON_limit_check_definition (tc_handler : &mut TCHandlerT, PID : u1
 
     var res : Result = Result::Ok;
 
-    var type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+    var type : DataPoolItemType = sys_data_pool_get_item_type(PID as usize);
 
     match type {
 
         case u8_t => {
 
             //get low limit
-            res = tc_handler_get_u8_appdata_field(tc_handler, &mut param_limit_check_definition.low_limit);
+            res = tc_handler_get_u8_appdata_field(tc_handler, &mut (param_limit_check_definition->low_limit));
 
             //get low limit evID
-            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition.low_limit_evID);
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut (param_limit_check_definition->low_limit_evID));
 
             //get high limit
-            res = tc_handler_get_u8_appdata_field(tc_handler, &mut param_limit_check_definition.high_limit);
+            res = tc_handler_get_u8_appdata_field(tc_handler, &mut (param_limit_check_definition->high_limit));
 
             //get high limit evID
-            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition.high_limit_evID);
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut (param_limit_check_definition->high_limit_evID));
 
         }
         case u32_t => {
 
             //get low limit
-            res = tc_handler_get_u32_appdata_field(tc_handler, &mut param_limit_check_definition.low_limit);
+            res = tc_handler_get_u32_appdata_field(tc_handler, &mut param_limit_check_definition->low_limit);
 
             //get low limit evID
-            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition.low_limit_evID);
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition->low_limit_evID);
 
             //get high limit
-            res = tc_handler_get_32_appdata_field(tc_handler, &mut param_limit_check_definition.high_limit);
+            res = tc_handler_get_32_appdata_field(tc_handler, &mut param_limit_check_definition->high_limit);
 
             //get high limit evID
-            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition.high_limit_evID);
+            res = tc_handler_get_u16_appdata_field(tc_handler, &mut param_limit_check_definition->high_limit_evID);
 
         }
         case NoValidPID => {

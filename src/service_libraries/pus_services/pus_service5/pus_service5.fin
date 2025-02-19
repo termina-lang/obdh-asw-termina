@@ -9,10 +9,15 @@ import service_libraries.pus_services.pus_service5.pus_service5_help;
 
 interface PUSS5Iface {
 
-    procedure build_event_list_tms(&mut self, event_list : &mut EventList, result : &mut Result);
+    //procedure build_event_list_tms(&mut self, event_list : &mut EventList, result : &mut Result);
     procedure exec5_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
     procedure exec5_6TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
-    procedure is_Ev_ID_enabled_ext(&mut self, Ev_ID: u16, p_enabled: &mut bool);
+    procedure is_Ev_ID_enabled_ext(&mut self, Ev_ID: u16, p_enabled: &mut bool); 
+    procedure build_tm_5_x_param_out_of_limit(&mut self, p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16,
+     fault_info : ParamOutOfLimitInfo, ev_ID : u16, result : &mut Result);
+    procedure build_tm_5_x_param_check_value_fail(&mut self, p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16,
+     fault_info : ParamFaultValueInfo, ev_ID : u16, result : &mut Result);
+
 
 };
 
@@ -109,7 +114,7 @@ resource class PUSService5 provides PUSS5Iface {
                 var index: usize = get_Ev_ID_enable_config_index(Ev_ID);
                 var offset : u8 = get_Ev_ID_enable_config_offset(Ev_ID);
 
-                if (result is Result::Error){
+                if (*result is Result::Error){
 
                     build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                 } 
@@ -184,7 +189,7 @@ resource class PUSService5 provides PUSS5Iface {
                 var index: usize = get_Ev_ID_enable_config_index(Ev_ID);
                 var offset : u8 = get_Ev_ID_enable_config_offset(Ev_ID);
 
-                if (result is Result::Error){
+                if (*result is Result::Error){
 
                     build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
                 } 
@@ -200,7 +205,7 @@ resource class PUSService5 provides PUSS5Iface {
 
                         if(is_valid_EvID) {
 
-                            build_tm_1_3(&mut Handler, tm_count, &(*tc_handler), result);
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
                             self->Ev_ID_enable_config[index] = self->Ev_ID_enable_config[index] & (0xFFFFFFFE << offset);
 
@@ -255,7 +260,7 @@ resource class PUSService5 provides PUSS5Iface {
     }
 
 
-    procedure build_tm_5_x_param_check_value_fail(&mut self, p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamOutOfLimitInfo, ev_ID : u16, result : &mut Result){
+    procedure build_tm_5_x_param_check_value_fail(&mut self, p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamFaultValueInfo, ev_ID : u16, result : &mut Result){
 
         startup_tm(p_tm_handler);
         append_u16_appdata_field(p_tm_handler, ev_ID,result);
