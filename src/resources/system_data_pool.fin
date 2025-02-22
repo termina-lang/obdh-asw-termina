@@ -14,11 +14,11 @@ enum DataPoolItemType {
 };
 
 
-function sys_data_pool_get_item_type (PID : usize) -> DataPoolItemType {
+function sys_data_pool_get_item_type (PID : u16) -> DataPoolItemType {
 
     var sdp_type : DataPoolItemType = DataPoolItemType::NoValidPID;
 
-    if PID < sdp_last_u32_param_id {
+    if PID as usize < sdp_last_u32_param_id {
 
         sdp_type = DataPoolItemType::u32_t;
 
@@ -27,7 +27,7 @@ function sys_data_pool_get_item_type (PID : usize) -> DataPoolItemType {
         sdp_type = DataPoolItemType::u8_t;
     }
   
-    if (PID >= sdp_last_u8_param_id){
+    if (PID as usize >= sdp_last_u8_param_id){
         
         sdp_type = DataPoolItemType::NoValidPID;
     }

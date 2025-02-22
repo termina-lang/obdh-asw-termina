@@ -228,7 +228,7 @@ resource class PUSService19 provides PUSS19Iface {
                                         self->event_action_config[index].event_ID = evID;
                                         self->event_action_config[index].enabled = false;
 
-                                        *result = self->disable_event_action(EvID, event_action_ID);
+                                        //*result = self->disable_event_action(EvID, event_action_ID);
 
                                         var tm_handler2 : Option<box TMHandlerT> = None;
                                         self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -542,7 +542,7 @@ resource class PUSService19 provides PUSS19Iface {
 
     
 
-
+/*
     procedure manage_event_actions(&mut self, event_list: &mut EventList){
 
         for i : usize in 0 .. max_num_events while (i < event_list->num_events){
@@ -615,6 +615,79 @@ resource class PUSService19 provides PUSS19Iface {
         
 
         clear_ev_list(event_list);
+
+        return;
+    }*/
+
+     procedure manage_event_action(&mut self){
+
+                
+            var event_info : EventInfo = {ev_RID = 0, ev_aux_data = [0; event_aux_data_max_size], ev_aux_data_size = 0};
+            get_event_info(&(*event_list), i, &mut event_info);
+
+            var RIDenabled : bool = false;
+            self->pus_service_5.is_RID_enabled_ext(event_info.ev_RID, &mut RIDenabled);
+        
+            if(RIDenabled){
+
+                var index : usize = 0;
+                var enabled : bool = false;
+
+                if (self->get_event_action_config(event_info.ev_RID, &mut index, &mut enabled)){
+
+                    if(enabled){
+                        //new pending event action
+                
+                        var RID_type : RIDType = get_RID_type(event_info.ev_RID);
+                        var tail_index : usize = 0;
+
+                        
+                        match RID_type {
+                            case Informative => {
+                                
+                                tail_index = (self->pending_action_head[0] + self->pending_action_number[0])%event_action_queue_dimension;
+                                self->pending_action_queue_1I[tail_index] = self->event_action_packets[index];
+                                self->pending_action_number[0] = self->pending_action_number[0] + 1;
+                            
+                            }
+                            case LowSeverityAnomaly => {
+
+                                tail_index = (self->pending_action_head[1] + self->pending_action_number[1])%event_action_queue_dimension;
+                                self->pending_action_queue_2LS[tail_index] = self->event_action_packets[index];
+                                self->pending_action_number[1] = self->pending_action_number[1] + 1;
+                                
+                            }
+                            case MediumSeverityAnomaly => {
+
+                                tail_index = (self->pending_action_head[2] + self->pending_action_number[2])%event_action_queue_dimension;
+                                self->pending_action_queue_3MS[tail_index] = self->event_action_packets[index];
+                                self->pending_action_number[2] = self->pending_action_number[2] +1;
+                                
+                            }
+                            case HighSeverityAnomaly => {
+
+                                tail_index = (self->pending_action_head[3] + self->pending_action_number[3])%event_action_queue_dimension;
+                                self->pending_action_queue_4HS[tail_index] = self->event_action_packets[index];
+                                self->pending_action_number[3] = self->pending_action_number[3] +1;
+                            
+                            }
+                            case RIDNotValid => {
+
+                                //error
+                                
+                            }
+                        }
+                        
+                    } else {
+                        
+                    }
+                }   
+              
+                
+            
+        
+    }
+        
 
         return;
     }

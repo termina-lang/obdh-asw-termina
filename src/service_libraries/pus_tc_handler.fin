@@ -85,3 +85,20 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
     }
 
 }
+
+function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u32) -> Result {
+
+	var res : Result = Result::Ok;
+
+    if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 4)){
+
+        *data = deserialize_uint32(&tc_handler->tc_descriptor.tc_bytes[tc_handler->app_data_index..tc_handler->app_data_index + 4]);
+        tc_handler->app_data_index = tc_handler->app_data_index + 4;
+
+    } else {
+
+        res = Result::Error;
+
+    }
+
+}

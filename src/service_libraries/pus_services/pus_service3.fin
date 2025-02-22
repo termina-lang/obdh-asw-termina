@@ -356,22 +356,22 @@ resource class PUSService3 provides PUSS3Iface {
         startup_tm(p_tm_handler);
         append_u16_appdata_field(p_tm_handler, self->hk_config_table[index].SID, result);
 
-        var PID : usize = 0;
+        var PID : u16 = 0;
         var u32_SDP_value : u32 = 0;
         var u8_SDP_value : u8 = 0;
 
         for j : usize in 0 .. max_params_per_SID while (j < (self->hk_config_table[index].num_params as usize)) {
 
-            PID = self->hk_config_table[index].params_def[j] as usize;
+            PID = self->hk_config_table[index].params_def[j];
             var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
 
             match item_type {
                 case u8_t => {
-                    self->system_data_pool_u8.load_index(PID, &mut u8_SDP_value);
+                    self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
                     append_u8_appdata_field(p_tm_handler, u8_SDP_value, result);
                 }
                 case u32_t => {
-                    self->system_data_pool_u32.load_index(PID, &mut u32_SDP_value);
+                    self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
                     append_u32_appdata_field(p_tm_handler, u32_SDP_value, result);
                 }
                 case NoValidPID => {
