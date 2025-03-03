@@ -16,7 +16,7 @@ function build_tm_17_2(tm_descriptor : &mut TMDescriptorT,
 										{version = 0 : u8,
 	 									type = 0 : u8,
 	 									subtype = 0 : u8,
-	 									destinationID = 0 : u8};
+	 									destinationID = 0 : u16};
 
 	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C);
 

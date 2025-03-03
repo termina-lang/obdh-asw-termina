@@ -67,6 +67,8 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &
 
     }
 
+    return res;
+
 }
 
 function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> Result {
@@ -83,6 +85,8 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
         res = Result::Error;
 
     }
+    
+    return res;
 
 }
 
@@ -100,5 +104,7 @@ function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : 
         res = Result::Error;
 
     }
+
+    return res;
 
 }
