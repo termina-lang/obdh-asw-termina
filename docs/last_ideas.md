@@ -2,7 +2,7 @@
 
 ## Cambio en el paradigma de programación - PS12
 
-<img src="images/diagrama.png" alt="Descripción de la imagen" width="300"/>
+<img src="images/diagrama.png" alt="Diagrama de estados - PlantUML" width="1000"/>
 
 
 ```
