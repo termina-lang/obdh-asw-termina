@@ -2,7 +2,7 @@
 
 ## Cambio en el paradigma de programación - PS12
 
-![Texto alternativo](images/do_monitoring_diagram.jpg)
+
 
 ```
 procedure do_monitoring (&mut self, PMONID: u16, … ) {
