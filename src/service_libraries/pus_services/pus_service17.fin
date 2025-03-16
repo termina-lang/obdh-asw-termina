@@ -5,43 +5,12 @@ PUS SERVICE 17 : TEST
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.tc_ccsds_pus_format;
 
-function build_tm_17_2(tm_descriptor : &mut TMDescriptorT,
-					tm_seq_counter : u16) {
 
-	var tm_packet_header : CCSDSPUSTMPacketHeaderT =
-	                                     {packet_id = 0 : u16,
-	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16};
-	var df_header : CCSDSPUSTMDFHeaderT =
-										{version = 0 : u8,
-	 									type = 0 : u8,
-	 									subtype = 0 : u8,
-	 									destinationID = 0 : u16};
-
-	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C);
-
-	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3, tm_seq_counter);
-	
-
-	tm_packet_header.packet_length = 3;
-
-	df_header.version = ccsds_pus_tm_build_df_header_version(0x1);
-	df_header.type = 17;
-	df_header.subtype = 2;
-	df_header.destinationID = 0x78;
-
-	ccsds_pus_tm_set_fields(&mut tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
-			
-	// Calculate p_tm_descriptor->tm_num_bytes
-	tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
-
-	return;
-}
-
-function build_tm_17_2(tm_handler : &mut TMHandlerT,
+function build_tm_17_2(p_tm_handler : &mut TMHandlerT,
 					tm_seq_counter : u16, result : &mut Result) {
 
-	close_tm(&mut tm_handler, 17, 2, result);
+    startup_tm(p_tm_handler);
+	close_tm(p_tm_handler, 17, 2, tm_seq_counter, result);
 	return;
 }
 

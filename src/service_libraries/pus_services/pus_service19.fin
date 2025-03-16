@@ -24,10 +24,10 @@ struct EventActionConfig {
 
 interface PUSS19Iface {
 
-    procedure exec19_1TC (&mut self, tc_descriptor: &TCDescriptorT , result: &mut Result);
-    procedure exec19_2TC (&mut self, tc_descriptor: &TCDescriptorT , result: &mut Result);
-    procedure exec19_4TC (&mut self, tc_descriptor: &TCDescriptorT , result: &mut Result);
-    procedure exec19_5TC (&mut self, tc_descriptor: &TCDescriptorT , result: &mut Result);
+     procedure exec19_1TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
+    procedure exec19_2TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
+    procedure exec19_4TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
+    procedure exec19_5TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
     procedure manage_event_actions(&mut self, event_list: &mut EventList);
     procedure get_pending_action_number(&mut self, paction_num : &mut[usize;4]);
     procedure extract_action (&mut self, index : usize, action_packet : &mut TCDescriptorT);
