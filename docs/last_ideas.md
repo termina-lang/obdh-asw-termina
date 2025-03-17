@@ -5,22 +5,40 @@
 <img src="images/diagrama.png" alt="Diagrama de estados - PlantUML" width="1000"/>
 
 
+
+
 ```
 procedure do_monitoring (&mut self, PMONID: u16, … ) {
-    for i = 0 in 5 while status !Exit{
+    for i = 0 in 6 while status !Exit{
         match status {
             case Init=> {
-                self->init_do_monitoring(); //method
+                self->init_do_monitoring(); //method: store the variables needed for the monitoring --> PMONID, fault_info, EvID
             }
             case check_PMONID => {
-                self->is_valid_PMONID(); //viewer
+
+                //choice point
+                if (self->is_valid_PMONID(); //viewer) {
+                    self->manage_interval_control(); //method 
+                } else {
+                    self->state = Exit;
+                }
             }
-            case valid_PMONID => {
-                self->manage_interval_control(); 
-            //method >> PMON as ID resource field
-            }
-            case init_monitoring => {
-                self->which_type_of_monitoring(); //viewer
+            
+            case do_monitoring => {
+               
+               //choice point
+               if(self->is_limits_monitoring) {
+
+                    self->state = do_limits_monitoring;
+
+               } else if (self->is_expected_value_monitoring) {
+
+                  self->state = do_expected_value_monitoring;
+
+               }
+               else {
+                 self->state = exit;
+               }
             } 
             case do_limits_monitoring =>{
                 self->PID_status(); //method
@@ -59,5 +77,7 @@ procedure do_monitoring (&mut self, PMONID: u16, … ) {
             }
         }
     }
+
+    return;
 }
 ```
