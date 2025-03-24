@@ -33,6 +33,11 @@ struct ParamFaultValueInfo {
     PID_expected_value : u32;
 };
 
+enum FaultInfo {
+    ParamOutOfLimit(ParamOutOfLimitInfo),
+    ParamFaultValue(ParamFaultValueInfo)
+};
+
 
 
 function get_Ev_ID_type(Ev_ID : u16) -> Ev_IDType {
