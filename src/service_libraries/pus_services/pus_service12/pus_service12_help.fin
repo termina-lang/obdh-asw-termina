@@ -179,6 +179,29 @@ function get_check_status_index (status : CheckState) -> u8 {
     return index;
 }
 
+function get_type_index (type : MonitorCheckType) -> u8 {
+
+    var index : u8 = 0;
+
+    match type {
+
+        case ExpectedValue => {
+            index = 0;
+        }
+        case Limits => {
+            index = 1;
+        }
+        case Delta => {
+            index = 2;
+        }
+        case Free => {
+            index = 0xFF;
+        }
+    }
+
+    return index;
+}
+
 
 function are_status_equal (status1 : CheckState, status2 : CheckState) -> bool {
 

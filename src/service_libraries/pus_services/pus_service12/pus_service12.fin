@@ -186,68 +186,16 @@ resource class PUSService12 provides PUSS12Iface {
     }
 */
 
-    method manage_param_above_upper_limit (&self, PMONID : u16, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16) -> bool {
 
-        var event_triggered : bool = false;
-
-        var check_status : CheckLimitsStatus = CheckLimitsStatus:: MonitorAboveHighLimit;
-        var new_status : CheckState = CheckState::ParamLimitStatus(check_status);
-
-        match(self->param_mon_config_table[PMONID as usize].definition){
-
-            case ParamValueCheck(check_definition) => {
-
-            }
-            case ParamLimitCheck(check_definition) => {
-
-                fault_info->PID = self->param_mon_config_table[PMONID as usize].PID; 
-                fault_info->PID_limit = check_definition.high_limit;
-
-                var type : DataPoolItemType = sys_data_pool_get_item_type(fault_info->PID);
-
-                match type {
-
-                    case u32_t => {
-                        self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
-                    }
-                    case u8_t => {
-                        var value : u8 = 0;
-                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut value);
-                        fault_info->PID_value = value as u32;
-                    }
-                    case NoValidPID => {
-                    //Error
-                    }
-                }
-
-                if(manage_new_status(PMONID, new_status, &mut (self->param_mon_config_table))){
-
-                    event_triggered = true;
-                    *ev_ID = check_definition.high_limit_evID;
-                }
-
-            }
-            case ParamDeltaCheck(check_definition) => {
-
-            }
-            case Unselected => {
-                
-            }
-        }
-
-        return event_triggered;
-    }
-
-
-
-    method manage_param_above_upper_limit (&self, ev_ID : &mut u16) -> ParamOutOfLimitInfo {
+    method manage_param_above_upper_limit (&priv self) -> ParamOutOfLimitInfo {
 
         var event_triggered : bool = false;
         var fault_info : ParamOutOfLimitInfo = {PID = 0,
                                                 PID_value = 0,
-                                                PID_limit = 0};
-        var check_status : CheckLimitsStatus = CheckLimitsStatus:: MonitorAboveHighLimit;
-        var new_status : CheckState = CheckState::ParamLimitStatus(check_status);
+                                                PID_limit = 0,
+                                                event_triggered = false};
+        let check_status : CheckLimitsStatus = CheckLimitsStatus:: MonitorAboveHighLimit;
+        self->req_status_update.new_status : CheckState = CheckState::ParamLimitStatus(check_status);
 
         let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
 
@@ -278,10 +226,12 @@ resource class PUSService12 provides PUSS12Iface {
                     }
                 }
 
-                if(manage_new_status(PMONID, new_status, &mut (self->param_mon_config_table))){
+                if(self->manage_new_status()){
 
-                    event_triggered = true;
-                    *ev_ID = check_definition.high_limit_evID;
+                    fault_info.event_triggered = true;
+                    self->req_status_update.fault_info = ParamOutOfLimit(fault_info);
+                    self->add_monitoring_transition();
+                    self->req_status_update.EvID = check_definition.high_limit_evID;
                 }
 
             }
@@ -296,6 +246,124 @@ resource class PUSService12 provides PUSS12Iface {
         return fault_info;
     }
 
+    viewer are_status_equal(&self, status1: CheckState, status2: CheckState)->bool{
+
+        var equal : bool = get_check_status_index(status1) == get_check_status_index(status2);
+        return equal;
+    }
+
+
+    method manage_new_status(&priv self)->bool{
+
+        var transition: bool = false;
+        let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize;
+
+        var new_state : CheckState = self->req_status_update.new_status;
+        var current_state : CheckState = self->param_mon_config_table[current_PMON_ID].current_state;
+        var temp_state : CheckState = self->param_mon_config_table[current_PMON_ID].temp_state;
+
+        if (self->are_status_equal(new_state, current_state) == false) {
+
+            if(are_status_equal(new_state, temp_state)) {
+
+                self->param_mon_config_table[current_PMON_ID].repetition_control = self->param_mon_config_table[current_PMON_ID].repetition_control + 1;
+
+            } else {
+
+                self->param_mon_config_table[current_PMON_ID].temp_state = new_state;
+                self->param_mon_config_table[current_PMON_ID].repetition_control = 1;
+                //self->param_mon_config_table[current_PMON_ID].transition_obt = get_current_time();
+            }
+
+            if (self->param_mon_config_table[current_PMON_ID].repetition_control >= self->param_mon_config_table[current_PMON_ID].repetition) {
+
+                self->param_mon_config_table[current_PMON_ID].repetition_control = 0;
+                self->param_mon_config_table[current_PMON_ID].current_state = new_state;
+                transition = true;
+
+            }
+        } 
+        else {
+            
+            self->param_mon_config_table[current_PMON_ID].temp_state = new_state;
+            self->param_mon_config_table[current_PMON_ID].repetition_control = 0;
+
+        }
+
+        return transition;
+        
+    }
+
+    viewer build_tm_12_12(&self, p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, result: &mut Result){
+
+        startup_tm(p_tm_handler);
+        append_u8_appdata_field(p_tm_handler, self->monitoring_transition_counter, result);
+
+        for i : usize in 0 .. self->monitoring_transition_counter {
+
+            var aux_prev_status : u8 = 0;
+            var aux_new_status : u8 = 0;
+
+            append_u16_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].PMONID, result);
+            append_u16_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].PID, result);
+            var type_id : u8 = get_type_index(self->param_mon_transitions_table[i].type);
+            append_u8_appdata_field(p_tm_handler, type_id, result);
+            append_u8_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].type, result);
+            
+            if(self->param_mon_transitions_table[i].type is ExpectedValue){
+                append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].mask_value, result);
+            }
+
+            aux_prev_status = get_check_status_index(self->param_mon_transitions_table[i].prev_status);
+            aux_new_status = get_check_status_index(self->param_mon_transitions_table[i].new_status);
+
+            append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].new_value, result);
+            append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].limit_value, result);
+            append_u8_appdata_field(p_tm_handler, aux_prev_status, result);
+            append_u8_appdata_field(p_tm_handler, aux_new_status, result);
+            append_u32_appdata_field(p_tm_handler, self->param_mon_transitions[i].trans_obt, result);
+        }
+        if(*result is Result::Ok){
+            close_tm(p_tm_handler, 12, 12, tm_seq_counter, result);
+        }
+
+
+        return;
+    }
+
+
+    method add_monitoring_transition(&priv self){
+
+        if(self->monitoring_transition_counter < max_num_transitions){
+
+            let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize;
+
+            self->param_mon_transitions_table[self->monitoring_transition_counter].PID = self->param_mon_config_table[current_PMON_ID].PID;
+            self->param_mon_transitions_table[self->monitoring_transition_counter].PMONID = self->req_status_update.PMONID;
+            self->param_mon_transitions_table[self->monitoring_transition_counter].type = self->param_mon_config_table[current_PMON_ID].type;
+            self->param_mon_transitions_table[self->monitoring_transition_counter].limit_value = self->req_status_update.fault_info.PID_limit;
+            self->param_mon_transitions_table[self->monitoring_transition_counter].value = self->req_status_update.fault_info.PID_value;
+
+            if(self->param_mon_config_table[current_PMON_ID].type is ExpectedValue){
+                //TO DO
+
+            }
+
+            self->param_mon_transitions_table[self->monitoring_transition_counter].new_status = self->req_status_update.new_status;
+            self->param_mon_transitions_table[self->monitoring_transition_counter].prev_status = self->param_mon_config_table[current_PMON_ID].current_state;
+            self->param_mon_transitions_table[self->monitoring_transition_counter].trans_obt = self->param_mon_config_table[current_PMON_ID].transition_obt;
+
+            self->monitoring_transition_counter = self->monitoring_transition_counter + 1;
+        }
+
+        if(self->monitoring_transition_counter == max_num_transitions){
+
+            
+            self->monitoring_transition_counter = 0;
+        }
+
+        return;
+    }
 /*
 
     viewer manage_param_below_lower_limit (&self, PMONID : u16, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16) -> bool {

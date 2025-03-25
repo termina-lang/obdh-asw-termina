@@ -10,6 +10,7 @@ struct RequestStatusUpdate {
     EvID: u16;
     current_monitor_definition: MonitorDefinition;
     fault_info: FaultInfo;
+    new_status: CheckState;
 }
 
 enum DoMonitoringReqStatus {
@@ -185,6 +186,45 @@ viewer check_PID_status_exp_val_monitoring(&priv self)-> CheckValueStatus {
     }
 
     return check_status;
+}
+
+
+
+method manage_param_above_upper_limit (PMONID : u16, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16, PID_value : u32, r_param_mon_config_table: &mut [ParamMonitoringConfiguration; max_num_pmon_ids]) -> bool {
+
+    let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize;
+    var event_triggered : bool = false; 
+
+    var check_status : CheckLimitsStatus = CheckLimitsStatus:: MonitorAboveHighLimit;
+    var new_status : CheckState = CheckState::ParamLimitStatus(check_status);
+
+    match(self->r_param_mon_config_table[current_PMON_ID].definition){
+
+        case ParamValueCheck(check_definition) => {
+
+        }
+        case ParamLimitCheck(check_definition) => {
+
+            fault_info->PID = r_param_mon_config_table[currrent_PMON_ID].PID; 
+            fault_info->PID_limit = check_definition.high_limit;
+            fault_info->PID_value = PID_value;
+
+            if(manage_new_status(PMONID, new_status, r_param_mon_config_table)){
+
+                event_triggered = true;
+                *ev_ID = check_definition.high_limit_evID;
+            }
+
+        }
+        case ParamDeltaCheck(check_definition) => {
+
+        }
+        case Unselected => {
+            
+        }
+    }
+
+    return event_triggered;
 }
 
 
