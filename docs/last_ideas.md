@@ -125,23 +125,24 @@ viewer get_expected_value_monitoring_definition(&self) -> ParamValueCheckDefinit
     return monitoring_definition;
 }
 
-method manage_interval_control(&priv self){
+method manage_interval_control(&priv self)->DoMonitoringReqStatus{
 
     let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
+    var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
 
     self->param_mon_config_table[current_PMON_ID].interval_control = self->param_mon_config_table[current_PMON_ID].interval_control + 1;
 
     if(self->param_mon_config_table[current_PMON_ID].interval_control >= self->param_mon_config_table[current_PMON_ID].interval){
 
         self->param_mon_config_table[PMONID as usize].interval_control = 0;
-        self->req_status = DoMonitoringReqStatus::DoMonitoring;
+        next_status = DoMonitoringReqStatus::DoMonitoring;
 
     } else {
 
-        self->req_status = DoMonitoringReqStatus::Exit;
+        next_status = DoMonitoringReqStatus::Exit;
     }
 
-    return;
+    return next_status;
 }
 
 viewer check_PID_status_limits_monitoring(&priv self)-> CheckLimitsStatus{
@@ -190,42 +191,7 @@ viewer check_PID_status_exp_val_monitoring(&priv self)-> CheckValueStatus {
 
 
 
-method manage_param_above_upper_limit (PMONID : u16, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16, PID_value : u32, r_param_mon_config_table: &mut [ParamMonitoringConfiguration; max_num_pmon_ids]) -> bool {
 
-    let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize;
-    var event_triggered : bool = false; 
-
-    var check_status : CheckLimitsStatus = CheckLimitsStatus:: MonitorAboveHighLimit;
-    var new_status : CheckState = CheckState::ParamLimitStatus(check_status);
-
-    match(self->r_param_mon_config_table[current_PMON_ID].definition){
-
-        case ParamValueCheck(check_definition) => {
-
-        }
-        case ParamLimitCheck(check_definition) => {
-
-            fault_info->PID = r_param_mon_config_table[currrent_PMON_ID].PID; 
-            fault_info->PID_limit = check_definition.high_limit;
-            fault_info->PID_value = PID_value;
-
-            if(manage_new_status(PMONID, new_status, r_param_mon_config_table)){
-
-                event_triggered = true;
-                *ev_ID = check_definition.high_limit_evID;
-            }
-
-        }
-        case ParamDeltaCheck(check_definition) => {
-
-        }
-        case Unselected => {
-            
-        }
-    }
-
-    return event_triggered;
-}
 
 
 ```
@@ -250,7 +216,7 @@ procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &
 
                 //choice point
                 if (self->is_valid_PMONID()) {
-                    self->manage_interval_control(); //method 
+                    self->req_status = self->manage_interval_control(); //method 
                 } else {
                     self->req_status = DoMonitoringReqStatus::Exit;
                 }
@@ -287,16 +253,17 @@ procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &
 
                 match limits_monitoring_status =>{
                     case MonitorAboveHighLimit {
-                        fault_info = self->manage_out_of_hl_state(); //method
+
+                        self->req_status = self->manage_param_above_upper_limit(); //method
                     }
                     case MonitorBelowLowLimit {
 
-                        fault_info = self->manage_out_of_ll_state(); //method
+                        self->req_status = self->manage_param_below_lower_limit(); //method
 
                     }
                     case MonitorWithinLimits {
 
-                        fault_info = self->manage_within_limits(); //method
+                        self->req_status = self->manage_param_within_limits(); //method
                     }
                     case MonitorUnchecked {
 
@@ -311,11 +278,11 @@ procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &
 
                 match exp_value_monitoring_status =>{
                     case unexpected{
-                        fault_info = self->manage_unexpected(); //method
+                        self->req_status = self->manage_unexpected_value; //method
                     }
                     case expected{
 
-                        fault_info = self->expected(); //method
+                        self->req_status = self->manage_expected_value(); //method
 
                     }
                     
