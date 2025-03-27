@@ -10,17 +10,19 @@ interface PUSS12Iface {
     procedure exec12_2TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
     procedure exec12_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
     procedure exec12_6TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
-
-    procedure do_param_limits_monitoring (&mut self, PMONID : u16, result : &mut Result, event_triggered : &mut bool, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16);
-    procedure do_check_value_monitoring (&mut self, PMONID : u16, result : &mut Result, event_triggered : &mut bool, fault_info : &mut ParamFaultValueInfo, ev_ID : &mut u16);
+    procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &mut FaultInfo, event_triggered: &mut bool);
+    
 };
 
 
 
 resource class PUSService12 provides PUSS12Iface {
 
+    req_status : DoMonitoringReqStatus;
+    req_status_update : RequestStatusUpdate;
+
     param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
-    monitoring_transition_counter : u16; 
+    monitoring_transition_counter : u8; 
     param_mon_transitions_table : [ParamMonitoringTransition; max_num_transitions];
 
     system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
@@ -29,6 +31,173 @@ resource class PUSService12 provides PUSS12Iface {
     tm_channel : access TMChannelIface;
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
+
+
+    viewer is_valid_PMONID(&self) -> bool{
+
+        var is_valid : bool = false;
+
+        if (self->req_status_update.PMONID < max_num_pmon_ids) {
+
+            is_valid = true;
+        }
+
+        return is_valid;
+    }
+
+    viewer is_limits_monitoring(&self) -> bool{
+
+        let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
+        var is_limits_mon : bool = false;
+
+        if (self->param_mon_config_table[current_PMON_ID].type is MonitorCheckType::Limits) {
+
+            is_limits_mon = true;
+        }
+
+        return is_limits_mon;
+    }
+
+
+    viewer is_expected_value_monitoring(&self) -> bool{
+
+        let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
+        var is_exp_val_mon : bool = false;
+
+        if (self->param_mon_config_table[current_PMON_ID].type is MonitorCheckType::ExpectedValue){
+
+            is_exp_val_mon = true;
+        }
+
+        return is_exp_val_mon;
+    }
+
+    viewer get_limits_monitoring_definition(&self) -> ParamLimitCheckDefinition {
+
+        let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
+        var monitoring_definition : ParamLimitheckDefinition = {
+            low_limit = 0,
+            low_limit_evID = 0,
+            high_limit = 0,
+            high_limit_evID = 0
+        };
+
+        match(self->param_mon_config_table[current_PMON_ID].definition) {
+
+            case ParamValueCheck(param_check_defintion)=> {
+                //error
+            }
+            case ParamLimitCheck(limit_check_def)=> {
+
+                monitoring_definition = limit_check_def;
+            }
+            
+            case ParamDeltaCheck(delta_check_definition) => {
+                //error
+            }
+            case Unselected => {
+                //error
+            }
+        }
+
+        return monitoring_definition;
+    }
+
+
+    viewer get_expected_value_monitoring_definition(&self) -> ParamValueCheckDefinition {
+
+        let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
+        var monitoring_definition : ParamValueCheckDefinition = {
+            mask_value = 0,
+            expected_value = 0,
+            EvID = 0
+        };
+
+        match(self->param_mon_config_table[current_PMON_ID].definition) {
+
+            case ParamValueCheck(param_check_defintion)=> {
+
+                monitoring_definition = param_check_definition;
+                
+            }
+            case ParamLimitCheck(limit_check_def)=> {
+
+            }
+            
+            case ParamDeltaCheck(delta_check_definition) => {
+                
+            }
+            case Unselected => {
+                
+            }
+        }
+
+        return monitoring_definition;
+    }
+
+    method manage_interval_control(&priv self)->DoMonitoringReqStatus{
+
+        let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
+
+        self->param_mon_config_table[current_PMON_ID].interval_control = self->param_mon_config_table[current_PMON_ID].interval_control + 1;
+
+        if(self->param_mon_config_table[current_PMON_ID].interval_control >= self->param_mon_config_table[current_PMON_ID].interval){
+
+            self->param_mon_config_table[PMONID as usize].interval_control = 0;
+            next_status = DoMonitoringReqStatus::DoMonitoring;
+
+        } else {
+
+            next_status = DoMonitoringReqStatus::Exit;
+        }
+
+        return next_status;
+    }
+
+    viewer check_PID_status_limits_monitoring(&self)-> CheckLimitsStatus{
+
+        var current_monitor_definition : ParamLimitCheckDefinition = self->get_limits_monitoring_definition();
+        var check_status: CheckLimitsStatus = CheckLimitsStatus::MonitorUnchecked;
+
+        if(self->PID_is_above_upper_limit(&current_monitor_definition)){
+
+            check_status = CheckLimitsStatus::MonitorAboveUpperLimit;
+
+        }
+        else if(self->PID_is_below_lower_limit(&current_monitor_definiton)){
+
+            check_status = CheckLimitsStatus::MonitorBelowLowerLimit;
+
+        }
+        else {
+
+            //monitor within limits
+            check_status = CheckLimitsStatus::MonitorWithinLimits;
+        }
+
+        return check_status;
+
+    }
+
+    viewer check_PID_status_exp_val_monitoring(&self)-> CheckValueStatus {
+
+        var current_monitor_definition : ParamValueCheckDefinition = self->get_expected_value_monitoring_definition();
+        var check_status : CheckValueStatus = CheckValueStatus::MonitorUnchecked;
+
+        if(self->PID_has_expected_masked_value(&current_monitor_definition)){
+
+            check_status = CheckValueStatus::MonitorValueExpected;
+
+        }
+        else {
+
+            check_status = CheckValueStatus::MonitorValueUnexpected;
+
+        }
+
+        return check_status;
+    }
 
 
 
@@ -130,13 +299,12 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
 
-    method manage_unexpected_value (&priv self) -> ParamFaultValueInfo {
+    method manage_unexpected_value (&priv self) -> DoMonitoringReqStatus {
 
         var fault_info : ParamFaultValueInfo = {PID = 0,
                                                 PID_value = 0,
                                                 PID_mask = 0,
-                                                PID_expected_value = 0,
-                                                event_triggered = false};
+                                                PID_expected_value = 0};
 
         let check_status : CheckValueStatus = CheckValueStatus::MonitorValueUnexpected;
         var new_status : CheckState = CheckState::ParamValueStatus(check_status);
@@ -170,7 +338,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                 if(self->manage_new_status()){
 
-                    fault_info.event_triggered = true;
+                    self->req_status_update.event_triggered = true;
                     self->req_status_update.fault_info = ParamFaultValue(fault_info);
                     self->add_monitoring_transition();
                     self->req_status_update.EvID = check_definition.EvID;
@@ -188,19 +356,37 @@ resource class PUSService12 provides PUSS12Iface {
             }
         }
 
-        return fault_info;
+        return next_status;
+    }
+
+
+    method manage_expected_value (&priv self) -> DoMonitoringReqStatus {
+
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
+
+        let check_status : CheckValueStatus = CheckValueStatus::MonitorValueExpected;
+        var new_status : CheckState = CheckState::ParamValueStatus(check_status); 
+
+        if(self->manage_new_status()){
+
+            self->add_monitoring_transition();
+
+        }
+        return next_status;
     }
 
 
 
-    method manage_param_above_upper_limit (&priv self) -> ParamOutOfLimitInfo {
+    method manage_param_above_upper_limit (&priv self) -> DoMonitoringReqStatus {
+
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
 
         var fault_info : ParamOutOfLimitInfo = {PID = 0,
                                                 PID_value = 0,
-                                                PID_limit = 0,
-                                                event_triggered = false};
+                                                PID_limit = 0};
+
         let check_status : CheckLimitsStatus = CheckLimitsStatus:: MonitorAboveHighLimit;
-        self->req_status_update.new_status : CheckState = CheckState::ParamLimitStatus(check_status);
+        self->req_status_update.new_status = CheckState::ParamLimitStatus(check_status);
 
         let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
 
@@ -233,7 +419,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                 if(self->manage_new_status()){
 
-                    fault_info.event_triggered = true;
+                    self->req_status_update.event_triggered = true;
                     self->req_status_update.fault_info = ParamOutOfLimit(fault_info);
                     self->add_monitoring_transition();
                     self->req_status_update.EvID = check_definition.high_limit_evID;
@@ -248,18 +434,20 @@ resource class PUSService12 provides PUSS12Iface {
             }
         }
 
-        return fault_info;
+        return next_status;
     }
 
 
-    method manage_param_below_lower_limit (&priv self) -> ParamOutOfLimitInfo {
+    method manage_param_below_lower_limit (&priv self) -> DoMonitoringReqStatus {
+
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
 
         var fault_info : ParamOutOfLimitInfo = {PID = 0,
                                                 PID_value = 0,
-                                                PID_limit = 0,
-                                                event_triggered = false};
+                                                PID_limit = 0};
+
         let check_status : CheckLimitsStatus = CheckLimitsStatus:: MonitorBelowLowLimit;
-        self->req_status_update.new_status : CheckState = CheckState::ParamLimitStatus(check_status);
+        self->req_status_update.new_status = CheckState::ParamLimitStatus(check_status);
 
         let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
 
@@ -292,7 +480,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                 if(self->manage_new_status()){
 
-                    fault_info.event_triggered = true;
+                    self->req_status_update.event_triggered = true;
                     self->req_status_update.fault_info = ParamOutOfLimit(fault_info);
                     self->add_monitoring_transition();
                     self->req_status_update.EvID = check_definition.low_limit_evID;
@@ -307,7 +495,27 @@ resource class PUSService12 provides PUSS12Iface {
             }
         }
 
-        return fault_info;
+        return next_status;
+    }
+
+    method manage_param_within_limits (&priv self) -> DoMonitoringReqStatus{
+
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
+
+        var within_limits : CheckLimitsStatus = CheckLimitsStatus::MonitorWithinLimits;
+        var new_status : CheckState = CheckState::ParamLimitStatus(within_limits);
+        let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize;
+        let current_status : CheckState = self->param_mon_config_table[current_PMON_ID].current_state;
+
+        if(self->are_status_equal(new_status, current_status) == false){
+
+            if(self->manage_new_status()){
+
+                self->add_monitoring_transition();
+            }
+        }
+
+        return next_status;
     }
 
     viewer are_status_equal(&self, status1: CheckState, status2: CheckState)->bool{
@@ -363,7 +571,7 @@ resource class PUSService12 provides PUSS12Iface {
         startup_tm(p_tm_handler);
         append_u8_appdata_field(p_tm_handler, self->monitoring_transition_counter, result);
 
-        for i : usize in 0 .. self->monitoring_transition_counter {
+        for i : usize in 0 .. max_num_transitions while (i < (self->monitoring_transition_counter as usize)) {
 
             var aux_prev_status : u8 = 0;
             var aux_new_status : u8 = 0;
@@ -374,7 +582,7 @@ resource class PUSService12 provides PUSS12Iface {
             append_u8_appdata_field(p_tm_handler, type_id, result);
             append_u8_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].type, result);
             
-            if(self->param_mon_transitions_table[i].type is ExpectedValue){
+            if(self->param_mon_transitions_table[i].type is MonitorCheckType::ExpectedValue){
                 append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].mask_value, result);
             }
 
@@ -464,7 +672,115 @@ resource class PUSService12 provides PUSS12Iface {
         return;
     }
 
+    procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &mut FaultInfo, event_triggered: &mut bool) {
 
+        for i : usize in 0 .. 4 while (self->req_status is DoMonitoringReqStatus::Exit == false){
+            match self->req_status {
+                case Init=> {
+
+                    self->req_status_update.PMONID = PMONID;
+                    self->req_status_update.evID = *evID;
+                    self->req_status_update.fault_info = *fault_info;
+                    self->req_status = DoMonitoringReqStatus::checkPMONID;
+                    self->req_status_update.event_triggered = false;
+
+                }
+                case checkPMONID => {
+
+                    //choice point
+                    if (self->is_valid_PMONID()) {
+                        self->req_status = self->manage_interval_control(); //method 
+                    } else {
+                        self->req_status = DoMonitoringReqStatus::Exit;
+                    }
+                }
+                
+                case GetMonitoringType => {
+
+                    if(self->param_mon_config_table[PMONID as usize].enabled == true){
+
+                        //choice point
+                        if(self->is_limits_monitoring) {
+
+                            self->req_status = DoMonitoringReqStatus::DoLimitsMonitoring;
+                            
+
+                        } else if (self->is_expected_value_monitoring) {
+
+                            self->req_status = DoMonitoringReqStatus::DoExpectedValueMonitoring;
+
+                        }
+                        else {
+                            self->req_status = DoMonitoringReqStatus::Exit;
+                        }
+
+                    } else {
+
+                        self->req_status = DoMonitoringReqStatus::Exit;
+                    }
+                
+                } 
+                case DoLimitsMonitoring =>{
+
+                    var limits_monitoring_status : CheckLimitsStatus = self->check_PID_status_limits_monitoring(); 
+
+                    match limits_monitoring_status {
+                        case MonitorAboveHighLimit => {
+
+                            self->req_status = self->manage_param_above_upper_limit(); //method
+                        }
+                        case MonitorBelowLowLimit => {
+
+                            self->req_status = self->manage_param_below_lower_limit(); //method
+
+                        }
+                        case MonitorWithinLimits => {
+
+                            self->req_status = self->manage_param_within_limits(); //method
+                        }
+                        case MonitorUnchecked => {
+
+                        }
+
+                    }
+                        
+                }
+                case DoExpectedValueMonitoring => {
+
+                    var exp_value_monitoring_status: CheckValueStatus = self->check_PID_status_exp_val_monitoring(); //viewer
+
+                    match exp_value_monitoring_status {
+                        case MonitorValueUnexpected =>{
+                            self->req_status = self->manage_unexpected_value(); //method
+                        }
+                        case MonitorValueExpected =>{
+
+                            self->req_status = self->manage_expected_value(); //method
+
+                        }
+                        case MonitorUnchecked => {
+
+                        }
+                        
+
+                    }
+                }
+                case GetRequestStatusUpdate => {
+                    *evID = self->req_status_update.evID;
+                    *fault_info = self->req_status_update.fault_info;
+                }
+            }
+        }
+
+        if(self->req_status is DoMonitoringReqStatus::Exit){
+
+            self->req_status = DoMonitoringReqStatus::Init;
+        }
+
+        return;
+    }
+
+/*
     procedure do_param_limits_monitoring (&mut self, PMONID : u16, result : &mut Result, event_triggered : &mut bool, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16){ 
 
        
@@ -501,7 +817,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                         } else {
 
-                            /*monitor within limits, update status */
+                           
                             var within_limits : CheckLimitsStatus = CheckLimitsStatus::MonitorWithinLimits;
                             var new_status : CheckState = CheckState::ParamLimitStatus(within_limits);
                             var current_status : CheckState = self->param_mon_config_table[PMONID as usize].current_state;
@@ -547,7 +863,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     procedure do_check_value_monitoring (&mut self, PMONID : u16, result : &mut Result, event_triggered : &mut bool, fault_info : &mut ParamFaultValueInfo, ev_ID : &mut u16){
 
-            if (PMONID as usize < max_num_pmon_ids && self->param_mon_config_table[PMONID as usize].enabled == true){
+        if (PMONID as usize < max_num_pmon_ids && self->param_mon_config_table[PMONID as usize].enabled == true){
 
             var PID : u16 = self->param_mon_config_table[PMONID as usize].PID;
 
@@ -583,7 +899,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                         if(self->PID_has_expected_masked_value(PID, &param_check_defintion)) {
 
-                            /*manage_new_status*/
+                           
                             var check_status : CheckValueStatus = CheckValueStatus::MonitorValueExpected;
                             var new_status : CheckState = CheckState::ParamValueStatus(check_status);
                             
@@ -613,7 +929,7 @@ resource class PUSService12 provides PUSS12Iface {
         }
 
         return; 
-    }
+    }*/
 
 
     viewer get_PMON_type (&self, PMONID : usize) -> MonitorCheckType {

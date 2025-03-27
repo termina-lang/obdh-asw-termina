@@ -11,10 +11,17 @@ struct RequestStatusUpdate {
     current_monitor_definition: MonitorDefinition;
     fault_info: FaultInfo;
     new_status: CheckState;
+    event_triggered: bool;
 }
 
 enum DoMonitoringReqStatus {
-
+    Init;
+    CheckPMONID;
+    GetMonitoringType;
+    DoLimitsMonitoring;
+    DoExpectedValueMonitoring;
+    GetRequestStatusUpdate;
+    Exit;
 }
 
 
@@ -200,9 +207,9 @@ viewer check_PID_status_exp_val_monitoring(&priv self)-> CheckValueStatus {
 
 
 ```
-procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &mut FaultInfo) {
+procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &mut FaultInfo, event_triggered: &mut bool) {
 
-    for i = 0 in 6 while (self->req_status is Exit == false){
+    for i = 0 in 4 while (self->req_status is Exit == false){
         match self->req_status {
             case Init=> {
 
@@ -210,6 +217,7 @@ procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &
                 self->req_status_update.evID = *evID;
                 self->req_status_update.fault_info = *fault_info;
                 self->req_status = DoMonitoringReqStatus::checkPMONID;
+                self->req_status_update.event_triggered = false;
 
             }
             case checkPMONID => {
@@ -278,7 +286,7 @@ procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &
 
                 match exp_value_monitoring_status =>{
                     case unexpected{
-                        self->req_status = self->manage_unexpected_value; //method
+                        self->req_status = self->manage_unexpected_value(); //method
                     }
                     case expected{
 
@@ -289,7 +297,16 @@ procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &
 
                 }
             }
+            case GetRequestStatusUpdate => {
+                *evID = self->req_status_update.evID;
+                *fault_info = self->req_status_update.fault_info;
+            }
         }
+    }
+
+    if(self->req_status is DoMonitoringReqStatus::Exit){
+
+        self->req_status = DoMonitoringReqStatus::Init;
     }
 
     return;

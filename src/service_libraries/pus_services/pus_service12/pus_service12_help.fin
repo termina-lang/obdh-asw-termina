@@ -109,6 +109,25 @@ struct ParamMonitoringTransition {
 
 };
 
+struct RequestStatusUpdate {
+    PMONID: u16;
+    EvID: u16;
+    current_monitor_definition: MonitorDefinition;
+    fault_info: FaultInfo;
+    new_status: CheckState;
+    event_triggered: bool;
+};
+
+enum DoMonitoringReqStatus {
+    Init,
+    CheckPMONID,
+    GetMonitoringType,
+    DoLimitsMonitoring,
+    DoExpectedValueMonitoring,
+    GetRequestStatusUpdate,
+    Exit
+};
+
 function get_check_status_index (status : CheckState) -> u8 {
 
     var index : u8 = 0;
@@ -519,11 +538,7 @@ function add_valid_mng_mon_def (PMONID: usize, param_monit_config: &ParamMonitor
 
     return;
 }
-
-function add_monitoring_transition(monitoring_transitions : &mut [ParamMonitoringTransition;max_num_transitions], transition_counter: &mut u16,){
-
-
-}
+/*
 
 
 function manage_new_status (PMONID : u16, new_state : CheckState, r_param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids]) -> bool {
@@ -687,3 +702,4 @@ function manage_param_below_lower_limit (PMONID : u16, fault_info : &mut ParamOu
 
     return event_triggered;
 }
+*/

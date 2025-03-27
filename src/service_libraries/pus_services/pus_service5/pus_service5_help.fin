@@ -24,7 +24,6 @@ struct ParamOutOfLimitInfo {
     PID : u16;
     PID_value : u32;
     PID_limit : u32;
-    event_triggered : bool;
 };
 
 struct ParamFaultValueInfo {
@@ -32,7 +31,6 @@ struct ParamFaultValueInfo {
     PID_value : u32;
     PID_mask : u32;
     PID_expected_value : u32;
-    event_triggered : bool;
 };
 
 enum FaultInfo {
