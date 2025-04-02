@@ -37,7 +37,7 @@ resource class PUSService12 provides PUSS12Iface {
 
         var is_valid : bool = false;
 
-        if (self->req_status_update.PMONID < max_num_pmon_ids) {
+        if (self->req_status_update.PMONID as usize < max_num_pmon_ids) {
 
             is_valid = true;
         }
@@ -75,7 +75,7 @@ resource class PUSService12 provides PUSS12Iface {
     viewer get_limits_monitoring_definition(&self) -> ParamLimitCheckDefinition {
 
         let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize; 
-        var monitoring_definition : ParamLimitheckDefinition = {
+        var monitoring_definition : ParamLimitCheckDefinition = {
             low_limit = 0,
             low_limit_evID = 0,
             high_limit = 0,
@@ -115,7 +115,7 @@ resource class PUSService12 provides PUSS12Iface {
 
         match(self->param_mon_config_table[current_PMON_ID].definition) {
 
-            case ParamValueCheck(param_check_defintion)=> {
+            case ParamValueCheck(param_check_definition)=> {
 
                 monitoring_definition = param_check_definition;
                 
@@ -144,8 +144,8 @@ resource class PUSService12 provides PUSS12Iface {
 
         if(self->param_mon_config_table[current_PMON_ID].interval_control >= self->param_mon_config_table[current_PMON_ID].interval){
 
-            self->param_mon_config_table[PMONID as usize].interval_control = 0;
-            next_status = DoMonitoringReqStatus::DoMonitoring;
+            self->param_mon_config_table[current_PMON_ID].interval_control = 0;
+            next_status = DoMonitoringReqStatus::GetMonitoringType;
 
         } else {
 
@@ -162,12 +162,12 @@ resource class PUSService12 provides PUSS12Iface {
 
         if(self->PID_is_above_upper_limit(&current_monitor_definition)){
 
-            check_status = CheckLimitsStatus::MonitorAboveUpperLimit;
+            check_status = CheckLimitsStatus::MonitorAboveHighLimit;
 
         }
-        else if(self->PID_is_below_lower_limit(&current_monitor_definiton)){
+        else if(self->PID_is_below_lower_limit(&current_monitor_definition)){
 
-            check_status = CheckLimitsStatus::MonitorBelowLowerLimit;
+            check_status = CheckLimitsStatus::MonitorBelowLowLimit;
 
         }
         else {
@@ -301,6 +301,8 @@ resource class PUSService12 provides PUSS12Iface {
 
     method manage_unexpected_value (&priv self) -> DoMonitoringReqStatus {
 
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
+
         var fault_info : ParamFaultValueInfo = {PID = 0,
                                                 PID_value = 0,
                                                 PID_mask = 0,
@@ -314,21 +316,21 @@ resource class PUSService12 provides PUSS12Iface {
 
             case ParamValueCheck(check_definition) => {
 
-                fault_info->PID = self->param_mon_config_table[current_PMON_ID].PID; 
-                fault_info->PID_expected_value = check_definition.expected_value;
-                fault_info->PID_mask = check_definition.mask_value;
+                fault_info.PID = self->param_mon_config_table[current_PMON_ID].PID; 
+                fault_info.PID_expected_value = check_definition.expected_value;
+                fault_info.PID_mask = check_definition.mask_value;
 
-                var type : DataPoolItemType = sys_data_pool_get_item_type(fault_info->PID);
+                var type : DataPoolItemType = sys_data_pool_get_item_type(fault_info.PID);
 
                 match type {
 
                     case u32_t => {
-                        self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
+                        self->system_data_pool_u32.load_index((fault_info.PID as usize - sdp_first_u32_param_id), &mut (fault_info.PID_value));
                     }
                     case u8_t => {
                         var value : u8 = 0;
-                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut value);
-                        fault_info->PID_value = value as u32;
+                        self->system_data_pool_u8.load_index((fault_info.PID as usize - sdp_first_u8_param_id), &mut value);
+                        fault_info.PID_value = value as u32;
                         
                     }
                     case NoValidPID => {
@@ -339,7 +341,7 @@ resource class PUSService12 provides PUSS12Iface {
                 if(self->manage_new_status()){
 
                     self->req_status_update.event_triggered = true;
-                    self->req_status_update.fault_info = ParamFaultValue(fault_info);
+                    self->req_status_update.fault_info = FaultInfo::ParamFaultValue(fault_info);
                     self->add_monitoring_transition();
                     self->req_status_update.EvID = check_definition.EvID;
                 }
@@ -362,7 +364,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     method manage_expected_value (&priv self) -> DoMonitoringReqStatus {
 
-        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
         let check_status : CheckValueStatus = CheckValueStatus::MonitorValueExpected;
         var new_status : CheckState = CheckState::ParamValueStatus(check_status); 
@@ -379,7 +381,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     method manage_param_above_upper_limit (&priv self) -> DoMonitoringReqStatus {
 
-        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
         var fault_info : ParamOutOfLimitInfo = {PID = 0,
                                                 PID_value = 0,
@@ -397,20 +399,20 @@ resource class PUSService12 provides PUSS12Iface {
             }
             case ParamLimitCheck(check_definition) => {
 
-                fault_info->PID = self->param_mon_config_table[current_PMON_ID].PID; 
-                fault_info->PID_limit = check_definition.high_limit;
+                fault_info.PID = self->param_mon_config_table[current_PMON_ID].PID; 
+                fault_info.PID_limit = check_definition.high_limit;
 
-                var type : DataPoolItemType = sys_data_pool_get_item_type(fault_info->PID);
+                var type : DataPoolItemType = sys_data_pool_get_item_type(fault_info.PID);
 
                 match type {
 
                     case u32_t => {
-                        self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
+                        self->system_data_pool_u32.load_index((fault_info.PID as usize - sdp_first_u32_param_id), &mut (fault_info.PID_value));
                     }
                     case u8_t => {
                         var value : u8 = 0;
-                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut value);
-                        fault_info->PID_value = value as u32;
+                        self->system_data_pool_u8.load_index((fault_info.PID as usize - sdp_first_u8_param_id), &mut value);
+                        fault_info.PID_value = value as u32;
                     }
                     case NoValidPID => {
                     //Error
@@ -420,7 +422,7 @@ resource class PUSService12 provides PUSS12Iface {
                 if(self->manage_new_status()){
 
                     self->req_status_update.event_triggered = true;
-                    self->req_status_update.fault_info = ParamOutOfLimit(fault_info);
+                    self->req_status_update.fault_info = FaultInfo::ParamOutOfLimit(fault_info);
                     self->add_monitoring_transition();
                     self->req_status_update.EvID = check_definition.high_limit_evID;
                 }
@@ -440,7 +442,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     method manage_param_below_lower_limit (&priv self) -> DoMonitoringReqStatus {
 
-        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
         var fault_info : ParamOutOfLimitInfo = {PID = 0,
                                                 PID_value = 0,
@@ -458,20 +460,20 @@ resource class PUSService12 provides PUSS12Iface {
             }
             case ParamLimitCheck(check_definition) => {
 
-                fault_info->PID = self->param_mon_config_table[current_PMON_ID].PID; 
-                fault_info->PID_limit = check_definition.low_limit;
+                fault_info.PID = self->param_mon_config_table[current_PMON_ID].PID; 
+                fault_info.PID_limit = check_definition.low_limit;
 
-                var type : DataPoolItemType = sys_data_pool_get_item_type(fault_info->PID);
+                var type : DataPoolItemType = sys_data_pool_get_item_type(fault_info.PID);
 
                 match type {
 
                     case u32_t => {
-                        self->system_data_pool_u32.load_index((fault_info->PID as usize - sdp_first_u32_param_id), &mut fault_info->PID_value);
+                        self->system_data_pool_u32.load_index((fault_info.PID as usize - sdp_first_u32_param_id), &mut (fault_info.PID_value));
                     }
                     case u8_t => {
                         var value : u8 = 0;
-                        self->system_data_pool_u8.load_index((fault_info->PID as usize - sdp_first_u8_param_id), &mut value);
-                        fault_info->PID_value = value as u32;
+                        self->system_data_pool_u8.load_index((fault_info.PID as usize - sdp_first_u8_param_id), &mut value);
+                        fault_info.PID_value = value as u32;
                     }
                     case NoValidPID => {
                     //Error
@@ -481,7 +483,7 @@ resource class PUSService12 provides PUSS12Iface {
                 if(self->manage_new_status()){
 
                     self->req_status_update.event_triggered = true;
-                    self->req_status_update.fault_info = ParamOutOfLimit(fault_info);
+                    self->req_status_update.fault_info = FaultInfo::ParamOutOfLimit(fault_info);
                     self->add_monitoring_transition();
                     self->req_status_update.EvID = check_definition.low_limit_evID;
                 }
@@ -500,7 +502,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     method manage_param_within_limits (&priv self) -> DoMonitoringReqStatus{
 
-        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::Exit;
+        var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
         var within_limits : CheckLimitsStatus = CheckLimitsStatus::MonitorWithinLimits;
         var new_status : CheckState = CheckState::ParamLimitStatus(within_limits);
@@ -580,7 +582,7 @@ resource class PUSService12 provides PUSS12Iface {
             append_u16_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].PID, result);
             var type_id : u8 = get_type_index(self->param_mon_transitions_table[i].type);
             append_u8_appdata_field(p_tm_handler, type_id, result);
-            append_u8_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].type, result);
+            
             
             if(self->param_mon_transitions_table[i].type is MonitorCheckType::ExpectedValue){
                 append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].mask_value, result);
@@ -593,7 +595,7 @@ resource class PUSService12 provides PUSS12Iface {
             append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].limit_value, result);
             append_u8_appdata_field(p_tm_handler, aux_prev_status, result);
             append_u8_appdata_field(p_tm_handler, aux_new_status, result);
-            append_u32_appdata_field(p_tm_handler, self->param_mon_transitions[i].trans_obt, result);
+            //append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].trans_obt, result); append_Timeval or convet_Timeval_to_u32??
         }
         if(*result is Result::Ok){
             close_tm(p_tm_handler, 12, 12, tm_seq_counter, result);
@@ -606,21 +608,32 @@ resource class PUSService12 provides PUSS12Iface {
 
     method add_monitoring_transition(&priv self){
 
-        if(self->monitoring_transition_counter < max_num_transitions){
+        var result : Result = Result::Ok;
+
+        if((self->monitoring_transition_counter as usize) < max_num_transitions){
 
             let current_PMON_ID : usize = (self->req_status_update.PMONID) as usize;
 
-            self->param_mon_transitions_table[self->monitoring_transition_counter].PID = self->param_mon_config_table[current_PMON_ID].PID;
-            self->param_mon_transitions_table[self->monitoring_transition_counter].PMONID = self->req_status_update.PMONID;
-            self->param_mon_transitions_table[self->monitoring_transition_counter].type = self->param_mon_config_table[current_PMON_ID].type;
-            self->param_mon_transitions_table[self->monitoring_transition_counter].limit_value = self->req_status_update.fault_info.PID_limit;
-            self->param_mon_transitions_table[self->monitoring_transition_counter].value = self->req_status_update.fault_info.PID_value;
+            self->param_mon_transitions_table[self->monitoring_transition_counter as usize].PID = self->param_mon_config_table[current_PMON_ID].PID;
+            self->param_mon_transitions_table[self->monitoring_transition_counter as usize].PMONID = self->req_status_update.PMONID;
+            self->param_mon_transitions_table[self->monitoring_transition_counter as usize].type = self->param_mon_config_table[current_PMON_ID].type;
+            match self->req_status_update.fault_info {
+                case ParamOutOfLimit(out_of_limit_info)=> {
+                    self->param_mon_transitions_table[self->monitoring_transition_counter as usize].limit_value = out_of_limit_info.PID_limit;
+                    self->param_mon_transitions_table[self->monitoring_transition_counter as usize].new_value = out_of_limit_info.PID_value;
+                }
+                case ParamFaultValue(fault_value_info)=> {
+                    self->param_mon_transitions_table[self->monitoring_transition_counter as usize].limit_value = fault_value_info.PID_expected_value;
+                    self->param_mon_transitions_table[self->monitoring_transition_counter as usize].new_value = fault_value_info.PID_value;
 
+                }
+            }
+             
             //Here it would be interesting to incorporate the I don't care option so that to improve code conciseness
             match (self->param_mon_config_table[current_PMON_ID].definition) {
                 case ParamValueCheck(value_definition)=> {
 
-                     self->param_mon_transitions_table[self->monitoring_transition_counter].mask_value = value_definition.mask_value;
+                     self->param_mon_transitions_table[self->monitoring_transition_counter as usize].mask_value = value_definition.mask_value;
 
                 }
                 case ParamLimitCheck(limit_definition)=> {
@@ -635,14 +648,14 @@ resource class PUSService12 provides PUSS12Iface {
 
             }
 
-            self->param_mon_transitions_table[self->monitoring_transition_counter].new_status = self->req_status_update.new_status;
-            self->param_mon_transitions_table[self->monitoring_transition_counter].prev_status = self->param_mon_config_table[current_PMON_ID].current_state;
-            self->param_mon_transitions_table[self->monitoring_transition_counter].trans_obt = self->param_mon_config_table[current_PMON_ID].transition_obt;
+            self->param_mon_transitions_table[self->monitoring_transition_counter as usize].new_status = self->req_status_update.new_status;
+            self->param_mon_transitions_table[self->monitoring_transition_counter as usize].prev_status = self->param_mon_config_table[current_PMON_ID].current_state;
+            self->param_mon_transitions_table[self->monitoring_transition_counter as usize].trans_obt = self->param_mon_config_table[current_PMON_ID].transition_obt;
 
             self->monitoring_transition_counter = self->monitoring_transition_counter + 1;
         }
 
-        if(self->monitoring_transition_counter == max_num_transitions){
+        if(self->monitoring_transition_counter as usize == max_num_transitions){
 
             var tm_handler : Option<box TMHandlerT> = None;
             self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -654,13 +667,13 @@ resource class PUSService12 provides PUSS12Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                self->build_tm_12_12(&mut b_tm_handler, tm_count, i, result);
+                self->build_tm_12_12(&mut b_tm_handler, tm_count, &mut result);
                 //Enviar telemetría a través del TM_CHANNEL
-                self->tm_channel.send_tm(b_tm_handler, result);
+                self->tm_channel.send_tm(b_tm_handler, &mut result);
             
                 }
                 case None => {
-                    *result = Result::Error;
+                    result = Result::Error;
 
                 }
             } 
@@ -679,13 +692,13 @@ resource class PUSService12 provides PUSS12Iface {
                 case Init=> {
 
                     self->req_status_update.PMONID = PMONID;
-                    self->req_status_update.evID = *evID;
+                    self->req_status_update.EvID = *evID;
                     self->req_status_update.fault_info = *fault_info;
-                    self->req_status = DoMonitoringReqStatus::checkPMONID;
+                    self->req_status = DoMonitoringReqStatus::CheckPMONID;
                     self->req_status_update.event_triggered = false;
 
                 }
-                case checkPMONID => {
+                case CheckPMONID => {
 
                     //choice point
                     if (self->is_valid_PMONID()) {
@@ -700,12 +713,12 @@ resource class PUSService12 provides PUSS12Iface {
                     if(self->param_mon_config_table[PMONID as usize].enabled == true){
 
                         //choice point
-                        if(self->is_limits_monitoring) {
+                        if(self->is_limits_monitoring()) {
 
                             self->req_status = DoMonitoringReqStatus::DoLimitsMonitoring;
                             
 
-                        } else if (self->is_expected_value_monitoring) {
+                        } else if (self->is_expected_value_monitoring()) {
 
                             self->req_status = DoMonitoringReqStatus::DoExpectedValueMonitoring;
 
@@ -766,8 +779,11 @@ resource class PUSService12 provides PUSS12Iface {
                     }
                 }
                 case GetRequestStatusUpdate => {
-                    *evID = self->req_status_update.evID;
+                    *evID = self->req_status_update.EvID;
                     *fault_info = self->req_status_update.fault_info;
+                }
+                case Exit => {
+                    //error
                 }
             }
         }
@@ -779,157 +795,6 @@ resource class PUSService12 provides PUSS12Iface {
 
         return;
     }
-
-/*
-    procedure do_param_limits_monitoring (&mut self, PMONID : u16, result : &mut Result, event_triggered : &mut bool, fault_info : &mut ParamOutOfLimitInfo, ev_ID : &mut u16){ 
-
-       
-        if ((PMONID as usize < max_num_pmon_ids) && (self->param_mon_config_table[PMONID as usize].enabled == true)){
-
-            var PID : u16 = self->param_mon_config_table[PMONID as usize].PID;
-
-            match(self->param_mon_config_table[PMONID as usize].definition) {
-
-                case ParamValueCheck(param_check_defintion)=> {
-                   //error
-                }
-                case ParamLimitCheck(limit_check_def)=> {
-
-                    self->param_mon_config_table[PMONID as usize].interval_control = self->param_mon_config_table[PMONID as usize].interval_control + 1;
-
-                    if(self->param_mon_config_table[PMONID as usize].interval_control >= self->param_mon_config_table[PMONID as usize].interval){
-
-                        self->param_mon_config_table[PMONID as usize].interval_control = 0;
-
-                        var PID_value : u32 = 0;
-
-                        if(self->PID_is_above_upper_limit(PID, &limit_check_def, &mut PID_value)){
-
-                            if(manage_param_above_upper_limit(PMONID, fault_info, ev_ID, PID_value, &mut self->param_mon_config_table)){
-                                *event_triggered = true;
-                            }
-
-                        } else if (self->PID_is_below_lower_limit(PID, &limit_check_def, &mut PID_value)){
-
-                            if(manage_param_below_lower_limit(PMONID, fault_info, ev_ID, PID_value, &mut self->param_mon_config_table)){
-                                *event_triggered = true;
-                            }
-
-                        } else {
-
-                           
-                            var within_limits : CheckLimitsStatus = CheckLimitsStatus::MonitorWithinLimits;
-                            var new_status : CheckState = CheckState::ParamLimitStatus(within_limits);
-                            var current_status : CheckState = self->param_mon_config_table[PMONID as usize].current_state;
-                            var item_value : u32 = 0;
-
-                            var type : DataPoolItemType = sys_data_pool_get_item_type(PID);
-
-                            match type {
-
-                                case u32_t => {
-                                    self->system_data_pool_u32.load_index((PID as usize - sdp_first_u32_param_id), &mut item_value);
-                                }
-                                case u8_t => {
-                                    var item_value_u8 : u8 = 0;
-                                    self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut item_value_u8);
-                                    item_value = item_value_u8 as u32;
-                                }
-                                case NoValidPID => {
-                                //Error
-                                }
-                            }
-
-                            var correct : bool = manage_new_status(PMONID, new_status, &mut (self->param_mon_config_table));
-
-                        }
-                    }
-
-
-                }
-                case ParamDeltaCheck(delta_check_definition) => {
-                    //error
-                }
-                case Unselected => {
-                    //error
-                }
-            }  
-   
-        }
-        
-        return;
-    }
-
-
-    procedure do_check_value_monitoring (&mut self, PMONID : u16, result : &mut Result, event_triggered : &mut bool, fault_info : &mut ParamFaultValueInfo, ev_ID : &mut u16){
-
-        if (PMONID as usize < max_num_pmon_ids && self->param_mon_config_table[PMONID as usize].enabled == true){
-
-            var PID : u16 = self->param_mon_config_table[PMONID as usize].PID;
-
-            match(self->param_mon_config_table[PMONID as usize].definition) {
-
-                case ParamValueCheck(param_check_defintion)=> {
-
-                    self->param_mon_config_table[PMONID as usize].interval_control = self->param_mon_config_table[PMONID as usize].interval_control + 1;
-
-                    if(self->param_mon_config_table[PMONID as usize].interval_control >= self->param_mon_config_table[PMONID as usize].interval){
-
-                        self->param_mon_config_table[PMONID as usize].interval_control = 0;
-
-                        var item_value : u32 = 0;
-
-                        var type : DataPoolItemType = sys_data_pool_get_item_type(PID);
-
-                        match type {
-
-                            case u32_t => {
-                                self->system_data_pool_u32.load_index((PID as usize - sdp_first_u32_param_id), &mut item_value);
-                            }
-                            case u8_t => {
-                                var value : u8 = 0;
-                                self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut value);
-                                item_value = value as u32;
-                            }
-                            case NoValidPID => {
-                            //Error
-                            }
-                        }
-
-
-                        if(self->PID_has_expected_masked_value(PID, &param_check_defintion)) {
-
-                           
-                            var check_status : CheckValueStatus = CheckValueStatus::MonitorValueExpected;
-                            var new_status : CheckState = CheckState::ParamValueStatus(check_status);
-                            
-                            var transition : bool = manage_new_status(PMONID, new_status, &mut (self->param_mon_config_table));
-
-                        } else {
-
-                            if(manage_unexpected_value(PMONID, fault_info, ev_ID, &mut self->param_mon_config_table, item_value)){
-                                *event_triggered = true;
-                            }
-
-                        }
-
-
-                    }
-                }
-                case ParamLimitCheck(limit_check_def) => {
-                    //error
-                }
-                case ParamDeltaCheck(delta_check_definition) => {
-                    //error
-                }
-                case Unselected => {
-                    //error
-                }
-            }
-        }
-
-        return; 
-    }*/
 
 
     viewer get_PMON_type (&self, PMONID : usize) -> MonitorCheckType {
