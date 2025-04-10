@@ -24,7 +24,7 @@ struct EventActionConfig {
 
 interface PUSS19Iface {
 
-     procedure exec19_1TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
+    procedure exec19_1TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
     procedure exec19_2TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
     procedure exec19_4TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
     procedure exec19_5TC (&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
@@ -334,7 +334,7 @@ resource class PUSService19 provides PUSS19Iface {
 
                                     build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
 
-                                    *result = self->disable_event_action(EvID, event_action_ID);
+                                    *result = self->delete_event_action(EvID, event_action_ID);
 
                                     var tm_handler2 : Option<box TMHandlerT> = None;
                                     self->a_tm_handler_pool.alloc(&mut tm_handler2);

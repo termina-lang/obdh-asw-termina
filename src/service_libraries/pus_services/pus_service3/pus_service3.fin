@@ -1,0 +1,795 @@
+/*
+PUS SERVICE 3 : HOUSEKEEPING
+*/
+
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import service_libraries.pus_services.pus_service1.pus_service1;
+import service_libraries.pus_services.pus_service3.pus_service3_help;
+import service_libraries.serialize;
+import resources.system_data_pool;
+import resources.tm_channel;
+import resources.tm_counter;
+
+
+
+
+interface PUSS3Iface {
+
+    procedure do_hk (&mut self, result : &mut Result);    
+    procedure exec_tc(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
+
+};
+
+resource class PUSService3 provides PUSS3Iface {
+
+    hk_config_table : [HKConfiguration; max_num_of_SIDs];
+    req_status : ExecTCReqStatus;
+    req_status_update : ExecTCReqStatusUpdate;
+    
+    system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
+    system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
+    tm_channel: access TMChannelIface;   
+    a_tm_handler_pool : access Allocator<TMHandlerT>;
+    tm_counter : access TMCounterIface;
+
+/*
+    viewer get_SIDindex (&self, SID : u16, index : &mut usize)->bool{
+
+        var found : bool = false;
+
+        for i : usize in 0 .. max_num_of_SIDs while found == false {
+
+            if (SID == self->hk_config_table[i].SID){
+
+                *index = i;
+                found = true;
+            }
+        }
+        return found;
+
+    }
+    */
+
+    /*
+    procedure exec3_5TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        var send_flag : bool = false;
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+                
+                var N : u8 = 0;
+                var SID: u16 = 0;
+                var index : usize = 0;
+
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut SID);
+    
+                if (*result is Result::Error){
+
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+
+                } else {
+
+                    if(N != 1) {
+
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
+                    } 
+                    else {
+
+                        if (self->get_SIDindex(SID, &mut index)){
+
+                            send_flag = true;
+
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+
+                            self->hk_config_table[index].enabled = true;
+                            self->hk_config_table[index].interval_control = 0;
+                            
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                            match tm_handler2 {
+
+                                case Some(b_tm_handler2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                    self->tm_channel.send_tm(b_tm_handler, result);
+                                }
+                                case None => {
+                                    *result = Result::Error;
+                                }
+                            }
+
+                        } else {
+
+                            build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), SID, result);
+                            
+                        }
+                    }
+                }
+                
+                self->tm_channel.send_tm(b_tm_handler, result);
+
+            }
+            case None => {
+                //Error
+                *result = Result::Error;
+            }  
+        } 
+
+        return;
+    }
+
+    procedure exec3_6TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        var send_flag : bool = false;
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+                
+                var N : u8 = 0;
+                var SID: u16 = 0;
+                var index : usize = 0;
+
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut SID);
+    
+                if (*result is Result::Error){
+
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+
+                } else {
+
+                    if(N != 1) {
+
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
+                    } 
+                    else {
+
+                        if (self->get_SIDindex(SID, &mut index)){
+
+                            send_flag = true;
+
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+
+                            self->hk_config_table[index].enabled = false;
+                            self->hk_config_table[index].interval_control = 0;
+                            
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                            match tm_handler2 {
+
+                                case Some(b_tm_handler2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                    self->tm_channel.send_tm(b_tm_handler2, result);
+                                }
+                                case None => {
+                                    *result = Result::Error;
+                                }
+                            }
+
+                        } else {
+
+                            build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), SID, result);
+                            
+                        }
+
+                    }
+                }
+                
+
+                self->tm_channel.send_tm(b_tm_handler, result);
+
+            }
+            case None => {
+                //Error
+                *result = Result::Error;
+            }  
+        } 
+
+        return;
+    }*/
+
+
+    /*procedure exec3_31TC(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                var N : u8 = 0;
+                var SID : u16 = 0;
+                var collection_interval : u8 = 0;
+                var index : usize = 0;
+
+                var send_flag : bool = false;
+
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut N);
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut SID);
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut collection_interval);
+
+                if (*result is Result::Error) {
+
+                    build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+
+                } else {
+
+                    if (N != 1) {
+
+                        build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), N, result);
+
+                    } else {
+
+                        if (self->get_SIDindex(SID, &mut index)){
+
+                            send_flag = true;
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &(*tc_handler), result);
+
+                            self->hk_config_table[index].interval = collection_interval;
+                            self->hk_config_table[index].interval_control = 0;
+
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                            match tm_handler2 {
+
+                                case Some(b_tm_handler2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &(*tc_handler), result);
+                                    self->tm_channel.send_tm(b_tm_handler2, result);
+                                }
+                                case None => {
+                                    *result = Result::Error;
+                                }
+                            }
+
+                        } else {
+
+                            build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, &(*tc_handler), SID, result);
+                        }
+                    }
+                }
+
+                self->tm_channel.send_tm(b_tm_handler, result);
+
+            }
+            case None => {
+                *result = Result::Error;
+            }
+        }
+
+        return;
+    }*/
+
+
+
+    method get_SIDindex (&self) -> IndexFound {
+
+        var index_found: IndexFound = {found = false, index = 0};
+
+        for i : usize in 0 .. max_num_of_SIDs while found == false {
+
+            if (SID == self->hk_config_table[i].SID){
+
+                index_found.found = true;
+                index_found.index = i;
+            }
+        }
+        return index_found;
+    }
+
+    method exec3_5TC(&priv self)-> ExecTCReqStatus {
+
+        var result : Result = Result::Ok;
+
+        if(self->req_status_update.tc_data.N != 1) {
+
+            build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), self->req_status_update.tc_data.N, &mut result);
+        } 
+        else {
+
+            self->req_status_update.index = self->get_SIDindex();
+
+            if (self->req_status_update.index.found){
+
+                var tm_handler : Option<box TMHandlerT> = None;
+                self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+                match tm_handler {
+
+                    case Some(b_tm_handler) => {
+
+                        var tm_count : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count);
+                        build_tm_1_3(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    }
+                    case None => {
+                        result = Result::Error;
+                    }
+                }
+                
+                self->hk_config_table[index].enabled = true;
+                self->hk_config_table[index].interval_control = 0;
+                
+                var tm_handler2 : Option<box TMHandlerT> = None;
+                self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                match tm_handler2 {
+
+                    case Some(b_tm_handler2) => {
+
+                        var tm_count2 : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count2);
+                        build_tm_1_7(&mut b_tm_handler2, tm_count2, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), &mut result);
+                        self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                    }
+                    case None => {
+                        result = Result::Error;
+                    }
+                }
+
+            } else {
+
+                build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), self->req_status_update.tc_data.SID, &mut result);
+                
+            }
+        }
+
+        if (result is Result::Error){
+
+            var next_status : ExecTCReqStatus = ExecTCReqStatus::Error;
+
+        } else {
+
+            var next_status : ExecTCReqStatus = ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+    }
+
+    method exec3_6TC(&priv self) -> ExecTCReqStatus {
+
+        var result : Result = Result::Ok;
+
+        if(self->req_status_update.tc_data.N != 1) {
+
+            build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), self->req_status_update.tc_data.N, &mut result);
+        } 
+        else {
+
+            self->req_status_update.index = self->get_SIDindex();
+
+            if (self->req_status_update.index.found){
+
+                var tm_handler : Option<box TMHandlerT> = None;
+                self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+                match tm_handler {
+
+                    case Some(b_tm_handler) => {
+
+                        var tm_count : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count);
+                        build_tm_1_3(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    }
+                    case None => {
+                        result = Result::Error;
+                    }
+                }
+                
+                self->hk_config_table[index].enabled = false;
+                self->hk_config_table[index].interval_control = 0;
+                
+                var tm_handler2 : Option<box TMHandlerT> = None;
+                self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                match tm_handler2 {
+
+                    case Some(b_tm_handler2) => {
+
+                        var tm_count2 : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count2);
+                        build_tm_1_7(&mut b_tm_handler2, tm_count2, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), &mut result);
+                        self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                    }
+                    case None => {
+                        result = Result::Error;
+                    }
+                }
+
+            } else {
+
+                build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), self->req_status_update.tc_data.SID, &mut result);
+                
+            }
+        }
+
+        if (result is Result::Error){
+
+            var next_status : ExecTCReqStatus = ExecTCReqStatus::Error;
+
+        } else {
+
+            var next_status : ExecTCReqStatus = ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+    }
+
+    method exec3_31TC(&priv self) -> ExecTCReqStatus {
+
+        var result : Result = Result::Ok;
+
+        if (self->req_status_update.tc_data_3_31.N != 1) {
+
+            build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), self->req_status_update.tc_data.N, &mut result);
+
+        } else {
+
+            self->req_status_update.index = self->get_SIDindex();
+
+            if (self->req_status_update.index.found){
+
+                var tm_handler : Option<box TMHandlerT> = None;
+                self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+                match tm_handler {
+
+                    case Some(b_tm_handler) => {
+
+                        var tm_count : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                        build_tm_1_3(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    }
+                    case None => {
+                        result = Result::Error;
+                    }
+                }
+
+                self->hk_config_table[index].interval = self->req_status_update.tc_data.collection_interval;
+                self->hk_config_table[index].interval_control = 0;
+
+                var tm_handler2 : Option<box TMHandlerT> = None;
+                self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                match tm_handler2 {
+
+                    case Some(b_tm_handler2) => {
+
+                        var tm_count2 : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count2);
+
+                        build_tm_1_7(&mut b_tm_handler2, tm_count2, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), &mut result);
+                        self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                    }
+                    case None => {
+                        result = Result::Error;
+                    }
+                }
+
+            } else {
+
+                build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), self->req_status_update.tc_data.SID, &mut result);
+            }
+        }
+
+        if (result is Result::Error){
+
+            var next_status : ExecTCReqStatus = ExecTCReqStatus::Error;
+
+        } else {
+
+            var next_status : ExecTCReqStatus = ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+    }
+
+    method manage_short_pack_length_error(&priv self) -> ExecTCReqStatus {
+
+        var result : Result = Result::Ok;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, &(self->req_status_update.tc_data.packet_id), 
+                                            &(self->req_status_update.tc_data.packet_error_ctrl), &mut result);
+                self->tm_channel.send_tm(b_tm_handler, result);
+            }
+            case None => {
+                *result = Result::Error;
+            }
+        }
+
+        if (result is Result::Error){
+
+            var next_status : ExecTCReqStatus = ExecTCReqStatus::Error;
+
+        } else {
+
+            var next_status : ExecTCReqStatus = ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+    }
+
+
+    viewer build_tm_3_25(&self, p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, index: usize, result: &mut Result) {
+
+        startup_tm(p_tm_handler);
+        append_u16_appdata_field(p_tm_handler, self->hk_config_table[index].SID, result);
+
+        var PID : u16 = 0;
+        var u32_SDP_value : u32 = 0;
+        var u8_SDP_value : u8 = 0;
+
+        for j : usize in 0 .. max_params_per_SID while (j < (self->hk_config_table[index].num_params as usize)) {
+
+            PID = self->hk_config_table[index].params_def[j];
+            var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+            match item_type {
+                case u8_t => {
+                    self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
+                    append_u8_appdata_field(p_tm_handler, u8_SDP_value, result);
+                }
+                case u32_t => {
+                    self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
+                    append_u32_appdata_field(p_tm_handler, u32_SDP_value, result);
+                }
+                case NoValidPID => {
+                    *result = Result::Error;
+                }
+            }
+    
+        }
+
+        close_tm(p_tm_handler, 3, 25, tm_seq_counter, result);
+
+
+	    return;
+    }
+
+    viewer get_subtype_PS3(&self, tc_handler : &mut TCHandlerT, subtype: &mut u8) -> ExecTCReqStatus {
+
+        *subtype = get_subtype(&(tc_handler->tc_descriptor.tc_bytes));
+        var next_status : ExecTCReqStatus = ExecTCReqStatus::ExecTC;
+
+        return next_status; 
+
+    }
+
+    viewer get_TC_3_5_6_params(&self, tc_handler : &mut TCHandlerT, result : &mut Result) -> TCData3_5_6 {
+
+          var tc_data : TCData = {
+            packet_id = 0,
+            packet_error_ctrl = 0,
+            N = 0,
+            SID = 0,
+            collection_interval = 0
+        };
+        tc_data.packet_id = tc_handler->packet_header.packet_id;
+        tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+        *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (tc_data.N));
+        *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data.SID));
+
+        return tc_data;
+
+    }
+
+
+    viewer get_TC_3_31_params(&self, tc_handler : &mut TCHandlerT, result : &mut Result) -> TCData3_31 {
+
+        var tc_data : TCData = {
+            packet_id = 0,
+            packet_error_ctrl = 0,
+            N = 0,
+            SID = 0,
+            collection_interval = 0
+        };
+        tc_data.packet_id = tc_handler->packet_header.packet_id;
+        tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+        *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (tc_data.N));
+        *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data.SID));
+        *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->req_status_update.tc_data_3_31.collection_interval));
+
+        return tc_data;
+
+    }
+
+
+    procedure exec_tc(&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
+
+        var subtype : u8 = 0;
+
+        for i : usize in 0 .. 4 while (self->req_status is ExecTCReqStatus::Exit == false) {
+
+            match self->request_status {
+
+                case Init => {
+
+                    self->req_status = self->get_subtype_PS3(tc_handler, &mut subtype);
+                }
+                case GetTCParams => {
+
+                    if (subtype == 5 || subtype == 6) {
+
+                        self->req_status_update.tc_data = self->get_TC_3_5_6_params(tc_handler, result);
+                        if (*result is Result::Error) {
+                            self->req_status = ExecTCReqStatus::ShortPackLengthError;
+                        } else {
+                            self->req_status = ExecTCReqStatus::ExecTC;
+                        }
+
+                    } else if (subtype == 31) {
+
+                        self->req_status_update.tc_data = self->get_TC_3_31_params(tc_handler, result);
+                        if (*result is Result::Error) {
+                            self->req_status = ExecTCReqStatus::ShortPackLengthError;
+                        } else {
+                            self->req_status = ExecTCReqStatus::ExecTC;
+                        }
+
+                    } else {
+
+                        self->req_status = ExecTCReqStatus::Error;
+                    }
+
+                }
+                case ExecTC => {
+
+                    if (subtype == 5) {
+
+                        self->req_status = self->exec3_5TC();
+
+                    } else if (subtype == 6) {
+
+                        self->req_status = self->exec3_6TC();
+
+                    } else if (subtype == 31) {
+
+                        self->req_status = self->exec3_31TC();
+
+                    } else {
+                        //Error
+                    }
+
+                }
+                case ShortPackLengthError => {
+
+                    self->req_status = self->manage_short_pack_length_error();
+                    
+                }
+                case Error => {
+
+                    *result = Result::Error;
+
+                }
+                case Exit => {
+                    //Do nothing
+                }  
+            }
+        }
+
+        if(self->req_status is ExecTCReqStatus::Exit){
+
+            self->req_status = ExecTCReqStatus::Init;
+        }
+
+        return;
+
+    } 
+    
+
+
+    procedure do_hk (&mut self, result : &mut Result){
+
+        for i : usize in 0 .. max_num_of_SIDs {
+
+            if (self->hk_config_table[i].enabled == true){
+
+                self->hk_config_table[i].interval_control = self->hk_config_table[i].interval_control + 1;
+
+                if (self->hk_config_table[i].interval_control >= self->hk_config_table[i].interval){
+
+                    self->hk_config_table[i].interval_control = 0;
+
+                    var tm_handler : Option<box TMHandlerT> = None;
+                    self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+                    match tm_handler {
+
+                        case Some(b_tm_handler) => {
+
+                        var tm_count : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                        self->build_tm_3_25(&mut b_tm_handler, tm_count, i, result);
+                        //Enviar telemetría a través del TM_CHANNEL
+                        self->tm_channel.send_tm(b_tm_handler, result);
+                   
+                        }
+                        case None => {
+                            *result = Result::Error;
+
+                        }
+                    }       
+                }
+            }
+        }
+
+        return;
+    }
+
+
+
+};
+
+
+
+
+
+
+
+
+
+

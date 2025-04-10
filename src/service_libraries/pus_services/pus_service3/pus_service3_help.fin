@@ -1,0 +1,38 @@
+const max_num_of_SIDs : usize = 8;
+const max_params_per_SID : usize = 16;
+
+enum ExecTCReqStatus {
+    Init,
+    ExecTC,
+    Error,
+    Exit
+};
+
+struct IndexFound {
+    var found : bool;
+    var index : usize;
+};
+
+struct TCData {
+    var packet_id : u16;
+    var packet_error_ctrl : u16;
+    var N : u8;
+    var SID: u16;
+    var collection_interval : u8;
+};
+
+struct ExecTCReqStatusUpdate {
+    index: IndexFound;
+    tc_data: TCData;
+};
+
+
+
+struct HKConfiguration {
+    enabled : bool;
+    SID : u16;
+    interval : u8;
+    interval_control : u8;
+    num_params : u8;
+    params_def : [u16; max_params_per_SID];
+};
