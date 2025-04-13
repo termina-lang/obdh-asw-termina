@@ -1,7 +1,7 @@
 const max_num_of_SIDs : usize = 8;
 const max_params_per_SID : usize = 16;
 
-enum ExecTCReqStatus {
+enum PS3ExecTCReqStatus {
     Init,
     ExecTC,
     Error,
@@ -9,21 +9,22 @@ enum ExecTCReqStatus {
 };
 
 struct IndexFound {
-    var found : bool;
-    var index : usize;
+    found : bool;
+    index : usize;
 };
 
-struct TCData {
-    var packet_id : u16;
-    var packet_error_ctrl : u16;
-    var N : u8;
-    var SID: u16;
-    var collection_interval : u8;
+struct PS3TCData {
+    packet_id : u16;
+    packet_error_ctrl : u16;
+    tc_num_bytes : usize;
+    N : u8;
+    SID: u16;
+    collection_interval : u8;
 };
 
-struct ExecTCReqStatusUpdate {
+struct PS3ExecTCReqStatusUpdate {
     index: IndexFound;
-    tc_data: TCData;
+    tc_data: PS3TCData;
 };
 
 

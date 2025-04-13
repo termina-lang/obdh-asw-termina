@@ -25,6 +25,9 @@ resource class PUSService5 provides PUSS5Iface {
 
     Ev_ID_enable_config : [u32; 4];
 
+    exect_tc_req_status : PS5ExecTCReqStatus;
+    exect_tc_req_status_update : PS5ExecTCReqStatusUpdate;
+
     tm_channel : access TMChannelIface;
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
@@ -272,6 +275,81 @@ resource class PUSService5 provides PUSS5Iface {
         close_tm(p_tm_handler, 5, subtype, tm_seq_counter, result);
 
         return;
+    }
+
+    viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut Result) -> PS5TCData {
+
+        *subtype = get_subtype(&(tc_handler->tc_descriptor.tc_bytes));
+
+        var tc_data : PS5TCData = {
+            packet_id = 0,
+            packet_error_ctrl = 0,
+            tc_num_bytes = 0,
+            N = 0,
+            EvID = 0,
+        };
+        tc_data.packet_id = tc_handler->packet_header.packet_id;
+        tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+        tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
+        *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (tc_data.N));
+        *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data.EvID));
+
+        return tc_data;
+
+    }
+
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
+
+        var subtype : u8 = 0;
+
+        for i : usize in 0 .. 3 while (self->exect_tc_req_status is PS5ExecTCReqStatus::Exit == false) {
+
+            match self->exect_tc_req_status {
+
+                case Init => {
+
+                    self->exect_tc_req_status_update.tc_data = self->get_TC_params(tc_handler, &mut subtype, result);
+                    if (*result is Result::Error) {
+                        self->exect_tc_req_status = self->manage_short_pack_length_error();
+                    } else {
+                        self->exect_tc_req_status = PS5ExecTCReqStatus::ExecTC;
+                    }
+
+                }
+                case ExecTC => {
+
+                    if (subtype == 5) {
+
+                        self->exect_tc_req_status = self->exec5_5TC();
+
+                    } else if (subtype == 6) {
+
+                        self->exect_tc_req_status = self->exec5_6TC();
+
+                    } else {
+
+                        self->exect_tc_req_status = PS5ExecTCReqStatus::Error;
+                    }
+
+                case Error => {
+
+                    *result = Result::Error;
+                    self->exect_tc_req_status = PS5ExecTCReqStatus::Exit;
+
+                }
+                case Exit => {
+                    //Unreachable point
+                }  
+            }
+        }
+
+        if(self->exect_tc_req_status is PS5ExecTCReqStatus::Exit){
+
+            self->exect_tc_req_status = PS5ExecTCReqStatus::Init;
+        }
+
+        return;
+
     }
   
 };

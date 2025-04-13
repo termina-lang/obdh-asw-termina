@@ -38,6 +38,31 @@ enum FaultInfo {
     ParamFaultValue(ParamFaultValueInfo)
 };
 
+enum PS5ExecTCReqStatus {
+    Init,
+    ExecTC,
+    Error,
+    Exit
+};
+
+struct IndexFound {
+    found : bool;
+    index : usize;
+};
+
+struct PS5TCData {
+    packet_id : u16;
+    packet_error_ctrl : u16;
+    tc_num_bytes : usize;
+    N : u8;
+    EvID: u16;
+};
+
+struct PS5ExecTCReqStatusUpdate {
+    index: IndexFound;
+    tc_data: PS5TCData;
+};
+
 
 
 function get_Ev_ID_type(Ev_ID : u16) -> Ev_IDType {
@@ -121,6 +146,7 @@ function get_Ev_ID_enable_config_offset(Ev_ID : u16) -> u8 {
 
     return (Ev_ID & offset_mask) as u8;
 } 
+
 
 /*
 function build_tm_5_x(p_tm_handler : &mut TMHandlerT,tm_seq_counter: u16, event : &EventInfo, index : usize){
