@@ -182,90 +182,19 @@ task class HouseKeepingFDIR {
 
         if (tc_type == 3){
 
+            self->pus_service_3.exec_tc(&mut tc_handler, &mut res);
 
-            if (subtype == 5){
-
-                self->pus_service_3.exec3_5TC(&mut tc_handler, &mut res);
-            } 
-            else if (subtype == 6){
-
-                self->pus_service_3.exec3_6TC(&mut tc_handler, &mut res);
-
-            } else if (subtype == 31){
-
-                self->pus_service_3.exec3_31TC(&mut tc_handler, &mut res);
-
-            } else {
-
-                res = Result::Error;
-                //This is an error in acceptance, could be modeled as an event
-                /* If the acceptance process is correct, this point should not be reached */
-            }
-
-/*
         } else if (tc_type == 5){
 
-            if (subtype == 5){
-
-                self->pus_service_5.exec5_5TC(&mut tc_handler &mut res);
-            } 
-            else if (subtype == 6){
-
-                self->pus_service_5.exec5_6TC(&mut tc_handler, &mut res);
-
-            } else {
-
-                res = Result::Error;
-                //This is an error in acceptance, could be modeled as an event
-                /* If the acceptance process is correct, this point should not be reached */
-         //  } 
-           
+            self->pus_service_5.exec_tc(&mut tc_handler, &mut res);
 
         } else if (tc_type == 12){
 
-            if (subtype == 1){
-
-                self->pus_service_12.exec12_1TC(&mut tc_handler, &mut res);
-            } 
-            else if (subtype == 2){
-
-                self->pus_service_12.exec12_2TC(&mut tc_handler, &mut res);
-
-            } else if (subtype == 5){
-
-                self->pus_service_12.exec12_5TC(&mut tc_handler, &mut res);
-
-            } else {
-
-                res = Result::Error;
-                //This is an error in acceptance, could be modeled as an event
-                /* If the acceptance process is correct, this point should not be reached */
-            }
+            self->pus_service_12.exec_tc(&mut tc_handler, &mut res);
 
         } else if (tc_type == 19){
 
-            if (subtype == 1){
-
-                self->pus_service_19.exec19_1TC(&mut tc_handler, &mut res);
-            } 
-            else if (subtype == 2){
-
-                self->pus_service_19.exec19_2TC(&mut tc_handler, &mut res);
-
-            } else if (subtype == 4){
-
-                self->pus_service_19.exec19_4TC(&mut tc_handler, &mut res);
-            
-            } else if (subtype == 5){
-
-                self->pus_service_19.exec19_5TC(&mut tc_handler, &mut res);
-
-            } else {
-
-                res = Result::Error;
-                //This is an error in acceptance, could be modeled as an event
-                /* If the acceptance process is correct, this point should not be reached */
-            }
+            self->pus_service_19.exec_tc(&mut tc_handler, &mut res);
 
         } else {
 

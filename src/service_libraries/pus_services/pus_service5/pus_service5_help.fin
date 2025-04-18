@@ -45,10 +45,7 @@ enum PS5ExecTCReqStatus {
     Exit
 };
 
-struct IndexFound {
-    found : bool;
-    index : usize;
-};
+
 
 struct PS5TCData {
     packet_id : u16;
@@ -59,10 +56,11 @@ struct PS5TCData {
 };
 
 struct PS5ExecTCReqStatusUpdate {
-    index: IndexFound;
     tc_data: PS5TCData;
 };
 
+
+//These functions could become viewers !!!
 
 
 function get_Ev_ID_type(Ev_ID : u16) -> Ev_IDType {
@@ -146,46 +144,3 @@ function get_Ev_ID_enable_config_offset(Ev_ID : u16) -> u8 {
 
     return (Ev_ID & offset_mask) as u8;
 } 
-
-
-/*
-function build_tm_5_x(p_tm_handler : &mut TMHandlerT,tm_seq_counter: u16, event : &EventInfo, index : usize){
-
-    var tm_packet_header : CCSDSPUSTMPacketHeaderT =
-	                                     {packet_id = 0 : u16,
-	                                      packet_seq_ctrl = 0 : u16,
-	                                      packet_length = 0 : u16};
-	var df_header : CCSDSPUSTMDFHeaderT =
-									{version = 0 : u8,
-	 								type = 0 : u8,
-	 								subtype = 0 : u8,
-	 								destinationID = 0};
-
-	tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32C : u16);
-
-	tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3 : u16, tm_seq_counter);
-	
-
-	tm_packet_header.packet_length = 5 + event->ev_aux_data_size as u16;
-
-	df_header.version = ccsds_pus_tm_build_df_header_version(0x1 : u8);
-	df_header.type = 5 : u8;
-	df_header.subtype = (index + 1) as u8;
-	df_header.destinationID = 0x78 : u8;
-
-
-	ccsds_pus_tm_set_fields(&mut p_tm_descriptor->tm_bytes[0 : usize .. 10 : usize], &tm_packet_header, &df_header);
-
-	serialize_uint16(event->ev_Ev_ID, &mut p_tm_descriptor->tm_bytes[14 : usize .. 16 : usize]);
-
-	for i : usize in 0 .. event_aux_data_max_size while (i < event->ev_aux_data_size) {
-
-        p_tm_descriptor->tm_bytes[16 + i] = event->ev_aux_data[i];
-    }
-	
-	// Calculate p_tm_descriptor->tm_num_bytes
-	p_tm_descriptor->tm_num_bytes = tm_packet_header.packet_length as usize + 7;
-
-    return;
-}*/
-

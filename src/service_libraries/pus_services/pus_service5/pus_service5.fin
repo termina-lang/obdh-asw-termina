@@ -9,9 +9,7 @@ import service_libraries.pus_services.pus_service5.pus_service5_help;
 
 interface PUSS5Iface {
 
-    //procedure build_event_list_tms(&mut self, event_list : &mut EventList, result : &mut Result);
-    procedure exec5_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
-    procedure exec5_6TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result);
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
     procedure is_Ev_ID_enabled_ext(&mut self, Ev_ID: u16, p_enabled: &mut bool); 
     procedure build_tm_5_x_param_out_of_limit(&mut self, p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16,
      fault_info : ParamOutOfLimitInfo, ev_ID : u16, result : &mut Result);
@@ -53,6 +51,43 @@ resource class PUSService5 provides PUSS5Iface {
         *p_enabled = (self->is_Ev_ID_enabled(Ev_ID));
 
         return;
+    }
+
+    viewer manage_short_pack_length_error(&self) -> PS5ExecTCReqStatus {
+
+        var next_status : PS5ExecTCReqStatus = PS5ExecTCReqStatus::Error;
+        var result : Result = Result::Ok;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.tc_data.packet_id), 
+                                            (self->exect_tc_req_status_update.tc_data.packet_error_ctrl), (self->exect_tc_req_status_update.tc_data.tc_num_bytes), &mut result);
+                self->tm_channel.send_tm(b_tm_handler, &mut result);
+            }
+            case None => {
+                result = Result::Error;
+            }
+        }
+
+        if (result is Result::Error){
+
+            next_status = PS5ExecTCReqStatus::Error;
+
+        } else {
+
+            next_status = PS5ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
     }
 
 /*
@@ -97,7 +132,7 @@ resource class PUSService5 provides PUSS5Iface {
 
     }
 */
-
+/*
     procedure exec5_5TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result) {
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -170,9 +205,173 @@ resource class PUSService5 provides PUSS5Iface {
         }
 
         return;
+    }*/
+
+    method exec5_5TC(&priv self) -> PS5ExecTCReqStatus {
+
+        var result : Result = Result::Ok;
+        var next_status : PS5ExecTCReqStatus = PS5ExecTCReqStatus::Error;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                var index: usize = get_Ev_ID_enable_config_index(self->exect_tc_req_status_update.tc_data.EvID);
+                var offset : u8 = get_Ev_ID_enable_config_offset(self->exect_tc_req_status_update.tc_data.EvID);
+
+            
+                if (self->exect_tc_req_status_update.tc_data.N != 1) {
+
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.tc_data.packet_id), 
+                                                        (self->exect_tc_req_status_update.tc_data.packet_error_ctrl), self->exect_tc_req_status_update.tc_data.N, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                }
+                else {
+
+                    var is_valid_EvID : bool = index < 4;
+
+                    if(is_valid_EvID) {
+
+                        build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        self->Ev_ID_enable_config[index] = self->Ev_ID_enable_config[index] | (1 << offset);
+
+                        var tm_handler2 : Option<box TMHandlerT> = None;
+                        self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                        match tm_handler2 {
+
+                            case Some(b_tm_handler2) => {
+
+                                var tm_count2 : u16 = 0 : u16;
+                                self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
+                                self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                            }
+                            case None => {
+                                result = Result::Error;
+                            }
+                        }
+
+                    } else {
+
+                        build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.tc_data.packet_id), 
+                                                        (self->exect_tc_req_status_update.tc_data.packet_error_ctrl), (self->exect_tc_req_status_update.tc_data.EvID), &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                    }
+
+                }
+            }
+            case None => {
+                result = Result::Error;
+            }
+        }
+
+        if (result is Result::Error){
+
+            next_status = PS5ExecTCReqStatus::Error;
+
+        } else {
+
+            next_status = PS5ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+
     }
 
+    method exec5_6TC(&priv self) -> PS5ExecTCReqStatus {
 
+        var result : Result = Result::Ok;
+        var next_status : PS5ExecTCReqStatus = PS5ExecTCReqStatus::Error;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                var index: usize = get_Ev_ID_enable_config_index(self->exect_tc_req_status_update.tc_data.EvID);
+                var offset : u8 = get_Ev_ID_enable_config_offset(self->exect_tc_req_status_update.tc_data.EvID);
+
+            
+                if (self->exect_tc_req_status_update.tc_data.N != 1) {
+
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.tc_data.packet_id), 
+                                                        (self->exect_tc_req_status_update.tc_data.packet_error_ctrl), self->exect_tc_req_status_update.tc_data.N, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                }
+                else {
+
+                    var is_valid_EvID : bool = index < 4;
+
+                    if(is_valid_EvID) {
+
+                        build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        self->Ev_ID_enable_config[index] = self->Ev_ID_enable_config[index] & (0xFFFFFFFE << offset);
+
+                        var tm_handler2 : Option<box TMHandlerT> = None;
+                        self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                        match tm_handler2 {
+
+                            case Some(b_tm_handler2) => {
+
+                                var tm_count2 : u16 = 0 : u16;
+                                self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
+                                self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                            }
+                            case None => {
+                                result = Result::Error;
+                            }
+                        }
+
+                    } else {
+
+                        build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.tc_data.packet_id), 
+                                                        (self->exect_tc_req_status_update.tc_data.packet_error_ctrl), (self->exect_tc_req_status_update.tc_data.EvID), &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                    }
+
+                }
+            }
+            case None => {
+                result = Result::Error;
+            }
+        }
+
+        if (result is Result::Error){
+
+            next_status = PS5ExecTCReqStatus::Error;
+
+        } else {
+
+            next_status = PS5ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+
+    }
+
+/*
     procedure exec5_6TC(&mut self, tc_handler: &mut TCHandlerT, result: &mut Result) {
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -248,7 +447,7 @@ resource class PUSService5 provides PUSS5Iface {
         return;
     }
 
-
+*/
     procedure build_tm_5_x_param_out_of_limit(&mut self, p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamOutOfLimitInfo, ev_ID : u16, result : &mut Result){
 
         startup_tm(p_tm_handler);
@@ -286,7 +485,7 @@ resource class PUSService5 provides PUSS5Iface {
             packet_error_ctrl = 0,
             tc_num_bytes = 0,
             N = 0,
-            EvID = 0,
+            EvID = 0
         };
         tc_data.packet_id = tc_handler->packet_header.packet_id;
         tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
@@ -330,6 +529,7 @@ resource class PUSService5 provides PUSS5Iface {
 
                         self->exect_tc_req_status = PS5ExecTCReqStatus::Error;
                     }
+                }
 
                 case Error => {
 
@@ -349,7 +549,7 @@ resource class PUSService5 provides PUSS5Iface {
         }
 
         return;
-
+    
     }
   
 };

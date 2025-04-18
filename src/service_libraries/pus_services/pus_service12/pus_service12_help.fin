@@ -103,7 +103,7 @@ struct ParamMonitoringTransition {
 
 };
 
-struct RequestStatusUpdate {
+struct DoMonitoringReqStatusUpdate {
     PMONID: u16;
     EvID: u16;
     current_monitor_definition: MonitorDefinition;
@@ -121,6 +121,63 @@ enum DoMonitoringReqStatus {
     GetRequestStatusUpdate,
     Exit
 };
+
+enum PS12ExecTCReqStatus {
+    Init,
+    ExecTC,
+    Error,
+    Exit
+};
+
+
+struct PS12TC_1_2_6_Data {
+    N : u8;
+    PMONID: u16;
+};
+
+struct PS12TC_5_Data {
+    N : u8;
+    PMONID: u16;
+    mon_config : ParamMonitoringConfiguration;
+};
+
+struct PS12ExecTCReqStatusUpdate {
+    packet_id : u16;
+    packet_error_ctrl : u16;
+    tc_num_bytes : usize;
+    tc_data_1_2_6: PS12TC_1_2_6_Data;
+    tc_data_5: PS12TC_5_Data;  
+};
+
+function PS12ExecTCReqStatusUpdate_init() -> PS12ExecTCReqStatusUpdate {
+    var res : PS12ExecTCReqStatusUpdate = {
+        packet_id = 0,
+        packet_error_ctrl = 0,
+        tc_num_bytes = 0,
+        tc_data_1_2_6 = {
+            N = 0,
+            PMONID = 0
+        },
+        tc_data_5 = {
+            N = 0,
+            PMONID = 0,
+            mon_config = {
+                PID = 0,
+                type = MonitorCheckType::Free,
+                enabled = false,
+                definition = MonitorDefinition::Unselected,
+                repetition= 0,
+                repetition_control= 0,
+                interval = 0,
+                interval_control = 0,
+                transition_obt = {tv_sec = 0, tv_usec = 0},
+                temp_state = CheckState::Unselected,
+                current_state = CheckState::Unselected
+            }
+        }
+    };
+    return res;
+}
 
 function get_check_status_index (status : CheckState) -> u8 {
 
@@ -223,34 +280,6 @@ function are_status_equal (status1 : CheckState, status2 : CheckState) -> bool {
     return equal;
 }
 
-
-
-
-function set_unchecked (param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids], valid_PMONID : usize) {
-
-    match (param_mon_config_table[valid_PMONID].current_state) {
-
-        case ParamValueStatus(check_val) => {
-            var monitor_unchecked : CheckValueStatus = CheckValueStatus::MonitorUnchecked;
-            param_mon_config_table[valid_PMONID].current_state = CheckState::ParamValueStatus(monitor_unchecked);
-        }
-        case ParamLimitStatus(check_limits) => {
-            var monitor_unchecked : CheckLimitsStatus = CheckLimitsStatus::MonitorUnchecked;
-            param_mon_config_table[valid_PMONID].current_state = CheckState::ParamLimitStatus(monitor_unchecked);
-        }
-        case ParamDeltaStatus(check_delta) => {
-            var monitor_unchecked : CheckDeltaStatus = CheckDeltaStatus::MonitorUnchecked;
-            param_mon_config_table[valid_PMONID].current_state = CheckState::ParamDeltaStatus(monitor_unchecked);
-        }
-        case Unselected => {
-            //Do nothing
-        }
-    }
-
-    param_mon_config_table[valid_PMONID].temp_state = param_mon_config_table[valid_PMONID].current_state;
-
-    return;
-}
 
 
 function get_check_type (aux : u8) -> MonitorCheckType {
@@ -450,44 +479,4 @@ function is_valid_check_limit_def (param_limit_check_definition : &MonitorDefini
     return res;
 }
 
-function add_valid_mng_mon_def (PMONID: usize, param_monit_config: &ParamMonitoringConfiguration,
-                                 param_mon_config_table : &mut [ParamMonitoringConfiguration; max_num_pmon_ids]){
 
-    (*param_mon_config_table)[PMONID] = *param_monit_config;
-
-    (*param_mon_config_table)[PMONID].enabled = false;
-
-    //set unckecked
-    if (PMONID < max_num_pmon_ids){
-
-        match (param_mon_config_table[PMONID].type) {
-
-            case ExpectedValue => {
-
-                var status : CheckValueStatus = CheckValueStatus::MonitorUnchecked;
-                (*param_mon_config_table)[PMONID].current_state = CheckState::ParamValueStatus(status);
-            }
-            case Limits => {
-
-                var status : CheckLimitsStatus = CheckLimitsStatus::MonitorUnchecked;
-                (*param_mon_config_table)[PMONID].current_state = CheckState::ParamLimitStatus(status);
-
-            }
-            case Delta => { 
-
-                var status : CheckDeltaStatus = CheckDeltaStatus::MonitorUnchecked;
-                (*param_mon_config_table)[PMONID].current_state = CheckState::ParamDeltaStatus(status);
-
-            }
-            case Free => {
-
-                //Error
-
-            }    
- 
-        }
-
-    }
-
-    return;
-}
