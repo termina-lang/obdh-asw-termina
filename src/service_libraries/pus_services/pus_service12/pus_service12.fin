@@ -1080,64 +1080,12 @@ resource class PUSService12 provides PUSS12Iface {
 
                 } else if (self->exect_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::Limits) {
 
-                    result = get_PMON_limit_check_definition(tc_handler, self->exect_tc_req_status_update.tc_data_5.mon_config.PID, &mut self->exect_tc_req_status_update.tc_data_5.mon_config.definition);
-
-                    if (result is Result::Error) {
-
-                        build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
-                    }
-                    else {
-
-                        if(is_valid_check_limit_def(&self->exect_tc_req_status_update.tc_data_5.mon_config.definition)){
-
-                            build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                            self->tm_channel.send_tm(b_tm_handler, &mut result);
-                            self->add_valid_mng_mon_def();
-                
-                            var tm_handler2 : Option<box TMHandlerT> = None;
-                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
-
-                            match tm_handler2 {
-
-                                case Some(b_tm_handler2) => {
-
-                                    var tm_count2 : u16 = 0 : u16;
-                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
-                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
-                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
-                                }
-                                case None => {
-                                    result = Result::Error;
-                                }
-                            }
-
-                        } else {
-
-                            build_tm_1_4_PMON_definition_invalid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), PMONID, &mut result);
-                            self->tm_channel.send_tm(b_tm_handler, &mut result);
-                        }
-
-                    }
-
-                } else if (self->exect_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::ExpectedValue) {
-
-                    *result = get_PMON_value_check_definition(tc_handler, self->exect_tc_req_status_update.tc_data_5.mon_config.PID, &mut self->exect_tc_req_status_update.tc_data_5.mon_config.definition);
-
-                    if (*result is Result::Error) {
-
-                        build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, result);
-
-                    } else {
+                    if(is_valid_check_limit_def(&self->exect_tc_req_status_update.tc_data_5.mon_config.definition)){
 
                         build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                         self->add_valid_mng_mon_def();
-
+            
                         var tm_handler2 : Option<box TMHandlerT> = None;
                         self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
@@ -1151,24 +1099,48 @@ resource class PUSService12 provides PUSS12Iface {
                                 self->tm_channel.send_tm(b_tm_handler2, &mut result);
                             }
                             case None => {
-                                *result = Result::Error;
+                                result = Result::Error;
                             }
+                        
                         }
+                    } else {
 
+                        build_tm_1_4_PMON_definition_invalid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
+                                                    (self->exect_tc_req_status_update.packet_error_ctrl), (self->exect_tc_req_status_update.tc_data_5.PMONID), &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
                     }
-            
+
+                } else if (self->exect_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::ExpectedValue) {
+
+                    build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    self->add_valid_mng_mon_def();
+
+                    var tm_handler2 : Option<box TMHandlerT> = None;
+                    self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                    match tm_handler2 {
+
+                        case Some(b_tm_handler2) => {
+
+                            var tm_count2 : u16 = 0 : u16;
+                            self->tm_counter.get_next_tm_count(&mut tm_count2);
+                            build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
+                            self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                        }
+                        case None => {
+                            result = Result::Error;
+                        }
+                    }
                 } else {
 
                     build_tm_1_4_PMON_definition_invalid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
                                                         (self->exect_tc_req_status_update.packet_error_ctrl), (self->exect_tc_req_status_update.tc_data_5.PMONID), &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
                 }
-
-                
-
             }
             case None => {
-                *result = Result::Error;
+                result = Result::Error;
             }
         }
 
@@ -1187,7 +1159,7 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
 //Comprobar exec12_6TC enteramente
-    method exec12_6TC(&priv self){
+    method exec12_6TC(&priv self) -> PS12ExecTCReqStatus {
 
         var result : Result = Result::Ok;
         var next_status : PS12ExecTCReqStatus = PS12ExecTCReqStatus::Error;
@@ -1211,7 +1183,7 @@ resource class PUSService12 provides PUSS12Iface {
                 }
                 else {
                     
-                    var PMON_type : MonitorCheckType = get_check_type(PMONID as u8);
+                    var PMON_type : MonitorCheckType = get_check_type((self->exect_tc_req_status_update.tc_data_1_2_6.PMONID) as u8);
 
                     if(PMON_type is MonitorCheckType::Free){
 
@@ -1219,12 +1191,12 @@ resource class PUSService12 provides PUSS12Iface {
                                                         (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update.tc_data_1_2_6.PMONID, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                    } else if (self->param_mon_config_table[PMONID as usize].enabled == false){ 
+                    } else if (self->param_mon_config_table[(self->exect_tc_req_status_update.tc_data_1_2_6.PMONID)as usize].enabled == false){ 
 
                         build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                       
-                        self->param_mon_config_table[PMONID as usize].type = MonitorCheckType::Free;
+                        self->param_mon_config_table[(self->exect_tc_req_status_update.tc_data_1_2_6.PMONID) as usize].type = MonitorCheckType::Free;
 
                         var tm_handler2 : Option<box TMHandlerT> = None;
                         self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -1245,7 +1217,7 @@ resource class PUSService12 provides PUSS12Iface {
                     } else {
 
                         build_tm_1_4_PMON_enabled(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update.tc_data_1_2_6.PMONID, result);
+                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update.tc_data_1_2_6.PMONID, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                     }
 
@@ -1309,25 +1281,142 @@ resource class PUSService12 provides PUSS12Iface {
         return next_status;
     }
 
+
+    viewer get_PMON_limit_check_definition (&self, tc_handler : &mut TCHandlerT, result: &mut Result) -> MonitorDefinition {
+
+        var limits_def : ParamLimitCheckDefinition = {
+            low_limit = 0,
+            low_limit_evID = 0,
+            high_limit = 0,
+            high_limit_evID = 0
+        };
+
+        var type : DataPoolItemType = sys_data_pool_get_item_type(self->exect_tc_req_status_update.tc_data_5.mon_config.PID);
+
+        match type {
+
+            case u8_t => {
+
+                var low_limit : u8 = 0;
+                var high_limit : u8 = 0;
+
+                //get low limit
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut low_limit);
+
+                //get low limit evID
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (limits_def.low_limit_evID));
+
+                //get high limit
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut high_limit);
+
+                //get high limit evID
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (limits_def.high_limit_evID));
+
+                limits_def.low_limit = low_limit as u32;
+                limits_def.high_limit = high_limit as u32;
+
+            }
+            case u32_t => {
+
+                //get low limit
+                *result = tc_handler_get_u32_appdata_field(tc_handler, &mut (limits_def.low_limit));
+                
+                //get low limit evID
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (limits_def.low_limit_evID));
+
+                //get high limit
+                *result = tc_handler_get_u32_appdata_field(tc_handler, &mut (limits_def.low_limit));
+
+                //get high limit evID
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (limits_def.high_limit_evID));
+
+            }
+            case NoValidPID => {
+                *result = Result::Error;
+            }
+
+
+        }
+
+        var param_limit_check_definition : MonitorDefinition = MonitorDefinition::ParamLimitCheck(limits_def);
+        
+        return param_limit_check_definition;
+
+    }
+
+
+    viewer get_PMON_value_check_definition (&self, tc_handler : &mut TCHandlerT, result : &mut Result) -> MonitorDefinition {
+
+        var value_def : ParamValueCheckDefinition = {
+            mask_value = 0,
+            expected_value = 0,
+            EvID = 0
+        };
+
+        var type : DataPoolItemType = sys_data_pool_get_item_type(self->exect_tc_req_status_update.tc_data_5.mon_config.PID);
+
+        match type {
+
+            case u8_t => {
+
+                var mask : u8 = 0;
+                var expected_value : u8 = 0;
+
+                //get mask
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut mask);
+
+                //get expected value
+                *result = tc_handler_get_u8_appdata_field(tc_handler, &mut expected_value);
+
+                //get EvID
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (value_def.EvID));
+
+                value_def.mask_value = mask as u32;
+                value_def.expected_value = expected_value as u32;
+
+            }
+            case u32_t => {
+
+                //get mask
+                *result = tc_handler_get_u32_appdata_field(tc_handler, &mut (value_def.mask_value));
+
+                //get expected value
+                *result = tc_handler_get_u32_appdata_field(tc_handler, &mut (value_def.expected_value));
+
+                //get EvID
+                *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (value_def.EvID));
+
+            }
+            case NoValidPID => {
+                *result = Result::Error;
+            }
+
+        }
+
+        var expected_value_check_definition : MonitorDefinition = MonitorDefinition::ParamValueCheck(value_def);
+     
+        
+        return expected_value_check_definition;
+
+    }
+
     viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut Result) -> PS12ExecTCReqStatusUpdate {
 
         var tc_data : PS12ExecTCReqStatusUpdate = PS12ExecTCReqStatusUpdate_init();
+        tc_data.packet_id = tc_handler->packet_header.packet_id;
+        tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+        tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
-        *subtype = get_subtype(&(tc_handler->tc_descriptor.tc_bytes));
+        *subtype = tc_handler->df_header.subtype;
 
         if (*subtype == 1 || *subtype == 2 || *subtype == 6){
 
-            var tc_data_1_2_6_aux : PS5TC_1_2_6_Data = {
-                packet_id = 0,
-                packet_error_ctrl = 0,
-                tc_num_bytes = 0,
+            var tc_data_1_2_6_aux : PS12TC_1_2_6_Data = {
                 N = 0,
                 PMONID = 0
             };
 
-            tc_data_1_2_6_aux.packet_id = tc_handler->packet_header.packet_id;
-            tc_data_1_2_6_aux.packet_error_ctrl = tc_handler->packet_error_ctrl;
-            tc_data_1_2_6_aux.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
+           
             *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (tc_data_1_2_6_aux.N));
             *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data_1_2_6_aux.PMONID));
 
@@ -1350,18 +1439,12 @@ resource class PUSService12 provides PUSS12Iface {
             };
             var aux : u8 = 0;
 
-            var tc_data_5_aux : PS5TC_5_Data = {
-                packet_id = 0,
-                packet_error_ctrl = 0,
-                tc_num_bytes = 0,
+            var tc_data_5_aux : PS12TC_5_Data = {
                 N = 0,
                 PMONID = 0,
                 mon_config = mon_config_aux
             };
 
-            tc_data_5_aux.packet_id = tc_handler->packet_header.packet_id;
-            tc_data_5_aux.packet_error_ctrl = tc_handler->packet_error_ctrl;
-            tc_data_5_aux.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
             *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (tc_data_5_aux.N));
             *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data_5_aux.PMONID));
             *result = tc_handler_get_u16_appdata_field(tc_handler, &mut tc_data_5_aux.mon_config.PID);
@@ -1369,6 +1452,19 @@ resource class PUSService12 provides PUSS12Iface {
             *result = tc_handler_get_u8_appdata_field(tc_handler, &mut tc_data_5_aux.mon_config.repetition);
             *result = tc_handler_get_u8_appdata_field(tc_handler, &mut aux);
             tc_data_5_aux.mon_config.type = get_check_type(aux);
+
+            if (self->exect_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::ExpectedValue) {
+
+                tc_data_5_aux.mon_config.definition = self->get_PMON_value_check_definition(tc_handler, result);
+
+            }
+            else if (self->exect_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::Limits){
+
+                tc_data_5_aux.mon_config.definition = self->get_PMON_limit_check_definition(tc_handler, result);
+            }
+            else {
+                //Error
+            }
 
             tc_data.tc_data_5 = tc_data_5_aux;
 
@@ -1420,7 +1516,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                     } else {
 
-                        self->exect_tc_req_status = PS5ExecTCReqStatus::Error;
+                        self->exect_tc_req_status = PS12ExecTCReqStatus::Error;
                     }
                 }
 

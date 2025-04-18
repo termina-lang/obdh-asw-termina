@@ -177,8 +177,7 @@ task class HouseKeepingFDIR {
 
         var res : Result = Result::Ok;
 
-        var tc_type : u8 = get_type(&(tc_handler.tc_descriptor.tc_bytes));
-        var subtype : u8 = get_subtype(&(tc_handler.tc_descriptor.tc_bytes));
+        var tc_type : u8 = tc_handler.df_header.type;
 
         if (tc_type == 3){
 

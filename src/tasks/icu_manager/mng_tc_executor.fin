@@ -22,44 +22,31 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
 
     pus_service_17 : access PUSS17Iface;
-    pus_service_2 : access PUSS2Iface;  
+    pus_service_2 : access PUSS2Iface;
+    pus_service_9 : access PUSS9Iface;
+    pus_service_128 : access PUSS128Iface;  
 
     procedure PUS_prio_exec_tc (&mut self, prio_tc : &mut TCHandlerT, ret: &mut Result) {
 
         var tc_type : u8 = get_type(&(tc_handler.tc_descriptor.tc_bytes));
-        var subtype : u8 = get_subtype(&(tc_handler.tc_descriptor.tc_bytes));
 
         if (tc_type == 17){
 
-            if (subtype == 1){
+            self->pus_service_17.exec_tc(prio_tc, ret);
 
-                self->pus_service_17.exec17_1TC(prio_tc, ret);
-
-            } else  {
-                
-                *ret = Result::Error;
-            }
-            
         } else if (tc_type == 2){
 
-            if (subtype == 1){
+            self->pus_service_2.exec_tc(prio_tc, ret);
 
-                sself->pus_service_2.exec2_1TC(prio_tc, ret);
+        } else if (tc_type == 9){
 
-            } else  {
-                
-                *ret = Result::Error;
-            }
-
-        } /*else if (tc_type == 9){
-
-            PUS_service_9_execTC(prio_tc, &mut descriptor, tm_count);
+            self->pus_service_9.exec_tc(prio_tc, ret);
     
         } else if (tc_type == 128){
 
-            PUS_service_128_execTC(prio_tc, &mut descriptor, tm_count); 
+            self->pus_service_128.exec_tc(prio_tc, ret);
         
-        }*/ else {
+        } else {
 
             *ret = Result::Error;
         }

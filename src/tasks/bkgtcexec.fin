@@ -18,26 +18,11 @@ task class PUSBKGTCExecutor {
 
         var res : Result = Result::Ok;
 
-    
         var tc_type : u8 = get_type(&(tc_handler.tc_descriptor.tc_bytes));
-        var subtype : u8 = get_subtype(&(tc_handler.tc_descriptor.tc_bytes));
 
         if (tc_type == 20){
 
-            if (subtype == 1){
-
-                self->pus_service_20.exec20_1TC(&mut tc_handler, &mut res);
-            } 
-            else if (subtype == 3){
-
-                self->pus_service_20.exec20_3TC(&mut tc_handler, &mut res);
-
-            } else {
-
-                res = Result::Error;
-                //This is an error in acceptance, could be modeled as an event
-                /* If the acceptance process is correct, this point should not be reached */
-            }
+            self->pus_service_20.exec_tc(&tc_handler, &mut res);
 
         } else {
 

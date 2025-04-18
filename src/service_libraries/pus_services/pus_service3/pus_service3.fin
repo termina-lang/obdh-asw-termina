@@ -368,7 +368,7 @@ resource class PUSService3 provides PUSS3Iface {
 
     viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut Result) -> PS3TCData {
 
-        *subtype = get_subtype(&(tc_handler->tc_descriptor.tc_bytes));
+        *subtype = tc_handler->df_header.subtype;
 
         var tc_data : PS3TCData = {
             packet_id = 0,

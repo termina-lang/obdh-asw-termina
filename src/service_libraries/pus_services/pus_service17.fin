@@ -5,6 +5,12 @@ PUS SERVICE 17 : TEST
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.tc_ccsds_pus_format;
 
+enum PS17ExecTCReqStatus {
+	ExecTC,
+	Error,
+	Exit
+};
+
 
 function build_tm_17_2(p_tm_handler : &mut TMHandlerT,
 					tm_seq_counter : u16, result : &mut Result) {
@@ -15,41 +21,92 @@ function build_tm_17_2(p_tm_handler : &mut TMHandlerT,
 }
 
 interface PUSS17Iface {
-	procedure exec17_1TC(&mut self, tc_handler : &TCHandlerT, result : &mut Result);
+	procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
 };
 
 resource class PUSService17 provides PUSS17Iface {
+
+	exect_tc_req_status : PS17ExecTCReqStatus;
 
 	tm_channel: access TMChannelIface;   
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
 
-	procedure exec17_1TC(&mut self, tc_handler : &TCHandlerT, result : &mut Result) {
+	method exec17_1TC(&priv self) -> PS17ExecTCReqStatus {
 
-		var subtype : u8 = tc_handler->df_header.subtype;
-		
-		if (subtype == 1){
+		var next_status : PS17ExecTCReqStatus = PS17ExecTCReqStatus::Error;
+		var result : Result = Result::Ok;
 
-			var tm_handler : Option<box TMHandlerT> = None;
-			self->a_tm_handler_pool.alloc(&mut tm_handler);
+		var tm_handler : Option<box TMHandlerT> = None;
+		self->a_tm_handler_pool.alloc(&mut tm_handler);
 
-			match tm_handler {
+		match tm_handler {
 
-				case Some(b_tm_handler) => {
+			case Some(b_tm_handler) => {
 
-					var tm_count : u16 = 0 : u16;
-					self->tm_counter.get_next_tm_count(&mut tm_count);
-					build_tm_17_2(&mut b_tm_handler, tm_count, result);
-					self->tm_channel.send_tm(b_tm_handler, result);
-				} 
-				case None => {
-					*result = Result::Error;
-				}
+				var tm_count : u16 = 0 : u16;
+				self->tm_counter.get_next_tm_count(&mut tm_count);
+				build_tm_17_2(&mut b_tm_handler, tm_count, &mut result);
+				self->tm_channel.send_tm(b_tm_handler, &mut result);
+			} 
+			case None => {
+				result = Result::Error;
 			}
+			
 		}
 
-    	return;
+		if (result is Result::Ok) {
+
+			next_status = PS17ExecTCReqStatus::Exit;
+
+		} else {
+
+			next_status = PS17ExecTCReqStatus::Error;
+		}
+
+		return next_status;
 	}
+
+	procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
+
+        var subtype : u8 = tc_handler->df_header.subtype;
+
+        for i : usize in 0 .. 2 while (self->exect_tc_req_status is PS17ExecTCReqStatus::Exit == false) {
+
+            match self->exect_tc_req_status {
+
+                case ExecTC => {
+
+                    if (subtype == 1) {
+
+                        self->exect_tc_req_status = self->exec17_1TC();
+
+                    } else {
+
+                        self->exect_tc_req_status = PS17ExecTCReqStatus::Error;
+                    }
+                }
+
+                case Error => {
+
+                    *result = Result::Error;
+                    self->exect_tc_req_status = PS17ExecTCReqStatus::Exit;
+
+                }
+                case Exit => {
+                    //Unreachable point
+                }  
+            }
+        }
+
+        if(self->exect_tc_req_status is PS17ExecTCReqStatus::Exit){
+
+            self->exect_tc_req_status = PS17ExecTCReqStatus::ExecTC;
+        }
+
+        return;
+    
+    }
 
 };
 
