@@ -7,7 +7,7 @@ import service_libraries.pus_services.pus_service9;
 import service_libraries.pus_services.pus_service12.pus_service12;
 import service_libraries.pus_services.pus_service17;
 import service_libraries.pus_services.pus_service19.pus_service19;
-import service_libraries.pus_services.pus_service20;
+import service_libraries.pus_services.pus_service20.pus_service20;
 import service_libraries.pus_tc_handler;
 import resources.uart;
 import resources.gpio_driver;

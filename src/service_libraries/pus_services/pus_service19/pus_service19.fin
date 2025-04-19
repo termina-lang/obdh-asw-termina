@@ -36,8 +36,6 @@ resource class PUSService19 provides PUSS19Iface {
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
 
-
-//I obviosuly know the following functions can't be viewers
     method disable_event_action (&priv self) -> Result {
 
         var result : Result = Result::Error;

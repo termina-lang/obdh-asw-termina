@@ -1,0 +1,26 @@
+import service_libraries.pus_services.pus_service1.pus_service1;
+import service_libraries.serialize;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import resources.system_data_pool;
+
+enum PS20ExecTCReqStatus {
+    Init,
+    ExecTC,
+    Error,
+    Exit
+};
+
+struct TC20_3Data {
+    PID_value_u8 : u8;
+    PID_value_u32 : u32;
+};
+
+struct PS20ExecTCReqStatusUpdate {
+    packet_id : u16;
+    packet_error_ctrl : u16;
+    tc_num_bytes : usize;
+    N: u8;
+    PID: u16;
+    tc_20_3_data : TC20_3Data;
+};
