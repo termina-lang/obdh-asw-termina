@@ -1,7 +1,7 @@
 import service_libraries.pus_services.pus_service3.pus_service3;
 import service_libraries.pus_services.pus_service5.pus_service5;
 import service_libraries.pus_services.pus_service12.pus_service12;
-import service_libraries.pus_services.pus_service19;
+import service_libraries.pus_services.pus_service19.pus_service19;
 
 const num_actions_per_second : usize = 2;
 

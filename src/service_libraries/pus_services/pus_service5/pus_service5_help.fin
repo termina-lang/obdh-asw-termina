@@ -46,17 +46,12 @@ enum PS5ExecTCReqStatus {
 };
 
 
-
-struct PS5TCData {
+struct PS5ExecTCReqStatusUpdate {
     packet_id : u16;
     packet_error_ctrl : u16;
     tc_num_bytes : usize;
     N : u8;
     EvID: u16;
-};
-
-struct PS5ExecTCReqStatusUpdate {
-    tc_data: PS5TCData;
 };
 
 

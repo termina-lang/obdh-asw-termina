@@ -1,0 +1,45 @@
+import service_libraries.pus_services.pus_service5.pus_service5;
+import service_libraries.pus_services.pus_service1.pus_service1;
+import service_libraries.serialize;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import service_libraries.event_list;
+const event_action_max_bytes : usize = 242;
+
+
+const max_event_action_definitions : usize = 16;
+const event_action_queue_dimension : usize = 8;
+
+
+struct EventActionConfig {
+    enabled: bool;
+    event_ID: u16;
+};
+
+
+enum PS19ExecTCReqStatus {
+    Init,
+    ExecTC,
+    Error,
+    Exit
+};
+
+struct PS19TCData {
+    packet_id : u16;
+    packet_error_ctrl : u16;
+    tc_num_bytes : usize;
+    N : u8;
+    EvID: u16;
+};
+
+struct FoundID {
+    found : bool;
+    ev_action_index : usize;
+};
+
+struct PS19ExecTCReqStatusUpdate {
+    tc_data : PS19TCData;
+    ev_action_ID: FoundID;
+    action_tc_packet : TCDescriptorT;
+};
+

@@ -320,7 +320,7 @@ function build_tm_1_7(p_tm_handler : &mut TMHandlerT,
 }
 
 
-function build_tm_1_8_max_evactions_defined (p_tm_handler : &mut TMHandlerT,
+function build_tm_1_8_max_ev_actions_defined (p_tm_handler : &mut TMHandlerT,
 					tm_seq_counter : u16, tc_packet_id : u16, tc_packet_error_ctrl: u16, evID: u16, result : &mut Result) {
 	
 	var verify_stage : TCVerifyStage = TCVerifyStage::ExecCompletion;

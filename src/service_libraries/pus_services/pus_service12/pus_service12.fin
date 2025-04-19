@@ -18,8 +18,8 @@ resource class PUSService12 provides PUSS12Iface {
     do_monitoring_req_status : DoMonitoringReqStatus;
     do_monitoring_req_status_update : DoMonitoringReqStatusUpdate;
 
-    exect_tc_req_status : PS12ExecTCReqStatus;
-    exect_tc_req_status_update : PS12ExecTCReqStatusUpdate;
+    exec_tc_req_status : PS12ExecTCReqStatus;
+    exec_tc_req_status_update : PS12ExecTCReqStatusUpdate;
 
     param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
     monitoring_transition_counter : u8; 
@@ -811,7 +811,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     method set_unchecked (&priv self) {
 
-        var valid_PMONID : usize = (self->exect_tc_req_status_update. tc_data_1_2_6.PMONID) as usize;
+        var valid_PMONID : usize = (self->exec_tc_req_status_update. tc_data_1_2_6.PMONID) as usize;
 
         match (self->param_mon_config_table[valid_PMONID].current_state) {
 
@@ -852,15 +852,15 @@ resource class PUSService12 provides PUSS12Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                if (self->exect_tc_req_status_update.tc_data_1_2_6.N != 1) {
+                if (self->exec_tc_req_status_update.tc_data_1_2_6.N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update. tc_data_1_2_6.N, &mut result);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.tc_data_1_2_6.N, &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
                 }
                 else {
 
-                    var PMONID : usize = (self->exect_tc_req_status_update.tc_data_1_2_6.PMONID) as usize;
+                    var PMONID : usize = (self->exec_tc_req_status_update.tc_data_1_2_6.PMONID) as usize;
                     var is_valid_PMONID : bool = PMONID < max_num_pmon_ids;
 
                     if (is_valid_PMONID) {
@@ -892,14 +892,14 @@ resource class PUSService12 provides PUSS12Iface {
 
                         } else {
 
-                            build_tm_1_4_PMON_undefined(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update. tc_data_1_2_6.PMONID, &mut result);
+                            build_tm_1_4_PMON_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update. tc_data_1_2_6.PMONID, &mut result);
                             self->tm_channel.send_tm(b_tm_handler, &mut result);
                         }
                     } else {
 
-                        build_tm_1_4_PMONID_invalid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update. tc_data_1_2_6.PMONID, &mut result);
+                        build_tm_1_4_PMONID_invalid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update. tc_data_1_2_6.PMONID, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                     }
                 }
@@ -940,23 +940,23 @@ resource class PUSService12 provides PUSS12Iface {
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
                
-                if (self->exect_tc_req_status_update.tc_data_1_2_6.N != 1) {
+                if (self->exec_tc_req_status_update.tc_data_1_2_6.N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update.tc_data_1_2_6.N, &mut result);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.tc_data_1_2_6.N, &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
                 }
                 else {
 
-                    var is_valid_PMONID : bool = (self->exect_tc_req_status_update.tc_data_1_2_6.PMONID) as usize < max_num_pmon_ids;
+                    var is_valid_PMONID : bool = (self->exec_tc_req_status_update.tc_data_1_2_6.PMONID) as usize < max_num_pmon_ids;
 
                     if (is_valid_PMONID) {
 
-                        if(self->param_mon_config_table[(self->exect_tc_req_status_update.tc_data_1_2_6.PMONID) as usize].type is MonitorCheckType::Free == false){
+                        if(self->param_mon_config_table[(self->exec_tc_req_status_update.tc_data_1_2_6.PMONID) as usize].type is MonitorCheckType::Free == false){
 
                             build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
                             self->tm_channel.send_tm(b_tm_handler, &mut result);
-                            self->param_mon_config_table[(self->exect_tc_req_status_update.tc_data_1_2_6.PMONID) as usize].enabled = false;
+                            self->param_mon_config_table[(self->exec_tc_req_status_update.tc_data_1_2_6.PMONID) as usize].enabled = false;
                             self->set_unchecked();
                             var tm_handler2 : Option<box TMHandlerT> = None;
                             self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -977,14 +977,14 @@ resource class PUSService12 provides PUSS12Iface {
 
                         } else {
 
-                            build_tm_1_4_PMON_undefined(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update. tc_data_1_2_6.PMONID, &mut result);
+                            build_tm_1_4_PMON_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update. tc_data_1_2_6.PMONID, &mut result);
                             self->tm_channel.send_tm(b_tm_handler, &mut result);
                         }
                     } else {
 
-                        build_tm_1_4_PMONID_invalid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update. tc_data_1_2_6.PMONID, &mut result);
+                        build_tm_1_4_PMONID_invalid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update. tc_data_1_2_6.PMONID, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                     }
                 }
@@ -1010,9 +1010,9 @@ resource class PUSService12 provides PUSS12Iface {
 
     method add_valid_mng_mon_def (&priv self){
 
-        let PMONID : usize = (self->exect_tc_req_status_update.tc_data_5.mon_config.PID) as usize;
+        let PMONID : usize = (self->exec_tc_req_status_update.tc_data_5.mon_config.PID) as usize;
 
-        (self->param_mon_config_table)[PMONID] = self->exect_tc_req_status_update.tc_data_5.mon_config;
+        (self->param_mon_config_table)[PMONID] = self->exec_tc_req_status_update.tc_data_5.mon_config;
 
         (self->param_mon_config_table)[PMONID].enabled = false;
 
@@ -1066,21 +1066,21 @@ resource class PUSService12 provides PUSS12Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                if (self->exect_tc_req_status_update.tc_data_5.N != 1) {
+                if (self->exec_tc_req_status_update.tc_data_5.N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update.tc_data_5.N, &mut result);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.tc_data_5.N, &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                } else if (sys_data_pool_is_valid_PID(self->exect_tc_req_status_update.tc_data_5.mon_config.PID) == false) {
+                } else if (sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.tc_data_5.mon_config.PID) == false) {
 
-                    build_tm_1_4_PID_not_valid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update.tc_data_5.mon_config.PID, &mut result);
+                    build_tm_1_4_PID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.tc_data_5.mon_config.PID, &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                } else if (self->exect_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::Limits) {
+                } else if (self->exec_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::Limits) {
 
-                    if(is_valid_check_limit_def(&self->exect_tc_req_status_update.tc_data_5.mon_config.definition)){
+                    if(is_valid_check_limit_def(&self->exec_tc_req_status_update.tc_data_5.mon_config.definition)){
 
                         build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
@@ -1105,12 +1105,12 @@ resource class PUSService12 provides PUSS12Iface {
                         }
                     } else {
 
-                        build_tm_1_4_PMON_definition_invalid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                    (self->exect_tc_req_status_update.packet_error_ctrl), (self->exect_tc_req_status_update.tc_data_5.PMONID), &mut result);
+                        build_tm_1_4_PMON_definition_invalid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                    (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.tc_data_5.PMONID), &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                     }
 
-                } else if (self->exect_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::ExpectedValue) {
+                } else if (self->exec_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::ExpectedValue) {
 
                     build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
@@ -1134,8 +1134,8 @@ resource class PUSService12 provides PUSS12Iface {
                     }
                 } else {
 
-                    build_tm_1_4_PMON_definition_invalid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), (self->exect_tc_req_status_update.tc_data_5.PMONID), &mut result);
+                    build_tm_1_4_PMON_definition_invalid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.tc_data_5.PMONID), &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
                 }
             }
@@ -1175,28 +1175,28 @@ resource class PUSService12 provides PUSS12Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                if (self->exect_tc_req_status_update.tc_data_1_2_6.N != 1) {
+                if (self->exec_tc_req_status_update.tc_data_1_2_6.N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update.tc_data_1_2_6.N, &mut result);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.tc_data_1_2_6.N, &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
                 }
                 else {
                     
-                    var PMON_type : MonitorCheckType = get_check_type((self->exect_tc_req_status_update.tc_data_1_2_6.PMONID) as u8);
+                    var PMON_type : MonitorCheckType = get_check_type((self->exec_tc_req_status_update.tc_data_1_2_6.PMONID) as u8);
 
                     if(PMON_type is MonitorCheckType::Free){
 
-                        build_tm_1_4_PMON_undefined(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update.tc_data_1_2_6.PMONID, &mut result);
+                        build_tm_1_4_PMON_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.tc_data_1_2_6.PMONID, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                    } else if (self->param_mon_config_table[(self->exect_tc_req_status_update.tc_data_1_2_6.PMONID)as usize].enabled == false){ 
+                    } else if (self->param_mon_config_table[(self->exec_tc_req_status_update.tc_data_1_2_6.PMONID)as usize].enabled == false){ 
 
                         build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                       
-                        self->param_mon_config_table[(self->exect_tc_req_status_update.tc_data_1_2_6.PMONID) as usize].type = MonitorCheckType::Free;
+                        self->param_mon_config_table[(self->exec_tc_req_status_update.tc_data_1_2_6.PMONID) as usize].type = MonitorCheckType::Free;
 
                         var tm_handler2 : Option<box TMHandlerT> = None;
                         self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -1216,8 +1216,8 @@ resource class PUSService12 provides PUSS12Iface {
                         }
                     } else {
 
-                        build_tm_1_4_PMON_enabled(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                                        (self->exect_tc_req_status_update.packet_error_ctrl), self->exect_tc_req_status_update.tc_data_1_2_6.PMONID, &mut result);
+                        build_tm_1_4_PMON_enabled(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.tc_data_1_2_6.PMONID, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                     }
 
@@ -1259,8 +1259,8 @@ resource class PUSService12 provides PUSS12Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exect_tc_req_status_update.packet_id), 
-                                            (self->exect_tc_req_status_update.packet_error_ctrl), (self->exect_tc_req_status_update.tc_num_bytes), &mut result);
+                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                            (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.tc_num_bytes), &mut result);
                 self->tm_channel.send_tm(b_tm_handler, &mut result);
             }
             case None => {
@@ -1291,7 +1291,7 @@ resource class PUSService12 provides PUSS12Iface {
             high_limit_evID = 0
         };
 
-        var type : DataPoolItemType = sys_data_pool_get_item_type(self->exect_tc_req_status_update.tc_data_5.mon_config.PID);
+        var type : DataPoolItemType = sys_data_pool_get_item_type(self->exec_tc_req_status_update.tc_data_5.mon_config.PID);
 
         match type {
 
@@ -1353,7 +1353,7 @@ resource class PUSService12 provides PUSS12Iface {
             EvID = 0
         };
 
-        var type : DataPoolItemType = sys_data_pool_get_item_type(self->exect_tc_req_status_update.tc_data_5.mon_config.PID);
+        var type : DataPoolItemType = sys_data_pool_get_item_type(self->exec_tc_req_status_update.tc_data_5.mon_config.PID);
 
         match type {
 
@@ -1453,12 +1453,12 @@ resource class PUSService12 provides PUSS12Iface {
             *result = tc_handler_get_u8_appdata_field(tc_handler, &mut aux);
             tc_data_5_aux.mon_config.type = get_check_type(aux);
 
-            if (self->exect_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::ExpectedValue) {
+            if (self->exec_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::ExpectedValue) {
 
                 tc_data_5_aux.mon_config.definition = self->get_PMON_value_check_definition(tc_handler, result);
 
             }
-            else if (self->exect_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::Limits){
+            else if (self->exec_tc_req_status_update.tc_data_5.mon_config.type is MonitorCheckType::Limits){
 
                 tc_data_5_aux.mon_config.definition = self->get_PMON_limit_check_definition(tc_handler, result);
             }
@@ -1482,17 +1482,17 @@ resource class PUSService12 provides PUSS12Iface {
 
         var subtype : u8 = 0;
 
-        for i : usize in 0 .. 3 while (self->exect_tc_req_status is PS12ExecTCReqStatus::Exit == false) {
+        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PS12ExecTCReqStatus::Exit == false) {
 
-            match self->exect_tc_req_status {
+            match self->exec_tc_req_status {
 
                 case Init => {
 
-                    self->exect_tc_req_status_update = self->get_TC_params(tc_handler, &mut subtype, result);
+                    self->exec_tc_req_status_update = self->get_TC_params(tc_handler, &mut subtype, result);
                     if (*result is Result::Error) {
-                        self->exect_tc_req_status = self->manage_short_pack_length_error();
+                        self->exec_tc_req_status = self->manage_short_pack_length_error();
                     } else {
-                        self->exect_tc_req_status = PS12ExecTCReqStatus::ExecTC;
+                        self->exec_tc_req_status = PS12ExecTCReqStatus::ExecTC;
                     }
 
                 }
@@ -1500,30 +1500,30 @@ resource class PUSService12 provides PUSS12Iface {
 
                     if (subtype == 1) {
 
-                        self->exect_tc_req_status = self->exec12_1TC();
+                        self->exec_tc_req_status = self->exec12_1TC();
 
                     } else if (subtype == 2) {
 
-                        self->exect_tc_req_status = self->exec12_2TC();
+                        self->exec_tc_req_status = self->exec12_2TC();
 
                     } else if (subtype == 5) {
 
-                        self->exect_tc_req_status = self->exec12_5TC();
+                        self->exec_tc_req_status = self->exec12_5TC();
 
                     } else if (subtype == 6) {
 
-                        self->exect_tc_req_status = self->exec12_6TC();
+                        self->exec_tc_req_status = self->exec12_6TC();
 
                     } else {
 
-                        self->exect_tc_req_status = PS12ExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PS12ExecTCReqStatus::Error;
                     }
                 }
 
                 case Error => {
 
                     *result = Result::Error;
-                    self->exect_tc_req_status = PS12ExecTCReqStatus::Exit;
+                    self->exec_tc_req_status = PS12ExecTCReqStatus::Exit;
 
                 }
                 case Exit => {
@@ -1532,9 +1532,9 @@ resource class PUSService12 provides PUSS12Iface {
             }
         }
 
-        if(self->exect_tc_req_status is PS12ExecTCReqStatus::Exit){
+        if(self->exec_tc_req_status is PS12ExecTCReqStatus::Exit){
 
-            self->exect_tc_req_status = PS12ExecTCReqStatus::Init;
+            self->exec_tc_req_status = PS12ExecTCReqStatus::Init;
         }
 
         return;
