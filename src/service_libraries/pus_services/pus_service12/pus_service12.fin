@@ -546,7 +546,7 @@ resource class PUSService12 provides PUSS12Iface {
 
                 self->param_mon_config_table[current_PMON_ID].temp_state = new_state;
                 self->param_mon_config_table[current_PMON_ID].repetition_control = 1;
-                //self->param_mon_config_table[current_PMON_ID].transition_obt = get_current_time();
+                //self->param_mon_config_table[current_PMON_ID].transition_obt = clock_get_time();
             }
 
             if (self->param_mon_config_table[current_PMON_ID].repetition_control >= self->param_mon_config_table[current_PMON_ID].repetition) {

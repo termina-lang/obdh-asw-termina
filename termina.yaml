@@ -6,7 +6,7 @@ platform: rtems5-leon3-qemu
 source-modules: src
 profile: release
 enable-system-init: true
-enable-system-port: false
+enable-system-port: true
 builder: make
 platform-flags:
     rtems5-noel-qemu:

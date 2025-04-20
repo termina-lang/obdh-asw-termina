@@ -1,11 +1,11 @@
 const max_num_of_stats : usize = 4;
 
 struct StatsDef {
-    min : u16;
+    min : u32;
     min_obt : TimeVal;
-    max : u16;
+    max : u32;
     max_obt : TimeVal;
-    mean_value : u16;
+    mean_value : u32;
     samples : u32;
 };
 
@@ -13,4 +13,21 @@ struct StatsConfig {
     defined : [bool; max_num_of_stats];
     PID : [u16; max_num_of_stats];
     start_time : [TimeVal; max_num_of_stats];
+};
+
+
+enum PS4ExecTCReqStatus {
+    Init,
+    ExecTC,
+    Error,
+    Exit
+};
+
+
+struct PS4ExecTCReqStatusUpdate {
+    packet_id : u16;
+    packet_error_ctrl : u16;
+    tc_num_bytes : usize;
+    N: u8;
+    PID: u16;
 };

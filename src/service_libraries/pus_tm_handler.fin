@@ -68,6 +68,26 @@ function append_u32_appdata_field (tm_handler : &mut TMHandlerT, data : u32, res
     return;
 }
 
+function append_TimeVal_as_u32_appdata_field(tm_handler : &mut TMHandlerT, time : TimeVal, result : &mut Result) {
+
+    var data : u32 = time.tv_sec;
+
+    if (tm_handler->app_data_index + 3 < max_send_size){
+
+        serialize_uint32(data, &mut tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index .. tm_handler->app_data_index + 4]);
+        tm_handler->app_data_index = tm_handler->app_data_index + 4;
+        *result = Result::Ok;
+
+    } else {
+
+        *result = Result::Error;
+
+    }
+
+    return;
+
+}
+
 function tm_handler_build_packet_header (tm_handler : &mut TMHandlerT, tm_seq_counter : u16) {
 
     tm_handler->packet_header.packet_id = ccsds_pus_tm_build_packet_id(APID);

@@ -5,28 +5,509 @@ PUS SERVICE 4 : PARAMETER STATISTICS REPORTING
 import service_libraries.pus_services.pus_service4.pus_service4_utils;
 
 interface PUSS4Iface {
+
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
     
 };
 
 resource class PUSService4 provides PUSS4Iface {
 
-    param_stats : [StatsDef; max_num_of_stats];
-    stats_config : StatsConfig;
+    param_stats_definition : [StatsDef; max_num_of_stats];
+    stats_config_table : StatsConfig;
+
+    viewer get_PID_defined_stats_index (&self, index: &mut usize) -> Result {
+
+        var result : Result = Result::Error;
+
+        for i : usize in 0 .. max_num_of_stats while (result is Result::Error) {
+
+            if(self->exec_tc_req_status_update.PID == self->stats_config_table.PID[i]) {
+
+                if (self->stats_config_table.defined[i] == true) {
+
+                    if(sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID)) {
+
+                        *index = i;
+                        result = Result::Ok;
+                    } else {
+                        stats_config_table.defined[i] == false;
+                    }
+                }
+
+            }
+        }
+        return result;
+    }
+
+    viewer get_free_index (&self, index: &mut usize) -> Result {
+
+        var result : Result = Result::Error;
+
+        for i : usize in 0 .. max_num_of_stats while (result is Result::Error) {
+
+            if ((self->stats_config_table.defined[i] == false) || (sys_data_pool_is_valid_PID(stats_config_table.PID[i])) == false) {
+
+                *index = i; 
+                result = Result::Ok;
+            }
+        }
+        return result;
+    }
 
 
-    procedure exec4_6TC(&mut self, tc_handler: &TCHandlerT, result: &mut Result) {
+    method add_PID_stats (&priv self) -> Result {
 
-        var error : bool = false;
-        var res: Result = Result::Ok;
+        var result : Result = Result::Ok;
+        var PID_index: usize = 0;
 
-        var N : u8 = 0;
-        res = tc_handler_get_u8_appdata_field (tc_handler, &mut N)
-        var PID : u16 = 0;
-        res = tc_handler_get_u16_appdata_field (tc_handler, &mut PID)
+        result = self->get_PID_defined_stats_index(&mut PID_index);
+
+        if(result is Result::Error) {
+
+            result = self->get_free_index(&mut PID_index);
+        }
+
+        if(result is Result::Ok) {
+
+            self->stats_config_table.defined[PID_index] = true;
+            self->stats_config_table.PID[PID_index] = self->exec_tc_req_status_update.PID;
+
+            self->param_stats_definition[index].samples = 0;
+            //self->stats_config_table.start_time[index] = clock_get_time();
+            
+        }
+
+        return result;
+    }
+
+    method delete_PID_stats (&priv self) -> Result {
+
+        var result : Result = Result::Error;
+        var PID_index: usize = 0;
+        result = self->get_PID_defined_stats_index(&mut PID_index);
+
+        if (result is Result::Ok) {
+            self->stats_config_table.defined[PID_index] = false;
+        }
+
+        return result;
+        
+    }
+
+    method delete_all_stats (&priv self){
+
+        for i : usize in 0 .. max_num_of_stats {
+            self->stats_config_table.defined[i] = false;
+        }
+        
+    }
+
+    viewer build_tm_4_2(&self, p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, index: usize, result: &mut Result){
+
+        startup_tm(p_tm_handler);
+
+        //var current_time : TimeVal = clock_get_time();
+        
+        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->stats_config_table[index].start_time, result);
+        //append_TimeVal_as_u32_appdata_field(p_tm_handler, current_time, result);
+        append_u8_appdata_field(p_tm_handler, self->exec_tc_req_status_update.N, result);
+        append_u16_appdata_field(p_tm_handler, self->stats_config_table[index].PID, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].samples, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].max, result);
+        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].max_obt, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].min, result);
+        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].min_obt, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].mean_value, result);
+
+        if(result is Result::Ok) {
+            close_tm(p_tm_handler, 4, 2, tm_seq_counter, result);
+        }
 
         return;
     }
 
+// TC[4,1] : Report the parameter statistics
+    method exec4_1TC(&priv self) -> PS4ExecTCReqStatus {
 
+        var result : Result = Result::Ok;
+        var next_status : PS4ExecTCReqStatus = PS4ExecTCReqStatus::Error;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+            case Some(b_tm_handler)=> {
+
+                build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                self->tm_channel.send_tm(b_tm_handler, &mut result);
+            }
+            case None => {
+                result = Result::Error;
+            }
+        }
+
+        for i : usize in 0 .. max_num_of_stats while (result is Result::Ok) {
+
+            if (self->stats_config_table.defined[i] == true) {
+
+                var tm_handler2 : Option<box TMHandlerT> = None;
+                self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                match tm_handler2 {
+
+                    case Some(b_tm_handler2) => {
+
+                        var tm_count : u16 = 0 : u16;
+                        self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                        self->build_tm_4_2(b_tm_handler2, tm_count, i, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                        //reset_stats_index
+                        self->param_stats_definition[i].samples = 0;
+                        //self->stats_config_table.start_time[i] = clock_get_time();
+                    }
+                    case None => {
+                        result = Result::Error;
+                    }
+                }
+            }
+        }
+
+        if (result is Result::Ok){
+
+            var tm_handler3 : Option<box TMHandlerT> = None;
+            self->a_tm_handler_pool.alloc(&mut tm_handler3);
+
+            match tm_handler3 {
+
+                case Some(b_tm_handler3) => {
+
+                    var tm_count3 : u16 = 0 : u16;
+                    self->tm_counter.get_next_tm_count(&mut tm_count3);
+
+                    build_tm_1_7(&mut b_tm_handler3, tm_count3, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler3, &mut result);
+                }
+                case None => {
+                    result = Result::Error;
+                }
+            }
+
+        }
+        else {
+            //TODO TM/TC Memory Fail -> EEPROM, Recov Action -> Reset -> Reported in Reboot
+        }
+
+        if (result is Result::Error){
+
+            next_status = PS4ExecTCReqStatus::Error;
+
+        } else {
+
+            next_status = PS4ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+    }
+
+// TC[4,6] : Add or update parameter statistics definitions
+    method exec4_6TC(&priv self) -> PS4ExecTCReqStatus {
+
+        var result : Result = Result::Ok;
+        var next_status : PS4ExecTCReqStatus = PS4ExecTCReqStatus::Error;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                if (self->exec_tc_req_status_update.N != 1) {
+
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                }
+                else {
+
+                    if(sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID)) {
+
+                        result = self->add_PID_stats();
+
+                        if (result is Result::Ok) {
+
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                            match tm_handler2 {
+
+                                case Some(b_tm_handler2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
+                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                                }
+                                case None => {
+                                    result = Result::Error;
+                                }
+                            }
+
+
+                        } else {
+
+                            build_tm_1_8_not_free_stats_config(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        }
+
+
+                    }
+                    else {
+
+                        build_tm_1_4_PID_not_valid (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                    }
+                }
+            }
+            case None => {
+                result = Result::Error;
+            }
+        }
+        if (result is Result::Error){
+
+            next_status = PS4ExecTCReqStatus::Error;
+
+        } else {
+
+            next_status = PS4ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+    }
+
+// TC[4,7] : Delete parameter statistics definitions
+    method exec4_7TC(&priv self) -> PS4ExecTCReqStatus {
+
+        var result : Result = Result::Ok;
+        var next_status : PS4ExecTCReqStatus = PS4ExecTCReqStatus::Error;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                if (self->exec_tc_req_status_update.N != 1) {
+
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                }
+                else {
+
+                    if(sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID)) {
+
+                        result = self->delete_PID_stats();
+
+                        if (result is Result::Ok) {
+
+                            build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                            match tm_handler2 {
+
+                                case Some(b_tm_handler2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
+                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                                }
+                                case None => {
+                                    result = Result::Error;
+                                }
+                            }
+
+
+                        } else {
+
+                            build_tm_1_4_PID_stats_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        }
+
+
+                    }
+                    else {
+
+                        build_tm_1_4_PID_not_valid (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                    }
+                }
+            }
+            case None => {
+                result = Result::Error;
+            }
+        }
+        if (result is Result::Error){
+
+            next_status = PS4ExecTCReqStatus::Error;
+
+        } else {
+
+            next_status = PS4ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+    }
+    
+
+    viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut Result) -> PS4ExecTCReqStatusUpdate {
+
+        *subtype = tc_handler->df_header.subtype;
+
+        var tc_data : PS4ExecTCReqStatusUpdate = {
+            packet_id = 0,
+            packet_error_ctrl = 0,
+            tc_num_bytes = 0,
+            N = 0,
+            PID = 0
+        };
+        
+        tc_data.packet_id = tc_handler->packet_header.packet_id;
+        tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+        tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
+
+        if (*subtype == 6 || *subtype == 7) {
+
+            *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (tc_data.N));
+            *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data.PID));
+        }
+        
+        return tc_data;
+
+    }
+
+    viewer manage_short_pack_length_error(&self) -> PS4ExecTCReqStatus {
+
+        var next_status : PS4ExecTCReqStatus = PS4ExecTCReqStatus::Error;
+        var result : Result = Result::Ok;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                            (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.tc_num_bytes), &mut result);
+                self->tm_channel.send_tm(b_tm_handler, &mut result);
+            }
+            case None => {
+                result = Result::Error;
+            }
+        }
+
+        if (result is Result::Error){
+
+            next_status = PS4ExecTCReqStatus::Error;
+
+        } else {
+
+            next_status = PS4ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+    }
+
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
+
+        var subtype : u8 = 0;
+
+        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PS4ExecTCReqStatus::Exit == false) {
+
+            match self->exec_tc_req_status {
+
+                case Init => {
+
+                    self->exec_tc_req_status_update = self->get_TC_params(tc_handler, &mut subtype, result);
+                    if (*result is Result::Error) {
+                        self->exec_tc_req_status = self->manage_short_pack_length_error();
+                    } else {
+                        self->exec_tc_req_status = PS4ExecTCReqStatus::ExecTC;
+                    }
+
+                }
+                case ExecTC => {
+
+                    if (subtype == 1) {
+
+                        self->exec_tc_req_status = self->exec4_1TC();
+
+                    } else if (subtype == 6) {
+
+                        self->exec_tc_req_status = self->exec4_6TC();
+
+                    } else if (subtype == 7) {
+
+                        self->exec_tc_req_status = self->exec4_7TC();
+
+                    } else {
+
+                        self->exec_tc_req_status = PS4ExecTCReqStatus::Error;
+                    }
+                }
+
+                case Error => {
+
+                    *result = Result::Error;
+                    self->exec_tc_req_status = PS4ExecTCReqStatus::Exit;
+
+                }
+                case Exit => {
+                    //Unreachable point
+                }  
+            }
+        }
+
+        if(self->exec_tc_req_status is PS4ExecTCReqStatus::Exit){
+
+            self->exec_tc_req_status = PS4ExecTCReqStatus::Init;
+        }
+
+        return;
+    
+    }
 
 };
