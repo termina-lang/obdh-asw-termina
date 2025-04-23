@@ -7,17 +7,22 @@ import service_libraries.pus_services.pus_service4.pus_service4_utils;
 interface PUSS4Iface {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
+    procedure update_all_stats(&mut self, result: &mut Result);
+    procedure startup(&mut self);
     
 };
 
 resource class PUSService4 provides PUSS4Iface {
 
-    param_stats_definition : [StatsDef; max_num_of_stats];
+    param_stats : [StatsDef; max_num_of_stats];
     stats_config_table : StatsConfig;
 
     tm_channel: access TMChannelIface;   
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
+
+    system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
+    system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
     viewer get_PID_defined_stats_index (&self, index: &mut usize) -> Result {
 
@@ -58,6 +63,28 @@ resource class PUSService4 provides PUSS4Iface {
         return result;
     }
 
+    viewer is_stats_index_defined(&self, index: usize) -> bool {
+
+        var is_defined: bool = false;
+
+        if(index < max_num_of_stats){
+
+            if (self->stats_config_table.defined[index] == true) {
+
+                if(sys_data_pool_is_valid_PID(self->stats_config_table.PID[index])) {
+
+                    is_defined = true;
+
+                } else {
+
+                    self->stats_config_table.defined[index] = false;
+                }
+            }
+        }
+
+        return is_defined;
+    }
+
 
     method add_PID_stats (&priv self) -> Result {
 
@@ -76,7 +103,7 @@ resource class PUSService4 provides PUSS4Iface {
             self->stats_config_table.defined[PID_index] = true;
             self->stats_config_table.PID[PID_index] = self->exec_tc_req_status_update.PID;
 
-            self->param_stats_definition[index].samples = 0;
+            self->param_stats[index].samples = 0;
             //self->stats_config_table.start_time[index] = clock_get_time();
             
         }
@@ -116,12 +143,12 @@ resource class PUSService4 provides PUSS4Iface {
         //append_TimeVal_as_u32_appdata_field(p_tm_handler, current_time, result);
         append_u8_appdata_field(p_tm_handler, self->exec_tc_req_status_update.N, result);
         append_u16_appdata_field(p_tm_handler, self->stats_config_table[index].PID, result);
-        append_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].samples, result);
-        append_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].max, result);
-        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].max_obt, result);
-        append_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].min, result);
-        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].min_obt, result);
-        append_u32_appdata_field(p_tm_handler, self->param_stats_definition[index].mean_value, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats[index].samples, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats[index].max, result);
+        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->param_stats[index].max_obt, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats[index].min, result);
+        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->param_stats[index].min_obt, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats[index].mean_value, result);
 
         if(result is Result::Ok) {
             close_tm(p_tm_handler, 4, 2, tm_seq_counter, result);
@@ -167,7 +194,7 @@ resource class PUSService4 provides PUSS4Iface {
                         self->build_tm_4_2(b_tm_handler2, tm_count, i, &mut result);
                         self->tm_channel.send_tm(b_tm_handler2, &mut result);
                         //reset_stats_index
-                        self->param_stats_definition[i].samples = 0;
+                        self->param_stats[i].samples = 0;
                         //self->stats_config_table.start_time[i] = clock_get_time();
                     }
                     case None => {
@@ -455,6 +482,7 @@ resource class PUSService4 provides PUSS4Iface {
         return next_status;
     }
 
+
     procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
 
         var subtype : u8 = 0;
@@ -512,6 +540,230 @@ resource class PUSService4 provides PUSS4Iface {
 
         return;
     
+    }
+
+    viewer SDP_param_higher_than_limit(&self, pid_index : usize) -> bool {
+
+        var is_higher : bool = false;
+        var PID : u16 = self->stats_config_table.PID[pid_index];
+        var u8_SDP_value : u8 = 0;
+        var u32_SDP_value : u32 = 0;
+
+        var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+        match item_type {
+            case u8_t => {
+                self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
+                if ((u8_SDP_value as u32) > self->param_stats[pid_index].max) {
+                    is_higher = true;
+                }
+            }
+            case u32_t => {
+                self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
+                if (u32_SDP_value > self->param_stats[pid_index].max) {
+                    is_higher = true;
+                }
+            }
+            case NoValidPID => {
+                *result = Result::Error;
+            }
+        }
+
+        return is_higher;
+    }
+
+    method update_max(&priv self) -> Result {
+
+        var result : Result = Result::Ok;
+        var PID : u16 = self->stats_config_table.PID[pid_index];
+        var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+        match item_type {
+            case u8_t => {
+                var max_aux: u8 = 0;
+                self->system_data_pool_u8.load_index(PID as usize, &mut max_aux);
+                self->param_stats[pid_index].max = max_aux as u32;
+                //self->param_stats[pid_index].max_obt = clock_get_time();
+            }
+            case u32_t => {
+                self->system_data_pool_u8.load_index(PID as usize, &mut (self->param_stats[pid_index].max));
+                //self->param_stats[pid_index].max_obt = clock_get_time();
+
+            }
+            case NoValidPID => {
+                *result = Result::Error;
+            }
+        }
+
+        return result;
+    }
+
+    viewer SDP_param_lower_than_limit(&self, pid_index : usize) -> bool {
+
+        var is_lower : bool = false;
+        var PID : u16 = self->stats_config_table.PID[pid_index];
+        var u8_SDP_value : u8 = 0;
+        var u32_SDP_value : u32 = 0;
+
+        var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+        match item_type {
+            case u8_t => {
+                self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
+                if ((u8_SDP_value as u32) < self->param_stats[pid_index].min) {
+                    is_lower = true;
+                }
+            }
+            case u32_t => {
+                self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
+                if (u32_SDP_value < self->param_stats[pid_index].min) {
+                    is_lower = true;
+                }
+            }
+            case NoValidPID => {
+                *result = Result::Error;
+            }
+        }
+
+        return is_lower;
+    }
+
+    method update_min(&priv self) -> Result {
+
+        var result : Result = Result::Ok;
+        var PID : u16 = self->stats_config_table.PID[pid_index];
+        var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+        match item_type {
+            case u8_t => {
+                var min_aux: u8 = 0;
+                self->system_data_pool_u8.load_index(PID as usize, &mut min_aux);
+                self->param_stats[pid_index].min = min_aux as u32;
+                //self->param_stats[pid_index].min_obt = clock_get_time();
+            }
+            case u32_t => {
+                self->system_data_pool_u8.load_index(PID as usize, &mut (self->param_stats[pid_index].min));
+                //self->param_stats[pid_index].min_obt = clock_get_time();
+
+            }
+            case NoValidPID => {
+                *result = Result::Error;
+            }
+        }
+
+        return result;
+    }
+
+    method update_mean(&priv self) -> Result {
+
+        var result : Result = Result::Ok;
+        var PID : u16 = self->stats_config_table.PID[pid_index];
+        var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+        match item_type {
+            case u8_t => {
+                var mean_aux: u8 = 0;
+                self->system_data_pool_u8.load_index(PID as usize, &mut mean_aux);
+                self->param_stats[pid_index].mean_value = mean_value as u32;
+            }
+            case u32_t => {
+                self->system_data_pool_u8.load_index(PID as usize, &mut (self->param_stats[pid_index].mean_value));
+
+            }
+            case NoValidPID => {
+                *result = Result::Error;
+            }
+        }
+
+        return result;
+    }
+
+    viewer SDP_get_mean(&self, pid_index : usize) -> u32 {
+
+        var PID : u16 = self->stats_config_table.PID[pid_index];
+        var u8_SDP_value : u8 = 0;
+        var u32_SDP_value : u32 = 0;
+        var mean_value : u32 = 0;
+
+        var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+        match item_type {
+            case u8_t => {
+                self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
+                mean_value = ((self->param_stats[pid_index].mean_value * self->param_stats[pid_index].samples) + (u8_SDP_value as u32)) / (self->param_stats[pid_index].samples + 1);   
+            }
+            case u32_t => {
+                self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
+                mean_value = ((self->param_stats[pid_index].mean_value * self->param_stats[pid_index].samples) + u32_SDP_value) / (self->param_stats[pid_index].samples + 1);
+            }
+            case NoValidPID => {
+                *result = Result::Error;
+            }
+        }
+
+        return mean_value;
+    }
+
+    procedure update_all_stats(&mut self, result: &mut Result) {
+
+        for i : usize in 0 .. max_num_of_stats {
+
+            if(self->is_stats_index_defined(i) == true) {
+
+                var PID : u16 = self->stats_config_table.PID[i];
+
+                if(self->param_stats[i].samples > 0){
+
+                    if(self->SDP_param_higher_than_limit(i) == true) {
+
+                        self->update_max();
+
+                    } else if (self->SDP_param_lower_than_limit(i) == true) {
+
+                        self->update_min();
+
+                    } else {
+
+                    }
+
+                    self->param_stats[i].mean_value = self->SDP_get_mean(i);
+
+                }
+                else {
+
+                    self->update_max();
+                    self->update_min();
+                    self->update_mean();
+                }
+
+                self->param_stats[i].samples = self->param_stats[i].samples + 1;
+
+                
+            } else {
+                *result = Result::Error;
+            }
+
+
+        }
+
+        return;
+    }
+
+
+    procedure startup(&mut self){
+
+        for i : usize in 0 .. max_num_of_stats {
+
+            if(self->is_stats_index_defined(i) == true) {
+
+                self->param_stats[i].samples = 0;
+                self->stats_config_table.start_time[i] = clock_get_time();
+
+            }
+            
+        }
+
+        return;
     }
 
 };

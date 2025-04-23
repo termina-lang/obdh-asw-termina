@@ -1,3 +1,8 @@
+/*
+PUS SERVICE 9 : TIME MANAGEMENT
+*/
+
+
 const num_params3 : usize = 64;
 
 /*Óscar no tiene realmente implementado el servicio 9. Ante la recepción del TC[9,129] (que es equivalente al actual
