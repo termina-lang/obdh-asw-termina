@@ -8,7 +8,7 @@ import service_libraries.pus_services.pus_service12.pus_service12_help;
 interface PUSS12Iface {
     procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
     procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &mut FaultInfo, event_triggered: &mut bool);
-    
+    procedure is_PMON_enabled(&mut self, PMONID : usize, is_enabled : &mut bool);
 };
 
 
@@ -627,6 +627,9 @@ resource class PUSService12 provides PUSS12Iface {
                     self->param_mon_transitions_table[self->monitoring_transition_counter as usize].new_value = fault_value_info.PID_value;
 
                 }
+                case Empty => {
+                    //error
+                }
             }
              
             //Here it would be interesting to incorporate the I don't care option so that to improve code conciseness
@@ -791,6 +794,19 @@ resource class PUSService12 provides PUSS12Iface {
         if(self->do_monitoring_req_status is DoMonitoringReqStatus::Exit){
 
             self->do_monitoring_req_status = DoMonitoringReqStatus::Init;
+        }
+
+        return;
+    }
+
+    procedure is_PMON_enabled(&mut self, PMONID : usize, is_enabled : &mut bool) {
+
+        if (PMONID < max_num_pmon_ids) {
+
+            if(self->param_mon_config_table[PMONID].type is MonitorCheckType::Free == false){
+
+                *is_enabled = self->param_mon_config_table[PMONID as usize].enabled;
+            }
         }
 
         return;

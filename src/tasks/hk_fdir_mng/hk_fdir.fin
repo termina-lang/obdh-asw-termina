@@ -174,6 +174,57 @@ task class HouseKeepingFDIR {
     }
     */
 
+    method do_fdir(&priv self) -> Result {
+
+        var result : Result = Result::Ok;
+
+        var is_monitor_enabled : bool = false;
+
+        for i : usize in 0 .. max_num_pmon_ids {
+
+            self->pus_service_12.is_PMON_enabled(i, &mut is_monitor_enabled);
+
+            if(is_monitor_enabled){
+
+                var evID : u16 = 0;
+                var fault_info : FaultInfo = FaultInfo::default();
+                var event_triggered : bool = false;
+
+                self->pus_service_12.do_monitoring(i as u16, &mut evID, &mut fault_info, &mut event_triggered);
+
+                if(event_triggered){
+
+                    var is_Ev_ID_enabled : bool = false;
+                    self->pus_service_5.is_Ev_ID_enabled_ext(evID, &mut is_Ev_ID_enabled);
+
+                    if(is_Ev_ID_enabled){
+
+                        self->pus_service_5.build_and_tx_tm_5_x(&mut result, evID, fault_info);
+                        self->pus_service_19.manage_event_actions(evID);
+                    } 
+
+                }
+
+            }
+            
+        }
+
+        
+
+        return result;
+    }
+
+    action do_hk_fdir(&priv self, _current_time : TimeVal) -> Result {
+
+        var result : Result = Result::Ok;
+
+        self->pus_service_4.update_all_stats(&mut result);
+        self->pus_service_3.do_hk(&mut result);
+        self->do_fdir();
+
+        return result;
+    }
+
     action exec_tc(&priv self, tc_handler : box TCHandlerT)-> Result {
 
         var res : Result = Result::Ok;

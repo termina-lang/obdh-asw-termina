@@ -32,10 +32,12 @@ resource class PUSService20 provides PUSS20Iface {
 
         match item_type {
             case u8_t => {
+                var u8_SDP_value : u8 = 0;
                 self->system_data_pool_u8.load_index(((self->exec_tc_req_status_update.PID)) as usize, &mut u8_SDP_value);
                 append_u8_appdata_field(p_tm_handler, u8_SDP_value, result);
             }
             case u32_t => {
+                var u32_SDP_value : u32 = 0;
                 self->system_data_pool_u32.load_index(((self->exec_tc_req_status_update.PID)) as usize, &mut u32_SDP_value);
                 append_u32_appdata_field(p_tm_handler, u32_SDP_value, result);
             }
@@ -68,8 +70,8 @@ resource class PUSService20 provides PUSS20Iface {
 
                 if (self->exec_tc_req_status_update.N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
-                                                        (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
                 }
                 else {
@@ -118,8 +120,8 @@ resource class PUSService20 provides PUSS20Iface {
                             
                     } else {
 
-                        build_tm_1_4_PID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
-                                                        (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
+                        build_tm_1_4_PID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                         
                     }
@@ -135,11 +137,11 @@ resource class PUSService20 provides PUSS20Iface {
 
         if (result is Result::Error) {
 
-            next_status = PS19ExecTCReqStatus::Error;
+            next_status = PS20ExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS19ExecTCReqStatus::Exit;
+            next_status = PS20ExecTCReqStatus::Exit;
         }
 
         return next_status;
@@ -164,8 +166,8 @@ resource class PUSService20 provides PUSS20Iface {
 
                 if (self->exec_tc_req_status_update.N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
-                                                        (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.N, result);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
                 }
                 else {
@@ -184,12 +186,12 @@ resource class PUSService20 provides PUSS20Iface {
                             match item_type {
                                 case u8_t => {
                                     
-                                    self->system_data_pool_u8.store_index(self->exec_tc_req_status_update.PID, self->exec_tc_req_status_update.tc_20_3_data.PID_value_u8);
+                                    self->system_data_pool_u8.store_index(self->exec_tc_req_status_update.PID as usize, self->exec_tc_req_status_update.tc_20_3_data.PID_value_u8);
                                     succesful_execution = true;
                                 }
                                 case u32_t => {
 
-                                    self->system_data_pool_u32.store_index(self->exec_tc_req_status_update.PID, self->exec_tc_req_status_update.tc_20_3_data.PID_value_u32);
+                                    self->system_data_pool_u32.store_index(self->exec_tc_req_status_update.PID as usize, self->exec_tc_req_status_update.tc_20_3_data.PID_value_u32);
                                     succesful_execution = true;
                                 }
                                 case NoValidPID => {
@@ -220,14 +222,14 @@ resource class PUSService20 provides PUSS20Iface {
 
                         }
                         else {
-                            build_tm_1_4_PID_read_only_via_TC (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
-                                                        (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
+                            build_tm_1_4_PID_read_only_via_TC (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
                             self->tm_channel.send_tm(b_tm_handler, &mut result);
                         }
                     }
                     else {
-                        build_tm_1_4_PID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
-                                                        (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
+                        build_tm_1_4_PID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
                     }
                 }
@@ -235,7 +237,7 @@ resource class PUSService20 provides PUSS20Iface {
             }
             case None => {
                 //Error
-                *result = Result::Error;
+                result = Result::Error;
             }
         }
 
@@ -271,11 +273,11 @@ resource class PUSService20 provides PUSS20Iface {
         tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
         tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
         *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (tc_data.N));
-        *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data.EvID));
+        *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data.PID));
 
         if (*subtype == 3){
 
-            var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+            var item_type : DataPoolItemType = sys_data_pool_get_item_type(tc_data.PID);
 
             match item_type {
                 case u8_t => {

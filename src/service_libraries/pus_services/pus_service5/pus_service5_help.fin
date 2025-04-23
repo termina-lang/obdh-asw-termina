@@ -35,7 +35,8 @@ struct ParamFaultValueInfo {
 
 enum FaultInfo {
     ParamOutOfLimit(ParamOutOfLimitInfo),
-    ParamFaultValue(ParamFaultValueInfo)
+    ParamFaultValue(ParamFaultValueInfo),
+    Empty
 };
 
 enum PS5ExecTCReqStatus {
