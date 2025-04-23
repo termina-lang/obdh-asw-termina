@@ -15,6 +15,10 @@ resource class PUSService4 provides PUSS4Iface {
     param_stats_definition : [StatsDef; max_num_of_stats];
     stats_config_table : StatsConfig;
 
+    tm_channel: access TMChannelIface;   
+    a_tm_handler_pool : access Allocator<TMHandlerT>;
+    tm_counter : access TMCounterIface;
+
     viewer get_PID_defined_stats_index (&self, index: &mut usize) -> Result {
 
         var result : Result = Result::Error;

@@ -1,29 +1,286 @@
 import resources.gpio_driver;
+import service_libraries.pus_services.pus_service1.pus_service1;
+import service_libraries.serialize;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.tm_ccsds_pus_format;
+import resources.tm_counter;
+import resources.tm_channel;
 
 const num_params2 : usize = 64;
 
 
+enum PS2ExecTCReqStatus {
+    Init,
+	ExecTC,
+	Error,
+	Exit
+};
+
+struct PS2ExecTCReqStatusUpdate {
+    packet_id : u16;
+    packet_error_ctrl : u16;
+    tc_num_bytes : usize;
+    N: u8;
+    dev_address : u32;
+};
+
 /* Se pueden encender y apagar cuatros dispositivos, simulados mediante el uso de cuatro leds */
-// DISP 1 <--> LED 0
-// DISP 2 <--> LED 1
-// DISP 3 <--> LED 2
-// DISP 4 <--> LED 3
+// DISP <--> LED <--> address ON, OFF
+// DISP 1 <--> LED 0 <--> 0x00000001, 0x00000000
+// DISP 2 <--> LED 1 <--> 0x10000001, 0x10000000
+// DISP 3 <--> LED 2 <--> 0x20000001, 0x20000000
+// DISP 4 <--> LED 3 <--> 0x30000001, 0x30000000
 
 interface PUSS2Iface {
 
-    procedure exec2_1TC(&mut self, tc_descriptor: &TCDescriptorT, result: &mut Result);
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
 
 };
 
 resource class PUSService2 provides PUSS2Iface {
 
+    exec_tc_req_status : PS2ExecTCReqStatus;
+    exec_tc_req_status_update : PS2ExecTCReqStatusUpdate;
+
+    tm_channel: access TMChannelIface;   
+    a_tm_handler_pool : access Allocator<TMHandlerT>;
+    tm_counter : access TMCounterIface;
+
     gpio_driver : access GPIODrvIface;
 
     
-    procedure exec2_1TC(&mut self, tc_descriptor: &TCDescriptorT, result: &mut Result){
+    method exec2_1TC(&priv self) -> PS2ExecTCReqStatus {
 
+        var next_status : PS2ExecTCReqStatus = PS2ExecTCReqStatus::Error;
+        var result : Result = Result::Ok;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                if (self->exec_tc_req_status_update.N != 1) {
+
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                } else {
+
+                    if(self->device_drv_is_on_off_address_valid()){
+
+                        build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        result = self->dev_drv_on_off();
+
+                        if (result is Result::Error) {
+
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                            match tm_handler2 {
+
+                                case Some(b_tm_handler2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                    build_tm_1_8_device_command_exec_error(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                            (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.dev_address, &mut result);
+                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                                }
+                                case None => {
+                                    result = Result::Error;
+                                }
+                            }
+                            
+                        }
+                        else {
+
+                            var tm_handler2 : Option<box TMHandlerT> = None;
+                            self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+                            match tm_handler2 {
+
+                                case Some(b_tm_handler2) => {
+
+                                    var tm_count2 : u16 = 0 : u16;
+                                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
+                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                                }
+                                case None => {
+                                    result = Result::Error;
+                                }
+                            }
+
+                        }
+
+                     
+
+                    } else {
+
+                        build_tm_1_4_device_address_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                                            (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.dev_address, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+                        
+
+                    }
+                }
+            }
+            case None => {
+                result = Result::Error;
+            }
+        }
+
+        if (result is Result::Error) {
+
+            next_status = PS2ExecTCReqStatus::Error;
+
+        } else {
+
+            next_status = PS2ExecTCReqStatus::Exit;
+        }
+
+        return next_status;
+    }
+
+    viewer device_drv_is_on_off_address_valid(&self) -> bool {
+
+        var is_valid : bool = false;
+        var device_address : u32 = self->exec_tc_req_status_update.dev_address;
+
+        if (device_address == 0x00000001 || device_address == 0x10000001 || device_address == 0x20000001 || device_address == 0x30000001 ||
+            device_address == 0x00000000 || device_address == 0x10000000 || device_address == 0x20000000 || device_address == 0x30000000) {
+            is_valid = true;
+        }
+
+        return is_valid;
+
+    }
+
+    viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut Result) -> PS2ExecTCReqStatusUpdate {
+
+        *subtype = tc_handler->df_header.subtype;
+
+        var tc_data : PS2ExecTCReqStatusUpdate = {
+            packet_id = 0,
+            packet_error_ctrl = 0,
+            tc_num_bytes = 0,
+            N = 0,
+            dev_address = 0
+        }; 
+        tc_data.packet_id = tc_handler->packet_header.packet_id;
+        tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+        tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
+        *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (tc_data.N));
+        *result = tc_handler_get_u32_appdata_field(tc_handler, &mut (tc_data.dev_address));
+
+        return tc_data;
+
+    }
+
+    viewer manage_short_pack_length_error(&self) -> PS2ExecTCReqStatus {
+
+        var next_status : PS2ExecTCReqStatus = PS2ExecTCReqStatus::Error;
+        var result : Result = Result::Ok;
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
+                                            (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.tc_num_bytes), &mut result);
+                self->tm_channel.send_tm(b_tm_handler, &mut result);
+            }
+            case None => {
+                result = Result::Error;
+            }
+        }
+
+        if (result is Result::Error){
+
+            next_status = PS2ExecTCReqStatus::Error;
+
+        } else {
+
+            next_status = PS2ExecTCReqStatus::Exit;
+
+        }
+
+        return next_status;
+    }
+
+    method dev_drv_on_off(&priv self) -> Result {
+
+        var result : Result = Result::Ok;
+
+        var led: u8 = (self->exec_tc_req_status_update.dev_address & 0x10000000) as u8;
+        var on_off : u8 = (self->exec_tc_req_status_update.dev_address & 0x00000001) as u8;
+
+        self->gpio_driver.write_led(led, on_off);
+        return result;
+    }
+
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
+
+        var subtype : u8 = 0;
+
+        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PS2ExecTCReqStatus::Exit == false) {
+
+            match self->exec_tc_req_status {
+
+                case Init => {
+
+                    self->exec_tc_req_status_update = self->get_TC_params(tc_handler, &mut subtype, result);
+                    if (*result is Result::Error) {
+                        self->exec_tc_req_status = self->manage_short_pack_length_error();
+                    } else {
+                        self->exec_tc_req_status = PS2ExecTCReqStatus::ExecTC;
+                    }
+
+                }
+                case ExecTC => {
+
+                    if (subtype == 1) {
+
+                        self->exec_tc_req_status = self->exec2_1TC();
+
+                    } else {
+
+                        self->exec_tc_req_status = PS2ExecTCReqStatus::Error;
+                    }
+                }
+
+                case Error => {
+
+                    *result = Result::Error;
+                    self->exec_tc_req_status = PS2ExecTCReqStatus::Exit;
+
+                }
+                case Exit => {
+                    //Unreachable point
+                }  
+            }
+        }
+
+        if(self->exec_tc_req_status is PS2ExecTCReqStatus::Exit){
+
+            self->exec_tc_req_status = PS2ExecTCReqStatus::Init;
+        }
 
         return;
+    
     }
 
 

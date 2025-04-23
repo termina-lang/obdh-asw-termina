@@ -18,6 +18,7 @@ import tasks.icu_manager.icu_manager;
 import handlers.init;
 import handlers.uart_irq_handler;
 import tasks.tc_rx;
+import resources.tm_counter;
 
 
 import tasks.icu_manager.icu_manager;

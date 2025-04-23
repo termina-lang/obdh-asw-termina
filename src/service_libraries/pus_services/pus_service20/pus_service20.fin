@@ -17,7 +17,7 @@ resource class PUSService20 provides PUSS20Iface {
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
     tm_channel: access TMChannelIface;   
-    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
+    a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
 
 
@@ -70,17 +70,17 @@ resource class PUSService20 provides PUSS20Iface {
 
                     build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
-                    self->tm_channel.send_tm(descriptor, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
                 }
                 else {
 
                     if (sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID)){
 
                         build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                        self->tm_channel.send_tm(descriptor, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                        var tm_handler2 : Option<box TMDescriptorT> = None;
-                        self->a_tm_descriptor_pool.alloc(&mut tm_handler2);
+                        var tm_handler2 : Option<box TMHandlerT> = None;
+                        self->a_tm_handler_pool.alloc(&mut tm_handler2);
 
                         match tm_handler2 {
 
@@ -120,7 +120,7 @@ resource class PUSService20 provides PUSS20Iface {
 
                         build_tm_1_4_PID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
-                        self->tm_channel.send_tm(descriptor, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
                         
                     }
                 }
@@ -166,7 +166,7 @@ resource class PUSService20 provides PUSS20Iface {
 
                     build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.N, result);
-                    self->tm_channel.send_tm(descriptor, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
                 }
                 else {
 
@@ -175,7 +175,7 @@ resource class PUSService20 provides PUSS20Iface {
                         if(sys_data_pool_is_PID_update_via_TC_enabled(self->exec_tc_req_status_update.PID)){
 
                             build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                            self->tm_channel.send_tm(descriptor, &mut result);
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
 
                             var item_type : DataPoolItemType = sys_data_pool_get_item_type(self->exec_tc_req_status_update.PID);
 
@@ -222,13 +222,13 @@ resource class PUSService20 provides PUSS20Iface {
                         else {
                             build_tm_1_4_PID_read_only_via_TC (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
-                            self->tm_channel.send_tm(descriptor, &mut result);
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
                         }
                     }
                     else {
                         build_tm_1_4_PID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
-                        self->tm_channel.send_tm(descriptor, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
                     }
                 }
             

@@ -29,6 +29,7 @@ resource class PUSService5 provides PUSS5Iface {
     tm_channel : access TMChannelIface;
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
+    
 
     viewer is_Ev_ID_enabled(&self, Ev_ID : u16) -> bool {
 
