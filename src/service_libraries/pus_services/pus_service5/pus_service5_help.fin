@@ -55,6 +55,10 @@ struct PS5ExecTCReqStatusUpdate {
     EvID: u16;
 };
 
+function ps5_init_tc_req_status_update() -> PS5ExecTCReqStatusUpdate {
+    var ret : PS5ExecTCReqStatusUpdate = {packet_id = 0, packet_error_ctrl = 0, tc_num_bytes = 0, N = 0, EvID = 0};
+    return ret;
+}
 
 //These functions could become viewers !!!
 

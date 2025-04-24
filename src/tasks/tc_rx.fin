@@ -77,7 +77,7 @@ task class TCRXBottomHalfTask {
                     self->rx_status = RXStatus::SyncBytesRx;
 
                     var tc_handler : Option<box TCHandlerT> = None;
-                    self->a_tc_handler.alloc(&mut tc_handler);
+                    self->a_tc_handler_pool.alloc(&mut tc_handler);
 
                     match tc_handler {
 

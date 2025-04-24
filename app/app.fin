@@ -60,12 +60,12 @@ resource uart_drv : UARTDriver = {
 
 resource gpio_drv : GPIODriver = {
     registers @ 0xFC083000
-} : UARTDriver;
+} : GPIODriver;
 
 
 resource telemetry_channel : TMChannel = {
     uart <-> uart_drv,
-    a_tm_descriptor_pool <-> tm_pool
+    a_tm_handler_pool <-> tm_pool
 } : TMChannel;
 
 
@@ -83,30 +83,40 @@ resource pus_service_3 : PUSService3 = {
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}},
+    exec_tc_req_status = PS3ExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps3_init_tc_req_status_update(),
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> telemetry_channel,   
-    a_tm_descriptor_pool <-> tm_pool,
+    a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter
 } : PUSService3;
 
 
 
 resource pus_service_5 : PUSService5 = {
-    RID_enable_config = { 0x00000007, 0x0000000F, 0x00000000, 0x0000FFFF },
+    Ev_ID_enable_config = {0x00000007, 0x00000000, 0x00000000, 0x00000007},
+    exec_tc_req_status = PS5ExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps5_init_tc_req_status_update(),
     tm_channel <-> telemetry_channel,
-    a_tm_descriptor_pool <-> tm_pool,
+    a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter
 } : PUSService5;
 
 
 resource pus_service_12 : PUSService12 = {
+    do_monitoring_req_status = DoMonitoringReqStatus::Init,
+    do_monitoring_req_status_update = ps12_init_do_monitoring_req_status_update(),
+    exec_tc_req_status = PS12ExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps12_init_tc_req_status_update(),
     param_mon_config_table = [{ prev_state = CheckState::MonitorUnselected, state = CheckState::MonitorUnselected, 
+    monitoring_transition_counter = 0,
     transitionY2K = {tv_sec = 1 : u32, tv_usec = 0 : u32}, enabled = false, PID = 0, interval = 1, interval_control = 0 }; max_num_pmon_ids],
     param_limit_check_definition = [{ high_limit_rid = 0, high_limit = 0, low_limit_rid = 0, low_limit = 0 }; max_num_pmon_ids],
-    system_data_pool <-> system_data_pool,
+    system_data_pool_u32 <-> u32_system_data_pool,
+    system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> telemetry_channel,
-    a_tm_descriptor_pool <-> tm_pool,
+    a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter
 } : PUSService12;
 

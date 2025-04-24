@@ -10,7 +10,7 @@ import resources.tm_channel;
 
 
 interface MngTCExecIface {
-  procedure PUS_prio_exec_tc (&mut self, prio_tc : &TCHandlerT, ret: &mut Result);
+  procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Result);
   procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Result);
   procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Result);
 };
@@ -19,33 +19,33 @@ resource class ManagerTCExecutor provides MngTCExecIface {
 
     tm_channel: access TMChannelIface;
     tm_counter: access TMCounterIface;
-    a_tm_descriptor_pool : access Allocator<TMDescriptorT>;
+    a_tm_handler_pool : access Allocator<TMHandlerT>;
 
     pus_service_17 : access PUSS17Iface;
     pus_service_2 : access PUSS2Iface;
-    pus_service_9 : access PUSS9Iface;
-    pus_service_128 : access PUSS128Iface;  
+    //pus_service_9 : access PUSS9Iface;
+    //pus_service_128 : access PUSS128Iface;  
 
-    procedure PUS_prio_exec_tc (&mut self, prio_tc : &mut TCHandlerT, ret: &mut Result) {
+    procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Result) {
 
-        var tc_type : u8 = get_type(&(tc_handler.tc_descriptor.tc_bytes));
+        var tc_type : u8 = tc_handler->df_header.type;
 
         if (tc_type == 17){
 
-            self->pus_service_17.exec_tc(prio_tc, ret);
+            self->pus_service_17.exec_tc(tc_handler, ret);
 
         } else if (tc_type == 2){
 
-            self->pus_service_2.exec_tc(prio_tc, ret);
-
+            self->pus_service_2.exec_tc(tc_handler, ret);
+/*
         } else if (tc_type == 9){
 
-            self->pus_service_9.exec_tc(prio_tc, ret);
+            self->pus_service_9.exec_tc(tc_handler, ret);
     
         } else if (tc_type == 128){
 
-            self->pus_service_128.exec_tc(prio_tc, ret);
-        
+            self->pus_service_128.exec_tc(tc_handler, ret);
+        */
         } else {
 
             *ret = Result::Error;
@@ -56,18 +56,18 @@ resource class ManagerTCExecutor provides MngTCExecIface {
 
     procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Result) {
 
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
 
-        match tm_descriptor {
+        match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
                 //generar TM(1,1)
-                build_tm_1_1(&mut descriptor, tm_count, tc_handler);
-                self->tm_channel.send_tm(descriptor, ret);
+                build_tm_1_1(&mut b_tm_handler, tm_count, tc_handler->packet_header.packet_id, tc_handler->packet_error_ctrl, ret);
+                self->tm_channel.send_tm(b_tm_handler, ret);
                         
             }
             case None => {
@@ -81,19 +81,19 @@ resource class ManagerTCExecutor provides MngTCExecIface {
 
     procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Result) {
 
-        var tm_descriptor : Option<box TMDescriptorT> = None;
-        self->a_tm_descriptor_pool.alloc(&mut tm_descriptor);
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
         var tc_status : TCStatus = try_tc_acceptation(&(tc_handler->tc_descriptor));
 
-        match tm_descriptor {
+        match tm_handler {
 
-            case Some(descriptor) => {
+            case Some(b_tm_handler) => {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
                 //generar TM(1,2)
-                build_tm_1_2(&tc_status, &mut descriptor, tm_count, tc_handler);
-                self->tm_channel.send_tm(descriptor, ret);
+                build_tm_1_2(&tc_status, &mut b_tm_handler, tm_count, tc_handler, ret);
+                self->tm_channel.send_tm(b_tm_handler, ret);
             
             }
             case None => {

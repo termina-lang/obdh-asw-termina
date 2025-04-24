@@ -13,7 +13,7 @@ task class HouseKeepingFDIR {
     hkfdir_message_queue_input: in box TCDescriptorT triggers exec_tc;
     
     action_tc_message_queue_output: out box TCDescriptorT;
-    a_tc_descriptor_pool : access Allocator<TCDescriptorT>;
+    a_tc_handler_pool : access Allocator<TCHandlerT>;
 
     pus_service_3 : access PUSS3Iface;
     pus_service_12 : access PUSS12Iface;
@@ -21,7 +21,7 @@ task class HouseKeepingFDIR {
     pus_service_19 : access PUSS19Iface; 
     pus_service_4 : access PUSS4Iface;
 
-
+/*
     action do_hk_fdir(&priv self, _current_time : TimeVal) -> Result {
 
         var event_list : EventList = {
@@ -91,88 +91,7 @@ task class HouseKeepingFDIR {
         return res;
     } 
 
-/*
-    method manage_actions(&priv self){
-
-        var pending_actions : [usize; 4] = [0;4];
-        self->pus_service_19.get_pending_action_number(&mut pending_actions);
-
-        var n : u8 = 0;
-
-        for i: usize in 0 .. 3 while n < 2{
-
-            if (pending_actions[3-i] >= 2){
-
-                var tc_descriptor1 : Option<box TCDescriptorT> = None;
-                self->a_tc_descriptor_pool.alloc(&mut tc_descriptor1);
-            
-                match tc_descriptor1 {
-
-                    case Some(descriptor) => {
-
-                        self->pus_service_19.extract_action(3-i, &mut descriptor);
-                        self->action_tc_message_queue_output.send(descriptor);
-                        n = n + 1;
-
-                    }
-                    case None => {
-                    
-                    }
-
-                }
-
-                var tc_descriptor2 : Option<box TCDescriptorT> = None;
-                self->a_tc_descriptor_pool.alloc(&mut tc_descriptor2);
-            
-                match tc_descriptor2 {
-
-                    case Some(descriptor) => {
-
-                        self->pus_service_19.extract_action(3-i, &mut descriptor);
-                        self->action_tc_message_queue_output.send(descriptor);
-                        n = n + 1;
-
-                    }
-                    case None => {
-                    
-                    }
-
-                }
-            } else if (pending_actions[3-i] == 1){
-
-                var tc_descriptor : Option<box TCDescriptorT> = None;
-                self->a_tc_descriptor_pool.alloc(&mut tc_descriptor);
-            
-                match tc_descriptor {
-
-                    case Some(descriptor) => {
-
-                        self->pus_service_19.extract_action(3-i, &mut descriptor);
-                        self->action_tc_message_queue_output.send(descriptor);
-                        n = n + 1;
-
-                    }
-                    case None => {
-                    
-                    }
-
-                }
-            } else {
-                //Do nothing
-            }
-
-
-            
-
-        }
-
-        
-
-        return;
-
-        
-    }
-    */
+*/
 
     method do_fdir(&priv self) -> Result {
 
@@ -187,7 +106,7 @@ task class HouseKeepingFDIR {
             if(is_monitor_enabled){
 
                 var evID : u16 = 0;
-                var fault_info : FaultInfo = FaultInfo::default();
+                var fault_info : FaultInfo = FaultInfo::Empty;
                 var event_triggered : bool = false;
 
                 self->pus_service_12.do_monitoring(i as u16, &mut evID, &mut fault_info, &mut event_triggered);
@@ -200,7 +119,7 @@ task class HouseKeepingFDIR {
                     if(is_Ev_ID_enabled){
 
                         self->pus_service_5.build_and_tx_tm_5_x(&mut result, evID, fault_info);
-                        self->pus_service_19.manage_event_actions(evID);
+                        self->pus_service_19.manage_event_action(evID);
                     } 
 
                 }
@@ -220,7 +139,7 @@ task class HouseKeepingFDIR {
 
         self->pus_service_4.update_all_stats(&mut result);
         self->pus_service_3.do_hk(&mut result);
-        self->do_fdir();
+        result = self->do_fdir();
 
         return result;
     }

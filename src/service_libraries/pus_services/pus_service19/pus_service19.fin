@@ -177,7 +177,7 @@ resource class PUSService19 provides PUSS19Iface {
                                 
                                 var action_tc_handler : TCHandlerT = tc_handler_init();
 
-                                result = tc_handler_build_from_descriptor (&mut action_tc_handler, &(self->exec_tc_req_status_update.action_tc_packet));
+                                tc_handler_build_from_descriptor (&mut action_tc_handler, &(self->exec_tc_req_status_update.action_tc_packet));
                             
                                 var tc_status : TCStatus = {
                                     acceptation_status = TCAcceptationStatus::Undefined,
@@ -768,8 +768,6 @@ resource class PUSService19 provides PUSS19Iface {
         return;
     }
         
-
-       
 
 
     procedure get_pending_action_number(&mut self, paction_num : &mut[usize;4]){

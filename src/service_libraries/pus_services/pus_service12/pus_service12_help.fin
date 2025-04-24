@@ -112,6 +112,18 @@ struct DoMonitoringReqStatusUpdate {
     event_triggered: bool;
 };
 
+function ps12_init_do_monitoring_req_status_update() -> DoMonitoringReqStatusUpdate {
+    var res : DoMonitoringReqStatusUpdate = {
+        PMONID = 0,
+        EvID = 0,
+        current_monitor_definition = MonitorDefinition::Unselected,
+        fault_info = FaultInfo::Empty,
+        new_status = CheckState::Unselected,
+        event_triggered = false
+    };
+    return res;
+}
+
 enum DoMonitoringReqStatus {
     Init,
     CheckPMONID,
@@ -148,6 +160,36 @@ struct PS12ExecTCReqStatusUpdate {
     tc_data_1_2_6: PS12TC_1_2_6_Data;
     tc_data_5: PS12TC_5_Data;  
 };
+
+function ps12_init_tc_req_status_update() -> PS12ExecTCReqStatusUpdate {
+    var res : PS12ExecTCReqStatusUpdate = {
+        packet_id = 0,
+        packet_error_ctrl = 0,
+        tc_num_bytes = 0,
+        tc_data_1_2_6 = {
+            N = 0,
+            PMONID = 0
+        },
+        tc_data_5 = {
+            N = 0,
+            PMONID = 0,
+            mon_config = {
+                PID = 0,
+                type = MonitorCheckType::Free,
+                enabled = false,
+                definition = MonitorDefinition::Unselected,
+                repetition= 0,
+                repetition_control= 0,
+                interval = 0,
+                interval_control = 0,
+                transition_obt = {tv_sec = 0, tv_usec = 0},
+                temp_state = CheckState::Unselected,
+                current_state = CheckState::Unselected
+            }
+        }
+    };
+    return res;
+}
 
 function PS12ExecTCReqStatusUpdate_init() -> PS12ExecTCReqStatusUpdate {
     var res : PS12ExecTCReqStatusUpdate = {

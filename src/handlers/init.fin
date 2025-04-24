@@ -5,7 +5,8 @@ handler class Init {
 
     uart : access CharDevInit;
     gpio_driver : access GPIODrvIface;
-    system_data_pool : access AtomicArrayAccess<u16;sdp_num_params >;
+    system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
+    system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
     system_init_ev : sink TimeVal triggers init;
 
 
@@ -16,10 +17,11 @@ handler class Init {
 
         self->uart.initialize();
         self->gpio_driver.init_gpio();
-
+/*
         for i : usize in 0 .. sdp_num_params {
-            self->system_data_pool.store_index(i,i as u16);
+            self->system_data_pool_u.store_index(i,i as u16);
         }
+        */
 
 
         return ret;

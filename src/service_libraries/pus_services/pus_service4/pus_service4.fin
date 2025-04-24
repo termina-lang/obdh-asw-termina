@@ -27,6 +27,8 @@ resource class PUSService4 provides PUSS4Iface {
     system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
+    system_port : access SystemAPI;
+
     viewer get_PID_defined_stats_index (&self, index: &mut usize) -> Result {
 
         var result : Result = Result::Error;
@@ -107,7 +109,7 @@ resource class PUSService4 provides PUSS4Iface {
             self->stats_config_table.PID[PID_index] = self->exec_tc_req_status_update.PID;
 
             self->param_stats[PID_index].samples = 0;
-            //self->stats_config_table.start_time[index] = clock_get_time();
+            //self->stats_config_table.start_time[index] = clock_get_uptime();
             
         }
 
@@ -140,7 +142,7 @@ resource class PUSService4 provides PUSS4Iface {
 
         startup_tm(p_tm_handler);
 
-        //var current_time : TimeVal = clock_get_time();
+        //var current_time : TimeVal = clock_get_uptime();
         
         append_TimeVal_as_u32_appdata_field(p_tm_handler, self->stats_config_table.start_time[index], result);
         //append_TimeVal_as_u32_appdata_field(p_tm_handler, current_time, result);
@@ -201,7 +203,7 @@ resource class PUSService4 provides PUSS4Iface {
                         self->tm_channel.send_tm(b_tm_handler2, &mut result);
                         //reset_stats_index
                         self->param_stats[i].samples = 0;
-                        //self->stats_config_table.start_time[i] = clock_get_time();
+                        //self->stats_config_table.start_time[i] = clock_get_uptime();
                     }
                     case None => {
                         result = Result::Error;
@@ -578,31 +580,6 @@ resource class PUSService4 provides PUSS4Iface {
         return is_higher;
     }
 
-    method update_max(&priv self) -> Result {
-
-        var result : Result = Result::Ok;
-        var PID : u16 = self->stats_config_table.PID[pid_index];
-        var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
-
-        match item_type {
-            case u8_t => {
-                var max_aux: u8 = 0;
-                self->system_data_pool_u8.load_index(PID as usize, &mut max_aux);
-                self->param_stats[pid_index].max = max_aux as u32;
-                //self->param_stats[pid_index].max_obt = clock_get_time();
-            }
-            case u32_t => {
-                self->system_data_pool_u8.load_index(PID as usize, &mut (self->param_stats[pid_index].max));
-                //self->param_stats[pid_index].max_obt = clock_get_time();
-
-            }
-            case NoValidPID => {
-                *result = Result::Error;
-            }
-        }
-
-        return result;
-    }
 
     viewer SDP_param_lower_than_limit(&self, pid_index : usize) -> bool {
 
@@ -634,55 +611,28 @@ resource class PUSService4 provides PUSS4Iface {
         return is_lower;
     }
 
-    method update_min(&priv self) -> Result {
+    viewer get_data_pool_item(&self, PID: u16 ) -> u32 {
 
-        var result : Result = Result::Ok;
-        var PID : u16 = self->stats_config_table.PID[pid_index];
         var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+        var SDP_value : u32 = 0;
 
         match item_type {
             case u8_t => {
-                var min_aux: u8 = 0;
-                self->system_data_pool_u8.load_index(PID as usize, &mut min_aux);
-                self->param_stats[pid_index].min = min_aux as u32;
-                //self->param_stats[pid_index].min_obt = clock_get_time();
+                var aux_value: u8 = 0;
+                self->system_data_pool_u8.load_index(PID as usize, &mut aux_value);
+                SDP_value = aux_value as u32;
             }
             case u32_t => {
-                self->system_data_pool_u8.load_index(PID as usize, &mut (self->param_stats[pid_index].min));
-                //self->param_stats[pid_index].min_obt = clock_get_time();
-
+                self->system_data_pool_u32.load_index(PID as usize, &mut SDP_value);
             }
             case NoValidPID => {
-                *result = Result::Error;
+                //Error
             }
         }
+        return SDP_value;
 
-        return result;
     }
 
-    method update_mean(&priv self) -> Result {
-
-        var result : Result = Result::Ok;
-        var PID : u16 = self->stats_config_table.PID[pid_index];
-        var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
-
-        match item_type {
-            case u8_t => {
-                var mean_aux: u8 = 0;
-                self->system_data_pool_u8.load_index(PID as usize, &mut mean_aux);
-                self->param_stats[pid_index].mean_value = mean_value as u32;
-            }
-            case u32_t => {
-                self->system_data_pool_u8.load_index(PID as usize, &mut (self->param_stats[pid_index].mean_value));
-
-            }
-            case NoValidPID => {
-                *result = Result::Error;
-            }
-        }
-
-        return result;
-    }
 
     viewer SDP_get_mean(&self, pid_index : usize) -> u32 {
 
@@ -722,11 +672,26 @@ resource class PUSService4 provides PUSS4Iface {
 
                     if(self->SDP_param_higher_than_limit(i) == true) {
 
-                        self->update_max();
+                        var system_data_pool_item : u32 = self->get_data_pool_item(PID);
+                        self->param_stats[i].max = system_data_pool_item;
+                        var current_time : TimeVal = {
+                            tv_sec = 0,
+                            tv_usec = 0
+                        };
+                        self->system_port.clock_get_uptime(&mut current_time);
+                        self->param_stats[i].max_obt = current_time;
+
 
                     } else if (self->SDP_param_lower_than_limit(i) == true) {
 
-                        self->update_min();
+                        var system_data_pool_item : u32 = self->get_data_pool_item(PID);
+                        self->param_stats[i].min = system_data_pool_item;
+                        var current_time : TimeVal = {
+                            tv_sec = 0,
+                            tv_usec = 0
+                        };
+                        self->system_port.clock_get_uptime(&mut current_time);
+                        self->param_stats[i].min_obt = current_time;
 
                     } else {
 
@@ -737,9 +702,19 @@ resource class PUSService4 provides PUSS4Iface {
                 }
                 else {
 
-                    self->update_max();
-                    self->update_min();
-                    self->update_mean();
+                    var system_data_pool_item : u32 = self->get_data_pool_item(PID);
+                    self->param_stats[i].max = system_data_pool_item;
+                    self->param_stats[i].min = system_data_pool_item;
+                    self->param_stats[i].mean_value = system_data_pool_item;
+                    var current_time : TimeVal = {
+                        tv_sec = 0,
+                        tv_usec = 0
+                    };
+                    self->system_port.clock_get_uptime(&mut current_time);
+                    self->param_stats[i].max_obt = current_time;
+                    self->param_stats[i].min_obt = current_time;
+                    
+                    
                 }
 
                 self->param_stats[i].samples = self->param_stats[i].samples + 1;
@@ -763,7 +738,7 @@ resource class PUSService4 provides PUSS4Iface {
             if(self->is_stats_index_defined(i) == true) {
 
                 self->param_stats[i].samples = 0;
-                //self->stats_config_table.start_time[i] = clock_get_time();
+                //self->stats_config_table.start_time[i] = clock_get_uptime();
 
             }
             

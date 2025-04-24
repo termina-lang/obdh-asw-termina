@@ -22,7 +22,7 @@ task class PUSBKGTCExecutor {
 
         if (tc_type == 20){
 
-            self->pus_service_20.exec_tc(&tc_handler, &mut res);
+            self->pus_service_20.exec_tc(&mut tc_handler, &mut res);
 
         } else {
 

@@ -27,23 +27,23 @@ task class ICUManager {
                     case ExecCtrlReboot => {
 
                         //Ejecutar tc como prioritario
-                        self->tc_executor.PUS_prio_exec_tc(&tc_handler, &mut ret);
+                        self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
                         self->a_tc_handler_pool.free(tc_handler);
                            
                     }
                     case  ExecCtrlHK_FDIRTC => {
                     
-                        self->hkfdir_message_queue_output.send(&tc_handler);
+                        self->hkfdir_message_queue_output.send(tc_handler);
                     }
                     case ExecCtrlBKGTC => {
                         
-                        self->bkg_message_queue_output.send(&tc_handler);
+                        self->bkg_message_queue_output.send(tc_handler);
                         
                     }
                     case ExecCtrlPrioTC => {
 
                         //Ejecutar tc como prioritario
-                        self->tc_executor.PUS_prio_exec_tc(&tc_handler, &mut ret);
+                        self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
                         self->a_tc_handler_pool.free(tc_handler);
                     }
                     case Undefined => {
@@ -71,14 +71,14 @@ task class ICUManager {
 
         var ret : Result = Result::Ok;
 
-        var execution_status : TCExecutionCtrl = handle_tc((tc_handler.tc_descriptor));
+        var execution_status : TCExecutionCtrl = handle_tc((&(tc_handler.tc_descriptor)));
 
         match execution_status {
 
             case ExecCtrlReboot => {
 
                 //Ejecutar tc como prioritario
-                self->tc_executor.PUS_prio_exec_tc(&tc_handler, &mut ret);
+                self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
                 self->a_tc_handler_pool.free(tc_handler); 
             }
             case  ExecCtrlHK_FDIRTC => {
@@ -93,7 +93,7 @@ task class ICUManager {
             case ExecCtrlPrioTC => {
 
             //Ejecutar tc como prioritario
-                self->tc_executor.PUS_prio_exec_tc(&tc_handler, &mut ret);
+                self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
                 self->a_tc_handler_pool.free(tc_handler); 
             }
             case Undefined => {

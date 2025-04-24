@@ -19,9 +19,8 @@ function tc_handler_init () -> TCHandlerT {
     return tc_handler;
 }
 
-function tc_handler_build_from_descriptor (tc_handler : &mut TCHandlerT, telecommand : &TCDescriptorT) -> Result {
+function tc_handler_build_from_descriptor (tc_handler : &mut TCHandlerT, telecommand : &TCDescriptorT) {
 
-    var res : Result = Result::Ok;
 
     for i: usize in 0 .. max_tc_size while i < telecommand->tc_num_bytes {
         tc_handler->tc_descriptor.tc_bytes[i] = telecommand->tc_bytes[i];
@@ -32,7 +31,7 @@ function tc_handler_build_from_descriptor (tc_handler : &mut TCHandlerT, telecom
 
     tc_handler->app_data_index = 10;
 
-    return res;
+    return;
 
 }
 
