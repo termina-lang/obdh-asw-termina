@@ -9,6 +9,6 @@ enable-system-init: true
 enable-system-port: true
 builder: make
 platform-flags:
-    rtems5-noel-qemu:
-        enable-irq-3: true
+  rtems5-leon3-qemu:
+    enable-irq-3: true
         

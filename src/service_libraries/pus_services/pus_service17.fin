@@ -26,7 +26,7 @@ interface PUSS17Iface {
 
 resource class PUSService17 provides PUSS17Iface {
 
-	exect_tc_req_status : PS17ExecTCReqStatus;
+	exec_tc_req_status : PS17ExecTCReqStatus;
 
 	tm_channel: access TMChannelIface;   
     a_tm_handler_pool : access Allocator<TMHandlerT>;
@@ -71,26 +71,26 @@ resource class PUSService17 provides PUSS17Iface {
 
         var subtype : u8 = tc_handler->df_header.subtype;
 
-        for i : usize in 0 .. 2 while (self->exect_tc_req_status is PS17ExecTCReqStatus::Exit == false) {
+        for i : usize in 0 .. 2 while (self->exec_tc_req_status is PS17ExecTCReqStatus::Exit == false) {
 
-            match self->exect_tc_req_status {
+            match self->exec_tc_req_status {
 
                 case ExecTC => {
 
                     if (subtype == 1) {
 
-                        self->exect_tc_req_status = self->exec17_1TC();
+                        self->exec_tc_req_status = self->exec17_1TC();
 
                     } else {
 
-                        self->exect_tc_req_status = PS17ExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PS17ExecTCReqStatus::Error;
                     }
                 }
 
                 case Error => {
 
                     *result = Result::Error;
-                    self->exect_tc_req_status = PS17ExecTCReqStatus::Exit;
+                    self->exec_tc_req_status = PS17ExecTCReqStatus::Exit;
 
                 }
                 case Exit => {
@@ -99,9 +99,9 @@ resource class PUSService17 provides PUSS17Iface {
             }
         }
 
-        if(self->exect_tc_req_status is PS17ExecTCReqStatus::Exit){
+        if(self->exec_tc_req_status is PS17ExecTCReqStatus::Exit){
 
-            self->exect_tc_req_status = PS17ExecTCReqStatus::ExecTC;
+            self->exec_tc_req_status = PS17ExecTCReqStatus::ExecTC;
         }
 
         return;

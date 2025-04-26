@@ -109,10 +109,11 @@ resource pus_service_12 : PUSService12 = {
     do_monitoring_req_status_update = ps12_init_do_monitoring_req_status_update(),
     exec_tc_req_status = PS12ExecTCReqStatus::Init,
     exec_tc_req_status_update = ps12_init_tc_req_status_update(),
-    param_mon_config_table = [{ prev_state = CheckState::MonitorUnselected, state = CheckState::MonitorUnselected, 
+    param_mon_config_table = [{ PID = 0, type = MonitorCheckType::Free, enabled = false, definition = MonitorDefinition::Unselected, repetition= 0, repetition_control= 0, interval = 0, interval_control = 0,
+    transition_obt = {tv_sec = 0, tv_usec = 0}, temp_state = CheckState::Unselected, current_state = CheckState::Unselected}; max_num_pmon_ids],
     monitoring_transition_counter = 0,
-    transitionY2K = {tv_sec = 1 : u32, tv_usec = 0 : u32}, enabled = false, PID = 0, interval = 1, interval_control = 0 }; max_num_pmon_ids],
-    param_limit_check_definition = [{ high_limit_rid = 0, high_limit = 0, low_limit_rid = 0, low_limit = 0 }; max_num_pmon_ids],
+    param_mon_transitions_table = [{PMONID = 0, PID = 0, type = MonitorCheckType::Free, mask_value = 0, limit_value = 0, new_value = 0,
+    prev_status = CheckState::Unselected, new_status = CheckState::Unselected, trans_obt = {tv_sec = 0, tv_usec = 0}}; max_num_transitions],
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> telemetry_channel,
@@ -122,46 +123,77 @@ resource pus_service_12 : PUSService12 = {
 
 
 resource pus_service_19 : PUSService19 = {
+    exec_tc_req_status = PS19ExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps19_init_tc_req_status_update(),
     event_action_config = [{enabled = false, event_ID = 0}; max_event_action_definitions],
-    event_action_packets = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; max_event_action_definitions],
-    pending_action_queue_1I  = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; event_action_queue_dimension],
-    pending_action_queue_2LS = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; event_action_queue_dimension],
-    pending_action_queue_3MS = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; event_action_queue_dimension],
-    pending_action_queue_4HS = [{tc_bytes = [0 ; max_tc_size], tc_num_bytes = 0}; event_action_queue_dimension],
+    event_action_packets = [tc_handler_init(); max_event_action_definitions],
+    pending_action_queue_1I  = [tc_handler_init(); event_action_queue_dimension],
+    pending_action_queue_2LS = [tc_handler_init(); event_action_queue_dimension],
+    pending_action_queue_3MS = [tc_handler_init(); event_action_queue_dimension],
+    pending_action_queue_4HS = [tc_handler_init(); event_action_queue_dimension],
     pending_action_number = [0; 4],
     pending_action_head = [0; 4],
     pus_service_5 <-> pus_service_5,
     tm_channel <-> telemetry_channel,
-    a_tm_descriptor_pool <-> tm_pool,
+    a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter
 }: PUSService19;
 
 
 resource pus_service_20 : PUSService20 = {
-    system_data_pool <-> system_data_pool,
+    exec_tc_req_status = PS20ExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps20_init_tc_req_status_update(),
+    system_data_pool_u32 <-> u32_system_data_pool,
+    system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> telemetry_channel,
-    a_tm_descriptor_pool <-> tm_pool,
+    a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter
 }: PUSService20;
 
 
 resource pus_service_17 : PUSService17 = {
+    exec_tc_req_status = PS17ExecTCReqStatus::ExecTC,
     tm_channel <-> telemetry_channel,
-    a_tm_descriptor_pool <-> tm_pool,
+    a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter
 }: PUSService17;
+
+resource pus_service_2 : PUSService2 = {
+    exec_tc_req_status = PS2ExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps2_init_tc_req_status_update(),
+    tm_channel <-> telemetry_channel,
+    a_tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    gpio_driver <-> gpio_drv
+} : PUSService2;
+
+resource pus_service_4 : PUSService4 = {
+    exec_tc_req_status = PS4ExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps4_init_tc_req_status_update(),
+    param_stats = [{min = 0, min_obt = {tv_sec = 0, tv_usec = 0}, max = 0, max_obt = {tv_sec = 0, tv_usec = 0}, mean_value = 0, samples = 0}; max_num_of_stats],
+    stats_config_table = {defined = [false; max_num_of_stats],  PID = [0; max_num_of_stats], start_time = [{tv_sec = 0, tv_usec = 0}; max_num_of_stats]},
+    system_data_pool_u32 <-> u32_system_data_pool,
+    system_data_pool_u8 <-> u8_system_data_pool,
+    tm_channel <-> telemetry_channel,
+    a_tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    system_port <-> system_entry
+} : PUSService4;
 
 resource mng_tc_executor : ManagerTCExecutor = {
     tm_channel <-> telemetry_channel,
     tm_counter <-> telemetry_counter,
-    a_tm_descriptor_pool <-> tm_pool,
-    pus_service_17 <-> pus_service_17
+    a_tm_handler_pool <-> tm_pool,
+    pus_service_17 <-> pus_service_17,
+    pus_service_2 <-> pus_service_2
 } : ManagerTCExecutor;
 
 
 handler init : Init = {
     uart <-> uart_drv,
-    system_data_pool <-> system_data_pool,
+    gpio_driver <-> gpio_drv,
+    system_data_pool_u32 <-> u32_system_data_pool,
+    system_data_pool_u8 <-> u8_system_data_pool,
     system_init_ev <- system_init
 } : Init;
 
@@ -204,7 +236,8 @@ task hk_fdir : HouseKeepingFDIR = {
     pus_service_3 <-> pus_service_3,
     pus_service_12 <-> pus_service_12,
     pus_service_5 <-> pus_service_5,
-    pus_service_19 <-> pus_service_19
+    pus_service_19 <-> pus_service_19,
+    pus_service_4 <-> pus_service_4
 } : HouseKeepingFDIR;
 
 

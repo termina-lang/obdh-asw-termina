@@ -10,9 +10,9 @@ task class HouseKeepingFDIR {
 
 
     hk_fdir_timer_ev : sink TimeVal triggers do_hk_fdir;
-    hkfdir_message_queue_input: in box TCDescriptorT triggers exec_tc;
+    hkfdir_message_queue_input: in box TCHandlerT triggers exec_tc;
     
-    action_tc_message_queue_output: out box TCDescriptorT;
+    action_tc_message_queue_output: out box TCHandlerT;
     a_tc_handler_pool : access Allocator<TCHandlerT>;
 
     pus_service_3 : access PUSS3Iface;

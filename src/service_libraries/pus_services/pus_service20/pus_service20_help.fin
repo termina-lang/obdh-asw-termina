@@ -24,3 +24,19 @@ struct PS20ExecTCReqStatusUpdate {
     PID: u16;
     tc_20_3_data : TC20_3Data;
 };
+
+
+function ps20_init_tc_req_status_update() -> PS20ExecTCReqStatusUpdate {
+    var res : PS20ExecTCReqStatusUpdate = {
+        packet_id = 0,
+        packet_error_ctrl = 0,
+        tc_num_bytes = 0,
+        N = 0,
+        PID = 0,
+        tc_20_3_data = {
+            PID_value_u8 = 0,
+            PID_value_u32 = 0
+        }
+    };
+    return res;
+}

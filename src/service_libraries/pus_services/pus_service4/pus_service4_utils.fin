@@ -31,3 +31,14 @@ struct PS4ExecTCReqStatusUpdate {
     N: u8;
     PID: u16;
 };
+
+function ps4_init_tc_req_status_update() -> PS4ExecTCReqStatusUpdate {
+    var res : PS4ExecTCReqStatusUpdate = {
+        packet_id = 0,
+        packet_error_ctrl = 0,
+        tc_num_bytes = 0,
+        N = 0,
+        PID = 0
+    };
+    return res;
+}

@@ -20,12 +20,12 @@ resource class PUSService4 provides PUSS4Iface {
     param_stats : [StatsDef; max_num_of_stats];
     stats_config_table : StatsConfig;
 
+    system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
+    system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
+
     tm_channel: access TMChannelIface;   
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
-
-    system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
-    system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
     system_port : access SystemAPI;
 
@@ -135,6 +135,8 @@ resource class PUSService4 provides PUSS4Iface {
         for i : usize in 0 .. max_num_of_stats {
             self->stats_config_table.defined[i] = false;
         }
+
+        return;
         
     }
 

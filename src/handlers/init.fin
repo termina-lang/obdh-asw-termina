@@ -17,11 +17,13 @@ handler class Init {
 
         self->uart.initialize();
         self->gpio_driver.init_gpio();
-/*
-        for i : usize in 0 .. sdp_num_params {
-            self->system_data_pool_u.store_index(i,i as u16);
+
+        for i : usize in 0 .. sdp_num_u32_params {
+            self->system_data_pool_u32.store_index(i,i as u32);
         }
-        */
+        for i : usize in 0 .. sdp_num_u8_params {
+            self->system_data_pool_u8.store_index(i,i as u8);
+        }
 
 
         return ret;

@@ -639,14 +639,8 @@ resource class PUSService12 provides PUSS12Iface {
                      self->param_mon_transitions_table[self->monitoring_transition_counter as usize].mask_value = value_definition.mask_value;
 
                 }
-                case ParamLimitCheck(limit_definition)=> {
+                case _ => {
 
-                }
-                case ParamDeltaCheck(delta_definition)=> {
-
-                }
-                case Unselected => {
-                    //error
                 }
 
             }
