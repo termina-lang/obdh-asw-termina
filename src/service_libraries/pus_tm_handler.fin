@@ -116,6 +116,8 @@ function tm_handler_build_df_header (tm_handler : &mut TMHandlerT, tm_type : u8,
 
 function close_tm (tm_handler : &mut TMHandlerT, type : u8, subtype : u8, tm_count : u16, result : &mut Result) {
 
+    *result = Result::Ok;
+
     tm_handler_build_packet_header(tm_handler, tm_count);
     tm_handler_build_df_header(tm_handler, type, subtype);
 

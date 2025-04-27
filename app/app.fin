@@ -133,7 +133,6 @@ resource pus_service_19 : PUSService19 = {
     pending_action_queue_4HS = [tc_handler_init(); event_action_queue_dimension],
     pending_action_number = [0; 4],
     pending_action_head = [0; 4],
-    pus_service_5 <-> pus_service_5,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter

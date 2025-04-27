@@ -84,18 +84,12 @@ resource class PUSService12 provides PUSS12Iface {
 
         match(self->param_mon_config_table[current_PMON_ID].definition) {
 
-            case ParamValueCheck(param_check_defintion)=> {
-                //error
-            }
             case ParamLimitCheck(limit_check_def)=> {
 
                 monitoring_definition = limit_check_def;
             }
             
-            case ParamDeltaCheck(delta_check_definition) => {
-                //error
-            }
-            case Unselected => {
+            case _ => {
                 //error
             }
         }
@@ -120,16 +114,10 @@ resource class PUSService12 provides PUSS12Iface {
                 monitoring_definition = param_check_definition;
                 
             }
-            case ParamLimitCheck(limit_check_def)=> {
+            case _ =>{
 
             }
             
-            case ParamDeltaCheck(delta_check_definition) => {
-                
-            }
-            case Unselected => {
-                
-            }
         }
 
         return monitoring_definition;
@@ -309,7 +297,7 @@ resource class PUSService12 provides PUSS12Iface {
                                                 PID_expected_value = 0};
 
         let check_status : CheckValueStatus = CheckValueStatus::MonitorValueUnexpected;
-        var new_status : CheckState = CheckState::ParamValueStatus(check_status);
+        self->do_monitoring_req_status_update.new_status = CheckState::ParamValueStatus(check_status);
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
 
         match(self->param_mon_config_table[current_PMON_ID].definition){
@@ -347,14 +335,8 @@ resource class PUSService12 provides PUSS12Iface {
                 }
 
             }
-            case ParamLimitCheck(check_definition) => {
+            case _ => {
 
-            }
-            case ParamDeltaCheck(check_definition) => {
-
-            }
-            case Unselected => {
-                
             }
         }
 
@@ -367,7 +349,7 @@ resource class PUSService12 provides PUSS12Iface {
         var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
         let check_status : CheckValueStatus = CheckValueStatus::MonitorValueExpected;
-        var new_status : CheckState = CheckState::ParamValueStatus(check_status); 
+        self->do_monitoring_req_status_update.new_status = CheckState::ParamValueStatus(check_status); 
 
         if(self->manage_new_status()){
 
@@ -394,9 +376,6 @@ resource class PUSService12 provides PUSS12Iface {
 
         match(self->param_mon_config_table[current_PMON_ID].definition){
 
-            case ParamValueCheck(check_definition) => {
-
-            }
             case ParamLimitCheck(check_definition) => {
 
                 fault_info.PID = self->param_mon_config_table[current_PMON_ID].PID; 
@@ -428,11 +407,8 @@ resource class PUSService12 provides PUSS12Iface {
                 }
 
             }
-            case ParamDeltaCheck(check_definition) => {
+            case _ => {
 
-            }
-            case Unselected => {
-                
             }
         }
 
@@ -455,9 +431,6 @@ resource class PUSService12 provides PUSS12Iface {
 
         match(self->param_mon_config_table[current_PMON_ID].definition){
 
-            case ParamValueCheck(check_definition) => {
-
-            }
             case ParamLimitCheck(check_definition) => {
 
                 fault_info.PID = self->param_mon_config_table[current_PMON_ID].PID; 
@@ -489,11 +462,8 @@ resource class PUSService12 provides PUSS12Iface {
                 }
 
             }
-            case ParamDeltaCheck(check_definition) => {
+            case _ => {
 
-            }
-            case Unselected => {
-                
             }
         }
 
@@ -506,6 +476,7 @@ resource class PUSService12 provides PUSS12Iface {
 
         var within_limits : CheckLimitsStatus = CheckLimitsStatus::MonitorWithinLimits;
         var new_status : CheckState = CheckState::ParamLimitStatus(within_limits);
+        self->do_monitoring_req_status_update.new_status = new_status;
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize;
         let current_status : CheckState = self->param_mon_config_table[current_PMON_ID].current_state;
 
@@ -778,6 +749,7 @@ resource class PUSService12 provides PUSS12Iface {
                 case GetRequestStatusUpdate => {
                     *evID = self->do_monitoring_req_status_update.EvID;
                     *fault_info = self->do_monitoring_req_status_update.fault_info;
+                    *event_triggered = self->do_monitoring_req_status_update.event_triggered;
                 }
                 case Exit => {
                     //error
@@ -823,21 +795,21 @@ resource class PUSService12 provides PUSS12Iface {
 
         var valid_PMONID : usize = (self->exec_tc_req_status_update. tc_data_1_2_6.PMONID) as usize;
 
-        match (self->param_mon_config_table[valid_PMONID].current_state) {
+        match (self->param_mon_config_table[valid_PMONID].type) {
 
-            case ParamValueStatus(check_val) => {
+            case ExpectedValue => {
                 var monitor_unchecked : CheckValueStatus = CheckValueStatus::MonitorUnchecked;
                 self->param_mon_config_table[valid_PMONID].current_state = CheckState::ParamValueStatus(monitor_unchecked);
             }
-            case ParamLimitStatus(check_limits) => {
+            case Limits => {
                 var monitor_unchecked : CheckLimitsStatus = CheckLimitsStatus::MonitorUnchecked;
                 self->param_mon_config_table[valid_PMONID].current_state = CheckState::ParamLimitStatus(monitor_unchecked);
             }
-            case ParamDeltaStatus(check_delta) => {
+            case Delta => {
                 var monitor_unchecked : CheckDeltaStatus = CheckDeltaStatus::MonitorUnchecked;
                 self->param_mon_config_table[valid_PMONID].current_state = CheckState::ParamDeltaStatus(monitor_unchecked);
             }
-            case Unselected => {
+            case Free => {
                 //Do nothing
             }
         }

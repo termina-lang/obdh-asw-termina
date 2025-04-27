@@ -28,8 +28,6 @@ resource class PUSService19 provides PUSS19Iface {
     
     pending_action_number : [usize; 4];
     pending_action_head : [usize; 4];
-   
-    pus_service_5 : access PUSS5Iface;
 
     tm_channel: access TMChannelIface;   
     a_tm_handler_pool : access Allocator<TMHandlerT>;
@@ -132,6 +130,7 @@ resource class PUSService19 provides PUSS19Iface {
 
         var result: Result = Result::Ok;
         var next_status : PS19ExecTCReqStatus = PS19ExecTCReqStatus::Error;
+        var send_result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -147,7 +146,7 @@ resource class PUSService19 provides PUSS19Iface {
 
                     build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.N, &mut result);
-                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, &mut send_result);
 
                 }
                 else {
@@ -156,6 +155,7 @@ resource class PUSService19 provides PUSS19Iface {
 
                         
                         var is_enabled : bool = false;
+                        var error: TC19_1_Error = TC19_1_Error::NoError;
 
                         self->exec_tc_req_status_update.ev_action_ID = self->is_ev_action_defined(&mut is_enabled, self->exec_tc_req_status_update.tc_data.EvID);
 
@@ -163,9 +163,11 @@ resource class PUSService19 provides PUSS19Iface {
 
                             if (is_enabled){
 
-                                build_tm_1_4_ev_action_enabled(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
-                                                        (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.EvID, &mut result);
-                                self->tm_channel.send_tm(b_tm_handler, &mut result);
+                                error = TC19_1_Error::EvIDEnabled;
+                            }
+                            else {
+
+                                error = TC19_1_Error::NoError;
                             }
 
                         } else {
@@ -173,8 +175,17 @@ resource class PUSService19 provides PUSS19Iface {
                             self->exec_tc_req_status_update.ev_action_ID = self->get_free_event_action_index();
 
                             if(self->exec_tc_req_status_update.ev_action_ID.found){
+                                error = TC19_1_Error::NoError;
+                            }
+                            else {
+                                error = TC19_1_Error::MaxEventActionDefinitions;
+                            }
+                        }
 
-                                
+                        match error {
+
+                            case NoError => {
+
                                 var action_tc_handler : TCHandlerT = tc_handler_init();
 
                                 tc_handler_build_from_descriptor (&mut action_tc_handler, &(self->exec_tc_req_status_update.action_tc_packet));
@@ -190,12 +201,11 @@ resource class PUSService19 provides PUSS19Iface {
                                 if (tc_status.acceptation_status is TCAcceptationStatus::Accepted){
 
                                     build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                                    self->tm_channel.send_tm(b_tm_handler, &mut send_result);
                                 
                                     self->event_action_config[self->exec_tc_req_status_update.ev_action_ID.ev_action_index].event_ID = self->exec_tc_req_status_update.tc_data.EvID;
                                     self->event_action_config[self->exec_tc_req_status_update.ev_action_ID.ev_action_index].enabled = false;
 
-                                    //*result = self->disable_event_action(EvID, event_action_ID);
 
                                     var tm_handler2 : Option<box TMHandlerT> = None;
                                     self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -207,7 +217,7 @@ resource class PUSService19 provides PUSS19Iface {
                                             var tm_count2 : u16 = 0 : u16;
                                             self->tm_counter.get_next_tm_count(&mut tm_count2);
                                             build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
-                                            self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                                            self->tm_channel.send_tm(b_tm_handler2, &mut send_result);
                                         }
                                         case None => {
                                             result = Result::Error;
@@ -218,37 +228,43 @@ resource class PUSService19 provides PUSS19Iface {
 
                                     build_tm_1_4_ev_action_rejected (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.EvID, &mut result);
-                                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                                    self->tm_channel.send_tm(b_tm_handler, &mut send_result);
                                     
-                                }
-
+                                } 
 
                             }
-                            else {
+                            case EvIDEnabled => {
+
+                                build_tm_1_4_ev_action_enabled(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
+                                                            (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.EvID, &mut result);
+                                self->tm_channel.send_tm(b_tm_handler, &mut send_result);
+
+                            }
+                            case MaxEventActionDefinitions => {
 
                                 build_tm_1_8_max_ev_actions_defined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.EvID, &mut result);
-                                self->tm_channel.send_tm(b_tm_handler, &mut result);
+                                self->tm_channel.send_tm(b_tm_handler, &mut send_result);
+
                             }
-
                         }
-                        
-
+                   
                     } else {
 
                         build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.EvID, &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+                        self->tm_channel.send_tm(b_tm_handler, &mut send_result);
 
                     }
-
-                }
-
+                }  
             }
+         
             case None => {
                 result = Result::Error;
             }
         }
+
+
 
         if (result is Result::Error) {
 
@@ -289,7 +305,7 @@ resource class PUSService19 provides PUSS19Iface {
 
                     if (is_Ev_ID_valid(self->exec_tc_req_status_update.tc_data.EvID)) {
 
-                        var event_action_ID : u16 = 0;
+                        //var event_action_ID : u16 = 0;
                         var is_enabled : bool = false;
 
                         self->exec_tc_req_status_update.ev_action_ID = self->is_ev_action_defined(&mut is_enabled, self->exec_tc_req_status_update.tc_data.EvID);
@@ -473,7 +489,7 @@ resource class PUSService19 provides PUSS19Iface {
 
                     if (is_Ev_ID_valid(self->exec_tc_req_status_update.tc_data.EvID)) {
 
-                        var event_action_ID : u16 = 0;
+                        //var event_action_ID : u16 = 0;
                         var is_enabled : bool = false;
 
                         self->exec_tc_req_status_update.ev_action_ID = self->is_ev_action_defined(&mut is_enabled, self->exec_tc_req_status_update.tc_data.EvID);

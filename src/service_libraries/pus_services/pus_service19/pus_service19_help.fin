@@ -64,3 +64,10 @@ function ps19_init_tc_req_status_update() -> PS19ExecTCReqStatusUpdate {
     };
     return res;
 }
+
+
+enum TC19_1_Error {
+    NoError,
+    EvIDEnabled,
+    MaxEventActionDefinitions
+};

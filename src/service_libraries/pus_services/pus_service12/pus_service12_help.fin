@@ -364,17 +364,7 @@ function is_valid_check_limit_def (param_limit_check_definition : &MonitorDefini
 
             }
         }
-        case ParamValueCheck(param_value_check_definition) => {
-
-            res = false;
-
-        }
-        case ParamDeltaCheck(param_delta_check_definition) => {
-
-            res = false;
-
-        }
-        case Unselected => {
+        case _ => {
 
             res = false;
 
