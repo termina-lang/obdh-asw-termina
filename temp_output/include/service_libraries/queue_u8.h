@@ -5,7 +5,7 @@
 
 #include "option.h"
 
-#define queue_max_noe 1024
+extern const size_t queue_max_noe;
 
 typedef enum {
     QueueResult__Success,

@@ -16,32 +16,71 @@
 
 typedef struct {
     void * __that;
-    void (* PUS_prio_exec_tc)(void * const, const TCDescriptorT * const,
-                              Result * const);
-    void (* mng_tc_acceptation)(void * const, const TCDescriptorT * const,
+    void (* PUS_prio_exec_tc)(void * const, TCHandlerT * const, Result * const);
+    void (* mng_tc_acceptation)(void * const, const TCHandlerT * const,
                                 Result * const);
-    void (* mng_tc_rejection)(void * const, const TCDescriptorT * const,
+    void (* mng_tc_rejection)(void * const, const TCHandlerT * const,
                               Result * const);
 } MngTCExecIface;
 
 typedef struct {
-    __termina_resource_t __resource;
-    PUSS17Iface pus_service_17;
-    __termina_pool_t * a_tm_descriptor_pool;
-    TMCounterIface tm_counter;
-    TMChannelIface tm_channel;
+    __termina_id_t __mutex_id;
+    struct {
+        void * __that;
+        void (* exec_tc)(void * const, TCHandlerT * const, Result * const);
+    } pus_service_2;
+    struct {
+        void * __that;
+        void (* exec_tc)(void * const, TCHandlerT * const, Result * const);
+    } pus_service_17;
+    __termina_allocator_t a_tm_handler_pool;
+    struct {
+        void * __that;
+        void (* get_next_tm_count)(void * const, uint16_t * const);
+    } tm_counter;
+    struct {
+        void * __that;
+        void (* send_tm)(void * const, __termina_box_t, Result * const);
+    } tm_channel;
 } ManagerTCExecutor;
 
 void ManagerTCExecutor__PUS_prio_exec_tc(void * const __this,
-                                         const TCDescriptorT * const prio_tc,
+                                         TCHandlerT * const tc_handler,
                                          Result * const ret);
+void ManagerTCExecutor__PUS_prio_exec_tc__mutex_lock(void * const __this,
+                                                     TCHandlerT * const tc_handler,
+                                                     Result * const ret);
+void ManagerTCExecutor__PUS_prio_exec_tc__task_lock(void * const __this,
+                                                    TCHandlerT * const tc_handler,
+                                                    Result * const ret);
+void ManagerTCExecutor__PUS_prio_exec_tc__event_lock(void * const __this,
+                                                     TCHandlerT * const tc_handler,
+                                                     Result * const ret);
 
 void ManagerTCExecutor__mng_tc_acceptation(void * const __this,
-                                           const TCDescriptorT * const tc_descriptor,
+                                           const TCHandlerT * const tc_handler,
                                            Result * const ret);
+void ManagerTCExecutor__mng_tc_acceptation__mutex_lock(void * const __this,
+                                                       const TCHandlerT * const tc_handler,
+                                                       Result * const ret);
+void ManagerTCExecutor__mng_tc_acceptation__task_lock(void * const __this,
+                                                      const TCHandlerT * const tc_handler,
+                                                      Result * const ret);
+void ManagerTCExecutor__mng_tc_acceptation__event_lock(void * const __this,
+                                                       const TCHandlerT * const tc_handler,
+                                                       Result * const ret);
 
 void ManagerTCExecutor__mng_tc_rejection(void * const __this,
-                                         const TCDescriptorT * const tc_descriptor,
+                                         const TCHandlerT * const tc_handler,
                                          Result * const ret);
+void ManagerTCExecutor__mng_tc_rejection__mutex_lock(void * const __this,
+                                                     const TCHandlerT * const tc_handler,
+                                                     Result * const ret);
+void ManagerTCExecutor__mng_tc_rejection__task_lock(void * const __this,
+                                                    const TCHandlerT * const tc_handler,
+                                                    Result * const ret);
+void ManagerTCExecutor__mng_tc_rejection__event_lock(void * const __this,
+                                                     const TCHandlerT * const tc_handler,
+                                                     Result * const ret);
 
 #endif

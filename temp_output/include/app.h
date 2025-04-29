@@ -6,20 +6,24 @@
 #include "option.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/pus_services/pus_service2.h"
-#include "service_libraries/pus_services/pus_service3.h"
+#include "service_libraries/pus_services/pus_service3/pus_service3.h"
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
 #include "service_libraries/pus_services/pus_service9.h"
 #include "service_libraries/pus_services/pus_service12/pus_service12.h"
 #include "service_libraries/pus_services/pus_service17.h"
-#include "service_libraries/pus_services/pus_service19.h"
-#include "service_libraries/pus_services/pus_service20.h"
+#include "service_libraries/pus_services/pus_service19/pus_service19.h"
+#include "service_libraries/pus_services/pus_service20/pus_service20.h"
+#include "service_libraries/pus_services/pus_service4/pus_service4.h"
+#include "service_libraries/pus_tc_handler.h"
 #include "resources/uart.h"
+#include "resources/gpio_driver.h"
 #include "tasks/hk_fdir_mng/hk_fdir.h"
 #include "tasks/bkgtcexec.h"
 #include "tasks/icu_manager/icu_manager.h"
 #include "handlers/init.h"
 #include "handlers/uart_irq_handler.h"
 #include "tasks/tc_rx.h"
+#include "resources/tm_counter.h"
 #include "tasks/icu_manager/icu_manager.h"
 #include "tasks/hk_fdir_mng/hk_fdir.h"
 
@@ -39,9 +43,13 @@ extern __termina_pool_t tm_pool;
 
 extern __termina_pool_t tc_pool;
 
-extern _Atomic uint16_t system_data_pool[sdp_num_params];
+extern _Atomic uint32_t u32_system_data_pool[sdp_num_u32_params];
+
+extern _Atomic uint8_t u8_system_data_pool[sdp_num_u8_params];
 
 extern UARTDriver uart_drv;
+
+extern GPIODriver gpio_drv;
 
 extern TMChannel telemetry_channel;
 
@@ -58,6 +66,10 @@ extern PUSService19 pus_service_19;
 extern PUSService20 pus_service_20;
 
 extern PUSService17 pus_service_17;
+
+extern PUSService2 pus_service_2;
+
+extern PUSService4 pus_service_4;
 
 extern ManagerTCExecutor mng_tc_executor;
 

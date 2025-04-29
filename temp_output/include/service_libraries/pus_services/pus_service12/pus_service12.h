@@ -8,39 +8,153 @@
 
 typedef struct {
     void * __that;
-    void (* do_monitoring)(void * const, EventList * const, Result * const);
-    void (* exec12_1TC)(void * const, const TCDescriptorT * const,
-                        Result * const);
-    void (* exec12_2TC)(void * const, const TCDescriptorT * const,
-                        Result * const);
-    void (* exec12_5TC)(void * const, const TCDescriptorT * const,
-                        Result * const);
+    void (* exec_tc)(void * const, TCHandlerT * const, Result * const);
+    void (* do_monitoring)(void * const, uint16_t, uint16_t * const,
+                           FaultInfo * const, _Bool * const);
+    void (* is_PMON_enabled)(void * const, size_t, _Bool * const);
 } PUSS12Iface;
 
 typedef struct {
-    __termina_resource_t __resource;
-    TMCounterIface tm_counter;
-    __termina_pool_t * a_tm_descriptor_pool;
-    TMChannelIface tm_channel;
-    _Atomic uint16_t * system_data_pool;
-    ParamLimitCheckDefinition param_limit_check_definition[max_num_pmon_ids];
+    __termina_id_t __mutex_id;
+    struct {
+        void * __that;
+        void (* get_next_tm_count)(void * const, uint16_t * const);
+    } tm_counter;
+    __termina_allocator_t a_tm_handler_pool;
+    struct {
+        void * __that;
+        void (* send_tm)(void * const, __termina_box_t, Result * const);
+    } tm_channel;
+    _Atomic uint8_t * system_data_pool_u8;
+    _Atomic uint32_t * system_data_pool_u32;
+    ParamMonitoringTransition param_mon_transitions_table[max_num_transitions];
+    uint8_t monitoring_transition_counter;
     ParamMonitoringConfiguration param_mon_config_table[max_num_pmon_ids];
+    PS12ExecTCReqStatusUpdate exec_tc_req_status_update;
+    PS12ExecTCReqStatus exec_tc_req_status;
+    DoMonitoringReqStatusUpdate do_monitoring_req_status_update;
+    DoMonitoringReqStatus do_monitoring_req_status;
 } PUSService12;
 
-void PUSService12__do_monitoring(void * const __this,
-                                 EventList * const event_list,
-                                 Result * const result);
+_Bool PUSService12__PID_has_expected_masked_value(const PUSService12 * const self,
+                                                  const ParamValueCheckDefinition * const expected_value_check_definition);
 
-void PUSService12__exec12_1TC(void * const __this,
-                              const TCDescriptorT * const tc_descriptor,
-                              Result * const result);
+_Bool PUSService12__PID_is_above_upper_limit(const PUSService12 * const self,
+                                             const ParamLimitCheckDefinition * const limit_check_def);
 
-void PUSService12__exec12_2TC(void * const __this,
-                              const TCDescriptorT * const tc_descriptor,
-                              Result * const result);
+_Bool PUSService12__PID_is_below_lower_limit(const PUSService12 * const self,
+                                             const ParamLimitCheckDefinition * const limit_check_def);
 
-void PUSService12__exec12_5TC(void * const __this,
-                              const TCDescriptorT * const tc_descriptor,
-                              Result * const result);
+void PUSService12__build_tm_12_12(const PUSService12 * const self,
+                                  TMHandlerT * const p_tm_handler,
+                                  uint16_t tm_seq_counter,
+                                  Result * const result);
+
+void PUSService12__add_monitoring_transition(PUSService12 * const self);
+
+void PUSService12__add_valid_mng_mon_def(PUSService12 * const self);
+
+_Bool PUSService12__are_status_equal(const PUSService12 * const self,
+                                     CheckState status1, CheckState status2);
+
+ParamValueCheckDefinition PUSService12__get_expected_value_monitoring_definition(const PUSService12 * const self);
+
+CheckValueStatus PUSService12__check_PID_status_exp_val_monitoring(const PUSService12 * const self);
+
+ParamLimitCheckDefinition PUSService12__get_limits_monitoring_definition(const PUSService12 * const self);
+
+CheckLimitsStatus PUSService12__check_PID_status_limits_monitoring(const PUSService12 * const self);
+
+_Bool PUSService12__is_expected_value_monitoring(const PUSService12 * const self);
+
+_Bool PUSService12__is_limits_monitoring(const PUSService12 * const self);
+
+_Bool PUSService12__is_valid_PMONID(const PUSService12 * const self);
+
+_Bool PUSService12__manage_new_status(PUSService12 * const self);
+
+DoMonitoringReqStatus PUSService12__manage_expected_value(PUSService12 * const self);
+
+DoMonitoringReqStatus PUSService12__manage_interval_control(PUSService12 * const self);
+
+DoMonitoringReqStatus PUSService12__manage_param_above_upper_limit(PUSService12 * const self);
+
+DoMonitoringReqStatus PUSService12__manage_param_below_lower_limit(PUSService12 * const self);
+
+DoMonitoringReqStatus PUSService12__manage_param_within_limits(PUSService12 * const self);
+
+DoMonitoringReqStatus PUSService12__manage_unexpected_value(PUSService12 * const self);
+
+void PUSService12__do_monitoring(void * const __this, uint16_t PMONID,
+                                 uint16_t * const evID,
+                                 FaultInfo * const fault_info,
+                                 _Bool * const event_triggered);
+void PUSService12__do_monitoring__mutex_lock(void * const __this,
+                                             uint16_t PMONID,
+                                             uint16_t * const evID,
+                                             FaultInfo * const fault_info,
+                                             _Bool * const event_triggered);
+void PUSService12__do_monitoring__task_lock(void * const __this,
+                                            uint16_t PMONID,
+                                            uint16_t * const evID,
+                                            FaultInfo * const fault_info,
+                                            _Bool * const event_triggered);
+void PUSService12__do_monitoring__event_lock(void * const __this,
+                                             uint16_t PMONID,
+                                             uint16_t * const evID,
+                                             FaultInfo * const fault_info,
+                                             _Bool * const event_triggered);
+
+PS12ExecTCReqStatus PUSService12__exec12_1TC(PUSService12 * const self);
+
+void PUSService12__set_unchecked(PUSService12 * const self);
+
+PS12ExecTCReqStatus PUSService12__exec12_2TC(PUSService12 * const self);
+
+PS12ExecTCReqStatus PUSService12__exec12_5TC(PUSService12 * const self);
+
+PS12ExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self);
+
+MonitorDefinition PUSService12__get_PMON_limit_check_definition(const PUSService12 * const self,
+                                                                TCHandlerT * const tc_handler,
+                                                                Result * const result);
+
+MonitorDefinition PUSService12__get_PMON_value_check_definition(const PUSService12 * const self,
+                                                                TCHandlerT * const tc_handler,
+                                                                Result * const result);
+
+PS12ExecTCReqStatusUpdate PUSService12__get_TC_params(const PUSService12 * const self,
+                                                      TCHandlerT * const tc_handler,
+                                                      uint8_t * const subtype,
+                                                      Result * const result);
+
+PS12ExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSService12 * const self);
+
+void PUSService12__exec_tc(void * const __this, TCHandlerT * const tc_handler,
+                           Result * const result);
+void PUSService12__exec_tc__mutex_lock(void * const __this,
+                                       TCHandlerT * const tc_handler,
+                                       Result * const result);
+void PUSService12__exec_tc__task_lock(void * const __this,
+                                      TCHandlerT * const tc_handler,
+                                      Result * const result);
+void PUSService12__exec_tc__event_lock(void * const __this,
+                                       TCHandlerT * const tc_handler,
+                                       Result * const result);
+
+MonitorCheckType PUSService12__get_PMON_type(const PUSService12 * const self,
+                                             size_t PMONID);
+
+void PUSService12__is_PMON_enabled(void * const __this, size_t PMONID,
+                                   _Bool * const is_enabled);
+void PUSService12__is_PMON_enabled__mutex_lock(void * const __this,
+                                               size_t PMONID,
+                                               _Bool * const is_enabled);
+void PUSService12__is_PMON_enabled__task_lock(void * const __this,
+                                              size_t PMONID,
+                                              _Bool * const is_enabled);
+void PUSService12__is_PMON_enabled__event_lock(void * const __this,
+                                               size_t PMONID,
+                                               _Bool * const is_enabled);
 
 #endif

@@ -6,7 +6,7 @@
 #include "option.h"
 #include "service_libraries/serialize.h"
 
-#define max_tc_size 256
+extern const size_t max_tc_size;
 
 typedef struct {
     uint16_t packet_id;
@@ -18,7 +18,7 @@ typedef struct {
     uint8_t flag_ver_ack;
     uint8_t type;
     uint8_t subtype;
-    uint8_t sourceID;
+    uint16_t sourceID;
 } CCSDSPUSTCDFHeaderT;
 
 typedef struct {

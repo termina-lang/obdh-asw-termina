@@ -6,17 +6,19 @@
 #include "option.h"
 #include "resources/uart.h"
 
-#define riscv_uart_dr 0x1
+extern const uint32_t riscv_uart_dr;
 
-#define riscv_uart_te 0x4
+extern const uint32_t riscv_uart_te;
 
 typedef struct {
     __termina_out_port_t byte_message_queue_output;
     volatile UARTRegs * uart_registers;
-    CharDevRelayIrq uart;
+    struct {
+        void * __that;
+        void (* release_tx)(void * const);
+    } uart;
 } UARTIrqHandler;
 
-Result UARTIrqHandler__irq_handler(UARTIrqHandler * const self,
-                                   uint32_t _vector);
+Result UARTIrqHandler__irq_handler(void * const __this, uint32_t _vector);
 
 #endif

@@ -10,42 +10,225 @@
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/event_list.h"
 #include "resources/system_data_pool.h"
+#include "service_libraries/pus_tc_handler.h"
 
-#define max_num_pmon_ids 8
+extern const size_t max_num_pmon_ids;
+
+extern const size_t max_num_transitions;
 
 typedef enum {
-    CheckState__MonitorUnselected,
-    CheckState__MonitorUnchecked,
-    CheckState__MonitorAboveHighLimit,
-    CheckState__MonitorBelowLowLimit,
-    CheckState__MonitorWithinLimits
+    MonitorCheckType__ExpectedValue,
+    MonitorCheckType__Limits,
+    MonitorCheckType__Delta,
+    MonitorCheckType__Free
+} __enum_MonitorCheckType_t;
+
+typedef struct {
+    __enum_MonitorCheckType_t __variant;
+} MonitorCheckType;
+
+typedef struct {
+    uint32_t mask_value;
+    uint32_t expected_value;
+    uint16_t EvID;
+} ParamValueCheckDefinition;
+
+typedef struct {
+    uint32_t low_limit;
+    uint16_t low_limit_evID;
+    uint32_t high_limit;
+    uint16_t high_limit_evID;
+} ParamLimitCheckDefinition;
+
+typedef struct {
+    uint16_t low_delta_threshold;
+    uint16_t low_delta_EvID;
+    uint16_t high_delta_threshold;
+    uint16_t high_delta_EvID;
+    uint8_t consecutive_delta_values;
+} ParamDeltaCheckDefinition;
+
+typedef enum {
+    MonitorDefinition__ParamValueCheck,
+    MonitorDefinition__ParamLimitCheck,
+    MonitorDefinition__ParamDeltaCheck,
+    MonitorDefinition__Unselected
+} __enum_MonitorDefinition_t;
+
+typedef struct {
+    ParamValueCheckDefinition __0;
+} __enum_MonitorDefinition__ParamValueCheck_params_t;
+
+typedef struct {
+    ParamLimitCheckDefinition __0;
+} __enum_MonitorDefinition__ParamLimitCheck_params_t;
+
+typedef struct {
+    ParamDeltaCheckDefinition __0;
+} __enum_MonitorDefinition__ParamDeltaCheck_params_t;
+
+typedef struct {
+    __enum_MonitorDefinition_t __variant;
+    union {
+        __enum_MonitorDefinition__ParamValueCheck_params_t ParamValueCheck;
+        __enum_MonitorDefinition__ParamLimitCheck_params_t ParamLimitCheck;
+        __enum_MonitorDefinition__ParamDeltaCheck_params_t ParamDeltaCheck;
+    };
+} MonitorDefinition;
+
+typedef enum {
+    CheckValueStatus__MonitorUnchecked,
+    CheckValueStatus__MonitorValueUnexpected,
+    CheckValueStatus__MonitorValueExpected
+} __enum_CheckValueStatus_t;
+
+typedef struct {
+    __enum_CheckValueStatus_t __variant;
+} CheckValueStatus;
+
+typedef enum {
+    CheckLimitsStatus__MonitorUnchecked,
+    CheckLimitsStatus__MonitorAboveHighLimit,
+    CheckLimitsStatus__MonitorBelowLowLimit,
+    CheckLimitsStatus__MonitorWithinLimits
+} __enum_CheckLimitsStatus_t;
+
+typedef struct {
+    __enum_CheckLimitsStatus_t __variant;
+} CheckLimitsStatus;
+
+typedef enum {
+    CheckDeltaStatus__MonitorUnchecked,
+    CheckDeltaStatus__MonitorDeltaLow,
+    CheckDeltaStatus__MonitorDeltaHigh,
+    CheckDeltaStatus__MonitorDeltaWithin
+} __enum_CheckDeltaStatus_t;
+
+typedef struct {
+    __enum_CheckDeltaStatus_t __variant;
+} CheckDeltaStatus;
+
+typedef enum {
+    CheckState__ParamValueStatus,
+    CheckState__ParamLimitStatus,
+    CheckState__ParamDeltaStatus,
+    CheckState__Unselected
 } __enum_CheckState_t;
 
 typedef struct {
+    CheckValueStatus __0;
+} __enum_CheckState__ParamValueStatus_params_t;
+
+typedef struct {
+    CheckLimitsStatus __0;
+} __enum_CheckState__ParamLimitStatus_params_t;
+
+typedef struct {
+    CheckDeltaStatus __0;
+} __enum_CheckState__ParamDeltaStatus_params_t;
+
+typedef struct {
     __enum_CheckState_t __variant;
+    union {
+        __enum_CheckState__ParamValueStatus_params_t ParamValueStatus;
+        __enum_CheckState__ParamLimitStatus_params_t ParamLimitStatus;
+        __enum_CheckState__ParamDeltaStatus_params_t ParamDeltaStatus;
+    };
 } CheckState;
 
 typedef struct {
-    CheckState prev_state;
-    CheckState state;
-    TimeVal transitionY2K;
-    _Bool enabled;
     uint16_t PID;
+    MonitorCheckType type;
+    _Bool enabled;
+    MonitorDefinition definition;
+    uint8_t repetition;
+    uint8_t repetition_control;
     uint8_t interval;
     uint8_t interval_control;
+    TimeVal transition_obt;
+    CheckState temp_state;
+    CheckState current_state;
 } ParamMonitoringConfiguration;
 
 typedef struct {
-    uint16_t high_limit_rid;
-    uint16_t high_limit;
-    uint16_t low_limit_rid;
-    uint16_t low_limit;
-} ParamLimitCheckDefinition;
+    uint16_t PMONID;
+    uint16_t PID;
+    MonitorCheckType type;
+    uint32_t mask_value;
+    uint32_t limit_value;
+    uint32_t new_value;
+    CheckState prev_status;
+    CheckState new_status;
+    TimeVal trans_obt;
+} ParamMonitoringTransition;
 
-void trigger_event(EventList * const event_list, uint16_t RID, uint16_t PID,
-                   uint16_t PID_value, uint16_t limit, Result * const res);
+typedef struct {
+    uint16_t PMONID;
+    uint16_t EvID;
+    MonitorDefinition current_monitor_definition;
+    FaultInfo fault_info;
+    CheckState new_status;
+    _Bool event_triggered;
+} DoMonitoringReqStatusUpdate;
 
-void update_state(ParamMonitoringConfiguration param_mon_config_table[max_num_pmon_ids],
-                  size_t PMONID, CheckState new_state);
+DoMonitoringReqStatusUpdate ps12_init_do_monitoring_req_status_update();
+
+typedef enum {
+    DoMonitoringReqStatus__Init,
+    DoMonitoringReqStatus__CheckPMONID,
+    DoMonitoringReqStatus__GetMonitoringType,
+    DoMonitoringReqStatus__DoLimitsMonitoring,
+    DoMonitoringReqStatus__DoExpectedValueMonitoring,
+    DoMonitoringReqStatus__GetRequestStatusUpdate,
+    DoMonitoringReqStatus__Exit
+} __enum_DoMonitoringReqStatus_t;
+
+typedef struct {
+    __enum_DoMonitoringReqStatus_t __variant;
+} DoMonitoringReqStatus;
+
+typedef enum {
+    PS12ExecTCReqStatus__Init,
+    PS12ExecTCReqStatus__ExecTC,
+    PS12ExecTCReqStatus__Error,
+    PS12ExecTCReqStatus__Exit
+} __enum_PS12ExecTCReqStatus_t;
+
+typedef struct {
+    __enum_PS12ExecTCReqStatus_t __variant;
+} PS12ExecTCReqStatus;
+
+typedef struct {
+    uint8_t N;
+    uint16_t PMONID;
+} PS12TC_1_2_6_Data;
+
+typedef struct {
+    uint8_t N;
+    uint16_t PMONID;
+    ParamMonitoringConfiguration mon_config;
+} PS12TC_5_Data;
+
+typedef struct {
+    uint16_t packet_id;
+    uint16_t packet_error_ctrl;
+    size_t tc_num_bytes;
+    PS12TC_1_2_6_Data tc_data_1_2_6;
+    PS12TC_5_Data tc_data_5;
+} PS12ExecTCReqStatusUpdate;
+
+PS12ExecTCReqStatusUpdate ps12_init_tc_req_status_update();
+
+PS12ExecTCReqStatusUpdate PS12ExecTCReqStatusUpdate_init();
+
+uint8_t get_check_status_index(CheckState status);
+
+uint8_t get_type_index(MonitorCheckType type);
+
+_Bool are_status_equal(CheckState status1, CheckState status2);
+
+MonitorCheckType get_check_type(uint8_t aux);
+
+_Bool is_valid_check_limit_def(const MonitorDefinition * const param_limit_check_definition);
 
 #endif

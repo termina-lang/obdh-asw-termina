@@ -42,48 +42,158 @@ _Bool is_sourceID_valid(const TCDescriptorT * const tc_descriptor) {
 
 }
 
-void build_tm(TMDescriptorT * const p_tm_descriptor, uint16_t tm_seq_counter,
-              const TCDescriptorT * const tc_descriptor, uint16_t tm_plength,
-              uint8_t tm_type, uint8_t tm_subtype) {
+uint8_t get_failure_subtype(TCVerifyStage verify_stage) {
     
-    CCSDSPUSTMPacketHeaderT tm_packet_header;
-    tm_packet_header.packet_id = 0U;
-    tm_packet_header.packet_length = 0U;
-    tm_packet_header.packet_seq_ctrl = 0U;
+    uint8_t subtype = 0U;
 
-    CCSDSPUSTMDFHeaderT df_header;
-    df_header.destinationID = 0U;
-    df_header.subtype = 0U;
-    df_header.type = 0U;
-    df_header.version = 0U;
+    if (verify_stage.__variant == TCVerifyStage__Acceptation) {
+        
+        subtype = 2U;
 
-    uint16_t tc_packet_id = get_packet_id(tc_descriptor->tc_bytes);
+    } else if (verify_stage.__variant == TCVerifyStage__ExecStart) {
+        
+        subtype = 4U;
 
-    uint16_t tc_packet_seq_ctrl = get_packet_seq_ctrl(tc_descriptor->tc_bytes);
+    } else if (verify_stage.__variant == TCVerifyStage__Progress) {
+        
+        subtype = 6U;
 
-    tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32CU);
+    } else {
+        
+        subtype = 8U;
 
-    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3U,
-                                                                          tm_seq_counter);
+    }
 
-    tm_packet_header.packet_length = tm_plength;
+    return subtype;
 
-    df_header.version = ccsds_pus_tm_build_df_header_version(0x1U);
+}
 
-    df_header.type = tm_type;
+void build_tm_1_X_no_failure_data(TMHandlerT * const p_tm_handler,
+                                  uint16_t tm_seq_counter,
+                                  uint16_t tc_packet_id,
+                                  uint16_t tc_packet_error_ctrl,
+                                  TCVerifyStage verify_stage,
+                                  uint8_t failure_code, Result * const result) {
+    
+    uint8_t subtype = get_failure_subtype(verify_stage);
 
-    df_header.subtype = tm_subtype;
+    startup_tm(p_tm_handler);
 
-    df_header.destinationID = 0x78U;
+    append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
 
-    ccsds_pus_tm_set_fields(&p_tm_descriptor->tm_bytes[0U], &tm_packet_header,
-                            &df_header);
+    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
 
-    serialize_uint16(tc_packet_id, &p_tm_descriptor->tm_bytes[10U]);
+    append_u8_appdata_field(p_tm_handler, failure_code, result);
 
-    serialize_uint16(tc_packet_seq_ctrl, &p_tm_descriptor->tm_bytes[12U]);
+    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, result);
 
-    p_tm_descriptor->tm_num_bytes = (size_t)tm_packet_header.packet_length + 7U;
+    return;
+
+}
+
+void build_tm_1_X_u8_failure_data(TMHandlerT * const p_tm_handler,
+                                  uint16_t tm_seq_counter,
+                                  uint16_t tc_packet_id,
+                                  uint16_t tc_packet_error_ctrl,
+                                  TCVerifyStage verify_stage,
+                                  uint8_t failure_code, uint8_t failure_data,
+                                  Result * const result) {
+    
+    uint8_t subtype = get_failure_subtype(verify_stage);
+
+    startup_tm(p_tm_handler);
+
+    append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
+
+    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
+
+    append_u8_appdata_field(p_tm_handler, failure_code, result);
+
+    append_u8_appdata_field(p_tm_handler, failure_data, result);
+
+    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, result);
+
+    return;
+
+}
+
+void build_tm_1_X_u16_failure_data(TMHandlerT * const p_tm_handler,
+                                   uint16_t tm_seq_counter,
+                                   uint16_t tc_packet_id,
+                                   uint16_t tc_packet_error_ctrl,
+                                   TCVerifyStage verify_stage,
+                                   uint8_t failure_code, uint16_t failure_data,
+                                   Result * const result) {
+    
+    uint8_t subtype = get_failure_subtype(verify_stage);
+
+    startup_tm(p_tm_handler);
+
+    append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
+
+    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
+
+    append_u8_appdata_field(p_tm_handler, failure_code, result);
+
+    append_u16_appdata_field(p_tm_handler, failure_data, result);
+
+    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, result);
+
+    return;
+
+}
+
+void build_tm_1_X_u32_failure_data(TMHandlerT * const p_tm_handler,
+                                   uint16_t tm_seq_counter,
+                                   uint16_t tc_packet_id,
+                                   uint16_t tc_packet_error_ctrl,
+                                   TCVerifyStage verify_stage,
+                                   uint8_t failure_code, uint32_t failure_data,
+                                   Result * const result) {
+    
+    uint8_t subtype = get_failure_subtype(verify_stage);
+
+    startup_tm(p_tm_handler);
+
+    append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
+
+    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
+
+    append_u8_appdata_field(p_tm_handler, failure_code, result);
+
+    append_u32_appdata_field(p_tm_handler, failure_data, result);
+
+    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, result);
+
+    return;
+
+}
+
+void build_tm_1_X_u8_u32_failure_data(TMHandlerT * const p_tm_handler,
+                                      uint16_t tm_seq_counter,
+                                      uint16_t tc_packet_id,
+                                      uint16_t tc_packet_error_ctrl,
+                                      TCVerifyStage verify_stage,
+                                      uint8_t failure_code,
+                                      uint8_t failure_data1,
+                                      uint32_t failure_data2,
+                                      Result * const result) {
+    
+    uint8_t subtype = get_failure_subtype(verify_stage);
+
+    startup_tm(p_tm_handler);
+
+    append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
+
+    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
+
+    append_u8_appdata_field(p_tm_handler, failure_code, result);
+
+    append_u8_appdata_field(p_tm_handler, failure_data1, result);
+
+    append_u32_appdata_field(p_tm_handler, failure_data2, result);
+
+    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, result);
 
     return;
 

@@ -10,36 +10,90 @@
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/event_list.h"
 
-#define informative_RIDs 3
+extern const uint16_t informative_Ev_IDs;
 
-#define low_severity_anomaly_RIDs 4
+extern const uint16_t low_severity_anomaly_Ev_IDs;
 
-#define medium_severity_anomaly_RIDs 0
+extern const uint16_t medium_severity_anomaly_Ev_IDs;
 
-#define high_severity_anomaly_RIDs 16
+extern const uint16_t high_severity_anomaly_Ev_IDs;
 
-#define offset_mask 0x1F
+extern const uint16_t offset_mask;
 
 typedef enum {
-    RIDType__Informative,
-    RIDType__LowSeverityAnomaly,
-    RIDType__MediumSeverityAnomaly,
-    RIDType__HighSeverityAnomaly,
-    RIDType__RIDNotValid
-} __enum_RIDType_t;
+    Ev_IDType__Informative,
+    Ev_IDType__LowSeverityAnomaly,
+    Ev_IDType__MediumSeverityAnomaly,
+    Ev_IDType__HighSeverityAnomaly,
+    Ev_IDType__Ev_IDNotValid
+} __enum_Ev_IDType_t;
 
 typedef struct {
-    __enum_RIDType_t __variant;
-} RIDType;
+    __enum_Ev_IDType_t __variant;
+} Ev_IDType;
 
-RIDType get_RID_type(uint16_t RID);
+typedef struct {
+    uint16_t PID;
+    uint32_t PID_value;
+    uint32_t PID_limit;
+} ParamOutOfLimitInfo;
 
-size_t get_RID_enable_config_index(uint16_t RID);
+typedef struct {
+    uint16_t PID;
+    uint32_t PID_value;
+    uint32_t PID_mask;
+    uint32_t PID_expected_value;
+} ParamFaultValueInfo;
 
-uint8_t get_RID_enable_config_offset(uint16_t RID);
+typedef enum {
+    FaultInfo__ParamOutOfLimit,
+    FaultInfo__ParamFaultValue,
+    FaultInfo__Empty
+} __enum_FaultInfo_t;
 
-void build_tm_5_x(TMDescriptorT * const p_tm_descriptor,
-                  uint16_t tm_seq_counter, const EventInfo * const event,
-                  size_t index);
+typedef struct {
+    ParamOutOfLimitInfo __0;
+} __enum_FaultInfo__ParamOutOfLimit_params_t;
+
+typedef struct {
+    ParamFaultValueInfo __0;
+} __enum_FaultInfo__ParamFaultValue_params_t;
+
+typedef struct {
+    __enum_FaultInfo_t __variant;
+    union {
+        __enum_FaultInfo__ParamOutOfLimit_params_t ParamOutOfLimit;
+        __enum_FaultInfo__ParamFaultValue_params_t ParamFaultValue;
+    };
+} FaultInfo;
+
+typedef enum {
+    PS5ExecTCReqStatus__Init,
+    PS5ExecTCReqStatus__ExecTC,
+    PS5ExecTCReqStatus__Error,
+    PS5ExecTCReqStatus__Exit
+} __enum_PS5ExecTCReqStatus_t;
+
+typedef struct {
+    __enum_PS5ExecTCReqStatus_t __variant;
+} PS5ExecTCReqStatus;
+
+typedef struct {
+    uint16_t packet_id;
+    uint16_t packet_error_ctrl;
+    size_t tc_num_bytes;
+    uint8_t N;
+    uint16_t EvID;
+} PS5ExecTCReqStatusUpdate;
+
+PS5ExecTCReqStatusUpdate ps5_init_tc_req_status_update();
+
+Ev_IDType get_Ev_ID_type(uint16_t Ev_ID);
+
+_Bool is_Ev_ID_valid(uint16_t evID);
+
+size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID);
+
+uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID);
 
 #endif

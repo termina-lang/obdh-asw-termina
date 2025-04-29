@@ -1,85 +1,144 @@
 
 #include "service_libraries/pus_services/pus_service17.h"
 
-void build_tm_17_2(TMDescriptorT * const tm_descriptor,
-                   uint16_t tm_seq_counter) {
+void build_tm_17_2(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
+                   Result * const result) {
     
-    CCSDSPUSTMPacketHeaderT tm_packet_header;
-    tm_packet_header.packet_id = 0U;
-    tm_packet_header.packet_length = 0U;
-    tm_packet_header.packet_seq_ctrl = 0U;
+    startup_tm(p_tm_handler);
 
-    CCSDSPUSTMDFHeaderT df_header;
-    df_header.destinationID = 0U;
-    df_header.subtype = 0U;
-    df_header.type = 0U;
-    df_header.version = 0U;
-
-    tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32CU);
-
-    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3U,
-                                                                          tm_seq_counter);
-
-    tm_packet_header.packet_length = 3U;
-
-    df_header.version = ccsds_pus_tm_build_df_header_version(0x1U);
-
-    df_header.type = 17U;
-
-    df_header.subtype = 2U;
-
-    df_header.destinationID = 0x78U;
-
-    ccsds_pus_tm_set_fields(&tm_descriptor->tm_bytes[0U], &tm_packet_header,
-                            &df_header);
-
-    tm_descriptor->tm_num_bytes = (size_t)tm_packet_header.packet_length + 7U;
+    close_tm(p_tm_handler, 17U, 2U, tm_seq_counter, result);
 
     return;
 
 }
 
-void PUSService17__exec17_1TC(void * const __this,
-                              const TCDescriptorT * const tc_descriptor,
-                              Result * const result) {
+PS17ExecTCReqStatus PUSService17__exec17_1TC(PUSService17 * const self) {
+    
+    PS17ExecTCReqStatus next_status;
+    next_status.__variant = PS17ExecTCReqStatus__Error;
+
+    Result result;
+    result.__variant = Result__Ok;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    (self->a_tm_handler_pool.alloc)(self->a_tm_handler_pool.__that,
+                                    &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
+                                             &tm_count);
+
+        build_tm_17_2((TMHandlerT *)b_tm_handler.data, tm_count, &result);
+
+        (self->tm_channel.send_tm)(self->tm_channel.__that, b_tm_handler,
+                                   &result);
+
+    } else {
+        
+        result.__variant = Result__Error;
+
+    }
+
+    if (result.__variant == Result__Ok) {
+        
+        next_status.__variant = PS17ExecTCReqStatus__Exit;
+
+    } else {
+        
+        next_status.__variant = PS17ExecTCReqStatus__Error;
+
+    }
+
+    return next_status;
+
+}
+
+void PUSService17__exec_tc(void * const __this, TCHandlerT * const tc_handler,
+                           Result * const result) {
     
     PUSService17 * self = (PUSService17 *)__this;
 
-    __termina_resource__lock(&self->__resource);
+    uint8_t subtype = tc_handler->df_header.subtype;
 
-    uint8_t subtype = get_subtype(tc_descriptor->tc_bytes);
-
-    if (subtype == 1U) {
+    for (size_t i = 0U; i < 2U && self->exec_tc_req_status.__variant == PS17ExecTCReqStatus__Exit == 0; i = i + 1U) {
         
-        __option_box_t tm_descriptor;
-        tm_descriptor.__variant = None;
-
-        __termina_pool__alloc(self->a_tm_descriptor_pool, &tm_descriptor);
-
-        if (tm_descriptor.__variant == Some) {
+        if (self->exec_tc_req_status.__variant == PS17ExecTCReqStatus__ExecTC) {
             
-            __termina_box_t descriptor = tm_descriptor.Some.__0;
+            if (subtype == 1U) {
+                
+                self->exec_tc_req_status = PUSService17__exec17_1TC(self);
 
-            uint16_t tm_count = 0U;
+            } else {
+                
+                self->exec_tc_req_status.__variant = PS17ExecTCReqStatus__Error;
 
-            (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
-                                                 &tm_count);
+            }
 
-            build_tm_17_2((TMDescriptorT *)descriptor.data, tm_count);
+        } else if (self->exec_tc_req_status.__variant == PS17ExecTCReqStatus__Error) {
+            
+            (*result).__variant = Result__Error;
 
-            (self->tm_channel.send_tm)(self->tm_channel.__that, descriptor,
-                                       result);
+            self->exec_tc_req_status.__variant = PS17ExecTCReqStatus__Exit;
 
         } else {
             
-            (*result).__variant = Result__Error;
 
         }
 
     }
 
-    __termina_resource__unlock(&self->__resource);
+    if (self->exec_tc_req_status.__variant == PS17ExecTCReqStatus__Exit) {
+        
+        self->exec_tc_req_status.__variant = PS17ExecTCReqStatus__ExecTC;
+
+    }
 
     return;
+
+}
+
+void PUSService17__exec_tc__mutex_lock(void * const __this,
+                                       TCHandlerT * const tc_handler,
+                                       Result * const result) {
+    
+    PUSService17 * self = (PUSService17 *)__this;
+
+    Status status;
+    status.__variant = Status__Success;
+
+    __termina_mutex__lock(self->__mutex_id, &status);
+    PUSService17__exec_tc(self, tc_handler, result);
+    __termina_mutex__unlock(self->__mutex_id, &status);
+
+}
+
+void PUSService17__exec_tc__task_lock(void * const __this,
+                                      TCHandlerT * const tc_handler,
+                                      Result * const result) {
+    
+    __termina_task_lock_t lock;
+
+    lock = __termina_task__lock();
+    PUSService17__exec_tc(__this, tc_handler, result);
+    __termina_task__unlock(lock);
+
+}
+
+void PUSService17__exec_tc__event_lock(void * const __this,
+                                       TCHandlerT * const tc_handler,
+                                       Result * const result) {
+    
+    __termina_event_lock_t lock;
+
+    lock = __termina_event__lock();
+    PUSService17__exec_tc(__this, tc_handler, result);
+    __termina_event__unlock(lock);
 
 }

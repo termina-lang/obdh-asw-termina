@@ -17,7 +17,10 @@ typedef struct {
     uint8_t version;
     uint8_t type;
     uint8_t subtype;
-    uint8_t destinationID;
+    uint16_t msg_type_counter;
+    uint16_t destinationID;
+    uint32_t obt_secs;
+    uint16_t obt_finetime;
 } CCSDSPUSTMDFHeaderT;
 
 typedef struct {

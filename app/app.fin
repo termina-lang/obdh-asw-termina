@@ -104,7 +104,7 @@ resource pus_service_5 : PUSService5 = {
 } : PUSService5;
 
 
-resource pus_service_12 : PUSService12 = {
+resource pus_service_12: PUSService12 = {
     do_monitoring_req_status = DoMonitoringReqStatus::Init,
     do_monitoring_req_status_update = ps12_init_do_monitoring_req_status_update(),
     exec_tc_req_status = PS12ExecTCReqStatus::Init,

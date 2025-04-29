@@ -1,6 +1,10 @@
 
 #include "service_libraries/event_list.h"
 
+const size_t event_aux_data_max_size = 64U;
+
+const size_t max_num_events = 16U;
+
 _Bool is_list_full(const EventList * const list) {
     
     _Bool list_is_full = list->num_events == max_num_events;
@@ -26,23 +30,30 @@ ListResult add_event(EventList * const list, EventInfo new_event) {
 
     if (0 == full) {
         
-        list->events[list->num_events].ev_RID = new_event.ev_RID;
+        list->events[__termina_array__index(max_num_events,
+                                            list->num_events)].ev_RID = new_event.ev_RID;
 
         list->num_events = list->num_events + 1U;
 
         if (new_event.ev_aux_data_size > event_aux_data_max_size) {
             
-            list->events[list->num_events].ev_aux_data_size = event_aux_data_max_size;
+            list->events[__termina_array__index(max_num_events,
+                                                list->num_events)].ev_aux_data_size = event_aux_data_max_size;
 
         } else {
             
-            list->events[list->num_events].ev_aux_data_size = new_event.ev_aux_data_size;
+            list->events[__termina_array__index(max_num_events,
+                                                list->num_events)].ev_aux_data_size = new_event.ev_aux_data_size;
 
         }
 
-        for (size_t i = 0U; i < event_aux_data_max_size && i < list->events[list->num_events].ev_aux_data_size; i = i + 1U) {
+        for (size_t i = 0U; i < event_aux_data_max_size && i < list->events[__termina_array__index(max_num_events,
+                                                                                                   list->num_events)].ev_aux_data_size; i = i + 1U) {
             
-            list->events[list->num_events].ev_aux_data[i] = new_event.ev_aux_data[i];
+            list->events[__termina_array__index(max_num_events,
+                                                list->num_events)].ev_aux_data[__termina_array__index(event_aux_data_max_size,
+                                                                                                      i)] = new_event.ev_aux_data[__termina_array__index(event_aux_data_max_size,
+                                                                                                                                                         i)];
 
         }
 
@@ -70,7 +81,9 @@ void extract_event(EventList * const list,
 
         for (size_t i = 0U; i < max_num_events && i < list->num_events; i = i + 1U) {
             
-            list->events[i] = list->events[i + 1U];
+            list->events[__termina_array__index(max_num_events,
+                                                i)] = list->events[__termina_array__index(max_num_events,
+                                                                                          i + 1U)];
 
         }
 
@@ -91,7 +104,7 @@ void get_event_info(const EventList * const list, size_t index,
     
     if (index < list->num_events) {
         
-        *event = list->events[index];
+        *event = list->events[__termina_array__index(max_num_events, index)];
 
     }
 

@@ -44,7 +44,13 @@ void ccsds_pus_tm_set_fields(uint8_t tm_bytes[10U],
 
     tm_bytes[8U] = p_tm_df_header->subtype;
 
-    tm_bytes[9U] = p_tm_df_header->destinationID;
+    serialize_uint16(p_tm_df_header->msg_type_counter, &tm_bytes[9U]);
+
+    serialize_uint16(p_tm_df_header->destinationID, &tm_bytes[11U]);
+
+    serialize_uint32(p_tm_df_header->obt_secs, &tm_bytes[13U]);
+
+    serialize_uint16(p_tm_df_header->obt_finetime, &tm_bytes[17U]);
 
     return;
 

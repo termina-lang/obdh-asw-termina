@@ -1,19 +1,17 @@
 
 #include "resources/tm_channel.h"
 
-void TMChannel__send_tm(void * const __this, __termina_box_t tm_descriptor,
+void TMChannel__send_tm(void * const __this, __termina_box_t tm_handler,
                         Result * const result) {
     
     TMChannel * self = (TMChannel *)__this;
-
-    __termina_resource__lock(&self->__resource);
 
     CharDevResult queue_state;
     queue_state.__variant = CharDevResult__Success;
 
     (self->uart.send)(self->uart.__that,
-                      (*(TMDescriptorT *)tm_descriptor.data).tm_bytes,
-                      (*(TMDescriptorT *)tm_descriptor.data).tm_num_bytes,
+                      (*(TMHandlerT *)tm_handler.data).tm_descriptor.tm_bytes,
+                      (*(TMHandlerT *)tm_handler.data).tm_descriptor.tm_num_bytes,
                       &queue_state);
 
     if (queue_state.__variant == CharDevResult__Success) {
@@ -26,10 +24,47 @@ void TMChannel__send_tm(void * const __this, __termina_box_t tm_descriptor,
 
     }
 
-    __termina_pool__free(self->a_tm_descriptor_pool, tm_descriptor);
-
-    __termina_resource__unlock(&self->__resource);
+    (self->a_tm_handler_pool.free)(self->a_tm_handler_pool.__that, tm_handler);
 
     return;
+
+}
+
+void TMChannel__send_tm__mutex_lock(void * const __this,
+                                    __termina_box_t tm_handler,
+                                    Result * const result) {
+    
+    TMChannel * self = (TMChannel *)__this;
+
+    Status status;
+    status.__variant = Status__Success;
+
+    __termina_mutex__lock(self->__mutex_id, &status);
+    TMChannel__send_tm(self, tm_handler, result);
+    __termina_mutex__unlock(self->__mutex_id, &status);
+
+}
+
+void TMChannel__send_tm__task_lock(void * const __this,
+                                   __termina_box_t tm_handler,
+                                   Result * const result) {
+    
+    __termina_task_lock_t lock;
+
+    lock = __termina_task__lock();
+    TMChannel__send_tm(__this, tm_handler, result);
+    __termina_task__unlock(lock);
+
+}
+
+void TMChannel__send_tm__event_lock(void * const __this,
+                                    __termina_box_t tm_handler,
+                                    Result * const result) {
+    
+    __termina_event_lock_t lock;
+
+    lock = __termina_event__lock();
+    TMChannel__send_tm(__this, tm_handler, result);
+    __termina_event__unlock(lock);
 
 }

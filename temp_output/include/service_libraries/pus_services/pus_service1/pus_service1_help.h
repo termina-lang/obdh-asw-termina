@@ -8,6 +8,8 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 #include "service_libraries/crc.h"
 #include "service_libraries/serialize.h"
+#include "service_libraries/pus_tc_handler.h"
+#include "service_libraries/pus_tm_handler.h"
 
 typedef enum {
     TCAcceptationStatus__Accepted,
@@ -50,7 +52,16 @@ typedef struct {
     TCErrorType error_code;
 } TCStatus;
 
-#define base_length 7
+typedef enum {
+    TCVerifyStage__Acceptation,
+    TCVerifyStage__ExecStart,
+    TCVerifyStage__Progress,
+    TCVerifyStage__ExecCompletion
+} __enum_TCVerifyStage_t;
+
+typedef struct {
+    __enum_TCVerifyStage_t __variant;
+} TCVerifyStage;
 
 _Bool is_crc_valid(const TCDescriptorT * const tc_descriptor);
 
@@ -58,8 +69,47 @@ _Bool is_apid_valid(const TCDescriptorT * const tc_descriptor);
 
 _Bool is_sourceID_valid(const TCDescriptorT * const tc_descriptor);
 
-void build_tm(TMDescriptorT * const p_tm_descriptor, uint16_t tm_seq_counter,
-              const TCDescriptorT * const tc_descriptor, uint16_t tm_plength,
-              uint8_t tm_type, uint8_t tm_subtype);
+uint8_t get_failure_subtype(TCVerifyStage verify_stage);
+
+void build_tm_1_X_no_failure_data(TMHandlerT * const p_tm_handler,
+                                  uint16_t tm_seq_counter,
+                                  uint16_t tc_packet_id,
+                                  uint16_t tc_packet_error_ctrl,
+                                  TCVerifyStage verify_stage,
+                                  uint8_t failure_code, Result * const result);
+
+void build_tm_1_X_u8_failure_data(TMHandlerT * const p_tm_handler,
+                                  uint16_t tm_seq_counter,
+                                  uint16_t tc_packet_id,
+                                  uint16_t tc_packet_error_ctrl,
+                                  TCVerifyStage verify_stage,
+                                  uint8_t failure_code, uint8_t failure_data,
+                                  Result * const result);
+
+void build_tm_1_X_u16_failure_data(TMHandlerT * const p_tm_handler,
+                                   uint16_t tm_seq_counter,
+                                   uint16_t tc_packet_id,
+                                   uint16_t tc_packet_error_ctrl,
+                                   TCVerifyStage verify_stage,
+                                   uint8_t failure_code, uint16_t failure_data,
+                                   Result * const result);
+
+void build_tm_1_X_u32_failure_data(TMHandlerT * const p_tm_handler,
+                                   uint16_t tm_seq_counter,
+                                   uint16_t tc_packet_id,
+                                   uint16_t tc_packet_error_ctrl,
+                                   TCVerifyStage verify_stage,
+                                   uint8_t failure_code, uint32_t failure_data,
+                                   Result * const result);
+
+void build_tm_1_X_u8_u32_failure_data(TMHandlerT * const p_tm_handler,
+                                      uint16_t tm_seq_counter,
+                                      uint16_t tc_packet_id,
+                                      uint16_t tc_packet_error_ctrl,
+                                      TCVerifyStage verify_stage,
+                                      uint8_t failure_code,
+                                      uint8_t failure_data1,
+                                      uint32_t failure_data2,
+                                      Result * const result);
 
 #endif

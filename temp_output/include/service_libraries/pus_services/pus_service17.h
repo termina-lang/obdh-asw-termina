@@ -7,24 +7,50 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
 
-void build_tm_17_2(TMDescriptorT * const tm_descriptor,
-                   uint16_t tm_seq_counter);
+typedef enum {
+    PS17ExecTCReqStatus__ExecTC,
+    PS17ExecTCReqStatus__Error,
+    PS17ExecTCReqStatus__Exit
+} __enum_PS17ExecTCReqStatus_t;
+
+typedef struct {
+    __enum_PS17ExecTCReqStatus_t __variant;
+} PS17ExecTCReqStatus;
+
+void build_tm_17_2(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
+                   Result * const result);
 
 typedef struct {
     void * __that;
-    void (* exec17_1TC)(void * const, const TCDescriptorT * const,
-                        Result * const);
+    void (* exec_tc)(void * const, TCHandlerT * const, Result * const);
 } PUSS17Iface;
 
 typedef struct {
-    __termina_resource_t __resource;
-    TMCounterIface tm_counter;
-    __termina_pool_t * a_tm_descriptor_pool;
-    TMChannelIface tm_channel;
+    __termina_id_t __mutex_id;
+    struct {
+        void * __that;
+        void (* get_next_tm_count)(void * const, uint16_t * const);
+    } tm_counter;
+    __termina_allocator_t a_tm_handler_pool;
+    struct {
+        void * __that;
+        void (* send_tm)(void * const, __termina_box_t, Result * const);
+    } tm_channel;
+    PS17ExecTCReqStatus exec_tc_req_status;
 } PUSService17;
 
-void PUSService17__exec17_1TC(void * const __this,
-                              const TCDescriptorT * const tc_descriptor,
-                              Result * const result);
+PS17ExecTCReqStatus PUSService17__exec17_1TC(PUSService17 * const self);
+
+void PUSService17__exec_tc(void * const __this, TCHandlerT * const tc_handler,
+                           Result * const result);
+void PUSService17__exec_tc__mutex_lock(void * const __this,
+                                       TCHandlerT * const tc_handler,
+                                       Result * const result);
+void PUSService17__exec_tc__task_lock(void * const __this,
+                                      TCHandlerT * const tc_handler,
+                                      Result * const result);
+void PUSService17__exec_tc__event_lock(void * const __this,
+                                       TCHandlerT * const tc_handler,
+                                       Result * const result);
 
 #endif

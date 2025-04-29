@@ -5,6 +5,32 @@
 
 #include "option.h"
 
-#define sdp_num_params 64
+extern const size_t sdp_num_u32_params;
+
+extern const size_t sdp_num_u8_params;
+
+extern const size_t sdp_last_u32_param_id;
+
+extern const size_t sdp_last_u8_param_id;
+
+extern const size_t sdp_first_u32_param_id;
+
+extern const size_t sdp_first_u8_param_id;
+
+typedef enum {
+    DataPoolItemType__u8_t,
+    DataPoolItemType__u32_t,
+    DataPoolItemType__NoValidPID
+} __enum_DataPoolItemType_t;
+
+typedef struct {
+    __enum_DataPoolItemType_t __variant;
+} DataPoolItemType;
+
+DataPoolItemType sys_data_pool_get_item_type(uint16_t PID);
+
+_Bool sys_data_pool_is_valid_PID(uint16_t PID);
+
+_Bool sys_data_pool_is_PID_update_via_TC_enabled(uint16_t PID);
 
 #endif

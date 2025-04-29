@@ -7,19 +7,24 @@
 #include "tasks/icu_manager/mng_tc_executor.h"
 
 typedef struct {
-    __termina_task_t __task;
-    MngTCExecIface tc_executor;
+    __termina_id_t __task_msg_queue_id;
+    struct {
+        void * __that;
+        void (* PUS_prio_exec_tc)(void * const, TCHandlerT * const,
+                                  Result * const);
+    } tc_executor;
     __termina_out_port_t bkg_message_queue_output;
     __termina_out_port_t hkfdir_message_queue_output;
-    __termina_pool_t * a_tc_descriptor_pool;
-    __termina_in_port_t action_tc_message_queue_input;
-    __termina_in_port_t tc_message_queue_input;
+    __termina_allocator_t a_tc_handler_pool;
+    __termina_id_t action_tc_message_queue_input;
+    __termina_id_t tc_message_queue_input;
 } ICUManager;
 
-Result ICUManager__process_action_tc(ICUManager * const self,
-                                     __termina_box_t tc_descriptor);
+void __ICUManager__termina_task(void * const arg);
 
-Result ICUManager__process_tc(ICUManager * const self,
-                              __termina_box_t tc_descriptor);
+Result ICUManager__process_action_tc(void * const __this,
+                                     __termina_box_t tc_handler);
+
+Result ICUManager__process_tc(void * const __this, __termina_box_t tc_handler);
 
 #endif

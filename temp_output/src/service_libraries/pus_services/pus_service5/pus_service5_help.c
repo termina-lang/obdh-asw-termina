@@ -1,98 +1,140 @@
 
 #include "service_libraries/pus_services/pus_service5/pus_service5_help.h"
 
-RIDType get_RID_type(uint16_t RID) {
+const uint16_t informative_Ev_IDs = 3U;
+
+const uint16_t low_severity_anomaly_Ev_IDs = 4U;
+
+const uint16_t medium_severity_anomaly_Ev_IDs = 0U;
+
+const uint16_t high_severity_anomaly_Ev_IDs = 16U;
+
+const uint16_t offset_mask = 0x1FU;
+
+PS5ExecTCReqStatusUpdate ps5_init_tc_req_status_update() {
     
-    RIDType RID_type;
-    RID_type.__variant = RIDType__RIDNotValid;
+    PS5ExecTCReqStatusUpdate ret;
+    ret.EvID = 0U;
+    ret.N = 0U;
+    ret.packet_error_ctrl = 0U;
+    ret.packet_id = 0U;
+    ret.tc_num_bytes = 0U;
 
-    uint16_t aux_type = RID >> 12U;
+    return ret;
 
-    uint16_t aux_id = RID & 0xFFFU;
+}
+
+Ev_IDType get_Ev_ID_type(uint16_t Ev_ID) {
+    
+    Ev_IDType Ev_ID_type;
+    Ev_ID_type.__variant = Ev_IDType__Ev_IDNotValid;
+
+    uint16_t aux_type = Ev_ID >> 12U;
+
+    uint16_t aux_id = Ev_ID & 0xFFFU;
 
     if (aux_type == 1U) {
         
-        if (aux_id < informative_RIDs) {
+        if (aux_id < informative_Ev_IDs) {
             
-            RID_type.__variant = RIDType__Informative;
+            Ev_ID_type.__variant = Ev_IDType__Informative;
 
         } else {
             
-            RID_type.__variant = RIDType__RIDNotValid;
+            Ev_ID_type.__variant = Ev_IDType__Ev_IDNotValid;
 
         }
 
     } else if (aux_type == 2U) {
         
-        if (aux_id < low_severity_anomaly_RIDs) {
+        if (aux_id < low_severity_anomaly_Ev_IDs) {
             
-            RID_type.__variant = RIDType__LowSeverityAnomaly;
+            Ev_ID_type.__variant = Ev_IDType__LowSeverityAnomaly;
 
         } else {
             
-            RID_type.__variant = RIDType__RIDNotValid;
+            Ev_ID_type.__variant = Ev_IDType__Ev_IDNotValid;
 
         }
 
     } else if (aux_type == 3U) {
         
-        if (aux_id < medium_severity_anomaly_RIDs) {
+        if (aux_id < medium_severity_anomaly_Ev_IDs) {
             
-            RID_type.__variant = RIDType__MediumSeverityAnomaly;
+            Ev_ID_type.__variant = Ev_IDType__MediumSeverityAnomaly;
 
         } else {
             
-            RID_type.__variant = RIDType__RIDNotValid;
+            Ev_ID_type.__variant = Ev_IDType__Ev_IDNotValid;
 
         }
 
     } else if (aux_type == 4U) {
         
-        if (aux_id < high_severity_anomaly_RIDs) {
+        if (aux_id < high_severity_anomaly_Ev_IDs) {
             
-            RID_type.__variant = RIDType__HighSeverityAnomaly;
+            Ev_ID_type.__variant = Ev_IDType__HighSeverityAnomaly;
 
         } else {
             
-            RID_type.__variant = RIDType__RIDNotValid;
+            Ev_ID_type.__variant = Ev_IDType__Ev_IDNotValid;
 
         }
 
     } else {
         
-        RID_type.__variant = RIDType__RIDNotValid;
+        Ev_ID_type.__variant = Ev_IDType__Ev_IDNotValid;
 
     }
 
-    return RID_type;
+    return Ev_ID_type;
 
 }
 
-size_t get_RID_enable_config_index(uint16_t RID) {
+_Bool is_Ev_ID_valid(uint16_t evID) {
     
-    RIDType RID_type = get_RID_type(RID);
+    _Bool is_valid = 1;
 
-    size_t index = 4U;
+    Ev_IDType evID_type = get_Ev_ID_type(evID);
 
-    if (RID_type.__variant == RIDType__RIDNotValid) {
+    if (evID_type.__variant == Ev_IDType__Ev_IDNotValid) {
         
-        index = 4U;
-
-    } else if (RID_type.__variant == RIDType__MediumSeverityAnomaly) {
-        
-        index = 2U;
-
-    } else if (RID_type.__variant == RIDType__LowSeverityAnomaly) {
-        
-        index = 1U;
-
-    } else if (RID_type.__variant == RIDType__Informative) {
-        
-        index = 0U;
+        is_valid = 0;
 
     } else {
         
+
+    }
+
+    return is_valid;
+
+}
+
+size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID) {
+    
+    Ev_IDType Ev_ID_type = get_Ev_ID_type(Ev_ID);
+
+    size_t index = 4U;
+
+    if (Ev_ID_type.__variant == Ev_IDType__Informative) {
+        
+        index = 0U;
+
+    } else if (Ev_ID_type.__variant == Ev_IDType__LowSeverityAnomaly) {
+        
+        index = 1U;
+
+    } else if (Ev_ID_type.__variant == Ev_IDType__MediumSeverityAnomaly) {
+        
+        index = 2U;
+
+    } else if (Ev_ID_type.__variant == Ev_IDType__HighSeverityAnomaly) {
+        
         index = 3U;
+
+    } else {
+        
+        index = 4U;
 
     }
 
@@ -100,55 +142,8 @@ size_t get_RID_enable_config_index(uint16_t RID) {
 
 }
 
-uint8_t get_RID_enable_config_offset(uint16_t RID) {
+uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID) {
     
-    return (uint8_t)(RID & offset_mask);
-
-}
-
-void build_tm_5_x(TMDescriptorT * const p_tm_descriptor,
-                  uint16_t tm_seq_counter, const EventInfo * const event,
-                  size_t index) {
-    
-    CCSDSPUSTMPacketHeaderT tm_packet_header;
-    tm_packet_header.packet_id = 0U;
-    tm_packet_header.packet_length = 0U;
-    tm_packet_header.packet_seq_ctrl = 0U;
-
-    CCSDSPUSTMDFHeaderT df_header;
-    df_header.destinationID = 0U;
-    df_header.subtype = 0U;
-    df_header.type = 0U;
-    df_header.version = 0U;
-
-    tm_packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32CU);
-
-    tm_packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3U,
-                                                                          tm_seq_counter);
-
-    tm_packet_header.packet_length = 5U + (uint16_t)event->ev_aux_data_size;
-
-    df_header.version = ccsds_pus_tm_build_df_header_version(0x1U);
-
-    df_header.type = 5U;
-
-    df_header.subtype = (uint8_t)(index + 1U);
-
-    df_header.destinationID = 0x78U;
-
-    ccsds_pus_tm_set_fields(&p_tm_descriptor->tm_bytes[0U], &tm_packet_header,
-                            &df_header);
-
-    serialize_uint16(event->ev_RID, &p_tm_descriptor->tm_bytes[14U]);
-
-    for (size_t i = 0U; i < event_aux_data_max_size && i < event->ev_aux_data_size; i = i + 1U) {
-        
-        p_tm_descriptor->tm_bytes[16U + i] = event->ev_aux_data[i];
-
-    }
-
-    p_tm_descriptor->tm_num_bytes = (size_t)tm_packet_header.packet_length + 7U;
-
-    return;
+    return (uint8_t)(Ev_ID & offset_mask);
 
 }

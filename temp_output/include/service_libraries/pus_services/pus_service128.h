@@ -5,6 +5,6 @@
 
 #include "option.h"
 
-#define num_params1 64
+extern const size_t num_params1;
 
 #endif

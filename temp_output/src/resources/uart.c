@@ -1,6 +1,8 @@
 
 #include "resources/uart.h"
 
+const size_t max_send_size = 256U;
+
 void UARTDriver__disable_RF(UARTDriver * const self) {
     
     uint32_t riscv_uart_rf = 0xFFFFFBFFU;
@@ -65,8 +67,6 @@ void UARTDriver__initialize(void * const __this) {
     
     UARTDriver * self = (UARTDriver *)__this;
 
-    __termina_resource__lock(&self->__resource);
-
     UARTDriver__enable_RX(self);
 
     UARTDriver__enable_TX(self);
@@ -79,17 +79,46 @@ void UARTDriver__initialize(void * const __this) {
 
     UARTDriver__disable_RF(self);
 
-    __termina_resource__unlock(&self->__resource);
-
     return;
+
+}
+
+void UARTDriver__initialize__mutex_lock(void * const __this) {
+    
+    UARTDriver * self = (UARTDriver *)__this;
+
+    Status status;
+    status.__variant = Status__Success;
+
+    __termina_mutex__lock(self->__mutex_id, &status);
+    UARTDriver__initialize(self);
+    __termina_mutex__unlock(self->__mutex_id, &status);
+
+}
+
+void UARTDriver__initialize__task_lock(void * const __this) {
+    
+    __termina_task_lock_t lock;
+
+    lock = __termina_task__lock();
+    UARTDriver__initialize(__this);
+    __termina_task__unlock(lock);
+
+}
+
+void UARTDriver__initialize__event_lock(void * const __this) {
+    
+    __termina_event_lock_t lock;
+
+    lock = __termina_event__lock();
+    UARTDriver__initialize(__this);
+    __termina_event__unlock(lock);
 
 }
 
 void UARTDriver__release_tx(void * const __this) {
     
     UARTDriver * self = (UARTDriver *)__this;
-
-    __termina_resource__lock(&self->__resource);
 
     if (self->rem_bytes) {
         
@@ -133,9 +162,40 @@ void UARTDriver__release_tx(void * const __this) {
 
     }
 
-    __termina_resource__unlock(&self->__resource);
-
     return;
+
+}
+
+void UARTDriver__release_tx__mutex_lock(void * const __this) {
+    
+    UARTDriver * self = (UARTDriver *)__this;
+
+    Status status;
+    status.__variant = Status__Success;
+
+    __termina_mutex__lock(self->__mutex_id, &status);
+    UARTDriver__release_tx(self);
+    __termina_mutex__unlock(self->__mutex_id, &status);
+
+}
+
+void UARTDriver__release_tx__task_lock(void * const __this) {
+    
+    __termina_task_lock_t lock;
+
+    lock = __termina_task__lock();
+    UARTDriver__release_tx(__this);
+    __termina_task__unlock(lock);
+
+}
+
+void UARTDriver__release_tx__event_lock(void * const __this) {
+    
+    __termina_event_lock_t lock;
+
+    lock = __termina_event__lock();
+    UARTDriver__release_tx(__this);
+    __termina_event__unlock(lock);
 
 }
 
@@ -152,8 +212,6 @@ void UARTDriver__send(void * const __this,
                       CharDevResult * const result) {
     
     UARTDriver * self = (UARTDriver *)__this;
-
-    __termina_resource__lock(&self->__resource);
 
     (*result).__variant = CharDevResult__Success;
 
@@ -175,7 +233,8 @@ void UARTDriver__send(void * const __this,
             for (size_t i = 0U; i < max_send_size && (queued_bytes < nbytes && error == 0); i = i + 1U) {
                 
                 inner_queue_result = enqueue(&self->uart_queue,
-                                             output_bytes[i]);
+                                             output_bytes[__termina_array__index(max_send_size,
+                                                                                 i)]);
 
                 if (inner_queue_result.__variant == QueueResult__QueueFull) {
                     
@@ -205,7 +264,8 @@ void UARTDriver__send(void * const __this,
             
             for (size_t i = 0U; i < 4U && sent_bytes < nbytes; i = i + 1U) {
                 
-                self->registers->data = (uint32_t)output_bytes[i];
+                self->registers->data = (uint32_t)output_bytes[__termina_array__index(max_send_size,
+                                                                                      i)];
 
                 sent_bytes = sent_bytes + 1U;
 
@@ -233,7 +293,8 @@ void UARTDriver__send(void * const __this,
                 for (size_t i = 0U; i < max_send_size && (i < left_bytes && error == 0); i = i + 1U) {
                     
                     inner_queue_result = enqueue(&self->uart_queue,
-                                                 output_bytes[i + sent_bytes]);
+                                                 output_bytes[__termina_array__index(max_send_size,
+                                                                                     i + sent_bytes)]);
 
                     if (inner_queue_result.__variant == QueueResult__QueueFull) {
                         
@@ -258,9 +319,46 @@ void UARTDriver__send(void * const __this,
 
     }
 
-    __termina_resource__unlock(&self->__resource);
-
     return;
+
+}
+
+void UARTDriver__send__mutex_lock(void * const __this,
+                                  const uint8_t output_bytes[max_send_size],
+                                  size_t nbytes, CharDevResult * const result) {
+    
+    UARTDriver * self = (UARTDriver *)__this;
+
+    Status status;
+    status.__variant = Status__Success;
+
+    __termina_mutex__lock(self->__mutex_id, &status);
+    UARTDriver__send(self, output_bytes, nbytes, result);
+    __termina_mutex__unlock(self->__mutex_id, &status);
+
+}
+
+void UARTDriver__send__task_lock(void * const __this,
+                                 const uint8_t output_bytes[max_send_size],
+                                 size_t nbytes, CharDevResult * const result) {
+    
+    __termina_task_lock_t lock;
+
+    lock = __termina_task__lock();
+    UARTDriver__send(__this, output_bytes, nbytes, result);
+    __termina_task__unlock(lock);
+
+}
+
+void UARTDriver__send__event_lock(void * const __this,
+                                  const uint8_t output_bytes[max_send_size],
+                                  size_t nbytes, CharDevResult * const result) {
+    
+    __termina_event_lock_t lock;
+
+    lock = __termina_event__lock();
+    UARTDriver__send(__this, output_bytes, nbytes, result);
+    __termina_event__unlock(lock);
 
 }
 

@@ -13,12 +13,25 @@ typedef struct {
 } TMChannelIface;
 
 typedef struct {
-    __termina_resource_t __resource;
-    __termina_pool_t * a_tm_descriptor_pool;
-    CharDevSend uart;
+    __termina_id_t __mutex_id;
+    __termina_allocator_t a_tm_handler_pool;
+    struct {
+        void * __that;
+        void (* send)(void * const, const uint8_t *, size_t,
+                      CharDevResult * const);
+    } uart;
 } TMChannel;
 
-void TMChannel__send_tm(void * const __this, __termina_box_t tm_descriptor,
+void TMChannel__send_tm(void * const __this, __termina_box_t tm_handler,
                         Result * const result);
+void TMChannel__send_tm__mutex_lock(void * const __this,
+                                    __termina_box_t tm_handler,
+                                    Result * const result);
+void TMChannel__send_tm__task_lock(void * const __this,
+                                   __termina_box_t tm_handler,
+                                   Result * const result);
+void TMChannel__send_tm__event_lock(void * const __this,
+                                    __termina_box_t tm_handler,
+                                    Result * const result);
 
 #endif

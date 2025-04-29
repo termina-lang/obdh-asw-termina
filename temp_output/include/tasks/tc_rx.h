@@ -18,10 +18,10 @@ typedef struct {
 } RXStatus;
 
 typedef struct {
-    __termina_task_t __task;
-    __termina_pool_t * a_tc_descriptor_pool;
+    __termina_id_t __task_msg_queue_id;
+    __termina_allocator_t a_tc_handler_pool;
     __termina_out_port_t tc_message_queue_output;
-    __termina_in_port_t byte_message_queue_input;
+    __termina_id_t byte_message_queue_input;
     TCDescriptorT telecommand;
     uint8_t RX_tc_length[2U];
     size_t aux_index;
@@ -29,7 +29,8 @@ typedef struct {
     RXStatus rx_status;
 } TCRXBottomHalfTask;
 
-Result TCRXBottomHalfTask__get_tc(TCRXBottomHalfTask * const self,
-                                  uint8_t data);
+void __TCRXBottomHalfTask__termina_task(void * const arg);
+
+Result TCRXBottomHalfTask__get_tc(void * const __this, uint8_t data);
 
 #endif

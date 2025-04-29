@@ -1,6 +1,8 @@
 
 #include "service_libraries/tc_ccsds_pus_format.h"
 
+const size_t max_tc_size = 256U;
+
 uint16_t get_packet_id(const uint8_t tc_bytes[max_tc_size]) {
     
     uint16_t packet_id = 0U;
@@ -43,7 +45,10 @@ uint16_t get_packet_seq_ctrl(const uint8_t tc_bytes[max_tc_size]) {
 
     uint16_t crc_offset = get_packet_length(tc_bytes) + 5U;
 
-    packet_error_ctrl = deserialize_uint16(&tc_bytes[(size_t)crc_offset]);
+    packet_error_ctrl = deserialize_uint16(&tc_bytes[__termina_array__slice(max_tc_size,
+                                                                            2U,
+                                                                            (size_t)crc_offset,
+                                                                            (size_t)(crc_offset + 2U))]);
 
     return packet_error_ctrl;
 
@@ -96,16 +101,18 @@ void tc_get_fields(const uint8_t tc_bytes[max_tc_size],
 
     p_tc_df_header->subtype = tc_bytes[8U];
 
-    p_tc_df_header->sourceID = tc_bytes[9U];
+    p_tc_df_header->sourceID = deserialize_uint16(&tc_bytes[9U]);
 
     uint8_t packet_error_ctrl[2U];
     for (size_t __i0 = 0U; __i0 < 2U; __i0 = __i0 + 1U) {
         packet_error_ctrl[__i0] = 0U;
     }
 
-    packet_error_ctrl[0U] = tc_bytes[(size_t)((*p_tc_packet_header).packet_length + 5U)];
+    packet_error_ctrl[0U] = tc_bytes[__termina_array__index(max_tc_size,
+                                                            (size_t)((*p_tc_packet_header).packet_length + 5U))];
 
-    packet_error_ctrl[1U] = tc_bytes[(size_t)((*p_tc_packet_header).packet_length + 6U)];
+    packet_error_ctrl[1U] = tc_bytes[__termina_array__index(max_tc_size,
+                                                            (size_t)((*p_tc_packet_header).packet_length + 6U))];
 
     *p_tc_packet_err_ctrl = deserialize_uint16(packet_error_ctrl);
 

@@ -5,9 +5,9 @@
 
 #include "option.h"
 
-#define event_aux_data_max_size 64
+extern const size_t event_aux_data_max_size;
 
-#define max_num_events 16
+extern const size_t max_num_events;
 
 typedef enum {
     ListResult__Success,
