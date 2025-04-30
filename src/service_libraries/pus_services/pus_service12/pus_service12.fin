@@ -18,7 +18,7 @@ resource class PUSService12 provides PUSS12Iface {
     do_monitoring_req_status : DoMonitoringReqStatus;
     do_monitoring_req_status_update : DoMonitoringReqStatusUpdate;
 
-    exec_tc_req_status : PS12ExecTCReqStatus;
+    exec_tc_req_status : PSExecTCReqStatus;
     exec_tc_req_status_update : PS12ExecTCReqStatusUpdate;
 
     param_mon_config_table : [ParamMonitoringConfiguration; max_num_pmon_ids];
@@ -819,10 +819,10 @@ resource class PUSService12 provides PUSS12Iface {
         return;
         }
 
-    method exec12_1TC(&priv self) -> PS12ExecTCReqStatus {
+    method exec12_1TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PS12ExecTCReqStatus = PS12ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -894,11 +894,11 @@ resource class PUSService12 provides PUSS12Iface {
 
         if (result is Result::Error){
 
-            next_status = PS12ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS12ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -906,10 +906,10 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
 
-    method exec12_2TC(&priv self) -> PS12ExecTCReqStatus {
+    method exec12_2TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PS12ExecTCReqStatus = PS12ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
         
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -979,11 +979,11 @@ resource class PUSService12 provides PUSS12Iface {
 
         if (result is Result::Error){
 
-            next_status = PS12ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS12ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -1033,10 +1033,10 @@ resource class PUSService12 provides PUSS12Iface {
         return;
     }
 
-    method exec12_5TC(&priv self) -> PS12ExecTCReqStatus{
+    method exec12_5TC(&priv self) -> PSExecTCReqStatus{
 
         var result : Result = Result::Ok;
-        var next_status : PS12ExecTCReqStatus = PS12ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -1128,11 +1128,11 @@ resource class PUSService12 provides PUSS12Iface {
 
         if (result is Result::Error){
 
-            next_status = PS12ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS12ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -1141,10 +1141,10 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
 //Comprobar exec12_6TC enteramente
-    method exec12_6TC(&priv self) -> PS12ExecTCReqStatus {
+    method exec12_6TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PS12ExecTCReqStatus = PS12ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -1214,11 +1214,11 @@ resource class PUSService12 provides PUSS12Iface {
 
         if (result is Result::Error){
 
-            next_status = PS12ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS12ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -1226,9 +1226,9 @@ resource class PUSService12 provides PUSS12Iface {
 
     }
 
-    viewer manage_short_pack_length_error(&self) -> PS12ExecTCReqStatus {
+    viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
-        var next_status : PS12ExecTCReqStatus = PS12ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
         var result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -1252,11 +1252,11 @@ resource class PUSService12 provides PUSS12Iface {
 
         if (result is Result::Error){
 
-            next_status = PS12ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS12ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -1464,7 +1464,7 @@ resource class PUSService12 provides PUSS12Iface {
 
         var subtype : u8 = 0;
 
-        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PS12ExecTCReqStatus::Exit == false) {
+        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PSExecTCReqStatus::Exit == false) {
 
             match self->exec_tc_req_status {
 
@@ -1474,7 +1474,7 @@ resource class PUSService12 provides PUSS12Iface {
                     if (*result is Result::Error) {
                         self->exec_tc_req_status = self->manage_short_pack_length_error();
                     } else {
-                        self->exec_tc_req_status = PS12ExecTCReqStatus::ExecTC;
+                        self->exec_tc_req_status = PSExecTCReqStatus::ExecTC;
                     }
 
                 }
@@ -1498,14 +1498,14 @@ resource class PUSService12 provides PUSS12Iface {
 
                     } else {
 
-                        self->exec_tc_req_status = PS12ExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error;
                     }
                 }
 
                 case Error => {
 
                     *result = Result::Error;
-                    self->exec_tc_req_status = PS12ExecTCReqStatus::Exit;
+                    self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }
                 case Exit => {
@@ -1514,9 +1514,9 @@ resource class PUSService12 provides PUSS12Iface {
             }
         }
 
-        if(self->exec_tc_req_status is PS12ExecTCReqStatus::Exit){
+        if(self->exec_tc_req_status is PSExecTCReqStatus::Exit){
 
-            self->exec_tc_req_status = PS12ExecTCReqStatus::Init;
+            self->exec_tc_req_status = PSExecTCReqStatus::Init;
         }
 
         return;

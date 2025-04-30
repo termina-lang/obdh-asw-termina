@@ -1,9 +1,0 @@
-/*
-PUS SERVICE 9 : TIME MANAGEMENT
-*/
-
-
-const num_params3 : usize = 64;
-
-/*Óscar no tiene realmente implementado el servicio 9. Ante la recepción del TC[9,129] (que es equivalente al actual
-TC[9,1]), asigna a una variable de emulación del tiempo el parámetro recibido. Ver cómo hacerlo con la ARTYA7*/ 

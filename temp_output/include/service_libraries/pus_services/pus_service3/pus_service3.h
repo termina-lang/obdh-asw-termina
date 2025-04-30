@@ -33,7 +33,7 @@ typedef struct {
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
     PS3ExecTCReqStatusUpdate exec_tc_req_status_update;
-    PS3ExecTCReqStatus exec_tc_req_status;
+    PSExecTCReqStatus exec_tc_req_status;
     HKConfiguration hk_config_table[max_num_of_SIDs];
 } PUSService3;
 
@@ -49,18 +49,18 @@ void PUSService3__do_hk__event_lock(void * const __this, Result * const result);
 
 IndexFound PUSService3__get_SIDindex(PUSService3 * const self);
 
-PS3ExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self);
+PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self);
 
-PS3ExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self);
+PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self);
 
-PS3ExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self);
+PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self);
 
 PS3TCData PUSService3__get_TC_params(const PUSService3 * const self,
                                      TCHandlerT * const tc_handler,
                                      uint8_t * const subtype,
                                      Result * const result);
 
-PS3ExecTCReqStatus PUSService3__manage_short_pack_length_error(const PUSService3 * const self);
+PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const PUSService3 * const self);
 
 void PUSService3__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                           Result * const result);

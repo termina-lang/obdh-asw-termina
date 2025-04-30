@@ -12,10 +12,10 @@ void build_tm_17_2(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
 
 }
 
-PS17ExecTCReqStatus PUSService17__exec17_1TC(PUSService17 * const self) {
+PSExecTCReqStatus PUSService17__exec17_1TC(PUSService17 * const self) {
     
-    PS17ExecTCReqStatus next_status;
-    next_status.__variant = PS17ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     Result result;
     result.__variant = Result__Ok;
@@ -48,11 +48,11 @@ PS17ExecTCReqStatus PUSService17__exec17_1TC(PUSService17 * const self) {
 
     if (result.__variant == Result__Ok) {
         
-        next_status.__variant = PS17ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     } else {
         
-        next_status.__variant = PS17ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     }
 
@@ -67,9 +67,12 @@ void PUSService17__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     uint8_t subtype = tc_handler->df_header.subtype;
 
-    for (size_t i = 0U; i < 2U && self->exec_tc_req_status.__variant == PS17ExecTCReqStatus__Exit == 0; i = i + 1U) {
+    for (size_t i = 0U; i < 2U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
         
-        if (self->exec_tc_req_status.__variant == PS17ExecTCReqStatus__ExecTC) {
+        if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Init) {
+            
+
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__ExecTC) {
             
             if (subtype == 1U) {
                 
@@ -77,15 +80,15 @@ void PUSService17__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             } else {
                 
-                self->exec_tc_req_status.__variant = PS17ExecTCReqStatus__Error;
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
 
             }
 
-        } else if (self->exec_tc_req_status.__variant == PS17ExecTCReqStatus__Error) {
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Error) {
             
             (*result).__variant = Result__Error;
 
-            self->exec_tc_req_status.__variant = PS17ExecTCReqStatus__Exit;
+            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
 
         } else {
             
@@ -94,9 +97,9 @@ void PUSService17__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     }
 
-    if (self->exec_tc_req_status.__variant == PS17ExecTCReqStatus__Exit) {
+    if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit) {
         
-        self->exec_tc_req_status.__variant = PS17ExecTCReqStatus__ExecTC;
+        self->exec_tc_req_status.__variant = PSExecTCReqStatus__ExecTC;
 
     }
 

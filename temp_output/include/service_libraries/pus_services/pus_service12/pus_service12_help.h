@@ -11,6 +11,7 @@
 #include "service_libraries/event_list.h"
 #include "resources/system_data_pool.h"
 #include "service_libraries/pus_tc_handler.h"
+#include "service_libraries/pus_services/pus_services.h"
 
 extern const size_t max_num_pmon_ids;
 
@@ -186,17 +187,6 @@ typedef enum {
 typedef struct {
     __enum_DoMonitoringReqStatus_t __variant;
 } DoMonitoringReqStatus;
-
-typedef enum {
-    PS12ExecTCReqStatus__Init,
-    PS12ExecTCReqStatus__ExecTC,
-    PS12ExecTCReqStatus__Error,
-    PS12ExecTCReqStatus__Exit
-} __enum_PS12ExecTCReqStatus_t;
-
-typedef struct {
-    __enum_PS12ExecTCReqStatus_t __variant;
-} PS12ExecTCReqStatus;
 
 typedef struct {
     uint8_t N;

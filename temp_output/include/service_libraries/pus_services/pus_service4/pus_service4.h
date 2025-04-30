@@ -4,7 +4,7 @@
 #include <termina.h>
 
 #include "option.h"
-#include "service_libraries/pus_services/pus_service4/pus_service4_utils.h"
+#include "service_libraries/pus_services/pus_service4/pus_service4_help.h"
 
 typedef struct {
     void * __that;
@@ -32,7 +32,7 @@ typedef struct {
     StatsConfig stats_config_table;
     StatsDef param_stats[max_num_of_stats];
     PS4ExecTCReqStatusUpdate exec_tc_req_status_update;
-    PS4ExecTCReqStatus exec_tc_req_status;
+    PSExecTCReqStatus exec_tc_req_status;
 } PUSService4;
 
 uint32_t PUSService4__SDP_get_mean(const PUSService4 * const self,
@@ -61,18 +61,18 @@ Result PUSService4__delete_PID_stats(PUSService4 * const self);
 
 void PUSService4__delete_all_stats(PUSService4 * const self);
 
-PS4ExecTCReqStatus PUSService4__exec4_1TC(PUSService4 * const self);
+PSExecTCReqStatus PUSService4__exec4_1TC(PUSService4 * const self);
 
-PS4ExecTCReqStatus PUSService4__exec4_6TC(PUSService4 * const self);
+PSExecTCReqStatus PUSService4__exec4_6TC(PUSService4 * const self);
 
-PS4ExecTCReqStatus PUSService4__exec4_7TC(PUSService4 * const self);
+PSExecTCReqStatus PUSService4__exec4_7TC(PUSService4 * const self);
 
 PS4ExecTCReqStatusUpdate PUSService4__get_TC_params(const PUSService4 * const self,
                                                     TCHandlerT * const tc_handler,
                                                     uint8_t * const subtype,
                                                     Result * const result);
 
-PS4ExecTCReqStatus PUSService4__manage_short_pack_length_error(const PUSService4 * const self);
+PSExecTCReqStatus PUSService4__manage_short_pack_length_error(const PUSService4 * const self);
 
 void PUSService4__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                           Result * const result);

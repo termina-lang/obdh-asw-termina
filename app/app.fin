@@ -3,12 +3,12 @@ import service_libraries.pus_services.pus_service1.pus_service1;
 import service_libraries.pus_services.pus_service2;
 import service_libraries.pus_services.pus_service3.pus_service3;
 import service_libraries.pus_services.pus_service5.pus_service5;
-import service_libraries.pus_services.pus_service9;
 import service_libraries.pus_services.pus_service12.pus_service12;
 import service_libraries.pus_services.pus_service17;
 import service_libraries.pus_services.pus_service19.pus_service19;
 import service_libraries.pus_services.pus_service20.pus_service20;
 import service_libraries.pus_services.pus_service4.pus_service4;
+import service_libraries.pus_services.pus_service9.pus_service9;
 import service_libraries.pus_tc_handler;
 import resources.uart;
 import resources.gpio_driver;
@@ -83,7 +83,7 @@ resource pus_service_3 : PUSService3 = {
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}},
-    exec_tc_req_status = PS3ExecTCReqStatus::Init,
+    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps3_init_tc_req_status_update(),
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
@@ -96,7 +96,7 @@ resource pus_service_3 : PUSService3 = {
 
 resource pus_service_5 : PUSService5 = {
     Ev_ID_enable_config = {0x00000007, 0x00000000, 0x00000000, 0x00000007},
-    exec_tc_req_status = PS5ExecTCReqStatus::Init,
+    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps5_init_tc_req_status_update(),
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
@@ -107,7 +107,7 @@ resource pus_service_5 : PUSService5 = {
 resource pus_service_12: PUSService12 = {
     do_monitoring_req_status = DoMonitoringReqStatus::Init,
     do_monitoring_req_status_update = ps12_init_do_monitoring_req_status_update(),
-    exec_tc_req_status = PS12ExecTCReqStatus::Init,
+    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps12_init_tc_req_status_update(),
     param_mon_config_table = [{ PID = 0, type = MonitorCheckType::Free, enabled = false, definition = MonitorDefinition::Unselected, repetition= 0, repetition_control= 0, interval = 0, interval_control = 0,
     transition_obt = {tv_sec = 0, tv_usec = 0}, temp_state = CheckState::Unselected, current_state = CheckState::Unselected}; max_num_pmon_ids],
@@ -123,7 +123,7 @@ resource pus_service_12: PUSService12 = {
 
 
 resource pus_service_19 : PUSService19 = {
-    exec_tc_req_status = PS19ExecTCReqStatus::Init,
+    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps19_init_tc_req_status_update(),
     event_action_config = [{enabled = false, event_ID = 0}; max_event_action_definitions],
     event_action_packets = [tc_handler_init(); max_event_action_definitions],
@@ -140,7 +140,7 @@ resource pus_service_19 : PUSService19 = {
 
 
 resource pus_service_20 : PUSService20 = {
-    exec_tc_req_status = PS20ExecTCReqStatus::Init,
+    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps20_init_tc_req_status_update(),
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
@@ -151,14 +151,14 @@ resource pus_service_20 : PUSService20 = {
 
 
 resource pus_service_17 : PUSService17 = {
-    exec_tc_req_status = PS17ExecTCReqStatus::ExecTC,
+    exec_tc_req_status = PSExecTCReqStatus::ExecTC,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter
 }: PUSService17;
 
 resource pus_service_2 : PUSService2 = {
-    exec_tc_req_status = PS2ExecTCReqStatus::Init,
+    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps2_init_tc_req_status_update(),
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
@@ -167,7 +167,7 @@ resource pus_service_2 : PUSService2 = {
 } : PUSService2;
 
 resource pus_service_4 : PUSService4 = {
-    exec_tc_req_status = PS4ExecTCReqStatus::Init,
+    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps4_init_tc_req_status_update(),
     param_stats = [{min = 0, min_obt = {tv_sec = 0, tv_usec = 0}, max = 0, max_obt = {tv_sec = 0, tv_usec = 0}, mean_value = 0, samples = 0}; max_num_of_stats],
     stats_config_table = {defined = [false; max_num_of_stats],  PID = [0; max_num_of_stats], start_time = [{tv_sec = 0, tv_usec = 0}; max_num_of_stats]},
@@ -179,12 +179,25 @@ resource pus_service_4 : PUSService4 = {
     system_port <-> system_entry
 } : PUSService4;
 
+
+resource pus_service_9 : PUSService9 = {
+    ref_obt = {seconds = 0, finetime = 0},
+    ref_time_val_from_power_on = {tv_sec = 0, tv_usec = 0},
+    exec_tc_req_status = PSExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps9_init_tc_req_status_update(),
+    tm_channel <-> telemetry_channel,
+    a_tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    system_port <-> system_entry
+} : PUSService9;
+
 resource mng_tc_executor : ManagerTCExecutor = {
     tm_channel <-> telemetry_channel,
     tm_counter <-> telemetry_counter,
     a_tm_handler_pool <-> tm_pool,
     pus_service_17 <-> pus_service_17,
-    pus_service_2 <-> pus_service_2
+    pus_service_2 <-> pus_service_2,
+    pus_service_9 <-> pus_service_9
 } : ManagerTCExecutor;
 
 

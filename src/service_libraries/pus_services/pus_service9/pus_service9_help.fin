@@ -1,0 +1,35 @@
+import service_libraries.pus_services.pus_services;
+
+
+struct MissionObt {
+    seconds: u32;
+    finetime: u16;
+};
+
+
+struct PS9ExecTCReqStatusUpdate {
+    packet_id : u16;
+    packet_error_ctrl : u16;
+    tc_num_bytes : usize;
+    next_OBT: MissionObt;
+};
+
+
+
+function substract_TimeVal(timeval1: TimeVal, timeval2: TimeVal) -> TimeVal {
+    var result : TimeVal = {tv_sec = 0, tv_usec = 0};
+    result.tv_sec = timeval1.tv_sec - timeval2.tv_sec;
+    result.tv_usec = timeval1.tv_usec - timeval2.tv_usec;
+    if (result.tv_usec < 0) {
+        result.tv_sec = result.tv_sec - 1;
+        result.tv_usec = result.tv_usec + 1000000;
+    }
+    return result;
+}
+
+
+function ps9_init_tc_req_status_update() -> PS9ExecTCReqStatusUpdate {
+    var ret : PS9ExecTCReqStatusUpdate = {packet_id = 0, packet_error_ctrl = 0, tc_num_bytes = 0, next_OBT = {seconds = 0, finetime = 0}};
+    return ret;
+}
+

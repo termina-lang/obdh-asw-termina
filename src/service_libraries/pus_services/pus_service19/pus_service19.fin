@@ -15,7 +15,7 @@ interface PUSS19Iface {
 
 resource class PUSService19 provides PUSS19Iface {
 
-    exec_tc_req_status : PS19ExecTCReqStatus;
+    exec_tc_req_status : PSExecTCReqStatus;
     exec_tc_req_status_update : PS19ExecTCReqStatusUpdate;
 
     event_action_config : [EventActionConfig; max_event_action_definitions];
@@ -126,10 +126,10 @@ resource class PUSService19 provides PUSS19Iface {
 
 
     //TC[19,1] allows the addition of event-action definitions
-    method exec19_1TC (&priv self) -> PS19ExecTCReqStatus {
+    method exec19_1TC (&priv self) -> PSExecTCReqStatus {
 
         var result: Result = Result::Ok;
-        var next_status : PS19ExecTCReqStatus = PS19ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
         var send_result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -268,11 +268,11 @@ resource class PUSService19 provides PUSS19Iface {
 
         if (result is Result::Error) {
 
-            next_status = PS19ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS19ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
         }
 
         return next_status;
@@ -280,10 +280,10 @@ resource class PUSService19 provides PUSS19Iface {
 
 
 //TC[19,2] allows the deletion of event-action definitions
-    method exec19_2TC (&priv self) -> PS19ExecTCReqStatus {
+    method exec19_2TC (&priv self) -> PSExecTCReqStatus {
 
         var result: Result = Result::Ok;
-        var next_status : PS19ExecTCReqStatus = PS19ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -366,11 +366,11 @@ resource class PUSService19 provides PUSS19Iface {
         
         if (result is Result::Error) {
 
-            next_status = PS19ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS19ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
         }
 
         return next_status;
@@ -378,10 +378,10 @@ resource class PUSService19 provides PUSS19Iface {
 
 
     //TC[19,4] allows enabling event-action definitions
-    method exec19_4TC (&priv self) -> PS19ExecTCReqStatus {
+    method exec19_4TC (&priv self) -> PSExecTCReqStatus {
 
         var result: Result = Result::Ok;
-        var next_status : PS19ExecTCReqStatus = PS19ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -453,21 +453,21 @@ resource class PUSService19 provides PUSS19Iface {
 
         if (result is Result::Error) {
 
-            next_status = PS19ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS19ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
         }
 
         return next_status;
     }
 
     //TC[19,5] allows disabling event-action definitions
-    method exec19_5TC (&priv self) -> PS19ExecTCReqStatus {
+    method exec19_5TC (&priv self) -> PSExecTCReqStatus {
 
         var result: Result = Result::Ok;
-        var next_status : PS19ExecTCReqStatus = PS19ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -540,11 +540,11 @@ resource class PUSService19 provides PUSS19Iface {
 
         if (result is Result::Error) {
 
-            next_status = PS19ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS19ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
         }
 
         return next_status;
@@ -594,9 +594,9 @@ resource class PUSService19 provides PUSS19Iface {
 
     }
 
-    viewer manage_short_pack_length_error(&self) -> PS19ExecTCReqStatus {
+    viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
-        var next_status : PS19ExecTCReqStatus = PS19ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
         var result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -620,11 +620,11 @@ resource class PUSService19 provides PUSS19Iface {
 
         if (result is Result::Error){
 
-            next_status = PS19ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS19ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -636,7 +636,7 @@ resource class PUSService19 provides PUSS19Iface {
 
         var subtype : u8 = 0;
 
-        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PS19ExecTCReqStatus::Exit == false) {
+        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PSExecTCReqStatus::Exit == false) {
 
             match self->exec_tc_req_status {
 
@@ -646,7 +646,7 @@ resource class PUSService19 provides PUSS19Iface {
                     if (*result is Result::Error) {
                         self->exec_tc_req_status = self->manage_short_pack_length_error();
                     } else {
-                        self->exec_tc_req_status = PS19ExecTCReqStatus::ExecTC;
+                        self->exec_tc_req_status = PSExecTCReqStatus::ExecTC;
                     }
 
                 }
@@ -670,14 +670,14 @@ resource class PUSService19 provides PUSS19Iface {
 
                     } else {
 
-                        self->exec_tc_req_status = PS19ExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error;
                     }
                 }
 
                 case Error => {
 
                     *result = Result::Error;
-                    self->exec_tc_req_status = PS19ExecTCReqStatus::Exit;
+                    self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }
                 case Exit => {
@@ -686,9 +686,9 @@ resource class PUSService19 provides PUSS19Iface {
             }
         }
 
-        if(self->exec_tc_req_status is PS19ExecTCReqStatus::Exit){
+        if(self->exec_tc_req_status is PSExecTCReqStatus::Exit){
 
-            self->exec_tc_req_status = PS19ExecTCReqStatus::Init;
+            self->exec_tc_req_status = PSExecTCReqStatus::Init;
         }
 
         return;

@@ -316,13 +316,13 @@ void PUSService4__delete_all_stats(PUSService4 * const self) {
 
 }
 
-PS4ExecTCReqStatus PUSService4__exec4_1TC(PUSService4 * const self) {
+PSExecTCReqStatus PUSService4__exec4_1TC(PUSService4 * const self) {
     
     Result result;
     result.__variant = Result__Ok;
 
-    PS4ExecTCReqStatus next_status;
-    next_status.__variant = PS4ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -425,11 +425,11 @@ PS4ExecTCReqStatus PUSService4__exec4_1TC(PUSService4 * const self) {
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS4ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS4ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -437,13 +437,13 @@ PS4ExecTCReqStatus PUSService4__exec4_1TC(PUSService4 * const self) {
 
 }
 
-PS4ExecTCReqStatus PUSService4__exec4_6TC(PUSService4 * const self) {
+PSExecTCReqStatus PUSService4__exec4_6TC(PUSService4 * const self) {
     
     Result result;
     result.__variant = Result__Ok;
 
-    PS4ExecTCReqStatus next_status;
-    next_status.__variant = PS4ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -551,11 +551,11 @@ PS4ExecTCReqStatus PUSService4__exec4_6TC(PUSService4 * const self) {
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS4ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS4ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -563,13 +563,13 @@ PS4ExecTCReqStatus PUSService4__exec4_6TC(PUSService4 * const self) {
 
 }
 
-PS4ExecTCReqStatus PUSService4__exec4_7TC(PUSService4 * const self) {
+PSExecTCReqStatus PUSService4__exec4_7TC(PUSService4 * const self) {
     
     Result result;
     result.__variant = Result__Ok;
 
-    PS4ExecTCReqStatus next_status;
-    next_status.__variant = PS4ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -677,11 +677,11 @@ PS4ExecTCReqStatus PUSService4__exec4_7TC(PUSService4 * const self) {
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS4ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS4ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -721,10 +721,10 @@ PS4ExecTCReqStatusUpdate PUSService4__get_TC_params(const PUSService4 * const se
 
 }
 
-PS4ExecTCReqStatus PUSService4__manage_short_pack_length_error(const PUSService4 * const self) {
+PSExecTCReqStatus PUSService4__manage_short_pack_length_error(const PUSService4 * const self) {
     
-    PS4ExecTCReqStatus next_status;
-    next_status.__variant = PS4ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     Result result;
     result.__variant = Result__Ok;
@@ -762,11 +762,11 @@ PS4ExecTCReqStatus PUSService4__manage_short_pack_length_error(const PUSService4
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS4ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS4ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -781,9 +781,9 @@ void PUSService4__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     uint8_t subtype = 0U;
 
-    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PS4ExecTCReqStatus__Exit == 0; i = i + 1U) {
+    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
         
-        if (self->exec_tc_req_status.__variant == PS4ExecTCReqStatus__Init) {
+        if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Init) {
             
             self->exec_tc_req_status_update = PUSService4__get_TC_params(self,
                                                                          tc_handler,
@@ -796,11 +796,11 @@ void PUSService4__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             } else {
                 
-                self->exec_tc_req_status.__variant = PS4ExecTCReqStatus__ExecTC;
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__ExecTC;
 
             }
 
-        } else if (self->exec_tc_req_status.__variant == PS4ExecTCReqStatus__ExecTC) {
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__ExecTC) {
             
             if (subtype == 1U) {
                 
@@ -816,15 +816,15 @@ void PUSService4__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             } else {
                 
-                self->exec_tc_req_status.__variant = PS4ExecTCReqStatus__Error;
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
 
             }
 
-        } else if (self->exec_tc_req_status.__variant == PS4ExecTCReqStatus__Error) {
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Error) {
             
             (*result).__variant = Result__Error;
 
-            self->exec_tc_req_status.__variant = PS4ExecTCReqStatus__Exit;
+            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
 
         } else {
             
@@ -833,9 +833,9 @@ void PUSService4__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     }
 
-    if (self->exec_tc_req_status.__variant == PS4ExecTCReqStatus__Exit) {
+    if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit) {
         
-        self->exec_tc_req_status.__variant = PS4ExecTCReqStatus__Init;
+        self->exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
 
     }
 

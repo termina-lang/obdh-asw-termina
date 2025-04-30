@@ -4,21 +4,11 @@
 #include <termina.h>
 
 #include "option.h"
+#include "service_libraries/pus_services/pus_services.h"
 
 extern const size_t max_num_of_SIDs;
 
 extern const size_t max_params_per_SID;
-
-typedef enum {
-    PS3ExecTCReqStatus__Init,
-    PS3ExecTCReqStatus__ExecTC,
-    PS3ExecTCReqStatus__Error,
-    PS3ExecTCReqStatus__Exit
-} __enum_PS3ExecTCReqStatus_t;
-
-typedef struct {
-    __enum_PS3ExecTCReqStatus_t __variant;
-} PS3ExecTCReqStatus;
 
 typedef struct {
     _Bool found;

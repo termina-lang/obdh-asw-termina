@@ -10,6 +10,7 @@
 #include "service_libraries/tc_ccsds_pus_format.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
 #include "service_libraries/event_list.h"
+#include "service_libraries/pus_services/pus_services.h"
 
 extern const size_t event_action_max_bytes;
 
@@ -21,17 +22,6 @@ typedef struct {
     _Bool enabled;
     uint16_t event_ID;
 } EventActionConfig;
-
-typedef enum {
-    PS19ExecTCReqStatus__Init,
-    PS19ExecTCReqStatus__ExecTC,
-    PS19ExecTCReqStatus__Error,
-    PS19ExecTCReqStatus__Exit
-} __enum_PS19ExecTCReqStatus_t;
-
-typedef struct {
-    __enum_PS19ExecTCReqStatus_t __variant;
-} PS19ExecTCReqStatus;
 
 typedef struct {
     uint16_t packet_id;

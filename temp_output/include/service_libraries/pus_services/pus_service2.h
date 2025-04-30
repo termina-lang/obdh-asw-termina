@@ -11,19 +11,9 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 #include "resources/tm_counter.h"
 #include "resources/tm_channel.h"
+#include "service_libraries/pus_services/pus_services.h"
 
 extern const size_t num_params2;
-
-typedef enum {
-    PS2ExecTCReqStatus__Init,
-    PS2ExecTCReqStatus__ExecTC,
-    PS2ExecTCReqStatus__Error,
-    PS2ExecTCReqStatus__Exit
-} __enum_PS2ExecTCReqStatus_t;
-
-typedef struct {
-    __enum_PS2ExecTCReqStatus_t __variant;
-} PS2ExecTCReqStatus;
 
 typedef struct {
     uint16_t packet_id;
@@ -56,21 +46,21 @@ typedef struct {
         void (* send_tm)(void * const, __termina_box_t, Result * const);
     } tm_channel;
     PS2ExecTCReqStatusUpdate exec_tc_req_status_update;
-    PS2ExecTCReqStatus exec_tc_req_status;
+    PSExecTCReqStatus exec_tc_req_status;
 } PUSService2;
 
 Result PUSService2__dev_drv_on_off(PUSService2 * const self);
 
 _Bool PUSService2__device_drv_is_on_off_address_valid(const PUSService2 * const self);
 
-PS2ExecTCReqStatus PUSService2__exec2_1TC(PUSService2 * const self);
+PSExecTCReqStatus PUSService2__exec2_1TC(PUSService2 * const self);
 
 PS2ExecTCReqStatusUpdate PUSService2__get_TC_params(const PUSService2 * const self,
                                                     TCHandlerT * const tc_handler,
                                                     uint8_t * const subtype,
                                                     Result * const result);
 
-PS2ExecTCReqStatus PUSService2__manage_short_pack_length_error(const PUSService2 * const self);
+PSExecTCReqStatus PUSService2__manage_short_pack_length_error(const PUSService2 * const self);
 
 void PUSService2__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                           Result * const result);

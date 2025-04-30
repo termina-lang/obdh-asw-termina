@@ -1,12 +1,9 @@
+import service_libraries.pus_services.pus_services;
+
 const max_num_of_SIDs : usize = 8;
 const max_params_per_SID : usize = 16;
 
-enum PS3ExecTCReqStatus {
-    Init,
-    ExecTC,
-    Error,
-    Exit
-};
+
 
 struct IndexFound {
     found : bool;

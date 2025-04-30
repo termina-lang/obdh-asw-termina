@@ -9,17 +9,7 @@
 #include "service_libraries/tc_ccsds_pus_format.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
 #include "resources/system_data_pool.h"
-
-typedef enum {
-    PS20ExecTCReqStatus__Init,
-    PS20ExecTCReqStatus__ExecTC,
-    PS20ExecTCReqStatus__Error,
-    PS20ExecTCReqStatus__Exit
-} __enum_PS20ExecTCReqStatus_t;
-
-typedef struct {
-    __enum_PS20ExecTCReqStatus_t __variant;
-} PS20ExecTCReqStatus;
+#include "service_libraries/pus_services/pus_services.h"
 
 typedef struct {
     uint8_t PID_value_u8;

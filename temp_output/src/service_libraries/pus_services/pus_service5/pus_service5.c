@@ -156,13 +156,13 @@ void PUSService5__build_and_tx_tm_5_x__event_lock(void * const __this,
 
 }
 
-PS5ExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
+PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
     
     Result result;
     result.__variant = Result__Ok;
 
-    PS5ExecTCReqStatus next_status;
-    next_status.__variant = PS5ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -262,11 +262,11 @@ PS5ExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS5ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS5ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -274,13 +274,13 @@ PS5ExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
 
 }
 
-PS5ExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
+PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
     
     Result result;
     result.__variant = Result__Ok;
 
-    PS5ExecTCReqStatus next_status;
-    next_status.__variant = PS5ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -380,11 +380,11 @@ PS5ExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS5ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS5ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -420,10 +420,10 @@ PS5ExecTCReqStatusUpdate PUSService5__get_TC_params(const PUSService5 * const se
 
 }
 
-PS5ExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 * const self) {
+PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 * const self) {
     
-    PS5ExecTCReqStatus next_status;
-    next_status.__variant = PS5ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     Result result;
     result.__variant = Result__Ok;
@@ -461,11 +461,11 @@ PS5ExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS5ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS5ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -480,9 +480,9 @@ void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     uint8_t subtype = 0U;
 
-    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PS5ExecTCReqStatus__Exit == 0; i = i + 1U) {
+    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
         
-        if (self->exec_tc_req_status.__variant == PS5ExecTCReqStatus__Init) {
+        if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Init) {
             
             self->exec_tc_req_status_update = PUSService5__get_TC_params(self,
                                                                          tc_handler,
@@ -495,11 +495,11 @@ void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             } else {
                 
-                self->exec_tc_req_status.__variant = PS5ExecTCReqStatus__ExecTC;
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__ExecTC;
 
             }
 
-        } else if (self->exec_tc_req_status.__variant == PS5ExecTCReqStatus__ExecTC) {
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__ExecTC) {
             
             if (subtype == 5U) {
                 
@@ -511,15 +511,15 @@ void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             } else {
                 
-                self->exec_tc_req_status.__variant = PS5ExecTCReqStatus__Error;
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
 
             }
 
-        } else if (self->exec_tc_req_status.__variant == PS5ExecTCReqStatus__Error) {
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Error) {
             
             (*result).__variant = Result__Error;
 
-            self->exec_tc_req_status.__variant = PS5ExecTCReqStatus__Exit;
+            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
 
         } else {
             
@@ -528,9 +528,9 @@ void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     }
 
-    if (self->exec_tc_req_status.__variant == PS5ExecTCReqStatus__Exit) {
+    if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit) {
         
-        self->exec_tc_req_status.__variant = PS5ExecTCReqStatus__Init;
+        self->exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
 
     }
 

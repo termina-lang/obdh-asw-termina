@@ -11,10 +11,11 @@
 
 #define __TCRXBottomHalfTask__byte_message_queue_input 0
 
-#define __tc_pool__mutex_id 0
-#define __telemetry_channel__mutex_id 1
-#define __telemetry_counter__mutex_id 2
-#define __tm_pool__mutex_id 3
+#define __system_entry__mutex_id 0
+#define __tc_pool__mutex_id 1
+#define __telemetry_channel__mutex_id 2
+#define __telemetry_counter__mutex_id 3
+#define __tm_pool__mutex_id 4
 
 #define __hk_fdir__task_id 0
 #define __icu_manager__task_id 1
@@ -43,7 +44,7 @@
 
 #define __TERMINA_APP_CONFIG_PERIODIC_TIMERS 1
 
-#define __TERMINA_APP_CONFIG_MUTEXES 4
+#define __TERMINA_APP_CONFIG_MUTEXES 5
 
 #define __TERMINA_APP_CONFIG_MESSAGE_QUEUES 10
 

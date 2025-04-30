@@ -10,16 +10,9 @@ import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
 import resources.tm_counter;
 import resources.tm_channel;
+import service_libraries.pus_services.pus_services;
 
 const num_params2 : usize = 64;
-
-
-enum PS2ExecTCReqStatus {
-    Init,
-	ExecTC,
-	Error,
-	Exit
-};
 
 struct PS2ExecTCReqStatusUpdate {
     packet_id : u16;
@@ -55,7 +48,7 @@ interface PUSS2Iface {
 
 resource class PUSService2 provides PUSS2Iface {
 
-    exec_tc_req_status : PS2ExecTCReqStatus;
+    exec_tc_req_status : PSExecTCReqStatus;
     exec_tc_req_status_update : PS2ExecTCReqStatusUpdate;
 
     tm_channel: access TMChannelIface;   
@@ -65,9 +58,9 @@ resource class PUSService2 provides PUSS2Iface {
     gpio_driver : access GPIODrvIface;
 
     
-    method exec2_1TC(&priv self) -> PS2ExecTCReqStatus {
+    method exec2_1TC(&priv self) -> PSExecTCReqStatus {
 
-        var next_status : PS2ExecTCReqStatus = PS2ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
         var result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -155,11 +148,11 @@ resource class PUSService2 provides PUSS2Iface {
 
         if (result is Result::Error) {
 
-            next_status = PS2ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS2ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
         }
 
         return next_status;
@@ -200,9 +193,9 @@ resource class PUSService2 provides PUSS2Iface {
 
     }
 
-    viewer manage_short_pack_length_error(&self) -> PS2ExecTCReqStatus {
+    viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
-        var next_status : PS2ExecTCReqStatus = PS2ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
         var result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -226,11 +219,11 @@ resource class PUSService2 provides PUSS2Iface {
 
         if (result is Result::Error){
 
-            next_status = PS2ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS2ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -252,7 +245,7 @@ resource class PUSService2 provides PUSS2Iface {
 
         var subtype : u8 = 0;
 
-        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PS2ExecTCReqStatus::Exit == false) {
+        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PSExecTCReqStatus::Exit == false) {
 
             match self->exec_tc_req_status {
 
@@ -262,7 +255,7 @@ resource class PUSService2 provides PUSS2Iface {
                     if (*result is Result::Error) {
                         self->exec_tc_req_status = self->manage_short_pack_length_error();
                     } else {
-                        self->exec_tc_req_status = PS2ExecTCReqStatus::ExecTC;
+                        self->exec_tc_req_status = PSExecTCReqStatus::ExecTC;
                     }
 
                 }
@@ -274,14 +267,14 @@ resource class PUSService2 provides PUSS2Iface {
 
                     } else {
 
-                        self->exec_tc_req_status = PS2ExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error;
                     }
                 }
 
                 case Error => {
 
                     *result = Result::Error;
-                    self->exec_tc_req_status = PS2ExecTCReqStatus::Exit;
+                    self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }
                 case Exit => {
@@ -290,9 +283,9 @@ resource class PUSService2 provides PUSS2Iface {
             }
         }
 
-        if(self->exec_tc_req_status is PS2ExecTCReqStatus::Exit){
+        if(self->exec_tc_req_status is PSExecTCReqStatus::Exit){
 
-            self->exec_tc_req_status = PS2ExecTCReqStatus::Init;
+            self->exec_tc_req_status = PSExecTCReqStatus::Init;
         }
 
         return;

@@ -1053,13 +1053,13 @@ void PUSService12__do_monitoring__event_lock(void * const __this,
 
 }
 
-PS12ExecTCReqStatus PUSService12__exec12_1TC(PUSService12 * const self) {
+PSExecTCReqStatus PUSService12__exec12_1TC(PUSService12 * const self) {
     
     Result result;
     result.__variant = Result__Ok;
 
-    PS12ExecTCReqStatus next_status;
-    next_status.__variant = PS12ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -1179,11 +1179,11 @@ PS12ExecTCReqStatus PUSService12__exec12_1TC(PUSService12 * const self) {
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS12ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS12ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -1241,13 +1241,13 @@ void PUSService12__set_unchecked(PUSService12 * const self) {
 
 }
 
-PS12ExecTCReqStatus PUSService12__exec12_2TC(PUSService12 * const self) {
+PSExecTCReqStatus PUSService12__exec12_2TC(PUSService12 * const self) {
     
     Result result;
     result.__variant = Result__Ok;
 
-    PS12ExecTCReqStatus next_status;
-    next_status.__variant = PS12ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -1361,11 +1361,11 @@ PS12ExecTCReqStatus PUSService12__exec12_2TC(PUSService12 * const self) {
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS12ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS12ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -1373,13 +1373,13 @@ PS12ExecTCReqStatus PUSService12__exec12_2TC(PUSService12 * const self) {
 
 }
 
-PS12ExecTCReqStatus PUSService12__exec12_5TC(PUSService12 * const self) {
+PSExecTCReqStatus PUSService12__exec12_5TC(PUSService12 * const self) {
     
     Result result;
     result.__variant = Result__Ok;
 
-    PS12ExecTCReqStatus next_status;
-    next_status.__variant = PS12ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -1531,11 +1531,11 @@ PS12ExecTCReqStatus PUSService12__exec12_5TC(PUSService12 * const self) {
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS12ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS12ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -1543,13 +1543,13 @@ PS12ExecTCReqStatus PUSService12__exec12_5TC(PUSService12 * const self) {
 
 }
 
-PS12ExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self) {
+PSExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self) {
     
     Result result;
     result.__variant = Result__Ok;
 
-    PS12ExecTCReqStatus next_status;
-    next_status.__variant = PS12ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -1657,11 +1657,11 @@ PS12ExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self) {
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS12ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS12ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -1878,10 +1878,10 @@ PS12ExecTCReqStatusUpdate PUSService12__get_TC_params(const PUSService12 * const
 
 }
 
-PS12ExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSService12 * const self) {
+PSExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSService12 * const self) {
     
-    PS12ExecTCReqStatus next_status;
-    next_status.__variant = PS12ExecTCReqStatus__Error;
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Error;
 
     Result result;
     result.__variant = Result__Ok;
@@ -1919,11 +1919,11 @@ PS12ExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSServic
 
     if (result.__variant == Result__Error) {
         
-        next_status.__variant = PS12ExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Error;
 
     } else {
         
-        next_status.__variant = PS12ExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Exit;
 
     }
 
@@ -1938,9 +1938,9 @@ void PUSService12__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     uint8_t subtype = 0U;
 
-    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PS12ExecTCReqStatus__Exit == 0; i = i + 1U) {
+    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
         
-        if (self->exec_tc_req_status.__variant == PS12ExecTCReqStatus__Init) {
+        if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Init) {
             
             self->exec_tc_req_status_update = PUSService12__get_TC_params(self,
                                                                           tc_handler,
@@ -1953,11 +1953,11 @@ void PUSService12__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             } else {
                 
-                self->exec_tc_req_status.__variant = PS12ExecTCReqStatus__ExecTC;
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__ExecTC;
 
             }
 
-        } else if (self->exec_tc_req_status.__variant == PS12ExecTCReqStatus__ExecTC) {
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__ExecTC) {
             
             if (subtype == 1U) {
                 
@@ -1977,15 +1977,15 @@ void PUSService12__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             } else {
                 
-                self->exec_tc_req_status.__variant = PS12ExecTCReqStatus__Error;
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
 
             }
 
-        } else if (self->exec_tc_req_status.__variant == PS12ExecTCReqStatus__Error) {
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Error) {
             
             (*result).__variant = Result__Error;
 
-            self->exec_tc_req_status.__variant = PS12ExecTCReqStatus__Exit;
+            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
 
         } else {
             
@@ -1994,9 +1994,9 @@ void PUSService12__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     }
 
-    if (self->exec_tc_req_status.__variant == PS12ExecTCReqStatus__Exit) {
+    if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit) {
         
-        self->exec_tc_req_status.__variant = PS12ExecTCReqStatus__Init;
+        self->exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
 
     }
 

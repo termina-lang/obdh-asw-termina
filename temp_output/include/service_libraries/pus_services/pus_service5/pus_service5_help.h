@@ -9,6 +9,7 @@
 #include "service_libraries/serialize.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/event_list.h"
+#include "service_libraries/pus_services/pus_services.h"
 
 extern const uint16_t informative_Ev_IDs;
 
@@ -66,17 +67,6 @@ typedef struct {
         __enum_FaultInfo__ParamFaultValue_params_t ParamFaultValue;
     };
 } FaultInfo;
-
-typedef enum {
-    PS5ExecTCReqStatus__Init,
-    PS5ExecTCReqStatus__ExecTC,
-    PS5ExecTCReqStatus__Error,
-    PS5ExecTCReqStatus__Exit
-} __enum_PS5ExecTCReqStatus_t;
-
-typedef struct {
-    __enum_PS5ExecTCReqStatus_t __variant;
-} PS5ExecTCReqStatus;
 
 typedef struct {
     uint16_t packet_id;

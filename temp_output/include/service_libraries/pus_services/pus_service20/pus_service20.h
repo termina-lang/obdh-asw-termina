@@ -25,7 +25,7 @@ typedef struct {
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
     PS20ExecTCReqStatusUpdate exec_tc_req_status_update;
-    PS20ExecTCReqStatus exec_tc_req_status;
+    PSExecTCReqStatus exec_tc_req_status;
 } PUSService20;
 
 void PUSService20__build_tm_20_2(const PUSService20 * const self,
@@ -33,16 +33,16 @@ void PUSService20__build_tm_20_2(const PUSService20 * const self,
                                  uint16_t tm_seq_counter,
                                  Result * const result);
 
-PS20ExecTCReqStatus PUSService20__exec20_1TC(PUSService20 * const self);
+PSExecTCReqStatus PUSService20__exec20_1TC(PUSService20 * const self);
 
-PS20ExecTCReqStatus PUSService20__exec20_3TC(PUSService20 * const self);
+PSExecTCReqStatus PUSService20__exec20_3TC(PUSService20 * const self);
 
 PS20ExecTCReqStatusUpdate PUSService20__get_TC_params(const PUSService20 * const self,
                                                       TCHandlerT * const tc_handler,
                                                       uint8_t * const subtype,
                                                       Result * const result);
 
-PS20ExecTCReqStatus PUSService20__manage_short_pack_length_error(const PUSService20 * const self);
+PSExecTCReqStatus PUSService20__manage_short_pack_length_error(const PUSService20 * const self);
 
 void PUSService20__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                            Result * const result);

@@ -31,7 +31,7 @@ typedef struct {
     uint8_t monitoring_transition_counter;
     ParamMonitoringConfiguration param_mon_config_table[max_num_pmon_ids];
     PS12ExecTCReqStatusUpdate exec_tc_req_status_update;
-    PS12ExecTCReqStatus exec_tc_req_status;
+    PSExecTCReqStatus exec_tc_req_status;
     DoMonitoringReqStatusUpdate do_monitoring_req_status_update;
     DoMonitoringReqStatus do_monitoring_req_status;
 } PUSService12;
@@ -105,15 +105,15 @@ void PUSService12__do_monitoring__event_lock(void * const __this,
                                              FaultInfo * const fault_info,
                                              _Bool * const event_triggered);
 
-PS12ExecTCReqStatus PUSService12__exec12_1TC(PUSService12 * const self);
+PSExecTCReqStatus PUSService12__exec12_1TC(PUSService12 * const self);
 
 void PUSService12__set_unchecked(PUSService12 * const self);
 
-PS12ExecTCReqStatus PUSService12__exec12_2TC(PUSService12 * const self);
+PSExecTCReqStatus PUSService12__exec12_2TC(PUSService12 * const self);
 
-PS12ExecTCReqStatus PUSService12__exec12_5TC(PUSService12 * const self);
+PSExecTCReqStatus PUSService12__exec12_5TC(PUSService12 * const self);
 
-PS12ExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self);
+PSExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self);
 
 MonitorDefinition PUSService12__get_PMON_limit_check_definition(const PUSService12 * const self,
                                                                 TCHandlerT * const tc_handler,
@@ -128,7 +128,7 @@ PS12ExecTCReqStatusUpdate PUSService12__get_TC_params(const PUSService12 * const
                                                       uint8_t * const subtype,
                                                       Result * const result);
 
-PS12ExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSService12 * const self);
+PSExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSService12 * const self);
 
 void PUSService12__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                            Result * const result);

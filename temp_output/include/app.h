@@ -8,12 +8,12 @@
 #include "service_libraries/pus_services/pus_service2.h"
 #include "service_libraries/pus_services/pus_service3/pus_service3.h"
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
-#include "service_libraries/pus_services/pus_service9.h"
 #include "service_libraries/pus_services/pus_service12/pus_service12.h"
 #include "service_libraries/pus_services/pus_service17.h"
 #include "service_libraries/pus_services/pus_service19/pus_service19.h"
 #include "service_libraries/pus_services/pus_service20/pus_service20.h"
 #include "service_libraries/pus_services/pus_service4/pus_service4.h"
+#include "service_libraries/pus_services/pus_service9/pus_service9.h"
 #include "service_libraries/pus_tc_handler.h"
 #include "resources/uart.h"
 #include "resources/gpio_driver.h"
@@ -70,6 +70,8 @@ extern PUSService17 pus_service_17;
 extern PUSService2 pus_service_2;
 
 extern PUSService4 pus_service_4;
+
+extern PUSService9 pus_service_9;
 
 extern ManagerTCExecutor mng_tc_executor;
 

@@ -2,7 +2,7 @@
 PUS SERVICE 4 : PARAMETER STATISTICS REPORTING
 */
 
-import service_libraries.pus_services.pus_service4.pus_service4_utils;
+import service_libraries.pus_services.pus_service4.pus_service4_help;
 
 interface PUSS4Iface {
 
@@ -14,7 +14,7 @@ interface PUSS4Iface {
 
 resource class PUSService4 provides PUSS4Iface {
 
-    exec_tc_req_status : PS4ExecTCReqStatus;
+    exec_tc_req_status : PSExecTCReqStatus;
     exec_tc_req_status_update : PS4ExecTCReqStatusUpdate;
 
     param_stats : [StatsDef; max_num_of_stats];
@@ -165,10 +165,10 @@ resource class PUSService4 provides PUSS4Iface {
     }
 
 // TC[4,1] : Report the parameter statistics
-    method exec4_1TC(&priv self) -> PS4ExecTCReqStatus {
+    method exec4_1TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PS4ExecTCReqStatus = PS4ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -241,11 +241,11 @@ resource class PUSService4 provides PUSS4Iface {
 
         if (result is Result::Error){
 
-            next_status = PS4ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS4ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -253,10 +253,10 @@ resource class PUSService4 provides PUSS4Iface {
     }
 
 // TC[4,6] : Add or update parameter statistics definitions
-    method exec4_6TC(&priv self) -> PS4ExecTCReqStatus {
+    method exec4_6TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PS4ExecTCReqStatus = PS4ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -329,11 +329,11 @@ resource class PUSService4 provides PUSS4Iface {
         }
         if (result is Result::Error){
 
-            next_status = PS4ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS4ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -341,10 +341,10 @@ resource class PUSService4 provides PUSS4Iface {
     }
 
 // TC[4,7] : Delete parameter statistics definitions
-    method exec4_7TC(&priv self) -> PS4ExecTCReqStatus {
+    method exec4_7TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PS4ExecTCReqStatus = PS4ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -417,11 +417,11 @@ resource class PUSService4 provides PUSS4Iface {
         }
         if (result is Result::Error){
 
-            next_status = PS4ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS4ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -455,9 +455,9 @@ resource class PUSService4 provides PUSS4Iface {
 
     }
 
-    viewer manage_short_pack_length_error(&self) -> PS4ExecTCReqStatus {
+    viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
-        var next_status : PS4ExecTCReqStatus = PS4ExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
         var result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -481,11 +481,11 @@ resource class PUSService4 provides PUSS4Iface {
 
         if (result is Result::Error){
 
-            next_status = PS4ExecTCReqStatus::Error;
+            next_status = PSExecTCReqStatus::Error;
 
         } else {
 
-            next_status = PS4ExecTCReqStatus::Exit;
+            next_status = PSExecTCReqStatus::Exit;
 
         }
 
@@ -497,7 +497,7 @@ resource class PUSService4 provides PUSS4Iface {
 
         var subtype : u8 = 0;
 
-        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PS4ExecTCReqStatus::Exit == false) {
+        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PSExecTCReqStatus::Exit == false) {
 
             match self->exec_tc_req_status {
 
@@ -507,7 +507,7 @@ resource class PUSService4 provides PUSS4Iface {
                     if (*result is Result::Error) {
                         self->exec_tc_req_status = self->manage_short_pack_length_error();
                     } else {
-                        self->exec_tc_req_status = PS4ExecTCReqStatus::ExecTC;
+                        self->exec_tc_req_status = PSExecTCReqStatus::ExecTC;
                     }
 
                 }
@@ -527,14 +527,14 @@ resource class PUSService4 provides PUSS4Iface {
 
                     } else {
 
-                        self->exec_tc_req_status = PS4ExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error;
                     }
                 }
 
                 case Error => {
 
                     *result = Result::Error;
-                    self->exec_tc_req_status = PS4ExecTCReqStatus::Exit;
+                    self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }
                 case Exit => {
@@ -543,9 +543,9 @@ resource class PUSService4 provides PUSS4Iface {
             }
         }
 
-        if(self->exec_tc_req_status is PS4ExecTCReqStatus::Exit){
+        if(self->exec_tc_req_status is PSExecTCReqStatus::Exit){
 
-            self->exec_tc_req_status = PS4ExecTCReqStatus::Init;
+            self->exec_tc_req_status = PSExecTCReqStatus::Init;
         }
 
         return;

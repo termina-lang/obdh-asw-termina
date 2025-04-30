@@ -19,6 +19,11 @@ void ManagerTCExecutor__PUS_prio_exec_tc(void * const __this,
         (self->pus_service_2.exec_tc)(self->pus_service_2.__that, tc_handler,
                                       ret);
 
+    } else if (tc_type == 9U) {
+        
+        (self->pus_service_9.exec_tc)(self->pus_service_9.__that, tc_handler,
+                                      ret);
+
     } else {
         
         (*ret).__variant = Result__Error;

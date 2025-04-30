@@ -34,7 +34,7 @@ typedef struct {
     TCHandlerT event_action_packets[max_event_action_definitions];
     EventActionConfig event_action_config[max_event_action_definitions];
     PS19ExecTCReqStatusUpdate exec_tc_req_status_update;
-    PS19ExecTCReqStatus exec_tc_req_status;
+    PSExecTCReqStatus exec_tc_req_status;
 } PUSService19;
 
 Result PUSService19__delete_event_action(PUSService19 * const self);
@@ -49,20 +49,20 @@ FoundID PUSService19__is_ev_action_defined(const PUSService19 * const self,
                                            _Bool * const enabled,
                                            uint16_t evID);
 
-PS19ExecTCReqStatus PUSService19__exec19_1TC(PUSService19 * const self);
+PSExecTCReqStatus PUSService19__exec19_1TC(PUSService19 * const self);
 
-PS19ExecTCReqStatus PUSService19__exec19_2TC(PUSService19 * const self);
+PSExecTCReqStatus PUSService19__exec19_2TC(PUSService19 * const self);
 
-PS19ExecTCReqStatus PUSService19__exec19_4TC(PUSService19 * const self);
+PSExecTCReqStatus PUSService19__exec19_4TC(PUSService19 * const self);
 
-PS19ExecTCReqStatus PUSService19__exec19_5TC(PUSService19 * const self);
+PSExecTCReqStatus PUSService19__exec19_5TC(PUSService19 * const self);
 
 PS19ExecTCReqStatusUpdate PUSService19__get_TC_params(const PUSService19 * const self,
                                                       TCHandlerT * const tc_handler,
                                                       uint8_t * const subtype,
                                                       Result * const result);
 
-PS19ExecTCReqStatus PUSService19__manage_short_pack_length_error(const PUSService19 * const self);
+PSExecTCReqStatus PUSService19__manage_short_pack_length_error(const PUSService19 * const self);
 
 void PUSService19__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                            Result * const result);

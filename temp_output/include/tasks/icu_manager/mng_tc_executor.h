@@ -8,7 +8,7 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/pus_services/pus_service2.h"
-#include "service_libraries/pus_services/pus_service9.h"
+#include "service_libraries/pus_services/pus_service9/pus_service9.h"
 #include "service_libraries/pus_services/pus_service17.h"
 #include "service_libraries/pus_services/pus_service128.h"
 #include "resources/tm_counter.h"
@@ -25,6 +25,10 @@ typedef struct {
 
 typedef struct {
     __termina_id_t __mutex_id;
+    struct {
+        void * __that;
+        void (* exec_tc)(void * const, TCHandlerT * const, Result * const);
+    } pus_service_9;
     struct {
         void * __that;
         void (* exec_tc)(void * const, TCHandlerT * const, Result * const);

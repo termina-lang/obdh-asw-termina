@@ -45,6 +45,8 @@ PUSService2 pus_service_2;
 
 PUSService4 pus_service_4;
 
+PUSService9 pus_service_9;
+
 ManagerTCExecutor mng_tc_executor;
 
 Init init;

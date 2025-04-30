@@ -23,11 +23,9 @@
 
 #include "service_libraries/pus_services/pus_service3/pus_service3_help.h"
 
-#include "service_libraries/pus_services/pus_service4/pus_service4_utils.h"
+#include "service_libraries/pus_services/pus_service4/pus_service4_help.h"
 
 #include "service_libraries/pus_services/pus_service5/pus_service5_help.h"
-
-#include "service_libraries/pus_services/pus_service9.h"
 
 #include "service_libraries/pus_tm_handler.h"
 
@@ -64,7 +62,7 @@ void __termina_app__init_globals() {
     pus_service_3.a_tm_handler_pool.__that = &tm_pool;
     pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_3.a_tm_handler_pool.free = __termina_pool__free;
-    pus_service_3.exec_tc_req_status.__variant = PS3ExecTCReqStatus__Init;
+    pus_service_3.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_3.exec_tc_req_status_update = ps3_init_tc_req_status_update();
     pus_service_3.hk_config_table[0U].SID = 0U;
     pus_service_3.hk_config_table[0U].enabled = 1;
@@ -247,7 +245,7 @@ void __termina_app__init_globals() {
     pus_service_5.a_tm_handler_pool.__that = &tm_pool;
     pus_service_5.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_5.a_tm_handler_pool.free = __termina_pool__free;
-    pus_service_5.exec_tc_req_status.__variant = PS5ExecTCReqStatus__Init;
+    pus_service_5.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_5.exec_tc_req_status_update = ps5_init_tc_req_status_update();
     pus_service_5.tm_channel.__that = &telemetry_channel;
     pus_service_5.tm_channel.send_tm = TMChannel__send_tm;
@@ -258,7 +256,7 @@ void __termina_app__init_globals() {
     pus_service_12.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_12.do_monitoring_req_status.__variant = DoMonitoringReqStatus__Init;
     pus_service_12.do_monitoring_req_status_update = ps12_init_do_monitoring_req_status_update();
-    pus_service_12.exec_tc_req_status.__variant = PS12ExecTCReqStatus__Init;
+    pus_service_12.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_12.exec_tc_req_status_update = ps12_init_tc_req_status_update();
     pus_service_12.monitoring_transition_counter = 0U;
     for (size_t __i0 = 0U; __i0 < max_num_pmon_ids; __i0 = __i0 + 1U) {
@@ -303,7 +301,7 @@ void __termina_app__init_globals() {
     for (size_t __i0 = 0U; __i0 < max_event_action_definitions; __i0 = __i0 + 1U) {
         pus_service_19.event_action_packets[__i0] = tc_handler_init();
     }
-    pus_service_19.exec_tc_req_status.__variant = PS19ExecTCReqStatus__Init;
+    pus_service_19.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_19.exec_tc_req_status_update = ps19_init_tc_req_status_update();
     for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
         pus_service_19.pending_action_head[__i0] = 0U;
@@ -330,7 +328,7 @@ void __termina_app__init_globals() {
     pus_service_20.a_tm_handler_pool.__that = &tm_pool;
     pus_service_20.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_20.a_tm_handler_pool.free = __termina_pool__free;
-    pus_service_20.exec_tc_req_status.__variant = PS20ExecTCReqStatus__Init;
+    pus_service_20.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_20.exec_tc_req_status_update = ps20_init_tc_req_status_update();
     pus_service_20.system_data_pool_u32 = u32_system_data_pool;
     pus_service_20.system_data_pool_u8 = u8_system_data_pool;
@@ -341,7 +339,7 @@ void __termina_app__init_globals() {
     pus_service_17.a_tm_handler_pool.__that = &tm_pool;
     pus_service_17.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_17.a_tm_handler_pool.free = __termina_pool__free;
-    pus_service_17.exec_tc_req_status.__variant = PS17ExecTCReqStatus__ExecTC;
+    pus_service_17.exec_tc_req_status.__variant = PSExecTCReqStatus__ExecTC;
     pus_service_17.tm_channel.__that = &telemetry_channel;
     pus_service_17.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_17.tm_counter.__that = &telemetry_counter;
@@ -349,7 +347,7 @@ void __termina_app__init_globals() {
     pus_service_2.a_tm_handler_pool.__that = &tm_pool;
     pus_service_2.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_2.a_tm_handler_pool.free = __termina_pool__free;
-    pus_service_2.exec_tc_req_status.__variant = PS2ExecTCReqStatus__Init;
+    pus_service_2.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_2.exec_tc_req_status_update = ps2_init_tc_req_status_update();
     pus_service_2.gpio_driver.__that = &gpio_drv;
     pus_service_2.gpio_driver.write_led = GPIODriver__write_led;
@@ -360,7 +358,7 @@ void __termina_app__init_globals() {
     pus_service_4.a_tm_handler_pool.__that = &tm_pool;
     pus_service_4.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_4.a_tm_handler_pool.free = __termina_pool__free;
-    pus_service_4.exec_tc_req_status.__variant = PS4ExecTCReqStatus__Init;
+    pus_service_4.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_4.exec_tc_req_status_update = ps4_init_tc_req_status_update();
     for (size_t __i0 = 0U; __i0 < max_num_of_stats; __i0 = __i0 + 1U) {
         pus_service_4.param_stats[__i0].max = 0U;
@@ -389,6 +387,20 @@ void __termina_app__init_globals() {
     pus_service_4.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_4.tm_counter.__that = &telemetry_counter;
     pus_service_4.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_9.a_tm_handler_pool.__that = &tm_pool;
+    pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
+    pus_service_9.a_tm_handler_pool.free = __termina_pool__free;
+    pus_service_9.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_9.exec_tc_req_status_update = ps9_init_tc_req_status_update();
+    pus_service_9.ref_obt.finetime = 0U;
+    pus_service_9.ref_obt.seconds = 0U;
+    pus_service_9.ref_time_val_from_power_on.tv_sec = 0U;
+    pus_service_9.ref_time_val_from_power_on.tv_usec = 0U;
+    pus_service_9.system_port.clock_get_uptime = SystemEntry__clock_get_uptime;
+    pus_service_9.tm_channel.__that = &telemetry_channel;
+    pus_service_9.tm_channel.send_tm = TMChannel__send_tm;
+    pus_service_9.tm_counter.__that = &telemetry_counter;
+    pus_service_9.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
     mng_tc_executor.a_tm_handler_pool.__that = &tm_pool;
     mng_tc_executor.a_tm_handler_pool.alloc = __termina_pool__alloc;
     mng_tc_executor.a_tm_handler_pool.free = __termina_pool__free;
@@ -396,6 +408,8 @@ void __termina_app__init_globals() {
     mng_tc_executor.pus_service_17.exec_tc = PUSService17__exec_tc;
     mng_tc_executor.pus_service_2.__that = &pus_service_2;
     mng_tc_executor.pus_service_2.exec_tc = PUSService2__exec_tc;
+    mng_tc_executor.pus_service_9.__that = &pus_service_9;
+    mng_tc_executor.pus_service_9.exec_tc = PUSService9__exec_tc;
     mng_tc_executor.tm_channel.__that = &telemetry_channel;
     mng_tc_executor.tm_channel.send_tm = TMChannel__send_tm;
     mng_tc_executor.tm_counter.__that = &telemetry_counter;

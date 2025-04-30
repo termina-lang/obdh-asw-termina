@@ -1,0 +1,8 @@
+
+
+enum PSExecTCReqStatus {
+    Init,
+    ExecTC,
+    Error,
+    Exit
+};

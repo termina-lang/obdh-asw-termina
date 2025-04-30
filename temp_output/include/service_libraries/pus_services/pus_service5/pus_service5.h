@@ -26,7 +26,7 @@ typedef struct {
         void (* send_tm)(void * const, __termina_box_t, Result * const);
     } tm_channel;
     PS5ExecTCReqStatusUpdate exec_tc_req_status_update;
-    PS5ExecTCReqStatus exec_tc_req_status;
+    PSExecTCReqStatus exec_tc_req_status;
     uint32_t Ev_ID_enable_config[4U];
 } PUSService5;
 
@@ -60,16 +60,16 @@ void PUSService5__build_and_tx_tm_5_x__event_lock(void * const __this,
                                                   uint16_t evID,
                                                   FaultInfo fault_info);
 
-PS5ExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self);
+PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self);
 
-PS5ExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self);
+PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self);
 
 PS5ExecTCReqStatusUpdate PUSService5__get_TC_params(const PUSService5 * const self,
                                                     TCHandlerT * const tc_handler,
                                                     uint8_t * const subtype,
                                                     Result * const result);
 
-PS5ExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 * const self);
+PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 * const self);
 
 void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                           Result * const result);
