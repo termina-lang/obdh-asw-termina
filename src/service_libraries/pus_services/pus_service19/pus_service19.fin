@@ -489,7 +489,6 @@ resource class PUSService19 provides PUSS19Iface {
 
                     if (is_Ev_ID_valid(self->exec_tc_req_status_update.tc_data.EvID)) {
 
-                        //var event_action_ID : u16 = 0;
                         var is_enabled : bool = false;
 
                         self->exec_tc_req_status_update.ev_action_ID = self->is_ev_action_defined(&mut is_enabled, self->exec_tc_req_status_update.tc_data.EvID);

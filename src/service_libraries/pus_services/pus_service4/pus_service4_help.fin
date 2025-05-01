@@ -26,6 +26,7 @@ struct PS4ExecTCReqStatusUpdate {
     tc_num_bytes : usize;
     N: u8;
     PID: u16;
+    valid_index : usize;
 };
 
 constexpr ps4_init_tc_req_status_update : PS4ExecTCReqStatusUpdate = {
@@ -33,5 +34,6 @@ constexpr ps4_init_tc_req_status_update : PS4ExecTCReqStatusUpdate = {
     packet_error_ctrl = 0,
     tc_num_bytes = 0,
     N = 0,
-    PID = 0
+    PID = 0,
+    valid_index = 0
 };

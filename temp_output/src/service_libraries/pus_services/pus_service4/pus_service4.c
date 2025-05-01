@@ -132,8 +132,7 @@ _Bool PUSService4__SDP_param_lower_than_limit(const PUSService4 * const self,
 
 }
 
-Result PUSService4__get_PID_defined_stats_index(const PUSService4 * const self,
-                                                size_t * const index) {
+Result PUSService4__get_PID_defined_stats_index(PUSService4 * const self) {
     
     Result result;
     result.__variant = Result__Error;
@@ -148,12 +147,14 @@ Result PUSService4__get_PID_defined_stats_index(const PUSService4 * const self,
                 
                 if (sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID)) {
                     
-                    *index = i;
+                    self->exec_tc_req_status_update.valid_index = i;
 
                     result.__variant = Result__Ok;
 
                 } else {
                     
+                    self->stats_config_table.defined[__termina_array__index(max_num_of_stats,
+                                                                            i)] = 0;
 
                 }
 
@@ -196,18 +197,22 @@ Result PUSService4__add_PID_stats(PUSService4 * const self) {
     Result result;
     result.__variant = Result__Ok;
 
-    size_t PID_index = 0U;
-
-    result = PUSService4__get_PID_defined_stats_index(self, &PID_index);
+    result = PUSService4__get_PID_defined_stats_index(self);
 
     if (result.__variant == Result__Error) {
         
-        result = PUSService4__get_free_index(self, &PID_index);
+        size_t index = 0U;
+
+        result = PUSService4__get_free_index(self, &index);
+
+        self->exec_tc_req_status_update.valid_index = index;
 
     }
 
     if (result.__variant == Result__Ok) {
         
+        size_t PID_index = self->exec_tc_req_status_update.valid_index;
+
         self->stats_config_table.defined[__termina_array__index(max_num_of_stats,
                                                                 PID_index)] = 1;
 
@@ -309,7 +314,7 @@ Result PUSService4__delete_PID_stats(PUSService4 * const self) {
 
     size_t PID_index = 0U;
 
-    result = PUSService4__get_PID_defined_stats_index(self, &PID_index);
+    result = PUSService4__get_PID_defined_stats_index(self);
 
     if (result.__variant == Result__Ok) {
         
@@ -731,6 +736,7 @@ PS4ExecTCReqStatusUpdate PUSService4__get_TC_params(const PUSService4 * const se
     tc_data.packet_error_ctrl = 0U;
     tc_data.packet_id = 0U;
     tc_data.tc_num_bytes = 0U;
+    tc_data.valid_index = 0U;
 
     tc_data.packet_id = tc_handler->packet_header.packet_id;
 
@@ -988,6 +994,11 @@ void PUSService4__startup(void * const __this) {
             self->stats_config_table.start_time[__termina_array__index(max_num_of_stats,
                                                                        i)] = current_obt;
 
+        } else {
+            
+            self->stats_config_table.defined[__termina_array__index(max_num_of_stats,
+                                                                    i)] = 0;
+
         }
 
     }
@@ -1125,6 +1136,9 @@ void PUSService4__update_all_stats(void * const __this, Result * const result) {
         } else {
             
             (*result).__variant = Result__Error;
+
+            self->stats_config_table.defined[__termina_array__index(max_num_of_stats,
+                                                                    i)] = 0;
 
         }
 

@@ -442,6 +442,7 @@ void __termina_app__init_globals() {
     pus_service_4.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_4.exec_tc_req_status_update.packet_id = 0U;
     pus_service_4.exec_tc_req_status_update.tc_num_bytes = 0U;
+    pus_service_4.exec_tc_req_status_update.valid_index = 0U;
     for (size_t __i0 = 0U; __i0 < max_num_of_stats; __i0 = __i0 + 1U) {
         pus_service_4.param_stats[__i0].max = 0U;
         pus_service_4.param_stats[__i0].max_obt.finetime = 0U;

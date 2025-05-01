@@ -45,8 +45,7 @@ _Bool PUSService4__SDP_param_higher_than_limit(const PUSService4 * const self,
 _Bool PUSService4__SDP_param_lower_than_limit(const PUSService4 * const self,
                                               size_t pid_index);
 
-Result PUSService4__get_PID_defined_stats_index(const PUSService4 * const self,
-                                                size_t * const index);
+Result PUSService4__get_PID_defined_stats_index(PUSService4 * const self);
 
 Result PUSService4__get_free_index(const PUSService4 * const self,
                                    size_t * const index);

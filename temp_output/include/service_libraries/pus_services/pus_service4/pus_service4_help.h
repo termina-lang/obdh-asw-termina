@@ -30,6 +30,7 @@ typedef struct {
     size_t tc_num_bytes;
     uint8_t N;
     uint16_t PID;
+    size_t valid_index;
 } PS4ExecTCReqStatusUpdate;
 
 #endif

@@ -30,7 +30,7 @@ resource class PUSService4 provides PUSS4Iface {
     pus_service_9 : access PUSS9Iface;
 
 
-    viewer get_PID_defined_stats_index (&self, index: &mut usize) -> Result {
+    method get_PID_defined_stats_index (&priv self) -> Result {
 
         var result : Result = Result::Error;
 
@@ -42,10 +42,10 @@ resource class PUSService4 provides PUSS4Iface {
 
                     if(sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID)) {
 
-                        *index = i;
+                        self->exec_tc_req_status_update.valid_index = i;
                         result = Result::Ok;
                     } else {
-                        //self->stats_config_table.defined[i] = false;
+                        self->stats_config_table.defined[i] = false;
                     }
                 }
 
@@ -83,7 +83,6 @@ resource class PUSService4 provides PUSS4Iface {
 
                 } else {
 
-                    //self->stats_config_table.defined[index] = false;
                 }
             }
         }
@@ -95,16 +94,20 @@ resource class PUSService4 provides PUSS4Iface {
     method add_PID_stats (&priv self) -> Result {
 
         var result : Result = Result::Ok;
-        var PID_index: usize = 0;
+        
 
-        result = self->get_PID_defined_stats_index(&mut PID_index);
+        result = self->get_PID_defined_stats_index();
 
         if(result is Result::Error) {
 
-            result = self->get_free_index(&mut PID_index);
+            var index : usize = 0;
+            result = self->get_free_index(&mut index);
+            self->exec_tc_req_status_update.valid_index = index;
         }
 
         if(result is Result::Ok) {
+
+            var PID_index: usize = self->exec_tc_req_status_update.valid_index;
 
             self->stats_config_table.defined[PID_index] = true;
             self->stats_config_table.PID[PID_index] = self->exec_tc_req_status_update.PID;
@@ -123,7 +126,7 @@ resource class PUSService4 provides PUSS4Iface {
 
         var result : Result = Result::Error;
         var PID_index: usize = 0;
-        result = self->get_PID_defined_stats_index(&mut PID_index);
+        result = self->get_PID_defined_stats_index();
 
         if (result is Result::Ok) {
             self->stats_config_table.defined[PID_index] = false;
@@ -444,7 +447,8 @@ resource class PUSService4 provides PUSS4Iface {
             packet_error_ctrl = 0,
             tc_num_bytes = 0,
             N = 0,
-            PID = 0
+            PID = 0,
+            valid_index = 0
         };
         
         tc_data.packet_id = tc_handler->packet_header.packet_id;
@@ -730,6 +734,8 @@ resource class PUSService4 provides PUSS4Iface {
                 
             } else {
                 *result = Result::Error;
+                self->stats_config_table.defined[i] = false;
+                
             }
 
 
@@ -750,6 +756,9 @@ resource class PUSService4 provides PUSS4Iface {
                 self->pus_service_9.get_current_obt(&mut current_obt);
                 self->stats_config_table.start_time[i] = current_obt;
 
+            }
+            else {
+                self->stats_config_table.defined[i] = false;
             }
             
         }
