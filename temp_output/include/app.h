@@ -59,6 +59,8 @@ extern PUSService3 pus_service_3;
 
 extern PUSService5 pus_service_5;
 
+extern PUSService9 pus_service_9;
+
 extern PUSService12 pus_service_12;
 
 extern PUSService19 pus_service_19;
@@ -70,8 +72,6 @@ extern PUSService17 pus_service_17;
 extern PUSService2 pus_service_2;
 
 extern PUSService4 pus_service_4;
-
-extern PUSService9 pus_service_9;
 
 extern ManagerTCExecutor mng_tc_executor;
 

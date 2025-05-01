@@ -16,8 +16,9 @@ typedef struct {
 typedef struct {
     __termina_id_t __mutex_id;
     struct {
-        void (* clock_get_uptime)(TimeVal * const);
-    } system_port;
+        void * __that;
+        void (* get_current_obt)(void * const, MissionObt * const);
+    } pus_service_9;
     struct {
         void * __that;
         void (* get_next_tm_count)(void * const, uint16_t * const);

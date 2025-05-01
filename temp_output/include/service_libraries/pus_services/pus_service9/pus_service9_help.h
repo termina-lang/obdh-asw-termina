@@ -20,6 +20,4 @@ typedef struct {
 
 TimeVal substract_TimeVal(TimeVal timeval1, TimeVal timeval2);
 
-PS9ExecTCReqStatusUpdate ps9_init_tc_req_status_update();
-
 #endif

@@ -28,8 +28,7 @@ function substract_TimeVal(timeval1: TimeVal, timeval2: TimeVal) -> TimeVal {
 }
 
 
-function ps9_init_tc_req_status_update() -> PS9ExecTCReqStatusUpdate {
-    var ret : PS9ExecTCReqStatusUpdate = {packet_id = 0, packet_error_ctrl = 0, tc_num_bytes = 0, next_OBT = {seconds = 0, finetime = 0}};
-    return ret;
-}
+constexpr ps9_init_tc_req_status_update : PS9ExecTCReqStatusUpdate = {
+    packet_id = 0, packet_error_ctrl = 0, tc_num_bytes = 0, next_OBT = {seconds = 0, finetime = 0}
+};
 

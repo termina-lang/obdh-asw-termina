@@ -217,6 +217,16 @@ Result PUSService4__add_PID_stats(PUSService4 * const self) {
         self->param_stats[__termina_array__index(max_num_of_stats,
                                                  PID_index)].samples = 0U;
 
+        MissionObt current_obt;
+        current_obt.finetime = 0U;
+        current_obt.seconds = 0U;
+
+        (self->pus_service_9.get_current_obt)(self->pus_service_9.__that,
+                                              &current_obt);
+
+        self->stats_config_table.start_time[__termina_array__index(max_num_of_stats,
+                                                                   PID_index)] = current_obt;
+
     }
 
     return result;
@@ -230,10 +240,19 @@ void PUSService4__build_tm_4_2(const PUSService4 * const self,
     
     startup_tm(p_tm_handler);
 
-    append_TimeVal_as_u32_appdata_field(p_tm_handler,
-                                        self->stats_config_table.start_time[__termina_array__index(max_num_of_stats,
-                                                                                                   index)],
-                                        result);
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    (self->pus_service_9.get_current_obt)(self->pus_service_9.__that,
+                                          &current_obt);
+
+    append_u32_appdata_field(p_tm_handler,
+                             self->stats_config_table.start_time[__termina_array__index(max_num_of_stats,
+                                                                                        index)].seconds,
+                             result);
+
+    append_u32_appdata_field(p_tm_handler, current_obt.seconds, result);
 
     append_u8_appdata_field(p_tm_handler, self->exec_tc_req_status_update.N,
                             result);
@@ -253,20 +272,20 @@ void PUSService4__build_tm_4_2(const PUSService4 * const self,
                                                                       index)].max,
                              result);
 
-    append_TimeVal_as_u32_appdata_field(p_tm_handler,
-                                        self->param_stats[__termina_array__index(max_num_of_stats,
-                                                                                 index)].max_obt,
-                                        result);
+    append_u32_appdata_field(p_tm_handler,
+                             self->param_stats[__termina_array__index(max_num_of_stats,
+                                                                      index)].max_obt.seconds,
+                             result);
 
     append_u32_appdata_field(p_tm_handler,
                              self->param_stats[__termina_array__index(max_num_of_stats,
                                                                       index)].min,
                              result);
 
-    append_TimeVal_as_u32_appdata_field(p_tm_handler,
-                                        self->param_stats[__termina_array__index(max_num_of_stats,
-                                                                                 index)].min_obt,
-                                        result);
+    append_u32_appdata_field(p_tm_handler,
+                             self->param_stats[__termina_array__index(max_num_of_stats,
+                                                                      index)].min_obt.seconds,
+                             result);
 
     append_u32_appdata_field(p_tm_handler,
                              self->param_stats[__termina_array__index(max_num_of_stats,
@@ -379,6 +398,16 @@ PSExecTCReqStatus PUSService4__exec4_1TC(PUSService4 * const self) {
 
                 self->param_stats[__termina_array__index(max_num_of_stats,
                                                          i)].samples = 0U;
+
+                MissionObt current_obt;
+                current_obt.finetime = 0U;
+                current_obt.seconds = 0U;
+
+                (self->pus_service_9.get_current_obt)(self->pus_service_9.__that,
+                                                      &current_obt);
+
+                self->stats_config_table.start_time[__termina_array__index(max_num_of_stats,
+                                                                           i)] = current_obt;
 
             } else {
                 
@@ -949,6 +978,16 @@ void PUSService4__startup(void * const __this) {
             self->param_stats[__termina_array__index(max_num_of_stats,
                                                      i)].samples = 0U;
 
+            MissionObt current_obt;
+            current_obt.finetime = 0U;
+            current_obt.seconds = 0U;
+
+            (self->pus_service_9.get_current_obt)(self->pus_service_9.__that,
+                                                  &current_obt);
+
+            self->stats_config_table.start_time[__termina_array__index(max_num_of_stats,
+                                                                       i)] = current_obt;
+
         }
 
     }
@@ -1012,11 +1051,12 @@ void PUSService4__update_all_stats(void * const __this, Result * const result) {
                     self->param_stats[__termina_array__index(max_num_of_stats,
                                                              i)].max = system_data_pool_item;
 
-                    TimeVal current_time;
-                    current_time.tv_sec = 0U;
-                    current_time.tv_usec = 0U;
+                    MissionObt current_time;
+                    current_time.finetime = 0U;
+                    current_time.seconds = 0U;
 
-                    (self->system_port.clock_get_uptime)(&current_time);
+                    (self->pus_service_9.get_current_obt)(self->pus_service_9.__that,
+                                                          &current_time);
 
                     self->param_stats[__termina_array__index(max_num_of_stats,
                                                              i)].max_obt = current_time;
@@ -1030,11 +1070,12 @@ void PUSService4__update_all_stats(void * const __this, Result * const result) {
                     self->param_stats[__termina_array__index(max_num_of_stats,
                                                              i)].min = system_data_pool_item;
 
-                    TimeVal current_time;
-                    current_time.tv_sec = 0U;
-                    current_time.tv_usec = 0U;
+                    MissionObt current_time;
+                    current_time.finetime = 0U;
+                    current_time.seconds = 0U;
 
-                    (self->system_port.clock_get_uptime)(&current_time);
+                    (self->pus_service_9.get_current_obt)(self->pus_service_9.__that,
+                                                          &current_time);
 
                     self->param_stats[__termina_array__index(max_num_of_stats,
                                                              i)].min_obt = current_time;
@@ -1062,11 +1103,12 @@ void PUSService4__update_all_stats(void * const __this, Result * const result) {
                 self->param_stats[__termina_array__index(max_num_of_stats,
                                                          i)].mean_value = system_data_pool_item;
 
-                TimeVal current_time;
-                current_time.tv_sec = 0U;
-                current_time.tv_usec = 0U;
+                MissionObt current_time;
+                current_time.finetime = 0U;
+                current_time.seconds = 0U;
 
-                (self->system_port.clock_get_uptime)(&current_time);
+                (self->pus_service_9.get_current_obt)(self->pus_service_9.__that,
+                                                      &current_time);
 
                 self->param_stats[__termina_array__index(max_num_of_stats,
                                                          i)].max_obt = current_time;

@@ -33,6 +33,8 @@ PUSService3 pus_service_3;
 
 PUSService5 pus_service_5;
 
+PUSService9 pus_service_9;
+
 PUSService12 pus_service_12;
 
 PUSService19 pus_service_19;
@@ -44,8 +46,6 @@ PUSService17 pus_service_17;
 PUSService2 pus_service_2;
 
 PUSService4 pus_service_4;
-
-PUSService9 pus_service_9;
 
 ManagerTCExecutor mng_tc_executor;
 

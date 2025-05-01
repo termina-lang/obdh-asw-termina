@@ -96,6 +96,15 @@ static void __termina_app__init_mutexes(Status * const status) {
 
     if (Status__Success == status->__variant) {
         
+        pus_service_9.__mutex_id = __pus_service_9__mutex_id;
+
+        __termina_mutex__init(__pus_service_9__mutex_id,
+                              __TerminaMutexPolicy__Ceiling, 255, status);
+
+    }
+
+    if (Status__Success == status->__variant) {
+        
         system_entry.__mutex_id = __system_entry__mutex_id;
 
         __termina_mutex__init(__system_entry__mutex_id,

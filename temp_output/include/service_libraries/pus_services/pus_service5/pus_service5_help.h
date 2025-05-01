@@ -76,8 +76,6 @@ typedef struct {
     uint16_t EvID;
 } PS5ExecTCReqStatusUpdate;
 
-PS5ExecTCReqStatusUpdate ps5_init_tc_req_status_update();
-
 Ev_IDType get_Ev_ID_type(uint16_t Ev_ID);
 
 _Bool is_Ev_ID_valid(uint16_t evID);

@@ -21,11 +21,15 @@
 
 #include "service_libraries/pus_services/pus_service2.h"
 
+#include "service_libraries/pus_services/pus_service20/pus_service20_help.h"
+
 #include "service_libraries/pus_services/pus_service3/pus_service3_help.h"
 
 #include "service_libraries/pus_services/pus_service4/pus_service4_help.h"
 
 #include "service_libraries/pus_services/pus_service5/pus_service5_help.h"
+
+#include "service_libraries/pus_services/pus_service9/pus_service9_help.h"
 
 #include "service_libraries/pus_tm_handler.h"
 
@@ -63,7 +67,14 @@ void __termina_app__init_globals() {
     pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_3.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_3.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
-    pus_service_3.exec_tc_req_status_update = ps3_init_tc_req_status_update();
+    pus_service_3.exec_tc_req_status_update.index.found = 0;
+    pus_service_3.exec_tc_req_status_update.index.index = 0U;
+    pus_service_3.exec_tc_req_status_update.tc_data.N = 0U;
+    pus_service_3.exec_tc_req_status_update.tc_data.SID = 0U;
+    pus_service_3.exec_tc_req_status_update.tc_data.collection_interval = 0U;
+    pus_service_3.exec_tc_req_status_update.tc_data.packet_error_ctrl = 0U;
+    pus_service_3.exec_tc_req_status_update.tc_data.packet_id = 0U;
+    pus_service_3.exec_tc_req_status_update.tc_data.tc_num_bytes = 0U;
     pus_service_3.hk_config_table[0U].SID = 0U;
     pus_service_3.hk_config_table[0U].enabled = 1;
     pus_service_3.hk_config_table[0U].interval = 2U;
@@ -246,18 +257,63 @@ void __termina_app__init_globals() {
     pus_service_5.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_5.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_5.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
-    pus_service_5.exec_tc_req_status_update = ps5_init_tc_req_status_update();
+    pus_service_5.exec_tc_req_status_update.EvID = 0U;
+    pus_service_5.exec_tc_req_status_update.N = 0U;
+    pus_service_5.exec_tc_req_status_update.packet_error_ctrl = 0U;
+    pus_service_5.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_5.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_5.tm_channel.__that = &telemetry_channel;
     pus_service_5.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_5.tm_counter.__that = &telemetry_counter;
     pus_service_5.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_9.a_tm_handler_pool.__that = &tm_pool;
+    pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
+    pus_service_9.a_tm_handler_pool.free = __termina_pool__free;
+    pus_service_9.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_9.exec_tc_req_status_update.next_OBT.finetime = 0U;
+    pus_service_9.exec_tc_req_status_update.next_OBT.seconds = 0U;
+    pus_service_9.exec_tc_req_status_update.packet_error_ctrl = 0U;
+    pus_service_9.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_9.exec_tc_req_status_update.tc_num_bytes = 0U;
+    pus_service_9.ref_obt.finetime = 0U;
+    pus_service_9.ref_obt.seconds = 0U;
+    pus_service_9.ref_time_val_from_power_on.tv_sec = 0U;
+    pus_service_9.ref_time_val_from_power_on.tv_usec = 0U;
+    pus_service_9.system_port.clock_get_uptime = SystemEntry__clock_get_uptime;
+    pus_service_9.tm_channel.__that = &telemetry_channel;
+    pus_service_9.tm_channel.send_tm = TMChannel__send_tm;
+    pus_service_9.tm_counter.__that = &telemetry_counter;
+    pus_service_9.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
     pus_service_12.a_tm_handler_pool.__that = &tm_pool;
     pus_service_12.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_12.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_12.do_monitoring_req_status.__variant = DoMonitoringReqStatus__Init;
-    pus_service_12.do_monitoring_req_status_update = ps12_init_do_monitoring_req_status_update();
+    pus_service_12.do_monitoring_req_status_update.EvID = 0U;
+    pus_service_12.do_monitoring_req_status_update.PMONID = 0U;
+    pus_service_12.do_monitoring_req_status_update.current_monitor_definition.__variant = MonitorDefinition__Unselected;
+    pus_service_12.do_monitoring_req_status_update.event_triggered = 0;
+    pus_service_12.do_monitoring_req_status_update.fault_info.__variant = FaultInfo__Empty;
+    pus_service_12.do_monitoring_req_status_update.new_status.__variant = CheckState__Unselected;
     pus_service_12.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
-    pus_service_12.exec_tc_req_status_update = ps12_init_tc_req_status_update();
+    pus_service_12.exec_tc_req_status_update.packet_error_ctrl = 0U;
+    pus_service_12.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_1_2_6.N = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_1_2_6.PMONID = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.N = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.PMONID = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.PID = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.current_state.__variant = CheckState__Unselected;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.definition.__variant = MonitorDefinition__Unselected;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.enabled = 0;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.interval = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.interval_control = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.repetition = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.repetition_control = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.temp_state.__variant = CheckState__Unselected;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.transition_obt.finetime = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.transition_obt.seconds = 0U;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.type.__variant = MonitorCheckType__Free;
+    pus_service_12.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_12.monitoring_transition_counter = 0U;
     for (size_t __i0 = 0U; __i0 < max_num_pmon_ids; __i0 = __i0 + 1U) {
         pus_service_12.param_mon_config_table[__i0].PID = 0U;
@@ -269,8 +325,8 @@ void __termina_app__init_globals() {
         pus_service_12.param_mon_config_table[__i0].repetition = 0U;
         pus_service_12.param_mon_config_table[__i0].repetition_control = 0U;
         pus_service_12.param_mon_config_table[__i0].temp_state.__variant = CheckState__Unselected;
-        pus_service_12.param_mon_config_table[__i0].transition_obt.tv_sec = 0U;
-        pus_service_12.param_mon_config_table[__i0].transition_obt.tv_usec = 0U;
+        pus_service_12.param_mon_config_table[__i0].transition_obt.finetime = 0U;
+        pus_service_12.param_mon_config_table[__i0].transition_obt.seconds = 0U;
         pus_service_12.param_mon_config_table[__i0].type.__variant = MonitorCheckType__Free;
     }
     for (size_t __i0 = 0U; __i0 < max_num_transitions; __i0 = __i0 + 1U) {
@@ -281,10 +337,12 @@ void __termina_app__init_globals() {
         pus_service_12.param_mon_transitions_table[__i0].new_status.__variant = CheckState__Unselected;
         pus_service_12.param_mon_transitions_table[__i0].new_value = 0U;
         pus_service_12.param_mon_transitions_table[__i0].prev_status.__variant = CheckState__Unselected;
-        pus_service_12.param_mon_transitions_table[__i0].trans_obt.tv_sec = 0U;
-        pus_service_12.param_mon_transitions_table[__i0].trans_obt.tv_usec = 0U;
+        pus_service_12.param_mon_transitions_table[__i0].trans_obt.finetime = 0U;
+        pus_service_12.param_mon_transitions_table[__i0].trans_obt.seconds = 0U;
         pus_service_12.param_mon_transitions_table[__i0].type.__variant = MonitorCheckType__Free;
     }
+    pus_service_12.pus_service_9.__that = &pus_service_9;
+    pus_service_12.pus_service_9.get_current_obt = PUSService9__get_current_obt;
     pus_service_12.system_data_pool_u32 = u32_system_data_pool;
     pus_service_12.system_data_pool_u8 = u8_system_data_pool;
     pus_service_12.tm_channel.__that = &telemetry_channel;
@@ -302,7 +360,17 @@ void __termina_app__init_globals() {
         pus_service_19.event_action_packets[__i0] = tc_handler_init();
     }
     pus_service_19.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
-    pus_service_19.exec_tc_req_status_update = ps19_init_tc_req_status_update();
+    for (size_t __i0 = 0U; __i0 < max_tc_size; __i0 = __i0 + 1U) {
+        pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_bytes[__i0] = 0U;
+    }
+    pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_num_bytes = 0U;
+    pus_service_19.exec_tc_req_status_update.ev_action_ID.ev_action_index = 0U;
+    pus_service_19.exec_tc_req_status_update.ev_action_ID.found = 0;
+    pus_service_19.exec_tc_req_status_update.tc_data.EvID = 0U;
+    pus_service_19.exec_tc_req_status_update.tc_data.N = 0U;
+    pus_service_19.exec_tc_req_status_update.tc_data.packet_error_ctrl = 0U;
+    pus_service_19.exec_tc_req_status_update.tc_data.packet_id = 0U;
+    pus_service_19.exec_tc_req_status_update.tc_data.tc_num_bytes = 0U;
     for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
         pus_service_19.pending_action_head[__i0] = 0U;
     }
@@ -329,7 +397,13 @@ void __termina_app__init_globals() {
     pus_service_20.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_20.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_20.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
-    pus_service_20.exec_tc_req_status_update = ps20_init_tc_req_status_update();
+    pus_service_20.exec_tc_req_status_update.N = 0U;
+    pus_service_20.exec_tc_req_status_update.PID = 0U;
+    pus_service_20.exec_tc_req_status_update.packet_error_ctrl = 0U;
+    pus_service_20.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_20.exec_tc_req_status_update.tc_20_3_data.PID_value_u32 = 0U;
+    pus_service_20.exec_tc_req_status_update.tc_20_3_data.PID_value_u8 = 0U;
+    pus_service_20.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_20.system_data_pool_u32 = u32_system_data_pool;
     pus_service_20.system_data_pool_u8 = u8_system_data_pool;
     pus_service_20.tm_channel.__that = &telemetry_channel;
@@ -348,7 +422,11 @@ void __termina_app__init_globals() {
     pus_service_2.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_2.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_2.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
-    pus_service_2.exec_tc_req_status_update = ps2_init_tc_req_status_update();
+    pus_service_2.exec_tc_req_status_update.N = 0U;
+    pus_service_2.exec_tc_req_status_update.dev_address = 0U;
+    pus_service_2.exec_tc_req_status_update.packet_error_ctrl = 0U;
+    pus_service_2.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_2.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_2.gpio_driver.__that = &gpio_drv;
     pus_service_2.gpio_driver.write_led = GPIODriver__write_led;
     pus_service_2.tm_channel.__that = &telemetry_channel;
@@ -359,17 +437,23 @@ void __termina_app__init_globals() {
     pus_service_4.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_4.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_4.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
-    pus_service_4.exec_tc_req_status_update = ps4_init_tc_req_status_update();
+    pus_service_4.exec_tc_req_status_update.N = 0U;
+    pus_service_4.exec_tc_req_status_update.PID = 0U;
+    pus_service_4.exec_tc_req_status_update.packet_error_ctrl = 0U;
+    pus_service_4.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_4.exec_tc_req_status_update.tc_num_bytes = 0U;
     for (size_t __i0 = 0U; __i0 < max_num_of_stats; __i0 = __i0 + 1U) {
         pus_service_4.param_stats[__i0].max = 0U;
-        pus_service_4.param_stats[__i0].max_obt.tv_sec = 0U;
-        pus_service_4.param_stats[__i0].max_obt.tv_usec = 0U;
+        pus_service_4.param_stats[__i0].max_obt.finetime = 0U;
+        pus_service_4.param_stats[__i0].max_obt.seconds = 0U;
         pus_service_4.param_stats[__i0].mean_value = 0U;
         pus_service_4.param_stats[__i0].min = 0U;
-        pus_service_4.param_stats[__i0].min_obt.tv_sec = 0U;
-        pus_service_4.param_stats[__i0].min_obt.tv_usec = 0U;
+        pus_service_4.param_stats[__i0].min_obt.finetime = 0U;
+        pus_service_4.param_stats[__i0].min_obt.seconds = 0U;
         pus_service_4.param_stats[__i0].samples = 0U;
     }
+    pus_service_4.pus_service_9.__that = &pus_service_9;
+    pus_service_4.pus_service_9.get_current_obt = PUSService9__get_current_obt;
     for (size_t __i0 = 0U; __i0 < max_num_of_stats; __i0 = __i0 + 1U) {
         pus_service_4.stats_config_table.PID[__i0] = 0U;
     }
@@ -377,30 +461,15 @@ void __termina_app__init_globals() {
         pus_service_4.stats_config_table.defined[__i0] = 0;
     }
     for (size_t __i0 = 0U; __i0 < max_num_of_stats; __i0 = __i0 + 1U) {
-        pus_service_4.stats_config_table.start_time[__i0].tv_sec = 0U;
-        pus_service_4.stats_config_table.start_time[__i0].tv_usec = 0U;
+        pus_service_4.stats_config_table.start_time[__i0].finetime = 0U;
+        pus_service_4.stats_config_table.start_time[__i0].seconds = 0U;
     }
     pus_service_4.system_data_pool_u32 = u32_system_data_pool;
     pus_service_4.system_data_pool_u8 = u8_system_data_pool;
-    pus_service_4.system_port.clock_get_uptime = SystemEntry__clock_get_uptime;
     pus_service_4.tm_channel.__that = &telemetry_channel;
     pus_service_4.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_4.tm_counter.__that = &telemetry_counter;
     pus_service_4.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_9.a_tm_handler_pool.__that = &tm_pool;
-    pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_9.a_tm_handler_pool.free = __termina_pool__free;
-    pus_service_9.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
-    pus_service_9.exec_tc_req_status_update = ps9_init_tc_req_status_update();
-    pus_service_9.ref_obt.finetime = 0U;
-    pus_service_9.ref_obt.seconds = 0U;
-    pus_service_9.ref_time_val_from_power_on.tv_sec = 0U;
-    pus_service_9.ref_time_val_from_power_on.tv_usec = 0U;
-    pus_service_9.system_port.clock_get_uptime = SystemEntry__clock_get_uptime;
-    pus_service_9.tm_channel.__that = &telemetry_channel;
-    pus_service_9.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_9.tm_counter.__that = &telemetry_counter;
-    pus_service_9.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
     mng_tc_executor.a_tm_handler_pool.__that = &tm_pool;
     mng_tc_executor.a_tm_handler_pool.alloc = __termina_pool__alloc;
     mng_tc_executor.a_tm_handler_pool.free = __termina_pool__free;

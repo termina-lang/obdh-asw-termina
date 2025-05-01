@@ -12,6 +12,7 @@
 #include "resources/system_data_pool.h"
 #include "service_libraries/pus_tc_handler.h"
 #include "service_libraries/pus_services/pus_services.h"
+#include "service_libraries/pus_services/pus_service9/pus_service9.h"
 
 extern const size_t max_num_pmon_ids;
 
@@ -146,7 +147,7 @@ typedef struct {
     uint8_t repetition_control;
     uint8_t interval;
     uint8_t interval_control;
-    TimeVal transition_obt;
+    MissionObt transition_obt;
     CheckState temp_state;
     CheckState current_state;
 } ParamMonitoringConfiguration;
@@ -160,7 +161,7 @@ typedef struct {
     uint32_t new_value;
     CheckState prev_status;
     CheckState new_status;
-    TimeVal trans_obt;
+    MissionObt trans_obt;
 } ParamMonitoringTransition;
 
 typedef struct {
@@ -171,8 +172,6 @@ typedef struct {
     CheckState new_status;
     _Bool event_triggered;
 } DoMonitoringReqStatusUpdate;
-
-DoMonitoringReqStatusUpdate ps12_init_do_monitoring_req_status_update();
 
 typedef enum {
     DoMonitoringReqStatus__Init,
@@ -206,10 +205,6 @@ typedef struct {
     PS12TC_1_2_6_Data tc_data_1_2_6;
     PS12TC_5_Data tc_data_5;
 } PS12ExecTCReqStatusUpdate;
-
-PS12ExecTCReqStatusUpdate ps12_init_tc_req_status_update();
-
-PS12ExecTCReqStatusUpdate PS12ExecTCReqStatusUpdate_init();
 
 uint8_t get_check_status_index(CheckState status);
 

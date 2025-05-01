@@ -11,19 +11,6 @@ const uint16_t high_severity_anomaly_Ev_IDs = 16U;
 
 const uint16_t offset_mask = 0x1FU;
 
-PS5ExecTCReqStatusUpdate ps5_init_tc_req_status_update() {
-    
-    PS5ExecTCReqStatusUpdate ret;
-    ret.EvID = 0U;
-    ret.N = 0U;
-    ret.packet_error_ctrl = 0U;
-    ret.packet_id = 0U;
-    ret.tc_num_bytes = 0U;
-
-    return ret;
-
-}
-
 Ev_IDType get_Ev_ID_type(uint16_t Ev_ID) {
     
     Ev_IDType Ev_ID_type;

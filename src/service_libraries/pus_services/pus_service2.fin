@@ -22,16 +22,14 @@ struct PS2ExecTCReqStatusUpdate {
     dev_address : u32;
 };
 
-function ps2_init_tc_req_status_update() -> PS2ExecTCReqStatusUpdate {
-    var res : PS2ExecTCReqStatusUpdate = {
-        packet_id = 0,
-        packet_error_ctrl = 0,
-        tc_num_bytes = 0,
-        N = 0,
-        dev_address = 0
-    };
-    return res;
-}
+constexpr ps2_init_tc_req_status_update : PS2ExecTCReqStatusUpdate = {
+    packet_id = 0,
+    packet_error_ctrl = 0,
+    tc_num_bytes = 0,
+    N = 0,
+    dev_address = 0
+};
+
 
 /* Se pueden encender y apagar cuatros dispositivos, simulados mediante el uso de cuatro leds */
 // DISP <--> LED <--> address ON, OFF

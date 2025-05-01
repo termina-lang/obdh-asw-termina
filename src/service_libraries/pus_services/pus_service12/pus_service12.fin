@@ -32,6 +32,8 @@ resource class PUSService12 provides PUSS12Iface {
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
 
+    pus_service_9 : access PUSS9Iface;
+
 
     viewer is_valid_PMONID(&self) -> bool{
 
@@ -517,7 +519,9 @@ resource class PUSService12 provides PUSS12Iface {
 
                 self->param_mon_config_table[current_PMON_ID].temp_state = new_state;
                 self->param_mon_config_table[current_PMON_ID].repetition_control = 1;
-                //self->param_mon_config_table[current_PMON_ID].transition_obt = clock_get_time();
+                var current_obt : MissionObt = {seconds = 0, finetime = 0};
+                self->pus_service_9.get_current_obt(&mut current_obt);
+                self->param_mon_config_table[current_PMON_ID].transition_obt = current_obt;
             }
 
             if (self->param_mon_config_table[current_PMON_ID].repetition_control >= self->param_mon_config_table[current_PMON_ID].repetition) {
@@ -566,7 +570,7 @@ resource class PUSService12 provides PUSS12Iface {
             append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].limit_value, result);
             append_u8_appdata_field(p_tm_handler, aux_prev_status, result);
             append_u8_appdata_field(p_tm_handler, aux_new_status, result);
-            //append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].trans_obt, result); append_Timeval or convet_Timeval_to_u32??
+            append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].trans_obt.seconds, result); 
         }
         if(*result is Result::Ok){
             close_tm(p_tm_handler, 12, 12, tm_seq_counter, result);
@@ -603,7 +607,6 @@ resource class PUSService12 provides PUSS12Iface {
                 }
             }
              
-            //Here it would be interesting to incorporate the I don't care option so that to improve code conciseness
             match (self->param_mon_config_table[current_PMON_ID].definition) {
                 case ParamValueCheck(value_definition)=> {
 
@@ -1384,7 +1387,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut Result) -> PS12ExecTCReqStatusUpdate {
 
-        var tc_data : PS12ExecTCReqStatusUpdate = PS12ExecTCReqStatusUpdate_init();
+        var tc_data : PS12ExecTCReqStatusUpdate = ps12_init_tc_req_status_update;
         tc_data.packet_id = tc_handler->packet_header.packet_id;
         tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
         tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
@@ -1415,7 +1418,7 @@ resource class PUSService12 provides PUSS12Iface {
                     repetition_control = 0,
                     interval = 0,
                     interval_control = 0,
-                    transition_obt = {tv_sec = 0, tv_usec = 0},
+                    transition_obt = {seconds = 0, finetime = 0},
                     temp_state = CheckState::Unselected,
                     current_state = CheckState::Unselected
             };

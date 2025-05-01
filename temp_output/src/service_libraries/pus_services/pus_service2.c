@@ -3,19 +3,6 @@
 
 const size_t num_params2 = 64U;
 
-PS2ExecTCReqStatusUpdate ps2_init_tc_req_status_update() {
-    
-    PS2ExecTCReqStatusUpdate res;
-    res.N = 0U;
-    res.dev_address = 0U;
-    res.packet_error_ctrl = 0U;
-    res.packet_id = 0U;
-    res.tc_num_bytes = 0U;
-
-    return res;
-
-}
-
 Result PUSService2__dev_drv_on_off(PUSService2 * const self) {
     
     Result result;

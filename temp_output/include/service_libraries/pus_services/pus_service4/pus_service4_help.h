@@ -5,14 +5,15 @@
 
 #include "option.h"
 #include "service_libraries/pus_services/pus_services.h"
+#include "service_libraries/pus_services/pus_service9/pus_service9.h"
 
 extern const size_t max_num_of_stats;
 
 typedef struct {
     uint32_t min;
-    TimeVal min_obt;
+    MissionObt min_obt;
     uint32_t max;
-    TimeVal max_obt;
+    MissionObt max_obt;
     uint32_t mean_value;
     uint32_t samples;
 } StatsDef;
@@ -20,7 +21,7 @@ typedef struct {
 typedef struct {
     _Bool defined[max_num_of_stats];
     uint16_t PID[max_num_of_stats];
-    TimeVal start_time[max_num_of_stats];
+    MissionObt start_time[max_num_of_stats];
 } StatsConfig;
 
 typedef struct {
@@ -30,7 +31,5 @@ typedef struct {
     uint8_t N;
     uint16_t PID;
 } PS4ExecTCReqStatusUpdate;
-
-PS4ExecTCReqStatusUpdate ps4_init_tc_req_status_update();
 
 #endif

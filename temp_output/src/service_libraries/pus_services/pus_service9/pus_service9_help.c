@@ -22,16 +22,3 @@ TimeVal substract_TimeVal(TimeVal timeval1, TimeVal timeval2) {
     return result;
 
 }
-
-PS9ExecTCReqStatusUpdate ps9_init_tc_req_status_update() {
-    
-    PS9ExecTCReqStatusUpdate ret;
-    ret.next_OBT.finetime = 0U;
-    ret.next_OBT.seconds = 0U;
-    ret.packet_error_ctrl = 0U;
-    ret.packet_id = 0U;
-    ret.tc_num_bytes = 0U;
-
-    return ret;
-
-}

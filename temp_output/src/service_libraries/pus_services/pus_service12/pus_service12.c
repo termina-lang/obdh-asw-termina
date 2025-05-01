@@ -189,6 +189,11 @@ void PUSService12__build_tm_12_12(const PUSService12 * const self,
 
         append_u8_appdata_field(p_tm_handler, aux_new_status, result);
 
+        append_u32_appdata_field(p_tm_handler,
+                                 self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+                                                                                          i)].trans_obt.seconds,
+                                 result);
+
     }
 
     if ((*result).__variant == Result__Ok) {
@@ -556,6 +561,16 @@ _Bool PUSService12__manage_new_status(PUSService12 * const self) {
 
             self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
                                                                 current_PMON_ID)].repetition_control = 1U;
+
+            MissionObt current_obt;
+            current_obt.finetime = 0U;
+            current_obt.seconds = 0U;
+
+            (self->pus_service_9.get_current_obt)(self->pus_service_9.__that,
+                                                  &current_obt);
+
+            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+                                                                current_PMON_ID)].transition_obt = current_obt;
 
         }
 
@@ -1785,7 +1800,26 @@ PS12ExecTCReqStatusUpdate PUSService12__get_TC_params(const PUSService12 * const
                                                       uint8_t * const subtype,
                                                       Result * const result) {
     
-    PS12ExecTCReqStatusUpdate tc_data = PS12ExecTCReqStatusUpdate_init();
+    PS12ExecTCReqStatusUpdate tc_data;
+    tc_data.packet_error_ctrl = 0U;
+    tc_data.packet_id = 0U;
+    tc_data.tc_data_1_2_6.N = 0U;
+    tc_data.tc_data_1_2_6.PMONID = 0U;
+    tc_data.tc_data_5.N = 0U;
+    tc_data.tc_data_5.PMONID = 0U;
+    tc_data.tc_data_5.mon_config.PID = 0U;
+    tc_data.tc_data_5.mon_config.current_state.__variant = CheckState__Unselected;
+    tc_data.tc_data_5.mon_config.definition.__variant = MonitorDefinition__Unselected;
+    tc_data.tc_data_5.mon_config.enabled = 0;
+    tc_data.tc_data_5.mon_config.interval = 0U;
+    tc_data.tc_data_5.mon_config.interval_control = 0U;
+    tc_data.tc_data_5.mon_config.repetition = 0U;
+    tc_data.tc_data_5.mon_config.repetition_control = 0U;
+    tc_data.tc_data_5.mon_config.temp_state.__variant = CheckState__Unselected;
+    tc_data.tc_data_5.mon_config.transition_obt.finetime = 0U;
+    tc_data.tc_data_5.mon_config.transition_obt.seconds = 0U;
+    tc_data.tc_data_5.mon_config.type.__variant = MonitorCheckType__Free;
+    tc_data.tc_num_bytes = 0U;
 
     tc_data.packet_id = tc_handler->packet_header.packet_id;
 
@@ -1821,8 +1855,8 @@ PS12ExecTCReqStatusUpdate PUSService12__get_TC_params(const PUSService12 * const
         mon_config_aux.repetition = 0U;
         mon_config_aux.repetition_control = 0U;
         mon_config_aux.temp_state.__variant = CheckState__Unselected;
-        mon_config_aux.transition_obt.tv_sec = 0U;
-        mon_config_aux.transition_obt.tv_usec = 0U;
+        mon_config_aux.transition_obt.finetime = 0U;
+        mon_config_aux.transition_obt.seconds = 0U;
         mon_config_aux.type.__variant = MonitorCheckType__Free;
 
         uint8_t aux = 0U;

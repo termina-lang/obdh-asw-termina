@@ -27,7 +27,8 @@ resource class PUSService4 provides PUSS4Iface {
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
 
-    system_port : access SystemAPI;
+    pus_service_9 : access PUSS9Iface;
+
 
     viewer get_PID_defined_stats_index (&self, index: &mut usize) -> Result {
 
@@ -109,7 +110,9 @@ resource class PUSService4 provides PUSS4Iface {
             self->stats_config_table.PID[PID_index] = self->exec_tc_req_status_update.PID;
 
             self->param_stats[PID_index].samples = 0;
-            //self->stats_config_table.start_time[index] = clock_get_uptime();
+            var current_obt : MissionObt = {seconds = 0, finetime = 0};
+            self->pus_service_9.get_current_obt(&mut current_obt);
+            self->stats_config_table.start_time[PID_index] = current_obt;
             
         }
 
@@ -144,17 +147,18 @@ resource class PUSService4 provides PUSS4Iface {
 
         startup_tm(p_tm_handler);
 
-        //var current_time : TimeVal = clock_get_uptime();
+        var current_obt : MissionObt = {seconds = 0, finetime = 0};
+        self->pus_service_9.get_current_obt(&mut current_obt);
         
-        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->stats_config_table.start_time[index], result);
-        //append_TimeVal_as_u32_appdata_field(p_tm_handler, current_time, result);
+        append_u32_appdata_field(p_tm_handler, self->stats_config_table.start_time[index].seconds, result);
+        append_u32_appdata_field(p_tm_handler, current_obt.seconds, result);
         append_u8_appdata_field(p_tm_handler, self->exec_tc_req_status_update.N, result);
         append_u16_appdata_field(p_tm_handler, self->stats_config_table.PID[index], result);
         append_u32_appdata_field(p_tm_handler, self->param_stats[index].samples, result);
         append_u32_appdata_field(p_tm_handler, self->param_stats[index].max, result);
-        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->param_stats[index].max_obt, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats[index].max_obt.seconds, result);
         append_u32_appdata_field(p_tm_handler, self->param_stats[index].min, result);
-        append_TimeVal_as_u32_appdata_field(p_tm_handler, self->param_stats[index].min_obt, result);
+        append_u32_appdata_field(p_tm_handler, self->param_stats[index].min_obt.seconds, result);
         append_u32_appdata_field(p_tm_handler, self->param_stats[index].mean_value, result);
 
         if(*result is Result::Ok) {
@@ -205,7 +209,9 @@ resource class PUSService4 provides PUSS4Iface {
                         self->tm_channel.send_tm(b_tm_handler2, &mut result);
                         //reset_stats_index
                         self->param_stats[i].samples = 0;
-                        //self->stats_config_table.start_time[i] = clock_get_uptime();
+                        var current_obt : MissionObt = {seconds = 0, finetime = 0};
+                        self->pus_service_9.get_current_obt(&mut current_obt);
+                        self->stats_config_table.start_time[i] = current_obt;
                     }
                     case None => {
                         result = Result::Error;
@@ -676,11 +682,11 @@ resource class PUSService4 provides PUSS4Iface {
 
                         var system_data_pool_item : u32 = self->get_data_pool_item(PID);
                         self->param_stats[i].max = system_data_pool_item;
-                        var current_time : TimeVal = {
-                            tv_sec = 0,
-                            tv_usec = 0
+                        var current_time : MissionObt = {
+                            seconds = 0,
+                            finetime = 0
                         };
-                        self->system_port.clock_get_uptime(&mut current_time);
+                        self->pus_service_9.get_current_obt(&mut current_time);
                         self->param_stats[i].max_obt = current_time;
 
 
@@ -688,11 +694,11 @@ resource class PUSService4 provides PUSS4Iface {
 
                         var system_data_pool_item : u32 = self->get_data_pool_item(PID);
                         self->param_stats[i].min = system_data_pool_item;
-                        var current_time : TimeVal = {
-                            tv_sec = 0,
-                            tv_usec = 0
+                        var current_time : MissionObt = {
+                            seconds = 0,
+                            finetime = 0
                         };
-                        self->system_port.clock_get_uptime(&mut current_time);
+                        self->pus_service_9.get_current_obt(&mut current_time);
                         self->param_stats[i].min_obt = current_time;
 
                     } else {
@@ -708,11 +714,11 @@ resource class PUSService4 provides PUSS4Iface {
                     self->param_stats[i].max = system_data_pool_item;
                     self->param_stats[i].min = system_data_pool_item;
                     self->param_stats[i].mean_value = system_data_pool_item;
-                    var current_time : TimeVal = {
-                        tv_sec = 0,
-                        tv_usec = 0
+                    var current_time : MissionObt = {
+                        seconds = 0,
+                        finetime = 0
                     };
-                    self->system_port.clock_get_uptime(&mut current_time);
+                    self->pus_service_9.get_current_obt(&mut current_time);
                     self->param_stats[i].max_obt = current_time;
                     self->param_stats[i].min_obt = current_time;
                     
@@ -740,7 +746,9 @@ resource class PUSService4 provides PUSS4Iface {
             if(self->is_stats_index_defined(i) == true) {
 
                 self->param_stats[i].samples = 0;
-                //self->stats_config_table.start_time[i] = clock_get_uptime();
+                var current_obt : MissionObt = {seconds = 0, finetime = 0};
+                self->pus_service_9.get_current_obt(&mut current_obt);
+                self->stats_config_table.start_time[i] = current_obt;
 
             }
             

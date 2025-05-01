@@ -25,6 +25,4 @@ typedef struct {
     TC20_3Data tc_20_3_data;
 } PS20ExecTCReqStatusUpdate;
 
-PS20ExecTCReqStatusUpdate ps20_init_tc_req_status_update();
-
 #endif

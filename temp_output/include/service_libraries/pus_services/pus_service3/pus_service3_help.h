@@ -29,8 +29,6 @@ typedef struct {
     PS3TCData tc_data;
 } PS3ExecTCReqStatusUpdate;
 
-PS3ExecTCReqStatusUpdate ps3_init_tc_req_status_update();
-
 typedef struct {
     _Bool enabled;
     uint16_t SID;

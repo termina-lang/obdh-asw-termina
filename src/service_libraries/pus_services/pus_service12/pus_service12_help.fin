@@ -6,6 +6,7 @@ import service_libraries.event_list;
 import resources.system_data_pool;
 import service_libraries.pus_tc_handler;
 import service_libraries.pus_services.pus_services;
+import service_libraries.pus_services.pus_service9.pus_service9;
 
 
 const max_num_pmon_ids : usize = 8;
@@ -85,7 +86,7 @@ struct ParamMonitoringConfiguration {
     repetition_control: u8;
     interval : u8;
     interval_control : u8;
-    transition_obt : TimeVal;
+    transition_obt : MissionObt;
     temp_state : CheckState;
     current_state : CheckState;
 };
@@ -100,7 +101,7 @@ struct ParamMonitoringTransition {
 	new_value : u32;
 	prev_status : CheckState;
 	new_status : CheckState;
-	trans_obt : TimeVal;
+	trans_obt : MissionObt;
 
 };
 
@@ -113,17 +114,16 @@ struct DoMonitoringReqStatusUpdate {
     event_triggered: bool;
 };
 
-function ps12_init_do_monitoring_req_status_update() -> DoMonitoringReqStatusUpdate {
-    var res : DoMonitoringReqStatusUpdate = {
-        PMONID = 0,
-        EvID = 0,
-        current_monitor_definition = MonitorDefinition::Unselected,
-        fault_info = FaultInfo::Empty,
-        new_status = CheckState::Unselected,
-        event_triggered = false
-    };
-    return res;
-}
+constexpr ps12_init_do_monitoring_req_status_update : DoMonitoringReqStatusUpdate = {
+    PMONID = 0,
+    EvID = 0,
+    current_monitor_definition = MonitorDefinition::Unselected,
+    fault_info = FaultInfo::Empty,
+    new_status = CheckState::Unselected,
+    event_triggered = false
+};
+
+
 
 enum DoMonitoringReqStatus {
     Init,
@@ -155,65 +155,35 @@ struct PS12ExecTCReqStatusUpdate {
     tc_data_5: PS12TC_5_Data;  
 };
 
-function ps12_init_tc_req_status_update() -> PS12ExecTCReqStatusUpdate {
-    var res : PS12ExecTCReqStatusUpdate = {
-        packet_id = 0,
-        packet_error_ctrl = 0,
-        tc_num_bytes = 0,
-        tc_data_1_2_6 = {
-            N = 0,
-            PMONID = 0
-        },
-        tc_data_5 = {
-            N = 0,
-            PMONID = 0,
-            mon_config = {
-                PID = 0,
-                type = MonitorCheckType::Free,
-                enabled = false,
-                definition = MonitorDefinition::Unselected,
-                repetition= 0,
-                repetition_control= 0,
-                interval = 0,
-                interval_control = 0,
-                transition_obt = {tv_sec = 0, tv_usec = 0},
-                temp_state = CheckState::Unselected,
-                current_state = CheckState::Unselected
-            }
+constexpr ps12_init_tc_req_status_update : PS12ExecTCReqStatusUpdate = {
+    packet_id = 0,
+    packet_error_ctrl = 0,
+    tc_num_bytes = 0,
+    tc_data_1_2_6 = {
+        N = 0,
+        PMONID = 0
+    },
+    tc_data_5 = {
+        N = 0,
+        PMONID = 0,
+        mon_config = {
+            PID = 0,
+            type = MonitorCheckType::Free,
+            enabled = false,
+            definition = MonitorDefinition::Unselected,
+            repetition= 0,
+            repetition_control= 0,
+            interval = 0,
+            interval_control = 0,
+            transition_obt = {seconds = 0, finetime = 0},
+            temp_state = CheckState::Unselected,
+            current_state = CheckState::Unselected
         }
-    };
-    return res;
-}
+    }
+};
 
-function PS12ExecTCReqStatusUpdate_init() -> PS12ExecTCReqStatusUpdate {
-    var res : PS12ExecTCReqStatusUpdate = {
-        packet_id = 0,
-        packet_error_ctrl = 0,
-        tc_num_bytes = 0,
-        tc_data_1_2_6 = {
-            N = 0,
-            PMONID = 0
-        },
-        tc_data_5 = {
-            N = 0,
-            PMONID = 0,
-            mon_config = {
-                PID = 0,
-                type = MonitorCheckType::Free,
-                enabled = false,
-                definition = MonitorDefinition::Unselected,
-                repetition= 0,
-                repetition_control= 0,
-                interval = 0,
-                interval_control = 0,
-                transition_obt = {tv_sec = 0, tv_usec = 0},
-                temp_state = CheckState::Unselected,
-                current_state = CheckState::Unselected
-            }
-        }
-    };
-    return res;
-}
+
+    
 
 function get_check_status_index (status : CheckState) -> u8 {
 

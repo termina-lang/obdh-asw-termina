@@ -24,10 +24,9 @@ struct PS3ExecTCReqStatusUpdate {
     tc_data: PS3TCData;
 };
 
-function ps3_init_tc_req_status_update() -> PS3ExecTCReqStatusUpdate {
-    var ret : PS3ExecTCReqStatusUpdate = {index = {found = false, index = 0}, tc_data = {packet_id = 0, packet_error_ctrl = 0, tc_num_bytes = 0, N = 0, SID = 0, collection_interval = 0}};
-    return ret;
-}
+constexpr ps3_init_tc_req_status_update : PS3ExecTCReqStatusUpdate  = {
+    index = {found = false, index = 0}, tc_data = {packet_id = 0, packet_error_ctrl = 0, tc_num_bytes = 0, N = 0, SID = 0, collection_interval = 0}  
+};
 
 struct HKConfiguration {
     enabled : bool;

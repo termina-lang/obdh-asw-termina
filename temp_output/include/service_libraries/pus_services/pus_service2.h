@@ -23,8 +23,6 @@ typedef struct {
     uint32_t dev_address;
 } PS2ExecTCReqStatusUpdate;
 
-PS2ExecTCReqStatusUpdate ps2_init_tc_req_status_update();
-
 typedef struct {
     void * __that;
     void (* exec_tc)(void * const, TCHandlerT * const, Result * const);

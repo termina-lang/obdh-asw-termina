@@ -42,8 +42,6 @@ typedef struct {
     TCDescriptorT action_tc_packet;
 } PS19ExecTCReqStatusUpdate;
 
-PS19ExecTCReqStatusUpdate ps19_init_tc_req_status_update();
-
 typedef enum {
     TC19_1_Error__NoError,
     TC19_1_Error__EvIDEnabled,

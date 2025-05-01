@@ -37,27 +37,25 @@ struct PS19ExecTCReqStatusUpdate {
     action_tc_packet : TCDescriptorT;
 };
 
-function ps19_init_tc_req_status_update() -> PS19ExecTCReqStatusUpdate {
+constexpr ps19_init_tc_req_status_update : PS19ExecTCReqStatusUpdate = {
+    tc_data = {
+        packet_id = 0,
+        packet_error_ctrl = 0,
+        tc_num_bytes = 0,
+        N = 0,
+        EvID = 0
+    },
+    ev_action_ID = {
+        found = false,
+        ev_action_index = 0
+    },
+    action_tc_packet = {
+        tc_bytes = [0 ; max_tc_size],
+        tc_num_bytes = 0
+    }
+};
+ 
 
-    var res : PS19ExecTCReqStatusUpdate = {
-        tc_data = {
-            packet_id = 0,
-            packet_error_ctrl = 0,
-            tc_num_bytes = 0,
-            N = 0,
-            EvID = 0
-        },
-        ev_action_ID = {
-            found = false,
-            ev_action_index = 0
-        },
-        action_tc_packet = {
-            tc_bytes = [0 ; max_tc_size],
-            tc_num_bytes = 0
-        }
-    };
-    return res;
-}
 
 
 enum TC19_1_Error {
