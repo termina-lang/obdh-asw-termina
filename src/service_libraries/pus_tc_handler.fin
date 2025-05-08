@@ -62,7 +62,7 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &
 
     } else {
 
-        res = Result::Error;
+        res = Result::Error(TC_DATA_OUT_OF_RANGE_ERROR);
 
     }
 
@@ -81,7 +81,7 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
     } else {
 
-        res = Result::Error;
+        res = Result::Error(TC_DATA_OUT_OF_RANGE_ERROR);
 
     }
     
@@ -100,7 +100,7 @@ function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
     } else {
 
-        res = Result::Error;
+        res = Result::Error(TC_DATA_OUT_OF_RANGE_ERROR);
 
     }
 

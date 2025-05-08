@@ -1,8 +1,10 @@
 
+// PUS Services
 
 enum PSExecTCReqStatus {
     Init,
     ExecTC,
-    Error,
+    Error (i32),
+    Failure (i32),
     Exit
 };

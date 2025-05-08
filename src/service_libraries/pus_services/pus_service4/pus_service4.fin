@@ -165,7 +165,7 @@ resource class PUSService4 provides PUSS4Iface {
         append_u32_appdata_field(p_tm_handler, self->param_stats[index].mean_value, result);
 
         if(*result is Result::Ok) {
-            close_tm(p_tm_handler, 4, 2, tm_seq_counter, result);
+            close_tm(p_tm_handler, 4, 2, tm_seq_counter);
         }
 
         return;

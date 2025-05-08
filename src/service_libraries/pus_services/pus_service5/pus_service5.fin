@@ -261,7 +261,7 @@ resource class PUSService5 provides PUSS5Iface {
         append_u32_appdata_field(p_tm_handler, fault_info.PID_value,result);
         append_u32_appdata_field(p_tm_handler, fault_info.PID_limit,result);
         var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
-        close_tm(p_tm_handler, 5, subtype, tm_seq_counter, result);
+        close_tm(p_tm_handler, 5, subtype, tm_seq_counter);
 
         return;
     }
@@ -276,7 +276,7 @@ resource class PUSService5 provides PUSS5Iface {
         append_u32_appdata_field(p_tm_handler, fault_info.PID_mask,result);
         append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value,result);
         var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
-        close_tm(p_tm_handler, 5, subtype, tm_seq_counter, result);
+        close_tm(p_tm_handler, 5, subtype, tm_seq_counter);
 
         return;
     }

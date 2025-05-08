@@ -215,8 +215,8 @@ resource class UARTDriver provides
 
                         if (inner_queue_result is QueueResult::QueueFull) {
                         
-                        error = true;
-                        *result = CharDevResult::TXFIFOFull;
+                            error = true;
+                            *result = CharDevResult::TXFIFOFull;
                     
                         } else {
                             

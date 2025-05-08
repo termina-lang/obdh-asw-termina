@@ -26,7 +26,7 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     pus_service_9 : access PUSS9Iface;
     //pus_service_128 : access PUSS128Iface;  
 
-    procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Result) {
+    procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status) {
 
         var tc_type : u8 = tc_handler->df_header.type;
 
@@ -48,13 +48,13 @@ resource class ManagerTCExecutor provides MngTCExecIface {
         */
         } else {
 
-            *ret = Result::Error;
+            *ret = Status::Failure(ERROR_IN_ACCEPTANCE); //UNREACHABLE_BRANCH OR ERROR_IN_ACCEPTANCE?
         }
         
         return;
     }
 
-    procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Result) {
+    procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Status) {
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -79,7 +79,7 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     }
 
 
-    procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Result) {
+    procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Status) {
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);

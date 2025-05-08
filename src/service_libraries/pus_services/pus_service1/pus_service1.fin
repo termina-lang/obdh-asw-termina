@@ -83,28 +83,38 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 				status.acceptation_status = TCAcceptationStatus::Rejected;
 				status.error_code = TCErrorType::SubTypeError;
 			}
+		} else if (4 : u8 == type) {
+		
+			if (1 : u8 == subtype || 6 : u8 == subtype || 7 : u8 == subtype) {
+
+				status.acceptation_status = TCAcceptationStatus::Accepted;
+				status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
+
+			} 
+			else {
+				status.acceptation_status = TCAcceptationStatus::Rejected;
+				status.error_code = TCErrorType::SubTypeError;
+			}
+		} else if (2 : u8 == type) {
+		
+			if (1 : u8 == subtype) {
+
+				status.acceptation_status = TCAcceptationStatus::Accepted;
+				status.execution_status = TCExecutionCtrl::ExecCtrlPrioTC;
+
+			} else {
+				status.acceptation_status = TCAcceptationStatus::Rejected;
+				status.error_code = TCErrorType::SubTypeError;
+			}
 
         } else if (3 : u8 == type) {
 		
-			if (5 : u8 == subtype) {
+			if (5 : u8 == subtype || 6 : u8 == subtype || 31 : u8 == subtype) {
 
 				status.acceptation_status = TCAcceptationStatus::Accepted;
 				status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
 
 			}
-
-            else if (6 : u8 == subtype) {
-
-				status.acceptation_status = TCAcceptationStatus::Accepted;
-                status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
-            }
-
-            else if (31 : u8 == subtype) {
-
-				status.acceptation_status = TCAcceptationStatus::Accepted;
-                status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
-            }
-
 			else {
 
 				status.acceptation_status = TCAcceptationStatus::Rejected;
@@ -113,19 +123,12 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
         } else if (20 : u8 == type) {
 		
-			if (1 : u8 == subtype) {
+			if (1 : u8 == subtype || 3 : u8 == subtype) {
 
 				status.acceptation_status = TCAcceptationStatus::Accepted;
 				status.execution_status = TCExecutionCtrl::ExecCtrlBKGTC;
 
 			}
-
-            else if (3 : u8 == subtype) {
-
-				status.acceptation_status = TCAcceptationStatus::Accepted;
-                status.execution_status = TCExecutionCtrl::ExecCtrlBKGTC;
-            }
-
 			else {
                 
 				status.acceptation_status = TCAcceptationStatus::Rejected;
@@ -134,19 +137,12 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
         } else if (5 : u8 == type) {
 		
-			if (5 : u8 == subtype) {
+			if (5 : u8 == subtype || 6 : u8 == subtype) {
 
 				status.acceptation_status = TCAcceptationStatus::Accepted;
 				status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
 
 			}
-
-            else if (6 : u8 == subtype) {
-
-				status.acceptation_status = TCAcceptationStatus::Accepted;
-                status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
-            }
-
 			else {
                 
 				status.acceptation_status = TCAcceptationStatus::Rejected;
@@ -155,25 +151,12 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
         } else if (12 : u8 == type) {
 		
-			if (1 : u8 == subtype) {
+			if (1 : u8 == subtype || 5 : u8 == subtype || 6 : u8 == subtype) {
 
 				status.acceptation_status = TCAcceptationStatus::Accepted;
 				status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
 
 			}
-
-            else if (5 : u8 == subtype) {
-
-				status.acceptation_status = TCAcceptationStatus::Accepted;
-                status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
-            }
-
-			else if (6 : u8 == subtype) {
-
-				status.acceptation_status = TCAcceptationStatus::Accepted;
-                status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
-            }
-
 			else {
                 
 				status.acceptation_status = TCAcceptationStatus::Rejected;
@@ -182,31 +165,12 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
         } else if (19 : u8 == type) {
 		
-			if (1 : u8 == subtype) {
+			if (1 : u8 == subtype || 2 : u8 == subtype || 4 : u8 == subtype || 5 : u8 == subtype) {
 
 				status.acceptation_status = TCAcceptationStatus::Accepted;
 				status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
 
 			}
-
-            else if (2 : u8 == subtype) {
-
-				status.acceptation_status = TCAcceptationStatus::Accepted;
-                status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
-            }
-
-			else if (4 : u8 == subtype) {
-
-				status.acceptation_status = TCAcceptationStatus::Accepted;
-                status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
-            }
-
-			else if (5 : u8 == subtype) {
-
-				status.acceptation_status = TCAcceptationStatus::Accepted;
-                status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;
-            }
-
 			else {
                 
 				status.acceptation_status = TCAcceptationStatus::Rejected;

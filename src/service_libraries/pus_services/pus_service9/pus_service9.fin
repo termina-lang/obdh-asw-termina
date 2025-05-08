@@ -182,7 +182,7 @@ resource class PUSService9 provides PUSS9Iface {
 
         var subtype : u8 = tc_handler->df_header.subtype;
 
-        for i : usize in 0 .. 2 while (self->exec_tc_req_status is PSExecTCReqStatus::Exit == false) {
+        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PSExecTCReqStatus::Exit == false) {
 
             match self->exec_tc_req_status {
 

@@ -11,7 +11,6 @@ enum RXStatus {
 
 task class TCRXBottomHalfTask {
 
-    //start_tc : bool;
     rx_status : RXStatus;
     sync_word : [u8 ; 4]; //{0xBE, 0xBA, 0xBE, 0xEF}
     aux_index : usize;
@@ -23,9 +22,9 @@ task class TCRXBottomHalfTask {
     a_tc_handler_pool : access Allocator<TCHandlerT>;
 
 
-    action get_tc (&priv self, data: u8) -> Result {
+    action get_tc (&priv self, data: u8) -> Status {
 
-        var ret : Result = Result::Ok;
+        var ret : Status = Status::Success;
 
         match self->rx_status {
 
@@ -88,7 +87,7 @@ task class TCRXBottomHalfTask {
                             self->tc_message_queue_output.send(tc_handler_b);
                         }
                         case None => {
-                            ret = Result::Error;
+                            ret = Status::Failure(TC_POOL_ALLOC_ERROR);
                         }
                     }
                 }

@@ -359,7 +359,7 @@ resource class PUSService3 provides PUSS3Iface {
     
         }
 
-        close_tm(p_tm_handler, 3, 25, tm_seq_counter, result);
+        close_tm(p_tm_handler, 3, 25, tm_seq_counter);
 
 
 	    return;

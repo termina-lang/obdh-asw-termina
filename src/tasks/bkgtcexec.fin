@@ -14,9 +14,9 @@ task class PUSBKGTCExecutor {
     pus_service_20 : access PUSS20Iface;
   
 
-    action exec_tc(&priv self, tc_handler : box TCHandlerT)-> Result {
+    action exec_tc(&priv self, tc_handler : box TCHandlerT) -> Status {
 
-        var res : Result = Result::Ok;
+        var res : Status = Status::Success;
 
         var tc_type : u8 = get_type(&(tc_handler.tc_descriptor.tc_bytes));
 
@@ -26,7 +26,7 @@ task class PUSBKGTCExecutor {
 
         } else {
 
-            res = Result::Error;
+            res = Status::Failure(ERROR_IN_ACCEPTANCE); 
             //This is an error in acceptance, could be modeled as an event
         }
 

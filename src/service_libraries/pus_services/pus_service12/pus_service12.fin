@@ -573,7 +573,7 @@ resource class PUSService12 provides PUSS12Iface {
             append_u32_appdata_field(p_tm_handler, self->param_mon_transitions_table[i].trans_obt.seconds, result); 
         }
         if(*result is Result::Ok){
-            close_tm(p_tm_handler, 12, 12, tm_seq_counter, result);
+            close_tm(p_tm_handler, 12, 12, tm_seq_counter);
         }
 
 

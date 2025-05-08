@@ -10,9 +10,9 @@ task class ICUManager {
     tc_executor: access MngTCExecIface;
 
 
-    action process_tc(&priv self, tc_handler: box TCHandlerT) -> Result {
+    action process_tc(&priv self, tc_handler: box TCHandlerT) -> Status {
 
-        var ret : Result = Result::Ok;
+        var ret : Status = Status::Success;
 
         var current_tc_status : TCStatus = try_tc_acceptation(&(tc_handler.tc_descriptor));
 
@@ -59,7 +59,7 @@ task class ICUManager {
                 self->a_tc_handler_pool.free(tc_handler);
             }
             case Undefined => {
-                ret = Result::Error;
+                ret = Status::Failure(ERROR_IN_ACCEPTANCE);
                 self->a_tc_handler_pool.free(tc_handler);
             }
         }
@@ -67,9 +67,9 @@ task class ICUManager {
     }
 
 
-    action process_action_tc(&priv self, tc_handler: box TCHandlerT) -> Result {
+    action process_action_tc(&priv self, tc_handler: box TCHandlerT) -> Status {
 
-        var ret : Result = Result::Ok;
+        var ret : Status = Status::Success;
 
         var execution_status : TCExecutionCtrl = handle_tc((&(tc_handler.tc_descriptor)));
 
