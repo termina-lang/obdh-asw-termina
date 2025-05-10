@@ -74,6 +74,18 @@ resource telemetry_counter : TMCounter = {
 } : TMCounter;
 
 
+resource pus_service_9 : PUSService9 = {
+    ref_obt = {seconds = 0, finetime = 0},
+    ref_time_val_from_power_on = {tv_sec = 0, tv_usec = 0},
+    exec_tc_req_status = PSExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps9_init_tc_req_status_update,
+    tm_channel <-> telemetry_channel,
+    a_tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    system_port <-> system_entry
+} : PUSService9;
+
+
 resource pus_service_3 : PUSService3 = {
     hk_config_table =  {{enabled = true, SID = 0, interval = 2, interval_control = 0, num_params =5, params_def={0,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 10, interval = 30, interval_control = 0, num_params = 3, params_def = {5,6,7,0,0,0,0,0,0,0,0,0,0,0,0,0}},
@@ -89,7 +101,8 @@ resource pus_service_3 : PUSService3 = {
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> telemetry_channel,   
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter
+    tm_counter <-> telemetry_counter,
+    pus_service_9 <-> pus_service_9
 } : PUSService3;
 
 
@@ -100,19 +113,10 @@ resource pus_service_5 : PUSService5 = {
     exec_tc_req_status_update = ps5_init_tc_req_status_update,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter
+    tm_counter <-> telemetry_counter,
+    pus_service_9 <-> pus_service_9
 } : PUSService5;
 
-resource pus_service_9 : PUSService9 = {
-    ref_obt = {seconds = 0, finetime = 0},
-    ref_time_val_from_power_on = {tv_sec = 0, tv_usec = 0},
-    exec_tc_req_status = PSExecTCReqStatus::Init,
-    exec_tc_req_status_update = ps9_init_tc_req_status_update,
-    tm_channel <-> telemetry_channel,
-    a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
-    system_port <-> system_entry
-} : PUSService9;
 
 
 resource pus_service_12: PUSService12 = {

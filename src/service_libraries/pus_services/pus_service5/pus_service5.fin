@@ -25,6 +25,8 @@ resource class PUSService5 provides PUSS5Iface {
     tm_channel : access TMChannelIface;
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
+
+    pus_service_9 : access PUSS9Iface;
     
 
     viewer is_Ev_ID_enabled(&self, Ev_ID : u16) -> bool {
@@ -52,7 +54,7 @@ resource class PUSService5 provides PUSS5Iface {
 
     viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
-        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
         var result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -67,21 +69,21 @@ resource class PUSService5 provides PUSS5Iface {
 
                 build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
                                             (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.tc_num_bytes), &mut result);
-                self->tm_channel.send_tm(b_tm_handler, &mut result);
+                if (result is Result::Ok){
+
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                    if (result is Result::Error){
+                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                    }
+                } 
+                else {
+                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                }
             }
             case None => {
-                result = Result::Error;
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
             }
-        }
-
-        if (result is Result::Error){
-
-            next_status = PSExecTCReqStatus::Error;
-
-        } else {
-
-            next_status = PSExecTCReqStatus::Exit;
-
         }
 
         return next_status;
@@ -91,7 +93,7 @@ resource class PUSService5 provides PUSS5Iface {
     method exec5_5TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -111,7 +113,17 @@ resource class PUSService5 provides PUSS5Iface {
 
                     build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
                                                         (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
-                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    if (result is Result::Ok){
+
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        if (result is Result::Error){
+                            next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                        }
+                    } 
+                    else {
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                    }
                 }
                 else {
 
@@ -120,7 +132,18 @@ resource class PUSService5 provides PUSS5Iface {
                     if(is_valid_EvID) {
 
                         build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        if (result is Result::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
 
                         self->Ev_ID_enable_config[index] = self->Ev_ID_enable_config[index] | (1 << offset);
 
@@ -134,10 +157,22 @@ resource class PUSService5 provides PUSS5Iface {
                                 var tm_count2 : u16 = 0 : u16;
                                 self->tm_counter.get_next_tm_count(&mut tm_count2);
                                 build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
-                                self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                                if (result is Result::Ok){
+
+                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                                    if (result is Result::Error){
+                                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                    }
+                                } 
+                                else {
+                                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                                }
+                        
                             }
                             case None => {
-                                result = Result::Error;
+                                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
                             }
                         }
 
@@ -145,25 +180,26 @@ resource class PUSService5 provides PUSS5Iface {
 
                         build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
                                                         (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.EvID), &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        if (result is Result::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
 
                     }
 
                 }
             }
             case None => {
-                result = Result::Error;
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
             }
-        }
-
-        if (result is Result::Error){
-
-            next_status = PSExecTCReqStatus::Error;
-
-        } else {
-
-            next_status = PSExecTCReqStatus::Exit;
-
         }
 
         return next_status;
@@ -173,7 +209,7 @@ resource class PUSService5 provides PUSS5Iface {
     method exec5_6TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -193,7 +229,19 @@ resource class PUSService5 provides PUSS5Iface {
 
                     build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
                                                         (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
-                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                    if (result is Result::Ok){
+
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        if (result is Result::Error){
+                            next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                        }
+                    } 
+                    else {
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                    }
+                   
                 }
                 else {
 
@@ -202,7 +250,18 @@ resource class PUSService5 provides PUSS5Iface {
                     if(is_valid_EvID) {
 
                         build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        if (result is Result::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
 
                         self->Ev_ID_enable_config[index] = self->Ev_ID_enable_config[index] & (0xFFFFFFFE << offset);
 
@@ -216,10 +275,21 @@ resource class PUSService5 provides PUSS5Iface {
                                 var tm_count2 : u16 = 0 : u16;
                                 self->tm_counter.get_next_tm_count(&mut tm_count2);
                                 build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
-                                self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                                if (result is Result::Ok){
+
+                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                                    if (result is Result::Error){
+                                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                    }
+                                } 
+                                else {
+                                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                                }
                             }
                             case None => {
-                                result = Result::Error;
+                                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
                             }
                         }
 
@@ -227,25 +297,24 @@ resource class PUSService5 provides PUSS5Iface {
 
                         build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
                                                         (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.EvID), &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+                        if (result is Result::Ok){
 
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
                     }
 
                 }
             }
             case None => {
-                result = Result::Error;
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
             }
-        }
-
-        if (result is Result::Error){
-
-            next_status = PSExecTCReqStatus::Error;
-
-        } else {
-
-            next_status = PSExecTCReqStatus::Exit;
-
         }
 
         return next_status;
@@ -261,7 +330,9 @@ resource class PUSService5 provides PUSS5Iface {
         append_u32_appdata_field(p_tm_handler, fault_info.PID_value,result);
         append_u32_appdata_field(p_tm_handler, fault_info.PID_limit,result);
         var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
-        close_tm(p_tm_handler, 5, subtype, tm_seq_counter);
+        var current_obt : MissionObt = {seconds = 0, finetime = 0};
+        self->pus_service_9.get_current_obt(&mut current_obt);
+        close_tm(p_tm_handler, 5, subtype, tm_seq_counter, current_obt);
 
         return;
     }
@@ -276,7 +347,9 @@ resource class PUSService5 provides PUSS5Iface {
         append_u32_appdata_field(p_tm_handler, fault_info.PID_mask,result);
         append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value,result);
         var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
-        close_tm(p_tm_handler, 5, subtype, tm_seq_counter);
+        var current_obt : MissionObt = {seconds = 0, finetime = 0};
+        self->pus_service_9.get_current_obt(&mut current_obt);
+        close_tm(p_tm_handler, 5, subtype, tm_seq_counter, current_obt);
 
         return;
     }
@@ -366,13 +439,17 @@ resource class PUSService5 provides PUSS5Iface {
 
                     } else {
 
-                        self->exec_tc_req_status = PSExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error(ACCEPTANCE_ERROR);
                     }
                 }
+                case Error(error_code) => {
 
-                case Error => {
+                    self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
-                    *result = Result::Error;
+                }
+                case Failure(failure_code) => {
+
+                    *action_status = Status::Failure(failure_code);
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }

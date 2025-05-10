@@ -36,7 +36,7 @@ resource class TMChannel provides TMChannelIface {
         return;
    }*/
 
-    procedure send_tm(&mut self, tm_handler : box TMHandlerT, status : &mut Status) {
+    procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut Result) {
 
         var queue_state : CharDevResult = CharDevResult::Success;
 
@@ -44,11 +44,11 @@ resource class TMChannel provides TMChannelIface {
 
         if (queue_state is CharDevResult::Success) {
 
-            *status = Status::Success;
+            *result = Result::Ok;
                     
         } else {
 
-            *status = Status_Failure(TM_SEND_FAILURE);
+            *result = Result::Error;
             
         }
 

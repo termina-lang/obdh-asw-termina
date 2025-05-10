@@ -82,24 +82,24 @@ function tm_handler_build_packet_header (tm_handler : &mut TMHandlerT, tm_seq_co
 }
 
 //Revisar función
-function tm_handler_build_df_header (tm_handler : &mut TMHandlerT, tm_type : u8, tm_subtype : u8) {
+function tm_handler_build_df_header (tm_handler : &mut TMHandlerT, tm_type : u8, tm_subtype : u8, current_obt: MissionObt) {
 
     tm_handler->df_header.version = ccsds_pus_tm_build_df_header_version(0x1);
     tm_handler->df_header.type = tm_type;
     tm_handler->df_header.subtype = tm_subtype;
     tm_handler->df_header.msg_type_counter = 0; //Preguntar a Óscar
 	tm_handler->df_header.destinationID = destinationID;
-	tm_handler->df_header.obt_secs = 0; //tm_handler->df_header.obt_secs = obt_drv_get_current_obt();
-	tm_handler->df_header.obt_finetime = 0; //tm_handler->df_header.obt_finetime = obt_drv_get_current_obt_finetime();
+	tm_handler->df_header.obt_secs = current_obt.seconds;
+	tm_handler->df_header.obt_finetime = current_obt.finetime;
     
     return;
 }
 
 
-function close_tm (tm_handler : &mut TMHandlerT, type : u8, subtype : u8, tm_count : u16) {
+function close_tm (tm_handler : &mut TMHandlerT, type : u8, subtype : u8, tm_count : u16, current_obt: MissionObt) {
 
     tm_handler_build_packet_header(tm_handler, tm_count);
-    tm_handler_build_df_header(tm_handler, type, subtype);
+    tm_handler_build_df_header(tm_handler, type, subtype, current_obt);
 
     ccsds_pus_tm_set_fields(&mut (tm_handler->tm_descriptor.tm_bytes[0 : usize .. 10 : usize]), &(tm_handler->packet_header), &(tm_handler->df_header));
 

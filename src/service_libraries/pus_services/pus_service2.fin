@@ -133,7 +133,7 @@ resource class PUSService2 provides PUSS2Iface {
                                     }
                                 }
                                 case None => {
-                                    next_status = PSExecTCReqStatus::Failure(TC_POOL_ALLOC_FAILURE);
+                                    next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
                                 }
                             }
                             
@@ -165,7 +165,7 @@ resource class PUSService2 provides PUSS2Iface {
                                     
                                 }
                                 case None => {
-                                    next_status = PSExecTCReqStatus::Failure(TC_POOL_ALLOC_FAILURE);
+                                    next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
                                 }
                             }
 
@@ -193,7 +193,7 @@ resource class PUSService2 provides PUSS2Iface {
                 }
             }
             case None => {
-                next_status = PSExecTCReqStatus::Failure(TC_POOL_ALLOC_FAILURE);
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
             }
         }
 
@@ -266,7 +266,7 @@ resource class PUSService2 provides PUSS2Iface {
                 }
             }
             case None => {
-                next_status = PSExecTCReqStatus::Failure(TC_POOL_ALLOC_FAILURE);
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
             }
         }
 
@@ -312,11 +312,11 @@ resource class PUSService2 provides PUSS2Iface {
 
                     } else {
 
-                        self->exec_tc_req_status = PSExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error(ACCEPTANCE_ERROR);
                     }
                 }
 
-                case Error(_) => {
+                case Error(error_code) => {
 
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 

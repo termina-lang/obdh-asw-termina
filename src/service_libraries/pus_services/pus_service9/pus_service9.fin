@@ -62,7 +62,7 @@ resource class PUSService9 provides PUSS9Iface {
 
     viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
-        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
         var result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -77,21 +77,21 @@ resource class PUSService9 provides PUSS9Iface {
 
                 build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
                                             (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.tc_num_bytes), &mut result);
-                self->tm_channel.send_tm(b_tm_handler, &mut result);
+                if (result is Result::Ok){
+
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                    if (result is Result::Error){
+                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                    }
+                } 
+                else {
+                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                }
             }
             case None => {
-                result = Result::Error;
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
             }
-        }
-
-        if (result is Result::Error){
-
-            next_status = PSExecTCReqStatus::Error;
-
-        } else {
-
-            next_status = PSExecTCReqStatus::Exit;
-
         }
 
         return next_status;
@@ -124,7 +124,7 @@ resource class PUSService9 provides PUSS9Iface {
     method exec9_129TC (&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -136,7 +136,19 @@ resource class PUSService9 provides PUSS9Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
                 build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                if (result is Result::Ok){
+
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                    if (result is Result::Error){
+                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                    }
+                } 
+                else {
+                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                }
+                
 
                 self->set_obt();
 
@@ -150,10 +162,21 @@ resource class PUSService9 provides PUSS9Iface {
                         var tm_count2 : u16 = 0 : u16;
                         self->tm_counter.get_next_tm_count(&mut tm_count2);
                         build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
-                        self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                        if (result is Result::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
                     }
                     case None => {
-                        result = Result::Error;
+                        next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
                     }
                 }
 
@@ -161,19 +184,11 @@ resource class PUSService9 provides PUSS9Iface {
             }
             case None => {
 
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
+
             }
         }
-
-        if (result is Result::Error){
-
-            next_status = PSExecTCReqStatus::Error;
-
-        } else {
-
-            next_status = PSExecTCReqStatus::Exit;
-
-        }
-
+        
         return next_status;
 
     }
@@ -204,13 +219,18 @@ resource class PUSService9 provides PUSS9Iface {
 
                     } else {
 
-                        self->exec_tc_req_status = PSExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error(ACCEPTANCE_ERROR);
                     }
                 }
 
-                case Error => {
+                case Error(error_code) => {
 
-                    *result = Result::Error;
+                    self->exec_tc_req_status = PSExecTCReqStatus::Exit;
+
+                }
+                case Failure(failure_code) => {
+
+                    *action_status = Status::Failure(failure_code);
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }

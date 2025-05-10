@@ -33,6 +33,8 @@ resource class PUSService3 provides PUSS3Iface {
     a_tm_handler_pool : access Allocator<TMHandlerT>;
     tm_counter : access TMCounterIface;
 
+    pus_service_9 : access PUSS9Iface;
+
 
 
     method get_SIDindex (&priv self) -> IndexFound {
@@ -53,7 +55,7 @@ resource class PUSService3 provides PUSS3Iface {
     method exec3_5TC(&priv self)-> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
 
         var tm_handler : Option<box TMHandlerT> = None;
                 self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -69,7 +71,19 @@ resource class PUSService3 provides PUSS3Iface {
 
                     build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                     (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.N, &mut result);
-                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    
+                    if (result is Result::Ok){
+
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        if (result is Result::Error){
+                            next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                        }
+                    } 
+                    else {
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                    }
+                   
                 } 
                 else {
 
@@ -77,10 +91,19 @@ resource class PUSService3 provides PUSS3Iface {
 
                     if (self->exec_tc_req_status_update.index.found){
 
-                        
                         build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
-                        
+
+                        if (result is Result::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
                         
                         self->hk_config_table[self->exec_tc_req_status_update.index.index].enabled = true;
                         self->hk_config_table[self->exec_tc_req_status_update.index.index].interval_control = 0;
@@ -95,10 +118,22 @@ resource class PUSService3 provides PUSS3Iface {
                                 var tm_count2 : u16 = 0 : u16;
                                 self->tm_counter.get_next_tm_count(&mut tm_count2);
                                 build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
-                                self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                                if (result is Result::Ok){
+
+                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                                    if (result is Result::Error){
+                                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                    }
+                                } 
+                                else {
+                                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                                }
+                        
                             }
                             case None => {
-                                result = Result::Error;
+                                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
                             }
                         }
 
@@ -106,33 +141,35 @@ resource class PUSService3 provides PUSS3Iface {
 
                         build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                     (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.SID, &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+                        if (result is Result::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
+                        
                     }
                 }
             }
             case None => {
 
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
+
             }
         }
  
-
-        if (result is Result::Error){
-
-            next_status = PSExecTCReqStatus::Error;
-
-        } else {
-
-            next_status = PSExecTCReqStatus::Exit;
-
-        }
-
         return next_status;
     }
 
     method exec3_6TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -148,7 +185,18 @@ resource class PUSService3 provides PUSS3Iface {
 
                     build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                     (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.N, &mut result);
-                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    if (result is Result::Ok){
+
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        if (result is Result::Error){
+                            next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                        }
+                    } 
+                    else {
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                    }
+                   
                 } 
                 else {
 
@@ -158,8 +206,18 @@ resource class PUSService3 provides PUSS3Iface {
 
                         
                         build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
                         
+                        if (result is Result::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
                         
                         self->hk_config_table[self->exec_tc_req_status_update.index.index].enabled = false;
                         self->hk_config_table[self->exec_tc_req_status_update.index.index].interval_control = 0;
@@ -174,10 +232,21 @@ resource class PUSService3 provides PUSS3Iface {
                                 var tm_count2 : u16 = 0 : u16;
                                 self->tm_counter.get_next_tm_count(&mut tm_count2);
                                 build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
-                                self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                                
+                                if (result is Result::Ok){
+
+                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                                    if (result is Result::Error){
+                                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                    }
+                                } 
+                                else {
+                                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                                }
                             }
                             case None => {
-                                result = Result::Error;
+                                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
                             }
                         }
 
@@ -185,25 +254,25 @@ resource class PUSService3 provides PUSS3Iface {
 
                         build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                     (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.SID, &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+                        if (result is Result::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
                     }
                 }
             }
             case None => {
 
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
+
             }
-        }
-
-        
-
-        if (result is Result::Error){
-
-            next_status = PSExecTCReqStatus::Error;
-
-        } else {
-
-            next_status = PSExecTCReqStatus::Exit;
-
         }
 
         return next_status;
@@ -212,7 +281,7 @@ resource class PUSService3 provides PUSS3Iface {
     method exec3_31TC(&priv self) -> PSExecTCReqStatus {
 
         var result : Result = Result::Ok;
-        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -228,7 +297,17 @@ resource class PUSService3 provides PUSS3Iface {
 
                         build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.N, &mut result);
-                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+                        if (result is Result::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                            if (result is Result::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        } 
+                        else {
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
 
                     } else {
 
@@ -238,9 +317,19 @@ resource class PUSService3 provides PUSS3Iface {
 
 
                             build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
-                            self->tm_channel.send_tm(b_tm_handler, &mut result);
-                              
 
+                            if (result is Result::Ok){
+
+                                self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                                if (result is Result::Error){
+                                    next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                }
+                            } 
+                            else {
+                                next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                            }
+                              
                             self->hk_config_table[self->exec_tc_req_status_update.index.index].interval = self->exec_tc_req_status_update.tc_data.collection_interval;
                             self->hk_config_table[self->exec_tc_req_status_update.index.index].interval_control = 0;
 
@@ -255,10 +344,21 @@ resource class PUSService3 provides PUSS3Iface {
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
 
                                     build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
-                                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                                    
+                                    if (result is Result::Ok){
+
+                                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                                        if (result is Result::Error){
+                                            next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                        }
+                                    } 
+                                    else {
+                                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                                    }
                                 }
                                 case None => {
-                                    result = Result::Error;
+                                    next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
                                 }
                             }
 
@@ -266,34 +366,33 @@ resource class PUSService3 provides PUSS3Iface {
 
                             build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                                         (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), self->exec_tc_req_status_update.tc_data.SID, &mut result);
-                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+                            if (result is Result::Ok){
+
+                                self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                                if (result is Result::Error){
+                                    next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                }
+                            } 
+                            else {
+                                next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                            }
                         }
                     }
                 }
                 case None => {
 
-                    result = Result::Error;
+                    next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
 
                 }
             }
-
-
-        if (result is Result::Error){
-
-            next_status = PSExecTCReqStatus::Error;
-
-        } else {
-
-            next_status = PSExecTCReqStatus::Exit;
-
-        }
 
         return next_status;
     }
 
     viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
-        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Error;
+        var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
         var result : Result = Result::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -308,21 +407,21 @@ resource class PUSService3 provides PUSS3Iface {
 
                 build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), 
                                             (self->exec_tc_req_status_update.tc_data.packet_error_ctrl), (self->exec_tc_req_status_update.tc_data.tc_num_bytes), &mut result);
-                self->tm_channel.send_tm(b_tm_handler, &mut result);
+                if (result is Result::Ok){
+
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                    if (result is Result::Error){
+                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                    }
+                } 
+                else {
+                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                }
             }
             case None => {
-                result = Result::Error;
+                next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
             }
-        }
-
-        if (result is Result::Error){
-
-            next_status = PSExecTCReqStatus::Error;
-
-        } else {
-
-            next_status = PSExecTCReqStatus::Exit;
-
         }
 
         return next_status;
@@ -359,7 +458,10 @@ resource class PUSService3 provides PUSS3Iface {
     
         }
 
-        close_tm(p_tm_handler, 3, 25, tm_seq_counter);
+        var current_obt: MissionObt = {seconds = 0, finetime = 0};
+        self->pus_service_9.get_current_obt(&mut current_obt);
+
+        close_tm(p_tm_handler, 3, 25, tm_seq_counter, current_obt);
 
 
 	    return;
@@ -432,13 +534,19 @@ resource class PUSService3 provides PUSS3Iface {
 
                     } else {
 
-                        self->exec_tc_req_status = PSExecTCReqStatus::Error;
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error(ACCEPTANCE_ERROR);
                     }
 
                 }
-                case Error => {
 
-                    *result = Result::Error;
+                case Error(error_code) => {
+
+                    self->exec_tc_req_status = PSExecTCReqStatus::Exit;
+
+                }
+                case Failure(failure_code) => {
+
+                    *action_status = Status::Failure(failure_code);
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }
