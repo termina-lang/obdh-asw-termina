@@ -23,9 +23,9 @@ task class HouseKeepingFDIR {
 
 
 
-    method do_fdir(&priv self) -> Status {
+    method do_fdir(&priv self) -> Status<i32> {
 
-        var result : Status = Status::Success;
+        var result : Status<i32> = Status<i32>::Success;
 
         var is_monitor_enabled : bool = false;
 
@@ -63,9 +63,9 @@ task class HouseKeepingFDIR {
         return result;
     }
 
-    action do_hk_fdir(&priv self, _current_time : TimeVal) -> Status {
+    action do_hk_fdir(&priv self, _current_time : TimeVal) -> Status<i32> {
 
-        var result : Status = Status::Success;
+        var result : Status<i32> = Status<i32>::Success;
 
         self->pus_service_4.update_all_stats(&mut result);
         self->pus_service_3.do_hk(&mut result);
@@ -119,9 +119,9 @@ task class HouseKeepingFDIR {
         return result;
     }
 
-    action exec_tc(&priv self, tc_handler : box TCHandlerT)-> Status {
+    action exec_tc(&priv self, tc_handler : box TCHandlerT)-> Status<i32> {
 
-        var res : Status = Status::Success;
+        var res : Status<i32> = Status<i32>::Success;
 
         var tc_type : u8 = tc_handler.df_header.type;
 
@@ -148,7 +148,7 @@ task class HouseKeepingFDIR {
 
         }else {
 
-            res = Status::Failure(ERROR_IN_ACCEPTANCE); 
+            res = Status<i32>::Failure(ERROR_IN_ACCEPTANCE); 
             //This is an error in acceptance, could be modeled as an event
         }
         

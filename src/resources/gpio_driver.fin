@@ -26,9 +26,10 @@ resource class GPIODriver provides GPIODrvIface {
         return;
     }
 
-    procedure write_led (&mut self, led : u8, value : u8) {
+    procedure write_led (&mut self, led : u8, value : u8, result: &mut MyResult) {
 
         if (led < 4) {
+            *result = MyResult::Ok;
             let bit : u8 = led + 16;
             if (value == 0) {
                 let mask : u32 = 0xFFFFFFFF ^ (1 << bit);
@@ -36,6 +37,9 @@ resource class GPIODriver provides GPIODrvIface {
             } else {
                 self->registers.Output = self->registers.Output | (1 << bit);
             }
+        }
+        else {
+            *result = MyResult::Error;
         }
 
         return; 

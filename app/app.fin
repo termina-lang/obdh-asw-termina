@@ -151,7 +151,8 @@ resource pus_service_19 : PUSService19 = {
     pending_action_head = [0; 4],
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter
+    tm_counter <-> telemetry_counter,
+    pus_service_9 <-> pus_service_9
 }: PUSService19;
 
 
@@ -162,7 +163,8 @@ resource pus_service_20 : PUSService20 = {
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter
+    tm_counter <-> telemetry_counter,
+    pus_service_9 <-> pus_service_9
 }: PUSService20;
 
 
@@ -170,7 +172,8 @@ resource pus_service_17 : PUSService17 = {
     exec_tc_req_status = PSExecTCReqStatus::ExecTC,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter
+    tm_counter <-> telemetry_counter,
+    pus_service_9 <-> pus_service_9
 }: PUSService17;
 
 resource pus_service_2 : PUSService2 = {
@@ -179,7 +182,8 @@ resource pus_service_2 : PUSService2 = {
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
-    gpio_driver <-> gpio_drv
+    gpio_driver <-> gpio_drv,
+    pus_service_9 <-> pus_service_9
 } : PUSService2;
 
 resource pus_service_4 : PUSService4 = {

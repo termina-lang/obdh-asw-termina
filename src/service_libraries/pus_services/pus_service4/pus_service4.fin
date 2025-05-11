@@ -6,8 +6,8 @@ import service_libraries.pus_services.pus_service4.pus_service4_help;
 
 interface PUSS4Iface {
 
-    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result);
-    procedure update_all_stats(&mut self, result: &mut Result);
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>);
+    procedure update_all_stats(&mut self, result: &mut MyResult);
     procedure startup(&mut self);
     
 };
@@ -30,11 +30,11 @@ resource class PUSService4 provides PUSS4Iface {
     pus_service_9 : access PUSS9Iface;
 
 
-    method get_PID_defined_stats_index (&priv self) -> Result {
+    method get_PID_defined_stats_index (&priv self) -> MyResult {
 
-        var result : Result = Result::Error;
+        var result : MyResult = MyResult::Error;
 
-        for i : usize in 0 .. max_num_of_stats while (result is Result::Error) {
+        for i : usize in 0 .. max_num_of_stats while (result is MyResult::Error) {
 
             if(self->exec_tc_req_status_update.PID == self->stats_config_table.PID[i]) {
 
@@ -43,7 +43,7 @@ resource class PUSService4 provides PUSS4Iface {
                     if(sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID)) {
 
                         self->exec_tc_req_status_update.valid_index = i;
-                        result = Result::Ok;
+                        result = MyResult::Ok;
                     } else {
                         self->stats_config_table.defined[i] = false;
                     }
@@ -54,16 +54,16 @@ resource class PUSService4 provides PUSS4Iface {
         return result;
     }
 
-    viewer get_free_index (&self, index: &mut usize) -> Result {
+    viewer get_free_index (&self, index: &mut usize) -> MyResult {
 
-        var result : Result = Result::Error;
+        var result : MyResult = MyResult::Error;
 
-        for i : usize in 0 .. max_num_of_stats while (result is Result::Error) {
+        for i : usize in 0 .. max_num_of_stats while (result is MyResult::Error) {
 
             if ((self->stats_config_table.defined[i] == false) || (sys_data_pool_is_valid_PID(self->stats_config_table.PID[i])) == false) {
 
                 *index = i; 
-                result = Result::Ok;
+                result = MyResult::Ok;
             }
         }
         return result;
@@ -91,21 +91,21 @@ resource class PUSService4 provides PUSS4Iface {
     }
 
 
-    method add_PID_stats (&priv self) -> Result {
+    method add_PID_stats (&priv self) -> MyResult {
 
-        var result : Result = Result::Ok;
+        var result : MyResult = MyResult::Ok;
         
 
         result = self->get_PID_defined_stats_index();
 
-        if(result is Result::Error) {
+        if(result is MyResult::Error) {
 
             var index : usize = 0;
             result = self->get_free_index(&mut index);
             self->exec_tc_req_status_update.valid_index = index;
         }
 
-        if(result is Result::Ok) {
+        if(result is MyResult::Ok) {
 
             var PID_index: usize = self->exec_tc_req_status_update.valid_index;
 
@@ -122,13 +122,13 @@ resource class PUSService4 provides PUSS4Iface {
         return result;
     }
 
-    method delete_PID_stats (&priv self) -> Result {
+    method delete_PID_stats (&priv self) -> MyResult {
 
-        var result : Result = Result::Error;
+        var result : MyResult = MyResult::Error;
         var PID_index: usize = 0;
         result = self->get_PID_defined_stats_index();
 
-        if (result is Result::Ok) {
+        if (result is MyResult::Ok) {
             self->stats_config_table.defined[PID_index] = false;
         }
 
@@ -146,7 +146,7 @@ resource class PUSService4 provides PUSS4Iface {
         
     }
 
-    viewer build_tm_4_2(&self, p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, index: usize, result: &mut Result){
+    viewer build_tm_4_2(&self, p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, index: usize, result: &mut MyResult){
 
         startup_tm(p_tm_handler);
 
@@ -164,7 +164,7 @@ resource class PUSService4 provides PUSS4Iface {
         append_u32_appdata_field(p_tm_handler, self->param_stats[index].min_obt.seconds, result);
         append_u32_appdata_field(p_tm_handler, self->param_stats[index].mean_value, result);
 
-        if(*result is Result::Ok) {
+        if(*result is MyResult::Ok) {
 
             var current_obt : MissionObt = {seconds = 0, finetime = 0};
             self->pus_service_9.get_current_obt(&mut current_obt);
@@ -177,8 +177,10 @@ resource class PUSService4 provides PUSS4Iface {
 // TC[4,1] : Report the parameter statistics
     method exec4_1TC(&priv self) -> PSExecTCReqStatus {
 
-        var result : Result = Result::Ok;
+        var result : MyResult = MyResult::Ok;
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
+
+        var current_obt : MissionObt = {seconds = 0, finetime = 0};
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -189,13 +191,14 @@ resource class PUSService4 provides PUSS4Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                self->pus_service_9.get_current_obt(&mut current_obt);
+                build_tm_1_3(&mut b_tm_handler, tm_count, current_obt, &mut result);
 
-                if (result is Result::Ok){
+                if (result is MyResult::Ok){
 
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                    if (result is Result::Error){
+                    if (result is MyResult::Error){
                         next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                     }
                 } 
@@ -209,7 +212,7 @@ resource class PUSService4 provides PUSS4Iface {
             }
         }
 
-        for i : usize in 0 .. max_num_of_stats while (result is Result::Ok) {
+        for i : usize in 0 .. max_num_of_stats while (result is MyResult::Ok) {
 
             if (self->stats_config_table.defined[i] == true) {
 
@@ -225,11 +228,11 @@ resource class PUSService4 provides PUSS4Iface {
 
                         self->build_tm_4_2(&mut b_tm_handler2, tm_count, i, &mut result);
 
-                        if (result is Result::Ok){
+                        if (result is MyResult::Ok){
 
                             self->tm_channel.send_tm(b_tm_handler2, &mut result);
 
-                            if (result is Result::Error){
+                            if (result is MyResult::Error){
                                 next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                             }
                         } 
@@ -250,7 +253,7 @@ resource class PUSService4 provides PUSS4Iface {
             }
         }
 
-        if (result is Result::Ok){
+        if (result is MyResult::Ok){
 
             var tm_handler3 : Option<box TMHandlerT> = None;
             self->a_tm_handler_pool.alloc(&mut tm_handler3);
@@ -262,13 +265,14 @@ resource class PUSService4 provides PUSS4Iface {
                     var tm_count3 : u16 = 0 : u16;
                     self->tm_counter.get_next_tm_count(&mut tm_count3);
 
-                    build_tm_1_7(&mut b_tm_handler3, tm_count3, &mut result);
+                    self->pus_service_9.get_current_obt(&mut current_obt);
+                    build_tm_1_7(&mut b_tm_handler3, tm_count3, current_obt, &mut result);
 
-                    if (result is Result::Ok){
+                    if (result is MyResult::Ok){
 
                         self->tm_channel.send_tm(b_tm_handler3, &mut result);
 
-                        if (result is Result::Error){
+                        if (result is MyResult::Error){
                             next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                         }
                     } 
@@ -293,8 +297,10 @@ resource class PUSService4 provides PUSS4Iface {
 // TC[4,6] : Add or update parameter statistics definitions
     method exec4_6TC(&priv self) -> PSExecTCReqStatus {
 
-        var result : Result = Result::Ok;
+        var result : MyResult = MyResult::Ok;
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
+
+        var current_obt : MissionObt = {seconds = 0, finetime = 0};
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -308,14 +314,15 @@ resource class PUSService4 provides PUSS4Iface {
 
                 if (self->exec_tc_req_status_update.N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
+                    self->pus_service_9.get_current_obt(&mut current_obt);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl),
+                                 self->exec_tc_req_status_update.N, current_obt, &mut result);
 
-                    if (result is Result::Ok){
+                    if (result is MyResult::Ok){
 
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                        if (result is Result::Error){
+                        if (result is MyResult::Error){
                             next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                         }
                     } 
@@ -330,15 +337,16 @@ resource class PUSService4 provides PUSS4Iface {
 
                         result = self->add_PID_stats();
 
-                        if (result is Result::Ok) {
+                        if (result is MyResult::Ok) {
 
-                            build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                            self->pus_service_9.get_current_obt(&mut current_obt);
+                            build_tm_1_3(&mut b_tm_handler, tm_count, current_obt, &mut result);
 
-                            if (result is Result::Ok){
+                            if (result is MyResult::Ok){
 
                                 self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                                if (result is Result::Error){
+                                if (result is MyResult::Error){
                                     next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                                 }
                             } 
@@ -356,13 +364,14 @@ resource class PUSService4 provides PUSS4Iface {
                                     var tm_count2 : u16 = 0 : u16;
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
 
-                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
+                                    self->pus_service_9.get_current_obt(&mut current_obt);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, current_obt, &mut result);
                                     
-                                    if (result is Result::Ok){
+                                    if (result is MyResult::Ok){
 
                                         self->tm_channel.send_tm(b_tm_handler2, &mut result);
 
-                                        if (result is Result::Error){
+                                        if (result is MyResult::Error){
                                             next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                                         }
                                     } 
@@ -378,13 +387,15 @@ resource class PUSService4 provides PUSS4Iface {
 
                         } else {
 
-                            build_tm_1_8_not_free_stats_config(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
-                            if (result is Result::Ok){
+                            self->pus_service_9.get_current_obt(&mut current_obt);
+                            build_tm_1_8_not_free_stats_config(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl),
+                                             self->exec_tc_req_status_update.PID, current_obt, &mut result);
+
+                            if (result is MyResult::Ok){
 
                                 self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                                if (result is Result::Error){
+                                if (result is MyResult::Error){
                                     next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                                 }
                             } 
@@ -397,13 +408,15 @@ resource class PUSService4 provides PUSS4Iface {
                     }
                     else {
 
-                        build_tm_1_4_PID_not_valid (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
-                        if (result is Result::Ok){
+                        self->pus_service_9.get_current_obt(&mut current_obt);
+                        build_tm_1_4_PID_not_valid (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl),
+                                             self->exec_tc_req_status_update.PID, current_obt, &mut result);
+
+                        if (result is MyResult::Ok){
 
                             self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                            if (result is Result::Error){
+                            if (result is MyResult::Error){
                                 next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                             }
                         } 
@@ -425,8 +438,10 @@ resource class PUSService4 provides PUSS4Iface {
 // TC[4,7] : Delete parameter statistics definitions
     method exec4_7TC(&priv self) -> PSExecTCReqStatus {
 
-        var result : Result = Result::Ok;
+        var result : MyResult = MyResult::Ok;
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
+
+        var current_obt : MissionObt = {seconds = 0, finetime = 0};
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -440,13 +455,15 @@ resource class PUSService4 provides PUSS4Iface {
 
                 if (self->exec_tc_req_status_update.N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
-                    if (result is Result::Ok){
+                    self->pus_service_9.get_current_obt(&mut current_obt);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl),
+                                     self->exec_tc_req_status_update.N, current_obt, &mut result);
+
+                    if (result is MyResult::Ok){
 
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                        if (result is Result::Error){
+                        if (result is MyResult::Error){
                             next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                         }
                     } 
@@ -461,15 +478,16 @@ resource class PUSService4 provides PUSS4Iface {
 
                         result = self->delete_PID_stats();
 
-                        if (result is Result::Ok) {
+                        if (result is MyResult::Ok) {
 
-                            build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                            self->pus_service_9.get_current_obt(&mut current_obt);
+                            build_tm_1_3(&mut b_tm_handler, tm_count, current_obt, &mut result);
 
-                            if (result is Result::Ok){
+                            if (result is MyResult::Ok){
 
                                 self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                                if (result is Result::Error){
+                                if (result is MyResult::Error){
                                     next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                                 }
                             } 
@@ -487,13 +505,14 @@ resource class PUSService4 provides PUSS4Iface {
                                     var tm_count2 : u16 = 0 : u16;
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
 
-                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
+                                    self->pus_service_9.get_current_obt(&mut current_obt);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, current_obt, &mut result);
 
-                                    if (result is Result::Ok){
+                                    if (result is MyResult::Ok){
 
                                         self->tm_channel.send_tm(b_tm_handler2, &mut result);
 
-                                        if (result is Result::Error){
+                                        if (result is MyResult::Error){
                                             next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                                         }
                                     } 
@@ -510,14 +529,15 @@ resource class PUSService4 provides PUSS4Iface {
 
                         } else {
 
-                            build_tm_1_4_PID_stats_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
+                            self->pus_service_9.get_current_obt(&mut current_obt);
+                            build_tm_1_4_PID_stats_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl),
+                                             self->exec_tc_req_status_update.PID, current_obt, &mut result);
 
-                            if (result is Result::Ok){
+                            if (result is MyResult::Ok){
 
                                 self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                                if (result is Result::Error){
+                                if (result is MyResult::Error){
                                     next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                                 }
                             } 
@@ -531,14 +551,15 @@ resource class PUSService4 provides PUSS4Iface {
                     }
                     else {
 
-                        build_tm_1_4_PID_not_valid (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.PID, &mut result);
+                        self->pus_service_9.get_current_obt(&mut current_obt);
+                        build_tm_1_4_PID_not_valid (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl),
+                                     self->exec_tc_req_status_update.PID, current_obt, &mut result);
 
-                        if (result is Result::Ok){
+                        if (result is MyResult::Ok){
 
                             self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                            if (result is Result::Error){
+                            if (result is MyResult::Error){
                                 next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                             }
                         } 
@@ -557,7 +578,7 @@ resource class PUSService4 provides PUSS4Iface {
     }
     
 
-    viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut Result) -> PS4ExecTCReqStatusUpdate {
+    viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut MyResult) -> PS4ExecTCReqStatusUpdate {
 
         *subtype = tc_handler->df_header.subtype;
 
@@ -587,7 +608,9 @@ resource class PUSService4 provides PUSS4Iface {
     viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
-        var result : Result = Result::Ok;
+        var result : MyResult = MyResult::Ok;
+
+        var current_obt : MissionObt = {seconds = 0, finetime = 0};
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -599,14 +622,15 @@ resource class PUSService4 provides PUSS4Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                            (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.tc_num_bytes), &mut result);
+                self->pus_service_9.get_current_obt(&mut current_obt);
+                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl),
+                             (self->exec_tc_req_status_update.tc_num_bytes), current_obt, &mut result);
 
-                if (result is Result::Ok){
+                if (result is MyResult::Ok){
 
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                    if (result is Result::Error){
+                    if (result is MyResult::Error){
                         next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                     }
                 } 
@@ -623,7 +647,7 @@ resource class PUSService4 provides PUSS4Iface {
     }
 
 
-    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, result: &mut Result){
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>){
 
         var subtype : u8 = 0;
 
@@ -633,9 +657,11 @@ resource class PUSService4 provides PUSS4Iface {
 
                 case Init => {
 
-                    self->exec_tc_req_status_update = self->get_TC_params(tc_handler, &mut subtype, result);
-                    if (*result is Result::Error) {
-                        self->exec_tc_req_status = self->manage_short_pack_length_error();
+                    var result : MyResult = MyResult::Ok;
+                    self->exec_tc_req_status_update = self->get_TC_params(tc_handler, &mut subtype, &mut result);
+
+                    if (result is MyResult::Error) {
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error(TC_DATA_OUT_OF_RANGE_ERROR);
                     } else {
                         self->exec_tc_req_status = PSExecTCReqStatus::ExecTC;
                     }
@@ -664,10 +690,27 @@ resource class PUSService4 provides PUSS4Iface {
 
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
+                    if (error_code == ACCEPTANCE_ERROR) {
+
+                        //Generar TM[1,4] error en la aceptacion
+                        
+                    } else if (error_code == BUILD_TM_ERROR) {
+
+                        //Generar TM[1,8] error en la generacion de TM
+                       
+                    } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+
+                        self->exec_tc_req_status = self->manage_short_pack_length_error();
+                      
+                    } else {
+                        
+                       
+                    }
+
                 }
                 case Failure(failure_code) => {
 
-                    *action_status = Status::Failure(failure_code);
+                    *action_status = Status<i32>::Failure(failure_code);
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }
@@ -796,7 +839,7 @@ resource class PUSService4 provides PUSS4Iface {
         return mean_value;
     }
 
-    procedure update_all_stats(&mut self, result: &mut Result) {
+    procedure update_all_stats(&mut self, result: &mut MyResult) {
 
         for i : usize in 0 .. max_num_of_stats {
 
@@ -857,7 +900,7 @@ resource class PUSService4 provides PUSS4Iface {
 
                 
             } else {
-                *result = Result::Error;
+                *result = MyResult::Error;
                 self->stats_config_table.defined[i] = false;
                 
             }

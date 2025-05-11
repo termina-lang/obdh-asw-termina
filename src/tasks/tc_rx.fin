@@ -22,9 +22,9 @@ task class TCRXBottomHalfTask {
     a_tc_handler_pool : access Allocator<TCHandlerT>;
 
 
-    action get_tc (&priv self, data: u8) -> Status {
+    action get_tc (&priv self, data: u8) -> Status<i32> {
 
-        var ret : Status = Status::Success;
+        var ret : Status<i32> = Status<i32>::Success;
 
         match self->rx_status {
 
@@ -87,7 +87,7 @@ task class TCRXBottomHalfTask {
                             self->tc_message_queue_output.send(tc_handler_b);
                         }
                         case None => {
-                            ret = Status::Failure(TC_POOL_ALLOC_ERROR);
+                            ret = Status<i32>::Failure(TC_POOL_ALLOC_ERROR);
                         }
                     }
                 }

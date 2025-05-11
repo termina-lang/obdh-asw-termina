@@ -41,7 +41,7 @@ resource class PUSService17 provides PUSS17Iface {
 	method exec17_1TC(&priv self) -> PSExecTCReqStatus {
 
 		var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
-		var result : Result = Result::Ok;
+		var result : MyResult = MyResult::Ok;
 		
 
 		var tm_handler : Option<box TMHandlerT> = None;
@@ -56,7 +56,7 @@ resource class PUSService17 provides PUSS17Iface {
 				self->build_tm_17_2(&mut b_tm_handler, tm_count);
 				self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-				if (result is Result::Error){
+				if (result is MyResult::Error){
 					next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
 				}
 			} 
@@ -98,6 +98,19 @@ resource class PUSService17 provides PUSS17Iface {
                 case Error(error_code) => {
 
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
+
+                    if (error_code == ACCEPTANCE_ERROR) {
+
+                        //Generar TM[1,4] error en la aceptacion
+                        
+                    } else if (error_code == BUILD_TM_ERROR) {
+
+                        //Generar TM[1,8] error en la generacion de TM  
+                      
+                    } else {
+                        
+                       
+                    }
 
                 }
 

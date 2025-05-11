@@ -1,4 +1,5 @@
 import service_libraries.tc_ccsds_pus_format;
+import service_libraries.pus_services.pus_services;
 
 
 struct TCHandlerT {
@@ -51,9 +52,9 @@ function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandlerT, field
 
 }
 
-function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u8) -> Result {
+function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u8) -> MyResult {
 
-	var res : Result = Result::Ok;
+	var res : MyResult = MyResult::Ok;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 1)){
 
@@ -62,7 +63,7 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &
 
     } else {
 
-        res = Result::Error(TC_DATA_OUT_OF_RANGE_ERROR);
+        res = MyResult::Error;
 
     }
 
@@ -70,9 +71,9 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &
 
 }
 
-function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> Result {
+function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> MyResult {
 
-	var res : Result = Result::Ok;
+	var res : MyResult = MyResult::Ok;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 2)){
 
@@ -81,7 +82,7 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
     } else {
 
-        res = Result::Error(TC_DATA_OUT_OF_RANGE_ERROR);
+        res = MyResult::Error;
 
     }
     
@@ -89,9 +90,9 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
 }
 
-function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u32) -> Result {
+function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u32) -> MyResult {
 
-	var res : Result = Result::Ok;
+	var res : MyResult = MyResult::Ok;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 4)){
 
@@ -100,7 +101,7 @@ function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
     } else {
 
-        res = Result::Error(TC_DATA_OUT_OF_RANGE_ERROR);
+        res = MyResult::Error;
 
     }
 

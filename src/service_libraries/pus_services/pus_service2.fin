@@ -40,7 +40,7 @@ constexpr ps2_init_tc_req_status_update : PS2ExecTCReqStatusUpdate = {
 
 interface PUSS2Iface {
 
-    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status);
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>);
 
 };
 
@@ -55,11 +55,17 @@ resource class PUSService2 provides PUSS2Iface {
 
     gpio_driver : access GPIODrvIface;
 
+    pus_service_9 : access PUSS9Iface;
     
     method exec2_1TC(&priv self) -> PSExecTCReqStatus {
 
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
-        var result : Result = Result::Ok;
+        var result : MyResult = MyResult::Ok;
+
+        var current_obt : MissionObt = {
+            seconds = 0,
+            finetime = 0
+        };
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -73,13 +79,15 @@ resource class PUSService2 provides PUSS2Iface {
 
                 if (self->exec_tc_req_status_update.N != 1) {
 
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                                        (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.N, &mut result);
-                    if (result is Result::Ok){
+                    self->pus_service_9.get_current_obt(&mut current_obt);
+                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl), 
+                            self->exec_tc_req_status_update.N, current_obt, &mut result);
+
+                    if (result is MyResult::Ok){
 
                         self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                        if (result is Result::Error){
+                        if (result is MyResult::Error){
 					        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
 				        }
                     } else {
@@ -90,13 +98,14 @@ resource class PUSService2 provides PUSS2Iface {
 
                     if(self->device_drv_is_on_off_address_valid()){
 
-                        build_tm_1_3(&mut b_tm_handler, tm_count, &mut result);
+                        self->pus_service_9.get_current_obt(&mut current_obt);
+                        build_tm_1_3(&mut b_tm_handler, tm_count, current_obt, &mut result);
 
-                        if (result is Result::Ok){
+                        if (result is MyResult::Ok){
 
                             self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                            if (result is Result::Error){
+                            if (result is MyResult::Error){
                                 next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                             }
                         }
@@ -106,7 +115,7 @@ resource class PUSService2 provides PUSS2Iface {
                        
                         result = self->dev_drv_on_off();
 
-                        if (result is Result::Error) {
+                        if (result is MyResult::Error) {
 
                             var tm_handler2 : Option<box TMHandlerT> = None;
                             self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -117,14 +126,15 @@ resource class PUSService2 provides PUSS2Iface {
 
                                     var tm_count2 : u16 = 0 : u16;
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
-                                    build_tm_1_8_device_command_exec_error(&mut b_tm_handler2, tm_count2, (self->exec_tc_req_status_update.packet_id), 
-                                                            (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.dev_address, &mut result);
+                                    self->pus_service_9.get_current_obt(&mut current_obt);
+                                    build_tm_1_8_device_command_exec_error(&mut b_tm_handler2, tm_count2, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl),
+                                             self->exec_tc_req_status_update.dev_address, current_obt, &mut result);
 
-                                    if (result is Result::Ok){
+                                    if (result is MyResult::Ok){
 
                                         self->tm_channel.send_tm(b_tm_handler2, &mut result);
 
-                                        if (result is Result::Error){
+                                        if (result is MyResult::Error){
                                             next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                                         }
                                     }
@@ -149,13 +159,14 @@ resource class PUSService2 provides PUSS2Iface {
 
                                     var tm_count2 : u16 = 0 : u16;
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
-                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, &mut result);
+                                    self->pus_service_9.get_current_obt(&mut current_obt);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, current_obt, &mut result);
 
-                                    if (result is Result::Ok){
+                                    if (result is MyResult::Ok){
 
                                         self->tm_channel.send_tm(b_tm_handler2, &mut result);
 
-                                        if (result is Result::Error){
+                                        if (result is MyResult::Error){
                                             next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                                         }
                                     }
@@ -175,14 +186,15 @@ resource class PUSService2 provides PUSS2Iface {
 
                     } else {
 
-                        build_tm_1_4_device_address_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                                            (self->exec_tc_req_status_update.packet_error_ctrl), self->exec_tc_req_status_update.dev_address, &mut result);
+                        self->pus_service_9.get_current_obt(&mut current_obt);
+                        build_tm_1_4_device_address_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl),
+                                 self->exec_tc_req_status_update.dev_address, current_obt, &mut result);
 
-                        if (result is Result::Ok){
+                        if (result is MyResult::Ok){
 
                             self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                            if (result is Result::Error){
+                            if (result is MyResult::Error){
                                 next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                             }
                         } 
@@ -214,7 +226,7 @@ resource class PUSService2 provides PUSS2Iface {
 
     }
 
-    viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut Result) -> PS2ExecTCReqStatusUpdate {
+    viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut MyResult) -> PS2ExecTCReqStatusUpdate {
 
         *subtype = tc_handler->df_header.subtype;
 
@@ -238,7 +250,7 @@ resource class PUSService2 provides PUSS2Iface {
     viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
-        var result : Result = Result::Ok;
+        var result : MyResult = MyResult::Ok;
 
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -250,14 +262,15 @@ resource class PUSService2 provides PUSS2Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), 
-                                            (self->exec_tc_req_status_update.packet_error_ctrl), (self->exec_tc_req_status_update.tc_num_bytes), &mut result);
+                self->pus_service_9.get_current_obt(&mut current_obt);
+                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_error_ctrl), 
+                        (self->exec_tc_req_status_update.tc_num_bytes), current_obt, &mut result);
 
-                if (result is Result::Ok){
+                if (result is MyResult::Ok){
 
                     self->tm_channel.send_tm(b_tm_handler, &mut result);
 
-                    if (result is Result::Error){
+                    if (result is MyResult::Error){
                         next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
                     }
                 } 
@@ -273,18 +286,19 @@ resource class PUSService2 provides PUSS2Iface {
         return next_status;
     }
 
-    method dev_drv_on_off(&priv self) -> Result {
+    method dev_drv_on_off(&priv self) -> MyResult {
 
-        var result : Result = Result::Ok;
+        var result : MyResult = MyResult::Ok;
 
         var led: u8 = (self->exec_tc_req_status_update.dev_address & 0x10000000) as u8;
         var on_off : u8 = (self->exec_tc_req_status_update.dev_address & 0x00000001) as u8;
 
-        self->gpio_driver.write_led(led, on_off);
+        self->gpio_driver.write_led(led, on_off, &mut result);
+
         return result;
     }
 
-    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status){
+    procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>){
 
         var subtype : u8 = 0;
 
@@ -294,11 +308,12 @@ resource class PUSService2 provides PUSS2Iface {
 
                 case Init => {
 
-                    var result : Result = Result::Ok;
+                    var result : MyResult = MyResult::Ok;
                     
                     self->exec_tc_req_status_update = self->get_TC_params(tc_handler, &mut subtype, &mut result);
-                    if (*result is Result::Error) {
-                        self->exec_tc_req_status = self->manage_short_pack_length_error();
+
+                    if (result is MyResult::Error) {
+                        self->exec_tc_req_status = PSExecTCReqStatus::Error(TC_DATA_OUT_OF_RANGE_ERROR);
                     } else {
                         self->exec_tc_req_status = PSExecTCReqStatus::ExecTC;
                     }
@@ -315,15 +330,31 @@ resource class PUSService2 provides PUSS2Iface {
                         self->exec_tc_req_status = PSExecTCReqStatus::Error(ACCEPTANCE_ERROR);
                     }
                 }
-
                 case Error(error_code) => {
 
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
+                    if (error_code == ACCEPTANCE_ERROR) {
+
+                        //Generar TM[1,4] error en la aceptacion
+                        
+                    } else if (error_code == BUILD_TM_ERROR) {
+
+                        //Generar TM[1,8] error en la generacion de TM
+                       
+                    } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+
+                        self->exec_tc_req_status = self->manage_short_pack_length_error();
+                      
+                    } else {
+
+                       
+                    }      
+
                 }
                 case Failure(failure_code) => {
 
-                    *action_status = Status::Failure(failure_code);
+                    *action_status = Status<i32>::Failure(failure_code);
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }

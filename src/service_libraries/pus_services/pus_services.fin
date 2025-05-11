@@ -8,3 +8,9 @@ enum PSExecTCReqStatus {
     Failure (i32),
     Exit
 };
+
+
+enum MyResult {
+    Ok,
+    Error
+};

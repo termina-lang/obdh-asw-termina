@@ -1,5 +1,6 @@
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.serialize;
+import service_libraries.pus_services.pus_service9.pus_service9_help;
 
 
 struct TMHandlerT {
@@ -18,50 +19,50 @@ const tm_app_data_offset : usize = 19;
 
 
 
-function append_u8_appdata_field (tm_handler : &mut TMHandlerT, data : u8, result : &mut Result) {
+function append_u8_appdata_field (tm_handler : &mut TMHandlerT, data : u8, result : &mut MyResult) {
 
     if (tm_handler->app_data_index < max_send_size){
 
         tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index] = data;
         tm_handler->app_data_index = tm_handler->app_data_index + 1;
-        *result = Result::Ok;
+        *result = MyResult::Ok;
 
     } else {
 
-        *result = Result::Error(BUILD_TM_ERROR);
+        *result = MyResult::Error;
 
     }
 
     return;
 }
 
-function append_u16_appdata_field (tm_handler : &mut TMHandlerT, data : u16, result : &mut Result) {
+function append_u16_appdata_field (tm_handler : &mut TMHandlerT, data : u16, result : &mut MyResult) {
 
     if (tm_handler->app_data_index + 1 < max_send_size){
 
         serialize_uint16(data, &mut tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index .. tm_handler->app_data_index + 2]);
         tm_handler->app_data_index = tm_handler->app_data_index + 2;
-        *result = Result::Ok;
+        *result = MyResult::Ok;
 
     } else {
 
-        *result = Result::Error(BUILD_TM_ERROR);
+        *result = MyResult::Error;
     }
 
     return;
 }
 
-function append_u32_appdata_field (tm_handler : &mut TMHandlerT, data : u32, result : &mut Result) {
+function append_u32_appdata_field (tm_handler : &mut TMHandlerT, data : u32, result : &mut MyResult) {
 
     if (tm_handler->app_data_index + 3 < max_send_size){
 
         serialize_uint32(data, &mut tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index .. tm_handler->app_data_index + 4]);
         tm_handler->app_data_index = tm_handler->app_data_index + 4;
-        *result = Result::Ok;
+        *result = MyResult::Ok;
 
     } else {
 
-        *result = Result::Error(BUILD_TM_ERROR);
+        *result = MyResult::Error;
 
     }
 

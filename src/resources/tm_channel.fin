@@ -4,7 +4,7 @@ import service_libraries.tm_ccsds_pus_format;
 interface TMChannelIface {
 
     //procedure send_tm(&mut self, tm_descriptor: &TMDescriptorT, result : &mut Result);
-    procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut Result);
+    procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult);
 
 };
 
@@ -36,7 +36,7 @@ resource class TMChannel provides TMChannelIface {
         return;
    }*/
 
-    procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut Result) {
+    procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult) {
 
         var queue_state : CharDevResult = CharDevResult::Success;
 
@@ -44,11 +44,11 @@ resource class TMChannel provides TMChannelIface {
 
         if (queue_state is CharDevResult::Success) {
 
-            *result = Result::Ok;
+            *result = MyResult::Ok;
                     
         } else {
 
-            *result = Result::Error;
+            *result = MyResult::Error;
             
         }
 
