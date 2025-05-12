@@ -3,12 +3,14 @@
 
 #include <termina.h>
 
-#include "option.h"
 #include "service_libraries/pus_services/pus_service12/pus_service12_help.h"
+
+#include "option.h"
 
 typedef struct {
     void * __that;
-    void (* exec_tc)(void * const, TCHandlerT * const, Result * const);
+    void (* exec_tc)(void * const, TCHandlerT * const,
+                     __status_int32_t * const);
     void (* do_monitoring)(void * const, uint16_t, uint16_t * const,
                            FaultInfo * const, _Bool * const);
     void (* is_PMON_enabled)(void * const, size_t, _Bool * const);
@@ -27,7 +29,7 @@ typedef struct {
     __termina_allocator_t a_tm_handler_pool;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, Result * const);
+        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
     } tm_channel;
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
@@ -52,7 +54,7 @@ _Bool PUSService12__PID_is_below_lower_limit(const PUSService12 * const self,
 void PUSService12__build_tm_12_12(const PUSService12 * const self,
                                   TMHandlerT * const p_tm_handler,
                                   uint16_t tm_seq_counter,
-                                  Result * const result);
+                                  MyResult * const result);
 
 void PUSService12__add_monitoring_transition(PUSService12 * const self);
 
@@ -121,30 +123,30 @@ PSExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self);
 
 MonitorDefinition PUSService12__get_PMON_limit_check_definition(const PUSService12 * const self,
                                                                 TCHandlerT * const tc_handler,
-                                                                Result * const result);
+                                                                MyResult * const result);
 
 MonitorDefinition PUSService12__get_PMON_value_check_definition(const PUSService12 * const self,
                                                                 TCHandlerT * const tc_handler,
-                                                                Result * const result);
+                                                                MyResult * const result);
 
 PS12ExecTCReqStatusUpdate PUSService12__get_TC_params(const PUSService12 * const self,
                                                       TCHandlerT * const tc_handler,
                                                       uint8_t * const subtype,
-                                                      Result * const result);
+                                                      MyResult * const result);
 
 PSExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSService12 * const self);
 
 void PUSService12__exec_tc(void * const __this, TCHandlerT * const tc_handler,
-                           Result * const result);
+                           __status_int32_t * const action_status);
 void PUSService12__exec_tc__mutex_lock(void * const __this,
                                        TCHandlerT * const tc_handler,
-                                       Result * const result);
+                                       __status_int32_t * const action_status);
 void PUSService12__exec_tc__task_lock(void * const __this,
                                       TCHandlerT * const tc_handler,
-                                      Result * const result);
+                                      __status_int32_t * const action_status);
 void PUSService12__exec_tc__event_lock(void * const __this,
                                        TCHandlerT * const tc_handler,
-                                       Result * const result);
+                                       __status_int32_t * const action_status);
 
 MonitorCheckType PUSService12__get_PMON_type(const PUSService12 * const self,
                                              size_t PMONID);

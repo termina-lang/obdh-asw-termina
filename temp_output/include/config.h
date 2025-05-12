@@ -23,6 +23,9 @@
 #define __pus_bkg_tc_executor__task_id 2
 #define __tc_rx_bottom_half_task__task_id 3
 
+#define __init__handler_id 0
+#define __uart_hdlr__handler_id 1
+
 #define __hk_fdir__task_msg_queue_id 0
 #define __hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id 1
 #define __icu_manager__task_msg_queue_id 2

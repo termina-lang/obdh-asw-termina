@@ -3,8 +3,10 @@
 
 #include <termina.h>
 
-#include "option.h"
+#include "service_libraries/pus_services/pus_services.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
+
+#include "option.h"
 
 typedef struct {
     TCDescriptorT tc_descriptor;
@@ -22,13 +24,13 @@ void tc_handler_build_from_descriptor(TCHandlerT * const tc_handler,
 _Bool tc_handler_is_valid_next_appdata_field(const TCHandlerT * const tc_handler,
                                              size_t field_size);
 
-Result tc_handler_get_u8_appdata_field(TCHandlerT * const tc_handler,
-                                       uint8_t * const data);
+MyResult tc_handler_get_u8_appdata_field(TCHandlerT * const tc_handler,
+                                         uint8_t * const data);
 
-Result tc_handler_get_u16_appdata_field(TCHandlerT * const tc_handler,
-                                        uint16_t * const data);
+MyResult tc_handler_get_u16_appdata_field(TCHandlerT * const tc_handler,
+                                          uint16_t * const data);
 
-Result tc_handler_get_u32_appdata_field(TCHandlerT * const tc_handler,
-                                        uint32_t * const data);
+MyResult tc_handler_get_u32_appdata_field(TCHandlerT * const tc_handler,
+                                          uint32_t * const data);
 
 #endif

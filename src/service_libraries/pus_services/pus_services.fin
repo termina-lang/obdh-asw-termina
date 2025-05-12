@@ -1,11 +1,11 @@
-
+import service_libraries.errors;
 // PUS Services
 
 enum PSExecTCReqStatus {
     Init,
     ExecTC,
-    Error (i32),
-    Failure (i32),
+    Error(i32),
+    Failure(i32),
     Exit
 };
 

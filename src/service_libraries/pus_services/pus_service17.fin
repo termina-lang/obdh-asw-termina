@@ -11,7 +11,7 @@ import service_libraries.pus_services.pus_services;
 
 
 interface PUSS17Iface {
-	procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status);
+	procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>);
 };
 
 resource class PUSService17 provides PUSS17Iface {
@@ -71,7 +71,7 @@ resource class PUSService17 provides PUSS17Iface {
 		return next_status;
 	}
 
-	procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status) {
+	procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>) {
 
         var subtype : u8 = tc_handler->df_header.subtype;
 
@@ -116,7 +116,7 @@ resource class PUSService17 provides PUSS17Iface {
 
 				case Failure(failure_code) => {
 
-					*action_status = Status::Failure(failure_code);
+					*action_status = Failure(failure_code);
 					self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
 				}

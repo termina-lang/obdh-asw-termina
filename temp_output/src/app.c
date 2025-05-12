@@ -29,11 +29,11 @@ TMChannel telemetry_channel;
 
 TMCounter telemetry_counter;
 
+PUSService9 pus_service_9;
+
 PUSService3 pus_service_3;
 
 PUSService5 pus_service_5;
-
-PUSService9 pus_service_9;
 
 PUSService12 pus_service_12;
 

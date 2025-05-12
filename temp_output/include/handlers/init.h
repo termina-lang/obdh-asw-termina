@@ -3,11 +3,13 @@
 
 #include <termina.h>
 
-#include "option.h"
-#include "resources/uart.h"
 #include "resources/system_data_pool.h"
+#include "resources/uart.h"
+
+#include "option.h"
 
 typedef struct {
+    __termina_id_t __handler_id;
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
     struct {
@@ -20,6 +22,6 @@ typedef struct {
     } uart;
 } Init;
 
-Result Init__init(void * const __this, TimeVal _boot_time);
+__status_int32_t Init__init(void * const __this, TimeVal _boot_time);
 
 #endif

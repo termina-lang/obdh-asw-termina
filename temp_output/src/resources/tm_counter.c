@@ -18,12 +18,11 @@ void TMCounter__get_next_tm_count__mutex_lock(void * const __this,
     
     TMCounter * self = (TMCounter *)__this;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t __status = 0L;
 
-    __termina_mutex__lock(self->__mutex_id, &status);
+    __termina_mutex__lock(self->__mutex_id, &__status);
     TMCounter__get_next_tm_count(self, count);
-    __termina_mutex__unlock(self->__mutex_id, &status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 

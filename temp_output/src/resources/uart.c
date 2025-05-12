@@ -87,12 +87,11 @@ void UARTDriver__initialize__mutex_lock(void * const __this) {
     
     UARTDriver * self = (UARTDriver *)__this;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t __status = 0L;
 
-    __termina_mutex__lock(self->__mutex_id, &status);
+    __termina_mutex__lock(self->__mutex_id, &__status);
     UARTDriver__initialize(self);
-    __termina_mutex__unlock(self->__mutex_id, &status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 
@@ -170,12 +169,11 @@ void UARTDriver__release_tx__mutex_lock(void * const __this) {
     
     UARTDriver * self = (UARTDriver *)__this;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t __status = 0L;
 
-    __termina_mutex__lock(self->__mutex_id, &status);
+    __termina_mutex__lock(self->__mutex_id, &__status);
     UARTDriver__release_tx(self);
-    __termina_mutex__unlock(self->__mutex_id, &status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 
@@ -329,12 +327,11 @@ void UARTDriver__send__mutex_lock(void * const __this,
     
     UARTDriver * self = (UARTDriver *)__this;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t __status = 0L;
 
-    __termina_mutex__lock(self->__mutex_id, &status);
+    __termina_mutex__lock(self->__mutex_id, &__status);
     UARTDriver__send(self, output_bytes, nbytes, result);
-    __termina_mutex__unlock(self->__mutex_id, &status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 

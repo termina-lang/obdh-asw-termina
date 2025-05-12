@@ -3,16 +3,16 @@
 
 #include <termina.h>
 
-#include "option.h"
+#include "resources/system_data_pool.h"
+#include "service_libraries/pus_services/pus_service1/pus_service1.h"
+#include "service_libraries/pus_services/pus_service9/pus_service9.h"
+#include "service_libraries/pus_services/pus_services.h"
+#include "service_libraries/pus_tc_handler.h"
+#include "service_libraries/serialize.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
-#include "service_libraries/serialize.h"
-#include "service_libraries/pus_services/pus_service1/pus_service1.h"
-#include "service_libraries/event_list.h"
-#include "resources/system_data_pool.h"
-#include "service_libraries/pus_tc_handler.h"
-#include "service_libraries/pus_services/pus_services.h"
-#include "service_libraries/pus_services/pus_service9/pus_service9.h"
+
+#include "option.h"
 
 extern const size_t max_num_pmon_ids;
 

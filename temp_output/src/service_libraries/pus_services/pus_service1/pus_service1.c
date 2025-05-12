@@ -96,21 +96,41 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
             }
 
+        } else if (4U == type) {
+            
+            if (1U == subtype || 6U == subtype || 7U == subtype) {
+                
+                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+
+            } else {
+                
+                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+
+                status.error_code.__variant = TCErrorType__SubTypeError;
+
+            }
+
+        } else if (2U == type) {
+            
+            if (1U == subtype) {
+                
+                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
+
+            } else {
+                
+                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+
+                status.error_code.__variant = TCErrorType__SubTypeError;
+
+            }
+
         } else if (3U == type) {
             
-            if (5U == subtype) {
-                
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
-
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
-
-            } else if (6U == subtype) {
-                
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
-
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
-
-            } else if (31U == subtype) {
+            if (5U == subtype || 6U == subtype || 31U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -126,13 +146,7 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
         } else if (20U == type) {
             
-            if (1U == subtype) {
-                
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
-
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlBKGTC;
-
-            } else if (3U == subtype) {
+            if (1U == subtype || 3U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -148,13 +162,7 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
         } else if (5U == type) {
             
-            if (5U == subtype) {
-                
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
-
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
-
-            } else if (6U == subtype) {
+            if (5U == subtype || 6U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -170,19 +178,7 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
         } else if (12U == type) {
             
-            if (1U == subtype) {
-                
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
-
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
-
-            } else if (5U == subtype) {
-                
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
-
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
-
-            } else if (6U == subtype) {
+            if (1U == subtype || 5U == subtype || 6U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
@@ -198,25 +194,7 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
 
         } else if (19U == type) {
             
-            if (1U == subtype) {
-                
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
-
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
-
-            } else if (2U == subtype) {
-                
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
-
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
-
-            } else if (4U == subtype) {
-                
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
-
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
-
-            } else if (5U == subtype) {
+            if (1U == subtype || 2U == subtype || 4U == subtype || 5U == subtype) {
                 
                 status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 

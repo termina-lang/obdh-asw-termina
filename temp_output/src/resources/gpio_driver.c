@@ -15,12 +15,11 @@ void GPIODriver__init_gpio__mutex_lock(void * const __this) {
     
     GPIODriver * self = (GPIODriver *)__this;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t __status = 0L;
 
-    __termina_mutex__lock(self->__mutex_id, &status);
+    __termina_mutex__lock(self->__mutex_id, &__status);
     GPIODriver__init_gpio(self);
-    __termina_mutex__unlock(self->__mutex_id, &status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 
@@ -44,12 +43,15 @@ void GPIODriver__init_gpio__event_lock(void * const __this) {
 
 }
 
-void GPIODriver__write_led(void * const __this, uint8_t led, uint8_t value) {
+void GPIODriver__write_led(void * const __this, uint8_t led, uint8_t value,
+                           MyResult * const result) {
     
     GPIODriver * self = (GPIODriver *)__this;
 
     if (led < 4U) {
         
+        (*result).__variant = MyResult__Ok;
+
         uint8_t bit = led + 16U;
 
         if (value == 0U) {
@@ -64,6 +66,10 @@ void GPIODriver__write_led(void * const __this, uint8_t led, uint8_t value) {
 
         }
 
+    } else {
+        
+        (*result).__variant = MyResult__Error;
+
     }
 
     return;
@@ -71,37 +77,36 @@ void GPIODriver__write_led(void * const __this, uint8_t led, uint8_t value) {
 }
 
 void GPIODriver__write_led__mutex_lock(void * const __this, uint8_t led,
-                                       uint8_t value) {
+                                       uint8_t value, MyResult * const result) {
     
     GPIODriver * self = (GPIODriver *)__this;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t __status = 0L;
 
-    __termina_mutex__lock(self->__mutex_id, &status);
-    GPIODriver__write_led(self, led, value);
-    __termina_mutex__unlock(self->__mutex_id, &status);
+    __termina_mutex__lock(self->__mutex_id, &__status);
+    GPIODriver__write_led(self, led, value, result);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 
 void GPIODriver__write_led__task_lock(void * const __this, uint8_t led,
-                                      uint8_t value) {
+                                      uint8_t value, MyResult * const result) {
     
     __termina_task_lock_t lock;
 
     lock = __termina_task__lock();
-    GPIODriver__write_led(__this, led, value);
+    GPIODriver__write_led(__this, led, value, result);
     __termina_task__unlock(lock);
 
 }
 
 void GPIODriver__write_led__event_lock(void * const __this, uint8_t led,
-                                       uint8_t value) {
+                                       uint8_t value, MyResult * const result) {
     
     __termina_event_lock_t lock;
 
     lock = __termina_event__lock();
-    GPIODriver__write_led(__this, led, value);
+    GPIODriver__write_led(__this, led, value, result);
     __termina_event__unlock(lock);
 
 }

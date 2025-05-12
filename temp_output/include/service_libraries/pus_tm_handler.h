@@ -3,9 +3,11 @@
 
 #include <termina.h>
 
-#include "option.h"
-#include "service_libraries/tm_ccsds_pus_format.h"
+#include "service_libraries/pus_services/pus_service9/pus_service9_help.h"
 #include "service_libraries/serialize.h"
+#include "service_libraries/tm_ccsds_pus_format.h"
+
+#include "option.h"
 
 typedef struct {
     TMDescriptorT tm_descriptor;
@@ -23,25 +25,22 @@ extern const uint16_t destinationID;
 extern const size_t tm_app_data_offset;
 
 void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
-                             Result * const result);
+                             MyResult * const result);
 
 void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
-                              Result * const result);
+                              MyResult * const result);
 
 void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
-                              Result * const result);
-
-void append_TimeVal_as_u32_appdata_field(TMHandlerT * const tm_handler,
-                                         TimeVal time, Result * const result);
+                              MyResult * const result);
 
 void tm_handler_build_packet_header(TMHandlerT * const tm_handler,
                                     uint16_t tm_seq_counter);
 
 void tm_handler_build_df_header(TMHandlerT * const tm_handler, uint8_t tm_type,
-                                uint8_t tm_subtype);
+                                uint8_t tm_subtype, MissionObt current_obt);
 
 void close_tm(TMHandlerT * const tm_handler, uint8_t type, uint8_t subtype,
-              uint16_t tm_count, Result * const result);
+              uint16_t tm_count, MissionObt current_obt);
 
 void startup_tm(TMHandlerT * const tm_handler);
 

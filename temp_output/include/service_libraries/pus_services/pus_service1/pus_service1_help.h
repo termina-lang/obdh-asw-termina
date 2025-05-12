@@ -3,13 +3,14 @@
 
 #include <termina.h>
 
-#include "option.h"
-#include "service_libraries/tc_ccsds_pus_format.h"
-#include "service_libraries/tm_ccsds_pus_format.h"
 #include "service_libraries/crc.h"
-#include "service_libraries/serialize.h"
 #include "service_libraries/pus_tc_handler.h"
 #include "service_libraries/pus_tm_handler.h"
+#include "service_libraries/serialize.h"
+#include "service_libraries/tc_ccsds_pus_format.h"
+#include "service_libraries/tm_ccsds_pus_format.h"
+
+#include "option.h"
 
 typedef enum {
     TCAcceptationStatus__Accepted,
@@ -76,7 +77,8 @@ void build_tm_1_X_no_failure_data(TMHandlerT * const p_tm_handler,
                                   uint16_t tc_packet_id,
                                   uint16_t tc_packet_error_ctrl,
                                   TCVerifyStage verify_stage,
-                                  uint8_t failure_code, Result * const result);
+                                  uint8_t failure_code, MissionObt current_obt,
+                                  MyResult * const result);
 
 void build_tm_1_X_u8_failure_data(TMHandlerT * const p_tm_handler,
                                   uint16_t tm_seq_counter,
@@ -84,7 +86,8 @@ void build_tm_1_X_u8_failure_data(TMHandlerT * const p_tm_handler,
                                   uint16_t tc_packet_error_ctrl,
                                   TCVerifyStage verify_stage,
                                   uint8_t failure_code, uint8_t failure_data,
-                                  Result * const result);
+                                  MissionObt current_obt,
+                                  MyResult * const result);
 
 void build_tm_1_X_u16_failure_data(TMHandlerT * const p_tm_handler,
                                    uint16_t tm_seq_counter,
@@ -92,7 +95,8 @@ void build_tm_1_X_u16_failure_data(TMHandlerT * const p_tm_handler,
                                    uint16_t tc_packet_error_ctrl,
                                    TCVerifyStage verify_stage,
                                    uint8_t failure_code, uint16_t failure_data,
-                                   Result * const result);
+                                   MissionObt current_obt,
+                                   MyResult * const result);
 
 void build_tm_1_X_u32_failure_data(TMHandlerT * const p_tm_handler,
                                    uint16_t tm_seq_counter,
@@ -100,7 +104,8 @@ void build_tm_1_X_u32_failure_data(TMHandlerT * const p_tm_handler,
                                    uint16_t tc_packet_error_ctrl,
                                    TCVerifyStage verify_stage,
                                    uint8_t failure_code, uint32_t failure_data,
-                                   Result * const result);
+                                   MissionObt current_obt,
+                                   MyResult * const result);
 
 void build_tm_1_X_u8_u32_failure_data(TMHandlerT * const p_tm_handler,
                                       uint16_t tm_seq_counter,
@@ -110,6 +115,7 @@ void build_tm_1_X_u8_u32_failure_data(TMHandlerT * const p_tm_handler,
                                       uint8_t failure_code,
                                       uint8_t failure_data1,
                                       uint32_t failure_data2,
-                                      Result * const result);
+                                      MissionObt current_obt,
+                                      MyResult * const result);
 
 #endif

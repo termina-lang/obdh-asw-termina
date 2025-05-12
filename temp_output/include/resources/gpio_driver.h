@@ -14,7 +14,7 @@ typedef struct {
 typedef struct {
     void * __that;
     void (* init_gpio)(void * const);
-    void (* write_led)(void * const, uint8_t, uint8_t);
+    void (* write_led)(void * const, uint8_t, uint8_t, MyResult * const);
 } GPIODrvIface;
 
 typedef struct {
@@ -27,12 +27,13 @@ void GPIODriver__init_gpio__mutex_lock(void * const __this);
 void GPIODriver__init_gpio__task_lock(void * const __this);
 void GPIODriver__init_gpio__event_lock(void * const __this);
 
-void GPIODriver__write_led(void * const __this, uint8_t led, uint8_t value);
+void GPIODriver__write_led(void * const __this, uint8_t led, uint8_t value,
+                           MyResult * const result);
 void GPIODriver__write_led__mutex_lock(void * const __this, uint8_t led,
-                                       uint8_t value);
+                                       uint8_t value, MyResult * const result);
 void GPIODriver__write_led__task_lock(void * const __this, uint8_t led,
-                                      uint8_t value);
+                                      uint8_t value, MyResult * const result);
 void GPIODriver__write_led__event_lock(void * const __this, uint8_t led,
-                                       uint8_t value);
+                                       uint8_t value, MyResult * const result);
 
 #endif

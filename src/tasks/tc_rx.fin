@@ -1,5 +1,6 @@
 import service_libraries.tc_ccsds_pus_format;
 import service_libraries.serialize;
+import service_libraries.errors;
 
 enum RXStatus {
     SyncBytesRx,
@@ -24,7 +25,7 @@ task class TCRXBottomHalfTask {
 
     action get_tc (&priv self, data: u8) -> Status<i32> {
 
-        var ret : Status<i32> = Status<i32>::Success;
+        var ret : Status<i32> = Success;
 
         match self->rx_status {
 
@@ -87,7 +88,7 @@ task class TCRXBottomHalfTask {
                             self->tc_message_queue_output.send(tc_handler_b);
                         }
                         case None => {
-                            ret = Status<i32>::Failure(TC_POOL_ALLOC_ERROR);
+                            ret = Failure(TM_POOL_ALLOC_FAILURE);
                         }
                     }
                 }

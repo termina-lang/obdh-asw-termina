@@ -3,8 +3,9 @@
 
 #include <termina.h>
 
-#include "option.h"
 #include "service_libraries/serialize.h"
+
+#include "option.h"
 
 extern const size_t max_tc_size;
 

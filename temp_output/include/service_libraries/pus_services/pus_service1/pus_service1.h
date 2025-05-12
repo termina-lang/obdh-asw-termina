@@ -3,9 +3,10 @@
 
 #include <termina.h>
 
-#include "option.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1_help.h"
 #include "service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.h"
+
+#include "option.h"
 
 TCExecutionCtrl handle_tc(const TCDescriptorT * const tc_descriptor);
 

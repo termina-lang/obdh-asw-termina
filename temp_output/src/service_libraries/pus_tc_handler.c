@@ -61,11 +61,11 @@ _Bool tc_handler_is_valid_next_appdata_field(const TCHandlerT * const tc_handler
 
 }
 
-Result tc_handler_get_u8_appdata_field(TCHandlerT * const tc_handler,
-                                       uint8_t * const data) {
+MyResult tc_handler_get_u8_appdata_field(TCHandlerT * const tc_handler,
+                                         uint8_t * const data) {
     
-    Result res;
-    res.__variant = Result__Ok;
+    MyResult res;
+    res.__variant = MyResult__Ok;
 
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 1U)) {
         
@@ -76,7 +76,7 @@ Result tc_handler_get_u8_appdata_field(TCHandlerT * const tc_handler,
 
     } else {
         
-        res.__variant = Result__Error;
+        res.__variant = MyResult__Error;
 
     }
 
@@ -84,11 +84,11 @@ Result tc_handler_get_u8_appdata_field(TCHandlerT * const tc_handler,
 
 }
 
-Result tc_handler_get_u16_appdata_field(TCHandlerT * const tc_handler,
-                                        uint16_t * const data) {
+MyResult tc_handler_get_u16_appdata_field(TCHandlerT * const tc_handler,
+                                          uint16_t * const data) {
     
-    Result res;
-    res.__variant = Result__Ok;
+    MyResult res;
+    res.__variant = MyResult__Ok;
 
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 2U)) {
         
@@ -101,7 +101,7 @@ Result tc_handler_get_u16_appdata_field(TCHandlerT * const tc_handler,
 
     } else {
         
-        res.__variant = Result__Error;
+        res.__variant = MyResult__Error;
 
     }
 
@@ -109,11 +109,11 @@ Result tc_handler_get_u16_appdata_field(TCHandlerT * const tc_handler,
 
 }
 
-Result tc_handler_get_u32_appdata_field(TCHandlerT * const tc_handler,
-                                        uint32_t * const data) {
+MyResult tc_handler_get_u32_appdata_field(TCHandlerT * const tc_handler,
+                                          uint32_t * const data) {
     
-    Result res;
-    res.__variant = Result__Ok;
+    MyResult res;
+    res.__variant = MyResult__Ok;
 
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 4U)) {
         
@@ -126,7 +126,7 @@ Result tc_handler_get_u32_appdata_field(TCHandlerT * const tc_handler,
 
     } else {
         
-        res.__variant = Result__Error;
+        res.__variant = MyResult__Error;
 
     }
 

@@ -11,6 +11,7 @@ import service_libraries.tm_ccsds_pus_format;
 import resources.tm_counter;
 import resources.tm_channel;
 import service_libraries.pus_services.pus_services;
+import service_libraries.pus_services.pus_service9.pus_service9;
 
 const num_params2 : usize = 64;
 
@@ -91,6 +92,7 @@ resource class PUSService2 provides PUSS2Iface {
 					        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
 				        }
                     } else {
+                        self->a_tm_handler_pool.free(b_tm_handler);
                         next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                     }
                     
@@ -110,7 +112,8 @@ resource class PUSService2 provides PUSS2Iface {
                             }
                         }
                         else {
-                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                            self->a_tm_handler_pool.free(b_tm_handler);
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                         }
                        
                         result = self->dev_drv_on_off();
@@ -139,6 +142,7 @@ resource class PUSService2 provides PUSS2Iface {
                                         }
                                     }
                                     else {
+                                        self->a_tm_handler_pool.free(b_tm_handler2);
                                         next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                                     }
                                 }
@@ -171,6 +175,7 @@ resource class PUSService2 provides PUSS2Iface {
                                         }
                                     }
                                     else {
+                                        self->a_tm_handler_pool.free(b_tm_handler2);
                                         next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                                     }
                                     
@@ -199,7 +204,8 @@ resource class PUSService2 provides PUSS2Iface {
                             }
                         } 
                         else {
-                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                            self->a_tm_handler_pool.free(b_tm_handler);
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                         }
                     }
                 }
@@ -252,6 +258,11 @@ resource class PUSService2 provides PUSS2Iface {
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
         var result : MyResult = MyResult::Ok;
 
+        var current_obt : MissionObt = {
+            seconds = 0,
+            finetime = 0
+        };
+
         var tm_handler : Option<box TMHandlerT> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
 
@@ -275,7 +286,8 @@ resource class PUSService2 provides PUSS2Iface {
                     }
                 } 
                 else {
-                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                    self->a_tm_handler_pool.free(b_tm_handler);
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                 }
             }
             case None => {
@@ -354,7 +366,7 @@ resource class PUSService2 provides PUSS2Iface {
                 }
                 case Failure(failure_code) => {
 
-                    *action_status = Status<i32>::Failure(failure_code);
+                    *action_status = Failure(failure_code);
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }

@@ -1,12 +1,20 @@
 
 #include "service_libraries/pus_services/pus_service17.h"
 
-void build_tm_17_2(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                   Result * const result) {
+void PUSService17__build_tm_17_2(const PUSService17 * const self,
+                                 TMHandlerT * const p_tm_handler,
+                                 uint16_t tm_seq_counter) {
     
     startup_tm(p_tm_handler);
 
-    close_tm(p_tm_handler, 17U, 2U, tm_seq_counter, result);
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                        &current_obt);
+
+    close_tm(p_tm_handler, 17U, 2U, tm_seq_counter, current_obt);
 
     return;
 
@@ -15,16 +23,15 @@ void build_tm_17_2(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
 PSExecTCReqStatus PUSService17__exec17_1TC(PUSService17 * const self) {
     
     PSExecTCReqStatus next_status;
-    next_status.__variant = PSExecTCReqStatus__Error;
+    next_status.__variant = PSExecTCReqStatus__Exit;
 
-    Result result;
-    result.__variant = Result__Ok;
+    MyResult result;
+    result.__variant = MyResult__Ok;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
 
-    (self->a_tm_handler_pool.alloc)(self->a_tm_handler_pool.__that,
-                                    &tm_handler);
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
 
     if (tm_handler.__variant == Some) {
         
@@ -32,27 +39,25 @@ PSExecTCReqStatus PUSService17__exec17_1TC(PUSService17 * const self) {
 
         uint16_t tm_count = 0U;
 
-        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
-                                             &tm_count);
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
 
-        build_tm_17_2((TMHandlerT *)b_tm_handler.data, tm_count, &result);
+        PUSService17__build_tm_17_2(self, (TMHandlerT *)b_tm_handler.data,
+                                    tm_count);
 
-        (self->tm_channel.send_tm)(self->tm_channel.__that, b_tm_handler,
-                                   &result);
+        self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                 &result);
 
-    } else {
-        
-        result.__variant = Result__Error;
+        if (result.__variant == MyResult__Error) {
+            
+            next_status.__variant = PSExecTCReqStatus__Failure;
+            next_status.Failure.__0 = TM_SEND_FAILURE;
 
-    }
-
-    if (result.__variant == Result__Ok) {
-        
-        next_status.__variant = PSExecTCReqStatus__Exit;
+        }
 
     } else {
         
-        next_status.__variant = PSExecTCReqStatus__Error;
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
@@ -61,13 +66,13 @@ PSExecTCReqStatus PUSService17__exec17_1TC(PUSService17 * const self) {
 }
 
 void PUSService17__exec_tc(void * const __this, TCHandlerT * const tc_handler,
-                           Result * const result) {
+                           __status_int32_t * const action_status) {
     
     PUSService17 * self = (PUSService17 *)__this;
 
     uint8_t subtype = tc_handler->df_header.subtype;
 
-    for (size_t i = 0U; i < 2U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
+    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
         
         if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Init) {
             
@@ -81,12 +86,33 @@ void PUSService17__exec_tc(void * const __this, TCHandlerT * const tc_handler,
             } else {
                 
                 self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
+                self->exec_tc_req_status.Error.__0 = ACCEPTANCE_ERROR;
 
             }
 
         } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Error) {
             
-            (*result).__variant = Result__Error;
+            int32_t error_code = self->exec_tc_req_status.Error.__0;
+
+            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
+
+            if (error_code == ACCEPTANCE_ERROR) {
+                
+
+            } else if (error_code == BUILD_TM_ERROR) {
+                
+
+            } else {
+                
+
+            }
+
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Failure) {
+            
+            int32_t failure_code = self->exec_tc_req_status.Failure.__0;
+
+            (*action_status).__variant = Failure;
+            (*action_status).Failure.__0 = failure_code;
 
             self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
 
@@ -99,7 +125,7 @@ void PUSService17__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit) {
         
-        self->exec_tc_req_status.__variant = PSExecTCReqStatus__ExecTC;
+        self->exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
 
     }
 
@@ -109,39 +135,38 @@ void PUSService17__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
 void PUSService17__exec_tc__mutex_lock(void * const __this,
                                        TCHandlerT * const tc_handler,
-                                       Result * const result) {
+                                       __status_int32_t * const action_status) {
     
     PUSService17 * self = (PUSService17 *)__this;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t __status = 0L;
 
-    __termina_mutex__lock(self->__mutex_id, &status);
-    PUSService17__exec_tc(self, tc_handler, result);
-    __termina_mutex__unlock(self->__mutex_id, &status);
+    __termina_mutex__lock(self->__mutex_id, &__status);
+    PUSService17__exec_tc(self, tc_handler, action_status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 
 void PUSService17__exec_tc__task_lock(void * const __this,
                                       TCHandlerT * const tc_handler,
-                                      Result * const result) {
+                                      __status_int32_t * const action_status) {
     
     __termina_task_lock_t lock;
 
     lock = __termina_task__lock();
-    PUSService17__exec_tc(__this, tc_handler, result);
+    PUSService17__exec_tc(__this, tc_handler, action_status);
     __termina_task__unlock(lock);
 
 }
 
 void PUSService17__exec_tc__event_lock(void * const __this,
                                        TCHandlerT * const tc_handler,
-                                       Result * const result) {
+                                       __status_int32_t * const action_status) {
     
     __termina_event_lock_t lock;
 
     lock = __termina_event__lock();
-    PUSService17__exec_tc(__this, tc_handler, result);
+    PUSService17__exec_tc(__this, tc_handler, action_status);
     __termina_event__unlock(lock);
 
 }

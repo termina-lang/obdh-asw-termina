@@ -10,7 +10,7 @@ const uint16_t destinationID = 0x78U;
 const size_t tm_app_data_offset = 19U;
 
 void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
-                             Result * const result) {
+                             MyResult * const result) {
     
     if (tm_handler->app_data_index < max_send_size) {
         
@@ -19,11 +19,11 @@ void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
 
         tm_handler->app_data_index = tm_handler->app_data_index + 1U;
 
-        (*result).__variant = Result__Ok;
+        (*result).__variant = MyResult__Ok;
 
     } else {
         
-        (*result).__variant = Result__Error;
+        (*result).__variant = MyResult__Error;
 
     }
 
@@ -32,7 +32,7 @@ void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
 }
 
 void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
-                              Result * const result) {
+                              MyResult * const result) {
     
     if ((size_t)(tm_handler->app_data_index + 1U) < max_send_size) {
         
@@ -44,11 +44,11 @@ void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
 
         tm_handler->app_data_index = tm_handler->app_data_index + 2U;
 
-        (*result).__variant = Result__Ok;
+        (*result).__variant = MyResult__Ok;
 
     } else {
         
-        (*result).__variant = Result__Error;
+        (*result).__variant = MyResult__Error;
 
     }
 
@@ -57,7 +57,7 @@ void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
 }
 
 void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
-                              Result * const result) {
+                              MyResult * const result) {
     
     if ((size_t)(tm_handler->app_data_index + 3U) < max_send_size) {
         
@@ -69,38 +69,11 @@ void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
 
         tm_handler->app_data_index = tm_handler->app_data_index + 4U;
 
-        (*result).__variant = Result__Ok;
+        (*result).__variant = MyResult__Ok;
 
     } else {
         
-        (*result).__variant = Result__Error;
-
-    }
-
-    return;
-
-}
-
-void append_TimeVal_as_u32_appdata_field(TMHandlerT * const tm_handler,
-                                         TimeVal time, Result * const result) {
-    
-    uint32_t data = time.tv_sec;
-
-    if ((size_t)(tm_handler->app_data_index + 3U) < max_send_size) {
-        
-        serialize_uint32(data,
-                         &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(max_send_size,
-                                                                                    4U,
-                                                                                    tm_handler->app_data_index,
-                                                                                    tm_handler->app_data_index + 4U)]);
-
-        tm_handler->app_data_index = tm_handler->app_data_index + 4U;
-
-        (*result).__variant = Result__Ok;
-
-    } else {
-        
-        (*result).__variant = Result__Error;
+        (*result).__variant = MyResult__Error;
 
     }
 
@@ -123,7 +96,7 @@ void tm_handler_build_packet_header(TMHandlerT * const tm_handler,
 }
 
 void tm_handler_build_df_header(TMHandlerT * const tm_handler, uint8_t tm_type,
-                                uint8_t tm_subtype) {
+                                uint8_t tm_subtype, MissionObt current_obt) {
     
     tm_handler->df_header.version = ccsds_pus_tm_build_df_header_version(0x1U);
 
@@ -135,22 +108,20 @@ void tm_handler_build_df_header(TMHandlerT * const tm_handler, uint8_t tm_type,
 
     tm_handler->df_header.destinationID = destinationID;
 
-    tm_handler->df_header.obt_secs = 0U;
+    tm_handler->df_header.obt_secs = current_obt.seconds;
 
-    tm_handler->df_header.obt_finetime = 0U;
+    tm_handler->df_header.obt_finetime = current_obt.finetime;
 
     return;
 
 }
 
 void close_tm(TMHandlerT * const tm_handler, uint8_t type, uint8_t subtype,
-              uint16_t tm_count, Result * const result) {
+              uint16_t tm_count, MissionObt current_obt) {
     
-    (*result).__variant = Result__Ok;
-
     tm_handler_build_packet_header(tm_handler, tm_count);
 
-    tm_handler_build_df_header(tm_handler, type, subtype);
+    tm_handler_build_df_header(tm_handler, type, subtype, current_obt);
 
     ccsds_pus_tm_set_fields(&tm_handler->tm_descriptor.tm_bytes[0U],
                             &tm_handler->packet_header, &tm_handler->df_header);

@@ -3,14 +3,16 @@
 
 #include <termina.h>
 
-#include "option.h"
 #include "resources/uart.h"
+
+#include "option.h"
 
 extern const uint32_t riscv_uart_dr;
 
 extern const uint32_t riscv_uart_te;
 
 typedef struct {
+    __termina_id_t __handler_id;
     __termina_out_port_t byte_message_queue_output;
     volatile UARTRegs * uart_registers;
     struct {
@@ -19,6 +21,7 @@ typedef struct {
     } uart;
 } UARTIrqHandler;
 
-Result UARTIrqHandler__irq_handler(void * const __this, uint32_t _vector);
+__status_int32_t UARTIrqHandler__irq_handler(void * const __this,
+                                             uint32_t _vector);
 
 #endif

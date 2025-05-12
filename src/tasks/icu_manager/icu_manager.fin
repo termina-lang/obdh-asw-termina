@@ -12,7 +12,7 @@ task class ICUManager {
 
     action process_tc(&priv self, tc_handler: box TCHandlerT) -> Status<i32> {
 
-        var ret : Status<i32> = Status<i32>::Success;
+        var ret : Status<i32> = Success;
 
         var current_tc_status : TCStatus = try_tc_acceptation(&(tc_handler.tc_descriptor));
 
@@ -47,7 +47,8 @@ task class ICUManager {
                         self->a_tc_handler_pool.free(tc_handler);
                     }
                     case Undefined => {
-                        ret = Result::Error;
+                        //Generar TM[1,4] Error in acceptance
+                        
                         self->a_tc_handler_pool.free(tc_handler);
                     }
 
@@ -59,7 +60,7 @@ task class ICUManager {
                 self->a_tc_handler_pool.free(tc_handler);
             }
             case Undefined => {
-                ret = Status<i32>::Failure(ERROR_IN_ACCEPTANCE);
+                //Generar TM[1,4] Error in acceptance
                 self->a_tc_handler_pool.free(tc_handler);
             }
         }
@@ -69,7 +70,7 @@ task class ICUManager {
 
     action process_action_tc(&priv self, tc_handler: box TCHandlerT) -> Status<i32> {
 
-        var ret : Status<i32> = Status<i32>::Success;
+        var ret : Status<i32> = Success;
 
         var execution_status : TCExecutionCtrl = handle_tc((&(tc_handler.tc_descriptor)));
 
@@ -97,7 +98,7 @@ task class ICUManager {
                 self->a_tc_handler_pool.free(tc_handler); 
             }
             case Undefined => {
-                ret = Result::Error;
+                //Generar TM[1,4] Error in acceptance
                 self->a_tc_handler_pool.free(tc_handler);
             }
 

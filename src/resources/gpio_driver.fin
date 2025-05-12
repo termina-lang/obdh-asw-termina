@@ -12,7 +12,7 @@ struct GPIO_registers {
 
 interface GPIODrvIface {
     procedure init_gpio (&mut self);
-    procedure write_led (&mut self, led : u8, value : u8);
+    procedure write_led (&mut self, led : u8, value : u8, result: &mut MyResult);
 };
 
 resource class GPIODriver provides GPIODrvIface {

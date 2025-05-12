@@ -11,9 +11,9 @@ handler class Init {
 
 
     //This function should access to permanent memory and extract the real system_data_pool values
-    action init(&priv self, _boot_time : TimeVal) -> Result {
+    action init(&priv self, _boot_time : TimeVal) -> Status<i32> {
 
-        var ret : Result = Result::Ok;
+        var ret : Status<i32> = Success;
 
         self->uart.initialize();
         self->gpio_driver.init_gpio();

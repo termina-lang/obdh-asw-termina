@@ -1,12 +1,12 @@
 
 #include "tasks/tc_rx.h"
 
-Result TCRXBottomHalfTask__get_tc(void * const __this, uint8_t data) {
+__status_int32_t TCRXBottomHalfTask__get_tc(void * const __this, uint8_t data) {
     
     TCRXBottomHalfTask * self = (TCRXBottomHalfTask *)__this;
 
-    Result ret;
-    ret.__variant = Result__Ok;
+    __status_int32_t ret;
+    ret.__variant = Success;
 
     if (self->rx_status.__variant == RXStatus__SyncBytesRx) {
         
@@ -69,8 +69,8 @@ Result TCRXBottomHalfTask__get_tc(void * const __this, uint8_t data) {
             __option_box_t tc_handler;
             tc_handler.__variant = None;
 
-            (self->a_tc_handler_pool.alloc)(self->a_tc_handler_pool.__that,
-                                            &tc_handler);
+            self->a_tc_handler_pool.alloc(self->a_tc_handler_pool.__that,
+                                          &tc_handler);
 
             if (tc_handler.__variant == Some) {
                 
@@ -84,7 +84,8 @@ Result TCRXBottomHalfTask__get_tc(void * const __this, uint8_t data) {
 
             } else {
                 
-                ret.__variant = Result__Error;
+                ret.__variant = Failure;
+                ret.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
             }
 
@@ -100,13 +101,12 @@ void __TCRXBottomHalfTask__termina_task(void * arg) {
     
     TCRXBottomHalfTask * self = (TCRXBottomHalfTask *)arg;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t status = 0L;
 
     uint32_t next_msg = 0U;
 
-    Result result;
-    result.__variant = Result__Ok;
+    __status_int32_t result;
+    result.__variant = Success;
 
     uint8_t get_tc__msg_data;
 
@@ -115,7 +115,7 @@ void __TCRXBottomHalfTask__termina_task(void * arg) {
         __termina_msg_queue__recv(self->__task_msg_queue_id, &next_msg,
                                   &status);
 
-        if (status.__variant != Status__Success) {
+        if (status != 0L) {
             break;
         }
 
@@ -126,29 +126,36 @@ void __TCRXBottomHalfTask__termina_task(void * arg) {
                 __termina_msg_queue__recv(self->byte_message_queue_input,
                                           (void *)&get_tc__msg_data, &status);
 
-                if (status.__variant != Status__Success) {
-                    __termina_exec__shutdown();
+                if (status != 0L) {
+                    __termina_except__msg_queue_recv_error(self->byte_message_queue_input,
+                                                           status);
                 }
 
                 result = TCRXBottomHalfTask__get_tc(self, get_tc__msg_data);
 
-                if (result.__variant != Result__Ok) {
-                    __termina_exec__shutdown();
+                if (result.__variant != Success) {
+                    
+                    ExceptSource source;
+                    source.__variant = ExceptSource__Handler;
+                    source.Task.__0 = self->__task_id;
+
+                    __termina_except__action_failure(source,
+                                                     __TCRXBottomHalfTask__byte_message_queue_input,
+                                                     result.Failure.__0);
+
                 }
 
                 break;
 
             default:
 
-                __termina_exec__shutdown();
+                __termina_exec__reboot();
 
                 break;
 
         }
 
     }
-
-    __termina_exec__shutdown();
 
     return;
 

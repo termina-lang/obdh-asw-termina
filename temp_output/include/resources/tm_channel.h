@@ -3,13 +3,14 @@
 
 #include <termina.h>
 
-#include "option.h"
 #include "resources/uart.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
 
+#include "option.h"
+
 typedef struct {
     void * __that;
-    void (* send_tm)(void * const, __termina_box_t, Result * const);
+    void (* send_tm)(void * const, __termina_box_t, MyResult * const);
 } TMChannelIface;
 
 typedef struct {
@@ -23,15 +24,15 @@ typedef struct {
 } TMChannel;
 
 void TMChannel__send_tm(void * const __this, __termina_box_t tm_handler,
-                        Result * const result);
+                        MyResult * const result);
 void TMChannel__send_tm__mutex_lock(void * const __this,
                                     __termina_box_t tm_handler,
-                                    Result * const result);
+                                    MyResult * const result);
 void TMChannel__send_tm__task_lock(void * const __this,
                                    __termina_box_t tm_handler,
-                                   Result * const result);
+                                   MyResult * const result);
 void TMChannel__send_tm__event_lock(void * const __this,
                                     __termina_box_t tm_handler,
-                                    Result * const result);
+                                    MyResult * const result);
 
 #endif

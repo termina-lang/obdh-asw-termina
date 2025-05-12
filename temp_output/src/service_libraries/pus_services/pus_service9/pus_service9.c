@@ -1,6 +1,35 @@
 
 #include "service_libraries/pus_services/pus_service9/pus_service9.h"
 
+MissionObt PUSService9__inner_get_current_obt(const PUSService9 * const self) {
+    
+    uint32_t fine_time_increment = 0U;
+
+    TimeVal time_val_from_power_on;
+    time_val_from_power_on.tv_sec = 0U;
+    time_val_from_power_on.tv_usec = 0U;
+
+    self->system_port.clock_get_uptime(&time_val_from_power_on);
+
+    TimeVal interval;
+    interval.tv_sec = 0U;
+    interval.tv_usec = 0U;
+
+    interval = substract_TimeVal(time_val_from_power_on,
+                                 self->ref_time_val_from_power_on);
+
+    fine_time_increment = (uint32_t)self->ref_obt.finetime;
+
+    fine_time_increment = fine_time_increment + (uint32_t)((uint32_t)(interval.tv_usec * 1000U) / 15259U);
+
+    MissionObt current_obt;
+    current_obt.finetime = (uint16_t)(fine_time_increment & 0xFFFFU);
+    current_obt.seconds = (uint32_t)((uint32_t)(self->ref_obt.seconds + interval.tv_sec) + fine_time_increment) >> 16U;
+
+    return current_obt;
+
+}
+
 void PUSService9__set_obt(PUSService9 * const self) {
     
     self->ref_obt = self->exec_tc_req_status_update.next_OBT;
@@ -9,7 +38,7 @@ void PUSService9__set_obt(PUSService9 * const self) {
     aux_time_val.tv_sec = 0U;
     aux_time_val.tv_usec = 0U;
 
-    (self->system_port.clock_get_uptime)(&aux_time_val);
+    self->system_port.clock_get_uptime(&aux_time_val);
 
     self->ref_time_val_from_power_on = aux_time_val;
 
@@ -19,17 +48,20 @@ void PUSService9__set_obt(PUSService9 * const self) {
 
 PSExecTCReqStatus PUSService9__exec9_129TC(PUSService9 * const self) {
     
-    Result result;
-    result.__variant = Result__Ok;
+    MyResult result;
+    result.__variant = MyResult__Ok;
 
     PSExecTCReqStatus next_status;
-    next_status.__variant = PSExecTCReqStatus__Error;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
 
-    (self->a_tm_handler_pool.alloc)(self->a_tm_handler_pool.__that,
-                                    &tm_handler);
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
 
     if (tm_handler.__variant == Some) {
         
@@ -37,21 +69,42 @@ PSExecTCReqStatus PUSService9__exec9_129TC(PUSService9 * const self) {
 
         uint16_t tm_count = 0U;
 
-        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
-                                             &tm_count);
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
 
-        build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count, &result);
+        current_obt = PUSService9__inner_get_current_obt(self);
 
-        (self->tm_channel.send_tm)(self->tm_channel.__that, b_tm_handler,
-                                   &result);
+        build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count, current_obt,
+                     &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
 
         PUSService9__set_obt(self);
 
         __option_box_t tm_handler2;
         tm_handler2.__variant = None;
 
-        (self->a_tm_handler_pool.alloc)(self->a_tm_handler_pool.__that,
-                                        &tm_handler2);
+        self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
+                                      &tm_handler2);
 
         if (tm_handler2.__variant == Some) {
             
@@ -59,32 +112,47 @@ PSExecTCReqStatus PUSService9__exec9_129TC(PUSService9 * const self) {
 
             uint16_t tm_count2 = 0U;
 
-            (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
-                                                 &tm_count2);
+            self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                                               &tm_count2);
 
-            build_tm_1_7((TMHandlerT *)b_tm_handler2.data, tm_count2, &result);
+            current_obt = PUSService9__inner_get_current_obt(self);
 
-            (self->tm_channel.send_tm)(self->tm_channel.__that, b_tm_handler2,
-                                       &result);
+            build_tm_1_7((TMHandlerT *)b_tm_handler2.data, tm_count2,
+                         current_obt, &result);
+
+            if (result.__variant == MyResult__Ok) {
+                
+                self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler2,
+                                         &result);
+
+                if (result.__variant == MyResult__Error) {
+                    
+                    next_status.__variant = PSExecTCReqStatus__Failure;
+                    next_status.Failure.__0 = TM_SEND_FAILURE;
+
+                }
+
+            } else {
+                
+                self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                             b_tm_handler2);
+
+                next_status.__variant = PSExecTCReqStatus__Error;
+                next_status.Error.__0 = BUILD_TM_ERROR;
+
+            }
 
         } else {
             
-            result.__variant = Result__Error;
+            next_status.__variant = PSExecTCReqStatus__Failure;
+            next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
         }
 
     } else {
         
-
-    }
-
-    if (result.__variant == Result__Error) {
-        
-        next_status.__variant = PSExecTCReqStatus__Error;
-
-    } else {
-        
-        next_status.__variant = PSExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
@@ -95,7 +163,7 @@ PSExecTCReqStatus PUSService9__exec9_129TC(PUSService9 * const self) {
 PS9ExecTCReqStatusUpdate PUSService9__get_TC_params(const PUSService9 * const self,
                                                     TCHandlerT * const tc_handler,
                                                     uint8_t * const subtype,
-                                                    Result * const result) {
+                                                    MyResult * const result) {
     
     *subtype = tc_handler->df_header.subtype;
 
@@ -125,16 +193,19 @@ PS9ExecTCReqStatusUpdate PUSService9__get_TC_params(const PUSService9 * const se
 PSExecTCReqStatus PUSService9__manage_short_pack_length_error(const PUSService9 * const self) {
     
     PSExecTCReqStatus next_status;
-    next_status.__variant = PSExecTCReqStatus__Error;
+    next_status.__variant = PSExecTCReqStatus__Exit;
 
-    Result result;
-    result.__variant = Result__Ok;
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
 
-    (self->a_tm_handler_pool.alloc)(self->a_tm_handler_pool.__that,
-                                    &tm_handler);
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
 
     if (tm_handler.__variant == Some) {
         
@@ -142,32 +213,43 @@ PSExecTCReqStatus PUSService9__manage_short_pack_length_error(const PUSService9 
 
         uint16_t tm_count = 0U;
 
-        (self->tm_counter.get_next_tm_count)(self->tm_counter.__that,
-                                             &tm_count);
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        current_obt = PUSService9__inner_get_current_obt(self);
 
         build_tm_1_4_short_pack_length((TMHandlerT *)b_tm_handler.data,
                                        tm_count,
                                        self->exec_tc_req_status_update.packet_id,
                                        self->exec_tc_req_status_update.packet_error_ctrl,
                                        self->exec_tc_req_status_update.tc_num_bytes,
-                                       &result);
+                                       current_obt, &result);
 
-        (self->tm_channel.send_tm)(self->tm_channel.__that, b_tm_handler,
-                                   &result);
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
 
     } else {
         
-        result.__variant = Result__Error;
-
-    }
-
-    if (result.__variant == Result__Error) {
-        
-        next_status.__variant = PSExecTCReqStatus__Error;
-
-    } else {
-        
-        next_status.__variant = PSExecTCReqStatus__Exit;
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
@@ -176,24 +258,28 @@ PSExecTCReqStatus PUSService9__manage_short_pack_length_error(const PUSService9 
 }
 
 void PUSService9__exec_tc(void * const __this, TCHandlerT * const tc_handler,
-                          Result * const result) {
+                          __status_int32_t * const action_status) {
     
     PUSService9 * self = (PUSService9 *)__this;
 
     uint8_t subtype = tc_handler->df_header.subtype;
 
-    for (size_t i = 0U; i < 2U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
+    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
         
         if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Init) {
             
+            MyResult result;
+            result.__variant = MyResult__Ok;
+
             self->exec_tc_req_status_update = PUSService9__get_TC_params(self,
                                                                          tc_handler,
                                                                          &subtype,
-                                                                         result);
+                                                                         &result);
 
-            if ((*result).__variant == Result__Error) {
+            if (result.__variant == MyResult__Error) {
                 
-                self->exec_tc_req_status = PUSService9__manage_short_pack_length_error(self);
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
+                self->exec_tc_req_status.Error.__0 = TC_DATA_OUT_OF_RANGE_ERROR;
 
             } else {
                 
@@ -210,12 +296,37 @@ void PUSService9__exec_tc(void * const __this, TCHandlerT * const tc_handler,
             } else {
                 
                 self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
+                self->exec_tc_req_status.Error.__0 = ACCEPTANCE_ERROR;
 
             }
 
         } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Error) {
             
-            (*result).__variant = Result__Error;
+            int32_t error_code = self->exec_tc_req_status.Error.__0;
+
+            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
+
+            if (error_code == ACCEPTANCE_ERROR) {
+                
+
+            } else if (error_code == BUILD_TM_ERROR) {
+                
+
+            } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+                
+                self->exec_tc_req_status = PUSService9__manage_short_pack_length_error(self);
+
+            } else {
+                
+
+            }
+
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Failure) {
+            
+            int32_t failure_code = self->exec_tc_req_status.Failure.__0;
+
+            (*action_status).__variant = Failure;
+            (*action_status).Failure.__0 = failure_code;
 
             self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
 
@@ -238,39 +349,38 @@ void PUSService9__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
 void PUSService9__exec_tc__mutex_lock(void * const __this,
                                       TCHandlerT * const tc_handler,
-                                      Result * const result) {
+                                      __status_int32_t * const action_status) {
     
     PUSService9 * self = (PUSService9 *)__this;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t __status = 0L;
 
-    __termina_mutex__lock(self->__mutex_id, &status);
-    PUSService9__exec_tc(self, tc_handler, result);
-    __termina_mutex__unlock(self->__mutex_id, &status);
+    __termina_mutex__lock(self->__mutex_id, &__status);
+    PUSService9__exec_tc(self, tc_handler, action_status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 
 void PUSService9__exec_tc__task_lock(void * const __this,
                                      TCHandlerT * const tc_handler,
-                                     Result * const result) {
+                                     __status_int32_t * const action_status) {
     
     __termina_task_lock_t lock;
 
     lock = __termina_task__lock();
-    PUSService9__exec_tc(__this, tc_handler, result);
+    PUSService9__exec_tc(__this, tc_handler, action_status);
     __termina_task__unlock(lock);
 
 }
 
 void PUSService9__exec_tc__event_lock(void * const __this,
                                       TCHandlerT * const tc_handler,
-                                      Result * const result) {
+                                      __status_int32_t * const action_status) {
     
     __termina_event_lock_t lock;
 
     lock = __termina_event__lock();
-    PUSService9__exec_tc(__this, tc_handler, result);
+    PUSService9__exec_tc(__this, tc_handler, action_status);
     __termina_event__unlock(lock);
 
 }
@@ -286,7 +396,7 @@ void PUSService9__get_current_obt(void * const __this,
     time_val_from_power_on.tv_sec = 0U;
     time_val_from_power_on.tv_usec = 0U;
 
-    (self->system_port.clock_get_uptime)(&time_val_from_power_on);
+    self->system_port.clock_get_uptime(&time_val_from_power_on);
 
     TimeVal interval;
     interval.tv_sec = 0U;
@@ -312,12 +422,11 @@ void PUSService9__get_current_obt__mutex_lock(void * const __this,
     
     PUSService9 * self = (PUSService9 *)__this;
 
-    Status status;
-    status.__variant = Status__Success;
+    int32_t __status = 0L;
 
-    __termina_mutex__lock(self->__mutex_id, &status);
+    __termina_mutex__lock(self->__mutex_id, &__status);
     PUSService9__get_current_obt(self, current_obt);
-    __termina_mutex__unlock(self->__mutex_id, &status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 

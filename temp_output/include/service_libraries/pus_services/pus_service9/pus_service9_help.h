@@ -3,8 +3,9 @@
 
 #include <termina.h>
 
-#include "option.h"
 #include "service_libraries/pus_services/pus_services.h"
+
+#include "option.h"
 
 typedef struct {
     uint32_t seconds;

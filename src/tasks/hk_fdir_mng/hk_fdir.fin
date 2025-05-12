@@ -2,6 +2,7 @@ import service_libraries.pus_services.pus_service3.pus_service3;
 import service_libraries.pus_services.pus_service5.pus_service5;
 import service_libraries.pus_services.pus_service12.pus_service12;
 import service_libraries.pus_services.pus_service19.pus_service19;
+import service_libraries.errors;
 
 const num_actions_per_second : usize = 2;
 
@@ -25,7 +26,7 @@ task class HouseKeepingFDIR {
 
     method do_fdir(&priv self) -> Status<i32> {
 
-        var result : Status<i32> = Status<i32>::Success;
+        var result : Status<i32> = Success;
 
         var is_monitor_enabled : bool = false;
 
@@ -48,7 +49,9 @@ task class HouseKeepingFDIR {
 
                     if(is_Ev_ID_enabled){
 
-                        self->pus_service_5.build_and_tx_tm_5_x(&mut result, evID, fault_info);
+                        var res: MyResult = MyResult::Ok;
+
+                        self->pus_service_5.build_and_tx_tm_5_x(&mut res, evID, fault_info);
                         self->pus_service_19.manage_event_action(evID);
                     } 
 
@@ -65,9 +68,9 @@ task class HouseKeepingFDIR {
 
     action do_hk_fdir(&priv self, _current_time : TimeVal) -> Status<i32> {
 
-        var result : Status<i32> = Status<i32>::Success;
+        var result : Status<i32> = Success;
 
-        self->pus_service_4.update_all_stats(&mut result);
+        self->pus_service_4.update_all_stats();
         self->pus_service_3.do_hk(&mut result);
         result = self->do_fdir();
 
@@ -121,7 +124,7 @@ task class HouseKeepingFDIR {
 
     action exec_tc(&priv self, tc_handler : box TCHandlerT)-> Status<i32> {
 
-        var res : Status<i32> = Status<i32>::Success;
+        var res : Status<i32> = Success;
 
         var tc_type : u8 = tc_handler.df_header.type;
 
@@ -148,7 +151,7 @@ task class HouseKeepingFDIR {
 
         }else {
 
-            res = Status<i32>::Failure(ERROR_IN_ACCEPTANCE); 
+            res = Failure(ACCEPTANCE_ERROR); 
             //This is an error in acceptance, could be modeled as an event
         }
         

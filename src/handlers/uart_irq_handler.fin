@@ -11,9 +11,9 @@ handler class UARTIrqHandler {
     uart_registers : loc UARTRegs;
     byte_message_queue_output: out u8;
 
-    action irq_handler(&priv self, _vector : u32) -> Result {
+    action irq_handler(&priv self, _vector : u32) -> Status<i32> {
 
-        var ret : Result = Result::Ok;
+        var ret : Status<i32> = Success;
         let status : u32 = self->uart_registers.status;
 
         if ((status & riscv_uart_te) != 0 : u32) {

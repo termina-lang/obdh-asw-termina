@@ -9,7 +9,7 @@
 
 #include "resources/uart.h"
 
-#include "service_libraries/event_list.h"
+#include "service_libraries/errors.h"
 
 #include "service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.h"
 
@@ -63,6 +63,24 @@ void __termina_app__init_globals() {
     telemetry_channel.uart.__that = &uart_drv;
     telemetry_channel.uart.send = UARTDriver__send;
     telemetry_counter.tm_count = 0U;
+    pus_service_9.a_tm_handler_pool.__that = &tm_pool;
+    pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
+    pus_service_9.a_tm_handler_pool.free = __termina_pool__free;
+    pus_service_9.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_9.exec_tc_req_status_update.next_OBT.finetime = 0U;
+    pus_service_9.exec_tc_req_status_update.next_OBT.seconds = 0U;
+    pus_service_9.exec_tc_req_status_update.packet_error_ctrl = 0U;
+    pus_service_9.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_9.exec_tc_req_status_update.tc_num_bytes = 0U;
+    pus_service_9.ref_obt.finetime = 0U;
+    pus_service_9.ref_obt.seconds = 0U;
+    pus_service_9.ref_time_val_from_power_on.tv_sec = 0U;
+    pus_service_9.ref_time_val_from_power_on.tv_usec = 0U;
+    pus_service_9.system_port.clock_get_uptime = SystemEntry__clock_get_uptime;
+    pus_service_9.tm_channel.__that = &telemetry_channel;
+    pus_service_9.tm_channel.send_tm = TMChannel__send_tm;
+    pus_service_9.tm_counter.__that = &telemetry_counter;
+    pus_service_9.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
     pus_service_3.a_tm_handler_pool.__that = &tm_pool;
     pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_3.a_tm_handler_pool.free = __termina_pool__free;
@@ -243,6 +261,8 @@ void __termina_app__init_globals() {
     pus_service_3.hk_config_table[7U].params_def[13U] = 0U;
     pus_service_3.hk_config_table[7U].params_def[14U] = 0U;
     pus_service_3.hk_config_table[7U].params_def[15U] = 0U;
+    pus_service_3.pus_service_9.__that = &pus_service_9;
+    pus_service_3.pus_service_9.get_current_obt = PUSService9__get_current_obt;
     pus_service_3.system_data_pool_u32 = u32_system_data_pool;
     pus_service_3.system_data_pool_u8 = u8_system_data_pool;
     pus_service_3.tm_channel.__that = &telemetry_channel;
@@ -262,28 +282,12 @@ void __termina_app__init_globals() {
     pus_service_5.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_5.exec_tc_req_status_update.packet_id = 0U;
     pus_service_5.exec_tc_req_status_update.tc_num_bytes = 0U;
+    pus_service_5.pus_service_9.__that = &pus_service_9;
+    pus_service_5.pus_service_9.get_current_obt = PUSService9__get_current_obt;
     pus_service_5.tm_channel.__that = &telemetry_channel;
     pus_service_5.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_5.tm_counter.__that = &telemetry_counter;
     pus_service_5.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_9.a_tm_handler_pool.__that = &tm_pool;
-    pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_9.a_tm_handler_pool.free = __termina_pool__free;
-    pus_service_9.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
-    pus_service_9.exec_tc_req_status_update.next_OBT.finetime = 0U;
-    pus_service_9.exec_tc_req_status_update.next_OBT.seconds = 0U;
-    pus_service_9.exec_tc_req_status_update.packet_error_ctrl = 0U;
-    pus_service_9.exec_tc_req_status_update.packet_id = 0U;
-    pus_service_9.exec_tc_req_status_update.tc_num_bytes = 0U;
-    pus_service_9.ref_obt.finetime = 0U;
-    pus_service_9.ref_obt.seconds = 0U;
-    pus_service_9.ref_time_val_from_power_on.tv_sec = 0U;
-    pus_service_9.ref_time_val_from_power_on.tv_usec = 0U;
-    pus_service_9.system_port.clock_get_uptime = SystemEntry__clock_get_uptime;
-    pus_service_9.tm_channel.__that = &telemetry_channel;
-    pus_service_9.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_9.tm_counter.__that = &telemetry_counter;
-    pus_service_9.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
     pus_service_12.a_tm_handler_pool.__that = &tm_pool;
     pus_service_12.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_12.a_tm_handler_pool.free = __termina_pool__free;
@@ -389,6 +393,8 @@ void __termina_app__init_globals() {
     for (size_t __i0 = 0U; __i0 < event_action_queue_dimension; __i0 = __i0 + 1U) {
         pus_service_19.pending_action_queue_4HS[__i0] = tc_handler_init();
     }
+    pus_service_19.pus_service_9.__that = &pus_service_9;
+    pus_service_19.pus_service_9.get_current_obt = PUSService9__get_current_obt;
     pus_service_19.tm_channel.__that = &telemetry_channel;
     pus_service_19.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_19.tm_counter.__that = &telemetry_counter;
@@ -404,6 +410,8 @@ void __termina_app__init_globals() {
     pus_service_20.exec_tc_req_status_update.tc_20_3_data.PID_value_u32 = 0U;
     pus_service_20.exec_tc_req_status_update.tc_20_3_data.PID_value_u8 = 0U;
     pus_service_20.exec_tc_req_status_update.tc_num_bytes = 0U;
+    pus_service_20.pus_service_9.__that = &pus_service_9;
+    pus_service_20.pus_service_9.get_current_obt = PUSService9__get_current_obt;
     pus_service_20.system_data_pool_u32 = u32_system_data_pool;
     pus_service_20.system_data_pool_u8 = u8_system_data_pool;
     pus_service_20.tm_channel.__that = &telemetry_channel;
@@ -414,6 +422,8 @@ void __termina_app__init_globals() {
     pus_service_17.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_17.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_17.exec_tc_req_status.__variant = PSExecTCReqStatus__ExecTC;
+    pus_service_17.pus_service_9.__that = &pus_service_9;
+    pus_service_17.pus_service_9.get_current_obt = PUSService9__get_current_obt;
     pus_service_17.tm_channel.__that = &telemetry_channel;
     pus_service_17.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_17.tm_counter.__that = &telemetry_counter;
@@ -429,6 +439,8 @@ void __termina_app__init_globals() {
     pus_service_2.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_2.gpio_driver.__that = &gpio_drv;
     pus_service_2.gpio_driver.write_led = GPIODriver__write_led;
+    pus_service_2.pus_service_9.__that = &pus_service_9;
+    pus_service_2.pus_service_9.get_current_obt = PUSService9__get_current_obt;
     pus_service_2.tm_channel.__that = &telemetry_channel;
     pus_service_2.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_2.tm_counter.__that = &telemetry_counter;

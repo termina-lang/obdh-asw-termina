@@ -3,14 +3,14 @@
 
 #include <termina.h>
 
-#include "option.h"
-#include "service_libraries/pus_services/pus_service5/pus_service5.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
+#include "service_libraries/pus_services/pus_service5/pus_service5.h"
+#include "service_libraries/pus_services/pus_services.h"
 #include "service_libraries/serialize.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
-#include "service_libraries/event_list.h"
-#include "service_libraries/pus_services/pus_services.h"
+
+#include "option.h"
 
 extern const size_t event_action_max_bytes;
 

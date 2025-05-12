@@ -3,9 +3,10 @@
 
 #include <termina.h>
 
-#include "option.h"
-#include "service_libraries/pus_services/pus_services.h"
 #include "service_libraries/pus_services/pus_service9/pus_service9.h"
+#include "service_libraries/pus_services/pus_services.h"
+
+#include "option.h"
 
 extern const size_t max_num_of_stats;
 

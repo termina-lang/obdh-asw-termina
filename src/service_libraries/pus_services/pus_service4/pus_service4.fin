@@ -7,7 +7,7 @@ import service_libraries.pus_services.pus_service4.pus_service4_help;
 interface PUSS4Iface {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>);
-    procedure update_all_stats(&mut self, result: &mut MyResult);
+    procedure update_all_stats(&mut self);
     procedure startup(&mut self);
     
 };
@@ -165,9 +165,6 @@ resource class PUSService4 provides PUSS4Iface {
         append_u32_appdata_field(p_tm_handler, self->param_stats[index].mean_value, result);
 
         if(*result is MyResult::Ok) {
-
-            var current_obt : MissionObt = {seconds = 0, finetime = 0};
-            self->pus_service_9.get_current_obt(&mut current_obt);
             close_tm(p_tm_handler, 4, 2, tm_seq_counter, current_obt);
         }
 
@@ -203,7 +200,8 @@ resource class PUSService4 provides PUSS4Iface {
                     }
                 } 
                 else {
-                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                    self->a_tm_handler_pool.free(b_tm_handler);
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                 }
                
             }
@@ -237,14 +235,15 @@ resource class PUSService4 provides PUSS4Iface {
                             }
                         } 
                         else {
+                            self->a_tm_handler_pool.free(b_tm_handler2);
                             next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                         }
                         
                         //reset_stats_index
                         self->param_stats[i].samples = 0;
-                        var current_obt : MissionObt = {seconds = 0, finetime = 0};
-                        self->pus_service_9.get_current_obt(&mut current_obt);
-                        self->stats_config_table.start_time[i] = current_obt;
+                        var current_obt_update : MissionObt = {seconds = 0, finetime = 0};
+                        self->pus_service_9.get_current_obt(&mut current_obt_update);
+                        self->stats_config_table.start_time[i] = current_obt_update;
                     }
                     case None => {
                         next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
@@ -277,6 +276,7 @@ resource class PUSService4 provides PUSS4Iface {
                         }
                     } 
                     else {
+                        self->a_tm_handler_pool.free(b_tm_handler3);
                         next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                     }
                 }
@@ -288,6 +288,7 @@ resource class PUSService4 provides PUSS4Iface {
         }
         else {
             //TODO TM/TC Memory Fail -> EEPROM, Recov Action -> Reset -> Reported in Reboot
+            //Generar TM[5,2]
         }
 
 
@@ -327,6 +328,7 @@ resource class PUSService4 provides PUSS4Iface {
                         }
                     } 
                     else {
+                        self->a_tm_handler_pool.free(b_tm_handler);
                         next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                     }
                     
@@ -351,6 +353,7 @@ resource class PUSService4 provides PUSS4Iface {
                                 }
                             } 
                             else {
+                                self->a_tm_handler_pool.free(b_tm_handler);
                                 next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                             }
                            
@@ -376,6 +379,7 @@ resource class PUSService4 provides PUSS4Iface {
                                         }
                                     } 
                                     else {
+                                        self->a_tm_handler_pool.free(b_tm_handler2);
                                         next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                                     }
                                 }
@@ -400,6 +404,7 @@ resource class PUSService4 provides PUSS4Iface {
                                 }
                             } 
                             else {
+                                self->a_tm_handler_pool.free(b_tm_handler);
                                 next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                             }
                          
@@ -421,6 +426,7 @@ resource class PUSService4 provides PUSS4Iface {
                             }
                         } 
                         else {
+                            self->a_tm_handler_pool.free(b_tm_handler);
                             next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                         }          
 
@@ -468,6 +474,7 @@ resource class PUSService4 provides PUSS4Iface {
                         }
                     } 
                     else {
+                        self->a_tm_handler_pool.free(b_tm_handler);
                         next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                     }
                     
@@ -492,6 +499,7 @@ resource class PUSService4 provides PUSS4Iface {
                                 }
                             } 
                             else {
+                                self->a_tm_handler_pool.free(b_tm_handler);
                                 next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                             }
 
@@ -517,6 +525,7 @@ resource class PUSService4 provides PUSS4Iface {
                                         }
                                     } 
                                     else {
+                                        self->a_tm_handler_pool.free(b_tm_handler2);
                                         next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                                     }
                                     
@@ -542,6 +551,7 @@ resource class PUSService4 provides PUSS4Iface {
                                 }
                             } 
                             else {
+                                self->a_tm_handler_pool.free(b_tm_handler);
                                 next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                             }
 
@@ -564,6 +574,7 @@ resource class PUSService4 provides PUSS4Iface {
                             }
                         } 
                         else {
+                            self->a_tm_handler_pool.free(b_tm_handler);
                             next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                         }
                     }
@@ -635,6 +646,7 @@ resource class PUSService4 provides PUSS4Iface {
                     }
                 } 
                 else {
+                    self->a_tm_handler_pool.free(b_tm_handler);
                     next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                 }
             }
@@ -710,7 +722,7 @@ resource class PUSService4 provides PUSS4Iface {
                 }
                 case Failure(failure_code) => {
 
-                    *action_status = Status<i32>::Failure(failure_code);
+                    *action_status = Failure(failure_code);
                     self->exec_tc_req_status = PSExecTCReqStatus::Exit;
 
                 }
@@ -839,7 +851,7 @@ resource class PUSService4 provides PUSS4Iface {
         return mean_value;
     }
 
-    procedure update_all_stats(&mut self, result: &mut MyResult) {
+    procedure update_all_stats(&mut self) {
 
         for i : usize in 0 .. max_num_of_stats {
 
@@ -900,7 +912,7 @@ resource class PUSService4 provides PUSS4Iface {
 
                 
             } else {
-                *result = MyResult::Error;
+                
                 self->stats_config_table.defined[i] = false;
                 
             }
