@@ -227,7 +227,7 @@ handler uart_hdlr : UARTIrqHandler = {
     byte_message_queue_output -> byte_message_queue
 } : UARTIrqHandler;
 
-
+#[priority(4: u32)]
 task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
     rx_status = RXStatus::SyncBytesRx,
     sync_word = {0xBE, 0xBA, 0xBE, 0xEF},
@@ -240,6 +240,7 @@ task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
 } : TCRXBottomHalfTask;
 
 
+#[priority(5: u32)]
 task icu_manager : ICUManager = {
     tc_message_queue_input <- tc_message_queue,
     action_tc_message_queue_input <- action_tc_message_queue,
@@ -250,6 +251,7 @@ task icu_manager : ICUManager = {
 } : ICUManager;
 
 
+#[priority(6: u32)]
 task hk_fdir : HouseKeepingFDIR = {
     hk_fdir_timer_ev <- hk_fdir_timer,
     hkfdir_message_queue_input <- hkfdir_message_queue,
@@ -263,6 +265,7 @@ task hk_fdir : HouseKeepingFDIR = {
 } : HouseKeepingFDIR;
 
 
+#[priority(8: u32)]
 task pus_bkg_tc_executor : PUSBKGTCExecutor = {
     bkg_message_queue_input <- bkg_message_queue,
     a_tc_handler_pool  <-> tc_pool,

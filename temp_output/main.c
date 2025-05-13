@@ -23,7 +23,7 @@ static void __termina_app__init_tasks(int32_t * const status) {
 
         hk_fdir.__task_msg_queue_id = __hk_fdir__task_msg_queue_id;
 
-        __termina_task__init(__hk_fdir__task_id, 255, 4096U,
+        __termina_task__init(__hk_fdir__task_id, 6, 4096U,
                              __HouseKeepingFDIR__termina_task, &hk_fdir,
                              status);
 
@@ -35,7 +35,7 @@ static void __termina_app__init_tasks(int32_t * const status) {
 
         icu_manager.__task_msg_queue_id = __icu_manager__task_msg_queue_id;
 
-        __termina_task__init(__icu_manager__task_id, 255, 4096U,
+        __termina_task__init(__icu_manager__task_id, 5, 4096U,
                              __ICUManager__termina_task, &icu_manager, status);
 
     }
@@ -46,7 +46,7 @@ static void __termina_app__init_tasks(int32_t * const status) {
 
         pus_bkg_tc_executor.__task_msg_queue_id = __pus_bkg_tc_executor__task_msg_queue_id;
 
-        __termina_task__init(__pus_bkg_tc_executor__task_id, 255, 4096U,
+        __termina_task__init(__pus_bkg_tc_executor__task_id, 8, 4096U,
                              __PUSBKGTCExecutor__termina_task,
                              &pus_bkg_tc_executor, status);
 
@@ -58,7 +58,7 @@ static void __termina_app__init_tasks(int32_t * const status) {
 
         tc_rx_bottom_half_task.__task_msg_queue_id = __tc_rx_bottom_half_task__task_msg_queue_id;
 
-        __termina_task__init(__tc_rx_bottom_half_task__task_id, 255, 4096U,
+        __termina_task__init(__tc_rx_bottom_half_task__task_id, 4, 4096U,
                              __TCRXBottomHalfTask__termina_task,
                              &tc_rx_bottom_half_task, status);
 
@@ -117,7 +117,7 @@ static void __termina_app__init_mutexes(int32_t * const status) {
         pus_service_9.__mutex_id = __pus_service_9__mutex_id;
 
         __termina_mutex__init(__pus_service_9__mutex_id,
-                              __TerminaMutexPolicy__Ceiling, 255, status);
+                              __TerminaMutexPolicy__Ceiling, 5, status);
 
     }
 
@@ -126,7 +126,7 @@ static void __termina_app__init_mutexes(int32_t * const status) {
         system_entry.__mutex_id = __system_entry__mutex_id;
 
         __termina_mutex__init(__system_entry__mutex_id,
-                              __TerminaMutexPolicy__Ceiling, 255, status);
+                              __TerminaMutexPolicy__Ceiling, 5, status);
 
     }
 
@@ -135,7 +135,7 @@ static void __termina_app__init_mutexes(int32_t * const status) {
         tc_pool.__mutex_id = __tc_pool__mutex_id;
 
         __termina_mutex__init(__tc_pool__mutex_id,
-                              __TerminaMutexPolicy__Ceiling, 255, status);
+                              __TerminaMutexPolicy__Ceiling, 4, status);
 
     }
 
@@ -144,7 +144,7 @@ static void __termina_app__init_mutexes(int32_t * const status) {
         telemetry_channel.__mutex_id = __telemetry_channel__mutex_id;
 
         __termina_mutex__init(__telemetry_channel__mutex_id,
-                              __TerminaMutexPolicy__Ceiling, 255, status);
+                              __TerminaMutexPolicy__Ceiling, 5, status);
 
     }
 
@@ -153,7 +153,7 @@ static void __termina_app__init_mutexes(int32_t * const status) {
         telemetry_counter.__mutex_id = __telemetry_counter__mutex_id;
 
         __termina_mutex__init(__telemetry_counter__mutex_id,
-                              __TerminaMutexPolicy__Ceiling, 255, status);
+                              __TerminaMutexPolicy__Ceiling, 5, status);
 
     }
 
@@ -162,7 +162,7 @@ static void __termina_app__init_mutexes(int32_t * const status) {
         tm_pool.__mutex_id = __tm_pool__mutex_id;
 
         __termina_mutex__init(__tm_pool__mutex_id,
-                              __TerminaMutexPolicy__Ceiling, 255, status);
+                              __TerminaMutexPolicy__Ceiling, 5, status);
 
     }
 
