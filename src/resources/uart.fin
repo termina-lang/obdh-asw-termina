@@ -14,7 +14,7 @@ enum CharDevResult {
     TXFIFOFull
 };
 
-const max_send_size : usize = 256;
+constexpr max_send_size : usize = 256;
 
 interface CharDevSend {
     procedure send(&mut self,

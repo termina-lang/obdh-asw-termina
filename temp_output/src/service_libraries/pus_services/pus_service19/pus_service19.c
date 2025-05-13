@@ -6,13 +6,13 @@ MyResult PUSService19__delete_event_action(PUSService19 * const self) {
     MyResult result;
     result.__variant = MyResult__Error;
 
-    if (self->exec_tc_req_status_update.tc_data.EvID == self->event_action_config[__termina_array__index(max_event_action_definitions,
+    if (self->exec_tc_req_status_update.tc_data.EvID == self->event_action_config[__termina_array__index(16U,
                                                                                                          self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].event_ID) {
         
-        self->event_action_config[__termina_array__index(max_event_action_definitions,
+        self->event_action_config[__termina_array__index(16U,
                                                          self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].event_ID = 0U;
 
-        self->event_action_config[__termina_array__index(max_event_action_definitions,
+        self->event_action_config[__termina_array__index(16U,
                                                          self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].enabled = 0;
 
         result.__variant = MyResult__Ok;
@@ -28,10 +28,10 @@ MyResult PUSService19__disable_event_action(PUSService19 * const self) {
     MyResult result;
     result.__variant = MyResult__Error;
 
-    if (self->exec_tc_req_status_update.tc_data.EvID == self->event_action_config[__termina_array__index(max_event_action_definitions,
+    if (self->exec_tc_req_status_update.tc_data.EvID == self->event_action_config[__termina_array__index(16U,
                                                                                                          self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].event_ID) {
         
-        self->event_action_config[__termina_array__index(max_event_action_definitions,
+        self->event_action_config[__termina_array__index(16U,
                                                          self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].enabled = 0;
 
         result.__variant = MyResult__Ok;
@@ -47,10 +47,10 @@ MyResult PUSService19__enable_event_action(PUSService19 * const self) {
     MyResult result;
     result.__variant = MyResult__Error;
 
-    if (self->exec_tc_req_status_update.tc_data.EvID == self->event_action_config[__termina_array__index(max_event_action_definitions,
+    if (self->exec_tc_req_status_update.tc_data.EvID == self->event_action_config[__termina_array__index(16U,
                                                                                                          self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].event_ID) {
         
-        self->event_action_config[__termina_array__index(max_event_action_definitions,
+        self->event_action_config[__termina_array__index(16U,
                                                          self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].enabled = 1;
 
         result.__variant = MyResult__Ok;
@@ -67,9 +67,9 @@ FoundID PUSService19__get_free_event_action_index(const PUSService19 * const sel
     found_and_id.ev_action_index = 0U;
     found_and_id.found = 0;
 
-    for (size_t i = 0U; i < max_event_action_definitions && found_and_id.found == 0; i = i + 1U) {
+    for (size_t i = 0U; i < 16U && found_and_id.found == 0; i = i + 1U) {
         
-        if (self->event_action_config[__termina_array__index(max_event_action_definitions,
+        if (self->event_action_config[__termina_array__index(16U,
                                                              i)].event_ID == 0U) {
             
             found_and_id.ev_action_index = i;
@@ -92,14 +92,14 @@ FoundID PUSService19__is_ev_action_defined(const PUSService19 * const self,
     found_and_id.ev_action_index = 0U;
     found_and_id.found = 0;
 
-    for (size_t i = 0U; i < max_event_action_definitions && found_and_id.found == 0; i = i + 1U) {
+    for (size_t i = 0U; i < 16U && found_and_id.found == 0; i = i + 1U) {
         
-        if (self->event_action_config[__termina_array__index(max_event_action_definitions,
+        if (self->event_action_config[__termina_array__index(16U,
                                                              i)].event_ID == evID) {
             
             found_and_id.ev_action_index = i;
 
-            *enabled = self->event_action_config[__termina_array__index(max_event_action_definitions,
+            *enabled = self->event_action_config[__termina_array__index(16U,
                                                                         i)].enabled;
 
             found_and_id.found = 1;
@@ -256,10 +256,10 @@ PSExecTCReqStatus PUSService19__exec19_1TC(PUSService19 * const self) {
 
                         }
 
-                        self->event_action_config[__termina_array__index(max_event_action_definitions,
+                        self->event_action_config[__termina_array__index(16U,
                                                                          self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].event_ID = self->exec_tc_req_status_update.tc_data.EvID;
 
-                        self->event_action_config[__termina_array__index(max_event_action_definitions,
+                        self->event_action_config[__termina_array__index(16U,
                                                                          self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].enabled = 0;
 
                         __option_box_t tm_handler2;
@@ -1237,7 +1237,7 @@ PS19ExecTCReqStatusUpdate PUSService19__get_TC_params(const PUSService19 * const
     *subtype = tc_handler->df_header.subtype;
 
     PS19ExecTCReqStatusUpdate ps19_req_status_update;
-    for (size_t __i0 = 0U; __i0 < max_tc_size; __i0 = __i0 + 1U) {
+    for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
         ps19_req_status_update.action_tc_packet.tc_bytes[__i0] = 0U;
     }
     ps19_req_status_update.action_tc_packet.tc_num_bytes = 0U;
@@ -1267,8 +1267,8 @@ PS19ExecTCReqStatusUpdate PUSService19__get_TC_params(const PUSService19 * const
 
         for (size_t i = 0U; i < event_action_max_bytes && i < self->exec_tc_req_status_update.action_tc_packet.tc_num_bytes; i = i + 1U) {
             
-            ps19_req_status_update.action_tc_packet.tc_bytes[__termina_array__index(max_tc_size,
-                                                                                    i)] = tc_handler->tc_descriptor.tc_bytes[__termina_array__index(max_tc_size,
+            ps19_req_status_update.action_tc_packet.tc_bytes[__termina_array__index(256U,
+                                                                                    i)] = tc_handler->tc_descriptor.tc_bytes[__termina_array__index(256U,
                                                                                                                                                     i + 12U)];
 
         }
@@ -1276,6 +1276,73 @@ PS19ExecTCReqStatusUpdate PUSService19__get_TC_params(const PUSService19 * const
     }
 
     return ps19_req_status_update;
+
+}
+
+PSExecTCReqStatus PUSService19__manage_error_in_acceptance(const PUSService19 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                            &current_obt);
+
+        build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                         tm_count,
+                                         self->exec_tc_req_status_update.tc_data.packet_id,
+                                         self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
+                                         current_obt, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
 
 }
 
@@ -1313,6 +1380,73 @@ PSExecTCReqStatus PUSService19__manage_short_pack_length_error(const PUSService1
                                        self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
                                        self->exec_tc_req_status_update.tc_data.tc_num_bytes,
                                        current_obt, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
+
+}
+
+PSExecTCReqStatus PUSService19__manage_tm_limit_app_data_reached(const PUSService19 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                            &current_obt);
+
+        build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
+                                             tm_count,
+                                             self->exec_tc_req_status_update.tc_data.packet_id,
+                                             self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
+                                             current_obt, &result);
 
         if (result.__variant == MyResult__Ok) {
             
@@ -1410,9 +1544,11 @@ void PUSService19__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             if (error_code == ACCEPTANCE_ERROR) {
                 
+                self->exec_tc_req_status = PUSService19__manage_error_in_acceptance(self);
 
             } else if (error_code == BUILD_TM_ERROR) {
                 
+                self->exec_tc_req_status = PUSService19__manage_tm_limit_app_data_reached(self);
 
             } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
                 
@@ -1494,22 +1630,22 @@ void PUSService19__extract_action(void * const __this, size_t index,
 
     if (index == 0U) {
         
-        *action_packet = self->pending_action_queue_1I[__termina_array__index(event_action_queue_dimension,
+        *action_packet = self->pending_action_queue_1I[__termina_array__index(8U,
                                                                               self->pending_action_head[0U])];
 
     } else if (index == 1U) {
         
-        *action_packet = self->pending_action_queue_2LS[__termina_array__index(event_action_queue_dimension,
+        *action_packet = self->pending_action_queue_2LS[__termina_array__index(8U,
                                                                                self->pending_action_head[1U])];
 
     } else if (index == 2U) {
         
-        *action_packet = self->pending_action_queue_3MS[__termina_array__index(event_action_queue_dimension,
+        *action_packet = self->pending_action_queue_3MS[__termina_array__index(8U,
                                                                                self->pending_action_head[2U])];
 
     } else if (index == 3U) {
         
-        *action_packet = self->pending_action_queue_4HS[__termina_array__index(event_action_queue_dimension,
+        *action_packet = self->pending_action_queue_4HS[__termina_array__index(8U,
                                                                                self->pending_action_head[3U])];
 
     } else {
@@ -1562,14 +1698,14 @@ _Bool PUSService19__get_event_action_config(const PUSService19 * const self,
     
     _Bool found = 0;
 
-    for (size_t i = 0U; i < max_event_action_definitions && found == 0; i = i + 1U) {
+    for (size_t i = 0U; i < 16U && found == 0; i = i + 1U) {
         
-        if (self->event_action_config[__termina_array__index(max_event_action_definitions,
+        if (self->event_action_config[__termina_array__index(16U,
                                                              i)].event_ID == evID) {
             
             *index = i;
 
-            *enabled = self->event_action_config[__termina_array__index(max_event_action_definitions,
+            *enabled = self->event_action_config[__termina_array__index(16U,
                                                                         i)].enabled;
 
             found = 1;
@@ -1648,7 +1784,7 @@ void PUSService19__manage_event_action(void * const __this, uint16_t evID) {
 
     if (found_and_id.found && is_enabled) {
         
-        if (found_and_id.ev_action_index < max_event_action_definitions) {
+        if (found_and_id.ev_action_index < 16U) {
             
             Ev_IDType RID_type = get_Ev_ID_type(evID);
 
@@ -1656,12 +1792,12 @@ void PUSService19__manage_event_action(void * const __this, uint16_t evID) {
 
             if (RID_type.__variant == Ev_IDType__Informative) {
                 
-                if (self->pending_action_number[0U] < event_action_queue_dimension) {
+                if (self->pending_action_number[0U] < 8U) {
                     
-                    tail_index = (size_t)(self->pending_action_head[0U] + self->pending_action_number[0U]) % event_action_queue_dimension;
+                    tail_index = (size_t)(self->pending_action_head[0U] + self->pending_action_number[0U]) % 8U;
 
-                    self->pending_action_queue_1I[__termina_array__index(event_action_queue_dimension,
-                                                                         tail_index)] = self->event_action_packets[__termina_array__index(max_event_action_definitions,
+                    self->pending_action_queue_1I[__termina_array__index(8U,
+                                                                         tail_index)] = self->event_action_packets[__termina_array__index(16U,
                                                                                                                                           found_and_id.ev_action_index)];
 
                     self->pending_action_number[0U] = self->pending_action_number[0U] + 1U;
@@ -1673,12 +1809,12 @@ void PUSService19__manage_event_action(void * const __this, uint16_t evID) {
 
             } else if (RID_type.__variant == Ev_IDType__LowSeverityAnomaly) {
                 
-                if (self->pending_action_number[1U] < event_action_queue_dimension) {
+                if (self->pending_action_number[1U] < 8U) {
                     
-                    tail_index = (size_t)(self->pending_action_head[1U] + self->pending_action_number[1U]) % event_action_queue_dimension;
+                    tail_index = (size_t)(self->pending_action_head[1U] + self->pending_action_number[1U]) % 8U;
 
-                    self->pending_action_queue_2LS[__termina_array__index(event_action_queue_dimension,
-                                                                          tail_index)] = self->event_action_packets[__termina_array__index(max_event_action_definitions,
+                    self->pending_action_queue_2LS[__termina_array__index(8U,
+                                                                          tail_index)] = self->event_action_packets[__termina_array__index(16U,
                                                                                                                                            found_and_id.ev_action_index)];
 
                     self->pending_action_number[1U] = self->pending_action_number[1U] + 1U;
@@ -1690,12 +1826,12 @@ void PUSService19__manage_event_action(void * const __this, uint16_t evID) {
 
             } else if (RID_type.__variant == Ev_IDType__MediumSeverityAnomaly) {
                 
-                if (self->pending_action_number[2U] < event_action_queue_dimension) {
+                if (self->pending_action_number[2U] < 8U) {
                     
-                    tail_index = (size_t)(self->pending_action_head[2U] + self->pending_action_number[2U]) % event_action_queue_dimension;
+                    tail_index = (size_t)(self->pending_action_head[2U] + self->pending_action_number[2U]) % 8U;
 
-                    self->pending_action_queue_3MS[__termina_array__index(event_action_queue_dimension,
-                                                                          tail_index)] = self->event_action_packets[__termina_array__index(max_event_action_definitions,
+                    self->pending_action_queue_3MS[__termina_array__index(8U,
+                                                                          tail_index)] = self->event_action_packets[__termina_array__index(16U,
                                                                                                                                            found_and_id.ev_action_index)];
 
                     self->pending_action_number[2U] = self->pending_action_number[2U] + 1U;
@@ -1707,12 +1843,12 @@ void PUSService19__manage_event_action(void * const __this, uint16_t evID) {
 
             } else if (RID_type.__variant == Ev_IDType__HighSeverityAnomaly) {
                 
-                if (self->pending_action_number[3U] < event_action_queue_dimension) {
+                if (self->pending_action_number[3U] < 8U) {
                     
-                    tail_index = (size_t)(self->pending_action_head[3U] + self->pending_action_number[3U]) % event_action_queue_dimension;
+                    tail_index = (size_t)(self->pending_action_head[3U] + self->pending_action_number[3U]) % 8U;
 
-                    self->pending_action_queue_4HS[__termina_array__index(event_action_queue_dimension,
-                                                                          tail_index)] = self->event_action_packets[__termina_array__index(max_event_action_definitions,
+                    self->pending_action_queue_4HS[__termina_array__index(8U,
+                                                                          tail_index)] = self->event_action_packets[__termina_array__index(16U,
                                                                                                                                            found_and_id.ev_action_index)];
 
                     self->pending_action_number[3U] = self->pending_action_number[3U] + 1U;

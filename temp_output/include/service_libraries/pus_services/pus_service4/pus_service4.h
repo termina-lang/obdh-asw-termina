@@ -33,7 +33,7 @@ typedef struct {
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
     StatsConfig stats_config_table;
-    StatsDef param_stats[max_num_of_stats];
+    StatsDef param_stats[4U];
     PS4ExecTCReqStatusUpdate exec_tc_req_status_update;
     PSExecTCReqStatus exec_tc_req_status;
 } PUSService4;
@@ -74,7 +74,11 @@ PS4ExecTCReqStatusUpdate PUSService4__get_TC_params(const PUSService4 * const se
                                                     uint8_t * const subtype,
                                                     MyResult * const result);
 
+PSExecTCReqStatus PUSService4__manage_error_in_acceptance(const PUSService4 * const self);
+
 PSExecTCReqStatus PUSService4__manage_short_pack_length_error(const PUSService4 * const self);
+
+PSExecTCReqStatus PUSService4__manage_tm_limit_app_data_reached(const PUSService4 * const self);
 
 void PUSService4__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                           __status_int32_t * const action_status);

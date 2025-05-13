@@ -25,7 +25,7 @@ typedef struct {
 } CCSDSPUSTMDFHeaderT;
 
 typedef struct {
-    uint8_t tm_bytes[max_send_size];
+    uint8_t tm_bytes[256U];
     size_t tm_num_bytes;
 } TMDescriptorT;
 

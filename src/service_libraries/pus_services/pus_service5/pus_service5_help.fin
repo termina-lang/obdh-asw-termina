@@ -1,9 +1,6 @@
-import service_libraries.tc_ccsds_pus_format;
-import service_libraries.tm_ccsds_pus_format;
-import service_libraries.serialize;
-import service_libraries.pus_services.pus_service1.pus_service1;
-//import service_libraries.event_list;
+
 import service_libraries.pus_services.pus_services;
+import service_libraries.pus_services.pus_service1.pus_service1;
 
 const informative_Ev_IDs : u16 = 3;
 const low_severity_anomaly_Ev_IDs : u16 = 4;
@@ -12,6 +9,8 @@ const high_severity_anomaly_Ev_IDs : u16 = 16;
 
 const offset_mask : u16 = 0x001F; //Maximum Ev_IDs of each type in the baseline configuration is 32,
 	                              //from 0xX000 to 0xX01F, where X is the Ev_ID type
+
+const EvID_build_tm_error : u16 = 0x2100; //Ev_ID for the build TM error
 
 enum Ev_IDType {
     Informative, //0x1XXX

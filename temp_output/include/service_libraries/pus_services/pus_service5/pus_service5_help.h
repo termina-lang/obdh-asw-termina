@@ -5,9 +5,6 @@
 
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/pus_services/pus_services.h"
-#include "service_libraries/serialize.h"
-#include "service_libraries/tc_ccsds_pus_format.h"
-#include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
 
@@ -20,6 +17,8 @@ extern const uint16_t medium_severity_anomaly_Ev_IDs;
 extern const uint16_t high_severity_anomaly_Ev_IDs;
 
 extern const uint16_t offset_mask;
+
+extern const uint16_t EvID_build_tm_error;
 
 typedef enum {
     Ev_IDType__Informative,

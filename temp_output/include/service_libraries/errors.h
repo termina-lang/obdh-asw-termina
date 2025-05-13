@@ -17,4 +17,13 @@ extern const int32_t TC_DATA_OUT_OF_RANGE_ERROR;
 
 extern const int32_t UNREACHABLE_BRANCH_ERROR;
 
+typedef enum {
+    MyResult__Ok,
+    MyResult__Error
+} __enum_MyResult_t;
+
+typedef struct {
+    __enum_MyResult_t __variant;
+} MyResult;
+
 #endif

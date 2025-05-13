@@ -41,7 +41,7 @@ __status_int32_t TCRXBottomHalfTask__get_tc(void * const __this, uint8_t data) {
             
             self->telecommand.tc_num_bytes = (size_t)deserialize_uint16(self->RX_tc_length);
 
-            if (self->telecommand.tc_num_bytes < max_tc_size) {
+            if (self->telecommand.tc_num_bytes < 256U) {
                 
                 self->rx_status.__variant = RXStatus__TCBytesRx;
 
@@ -57,7 +57,7 @@ __status_int32_t TCRXBottomHalfTask__get_tc(void * const __this, uint8_t data) {
 
     } else {
         
-        self->telecommand.tc_bytes[__termina_array__index(max_tc_size,
+        self->telecommand.tc_bytes[__termina_array__index(256U,
                                                           self->aux_index)] = data;
 
         self->aux_index = self->aux_index + 1U;

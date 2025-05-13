@@ -1,8 +1,6 @@
 
 #include "resources/uart.h"
 
-const size_t max_send_size = 256U;
-
 void UARTDriver__disable_RF(UARTDriver * const self) {
     
     uint32_t riscv_uart_rf = 0xFFFFFBFFU;
@@ -205,9 +203,8 @@ _Bool UARTDriver__tf_is_empty(const UARTDriver * const self) {
 
 }
 
-void UARTDriver__send(void * const __this,
-                      const uint8_t output_bytes[max_send_size], size_t nbytes,
-                      CharDevResult * const result) {
+void UARTDriver__send(void * const __this, const uint8_t output_bytes[256U],
+                      size_t nbytes, CharDevResult * const result) {
     
     UARTDriver * self = (UARTDriver *)__this;
 
@@ -219,7 +216,7 @@ void UARTDriver__send(void * const __this,
 
         get_num_enqueued_elems(&self->uart_queue, &num_elements);
 
-        if ((size_t)(queue_max_noe - num_elements) >= nbytes) {
+        if ((size_t)(1024U - num_elements) >= nbytes) {
             
             QueueResult inner_queue_result;
             inner_queue_result.__variant = QueueResult__Success;
@@ -228,10 +225,10 @@ void UARTDriver__send(void * const __this,
 
             _Bool error = 0;
 
-            for (size_t i = 0U; i < max_send_size && (queued_bytes < nbytes && error == 0); i = i + 1U) {
+            for (size_t i = 0U; i < 256U && (queued_bytes < nbytes && error == 0); i = i + 1U) {
                 
                 inner_queue_result = enqueue(&self->uart_queue,
-                                             output_bytes[__termina_array__index(max_send_size,
+                                             output_bytes[__termina_array__index(256U,
                                                                                  i)]);
 
                 if (inner_queue_result.__variant == QueueResult__QueueFull) {
@@ -262,7 +259,7 @@ void UARTDriver__send(void * const __this,
             
             for (size_t i = 0U; i < 4U && sent_bytes < nbytes; i = i + 1U) {
                 
-                self->registers->data = (uint32_t)output_bytes[__termina_array__index(max_send_size,
+                self->registers->data = (uint32_t)output_bytes[__termina_array__index(256U,
                                                                                       i)];
 
                 sent_bytes = sent_bytes + 1U;
@@ -281,17 +278,17 @@ void UARTDriver__send(void * const __this,
 
             get_num_enqueued_elems(&self->uart_queue, &num_elements);
 
-            if ((size_t)(queue_max_noe - num_elements) >= left_bytes) {
+            if ((size_t)(1024U - num_elements) >= left_bytes) {
                 
                 QueueResult inner_queue_result;
                 inner_queue_result.__variant = QueueResult__Success;
 
                 _Bool error = 0;
 
-                for (size_t i = 0U; i < max_send_size && (i < left_bytes && error == 0); i = i + 1U) {
+                for (size_t i = 0U; i < 256U && (i < left_bytes && error == 0); i = i + 1U) {
                     
                     inner_queue_result = enqueue(&self->uart_queue,
-                                                 output_bytes[__termina_array__index(max_send_size,
+                                                 output_bytes[__termina_array__index(256U,
                                                                                      i + sent_bytes)]);
 
                     if (inner_queue_result.__variant == QueueResult__QueueFull) {
@@ -322,7 +319,7 @@ void UARTDriver__send(void * const __this,
 }
 
 void UARTDriver__send__mutex_lock(void * const __this,
-                                  const uint8_t output_bytes[max_send_size],
+                                  const uint8_t output_bytes[256U],
                                   size_t nbytes, CharDevResult * const result) {
     
     UARTDriver * self = (UARTDriver *)__this;
@@ -336,7 +333,7 @@ void UARTDriver__send__mutex_lock(void * const __this,
 }
 
 void UARTDriver__send__task_lock(void * const __this,
-                                 const uint8_t output_bytes[max_send_size],
+                                 const uint8_t output_bytes[256U],
                                  size_t nbytes, CharDevResult * const result) {
     
     __termina_task_lock_t lock;
@@ -348,7 +345,7 @@ void UARTDriver__send__task_lock(void * const __this,
 }
 
 void UARTDriver__send__event_lock(void * const __this,
-                                  const uint8_t output_bytes[max_send_size],
+                                  const uint8_t output_bytes[256U],
                                   size_t nbytes, CharDevResult * const result) {
     
     __termina_event_lock_t lock;

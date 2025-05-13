@@ -5,8 +5,8 @@
 
 void __termina_app__init_globals();
 
-_Atomic uint32_t u32_system_data_pool[sdp_num_u32_params];
-_Atomic uint8_t u8_system_data_pool[sdp_num_u8_params];
+_Atomic uint32_t u32_system_data_pool[12U];
+_Atomic uint8_t u8_system_data_pool[18U];
 
 static uint8_t __pool_tc_pool_memory[__termina_pool__size(sizeof(TCHandlerT),
                                                           20U)];

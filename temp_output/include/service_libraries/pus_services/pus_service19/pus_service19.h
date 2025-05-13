@@ -33,12 +33,12 @@ typedef struct {
     } tm_channel;
     size_t pending_action_head[4U];
     size_t pending_action_number[4U];
-    TCHandlerT pending_action_queue_4HS[event_action_queue_dimension];
-    TCHandlerT pending_action_queue_3MS[event_action_queue_dimension];
-    TCHandlerT pending_action_queue_2LS[event_action_queue_dimension];
-    TCHandlerT pending_action_queue_1I[event_action_queue_dimension];
-    TCHandlerT event_action_packets[max_event_action_definitions];
-    EventActionConfig event_action_config[max_event_action_definitions];
+    TCHandlerT pending_action_queue_4HS[8U];
+    TCHandlerT pending_action_queue_3MS[8U];
+    TCHandlerT pending_action_queue_2LS[8U];
+    TCHandlerT pending_action_queue_1I[8U];
+    TCHandlerT event_action_packets[16U];
+    EventActionConfig event_action_config[16U];
     PS19ExecTCReqStatusUpdate exec_tc_req_status_update;
     PSExecTCReqStatus exec_tc_req_status;
 } PUSService19;
@@ -68,7 +68,11 @@ PS19ExecTCReqStatusUpdate PUSService19__get_TC_params(const PUSService19 * const
                                                       uint8_t * const subtype,
                                                       MyResult * const result);
 
+PSExecTCReqStatus PUSService19__manage_error_in_acceptance(const PUSService19 * const self);
+
 PSExecTCReqStatus PUSService19__manage_short_pack_length_error(const PUSService19 * const self);
+
+PSExecTCReqStatus PUSService19__manage_tm_limit_app_data_reached(const PUSService19 * const self);
 
 void PUSService19__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                            __status_int32_t * const action_status);

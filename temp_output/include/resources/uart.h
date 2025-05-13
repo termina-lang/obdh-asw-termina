@@ -23,8 +23,6 @@ typedef struct {
     __enum_CharDevResult_t __variant;
 } CharDevResult;
 
-extern const size_t max_send_size;
-
 typedef struct {
     void * __that;
     void (* send)(void * const, const uint8_t *, size_t, CharDevResult * const);
@@ -71,17 +69,16 @@ void UARTDriver__release_tx__event_lock(void * const __this);
 
 _Bool UARTDriver__tf_is_empty(const UARTDriver * const self);
 
-void UARTDriver__send(void * const __this,
-                      const uint8_t output_bytes[max_send_size], size_t nbytes,
-                      CharDevResult * const result);
+void UARTDriver__send(void * const __this, const uint8_t output_bytes[256U],
+                      size_t nbytes, CharDevResult * const result);
 void UARTDriver__send__mutex_lock(void * const __this,
-                                  const uint8_t output_bytes[max_send_size],
+                                  const uint8_t output_bytes[256U],
                                   size_t nbytes, CharDevResult * const result);
 void UARTDriver__send__task_lock(void * const __this,
-                                 const uint8_t output_bytes[max_send_size],
+                                 const uint8_t output_bytes[256U],
                                  size_t nbytes, CharDevResult * const result);
 void UARTDriver__send__event_lock(void * const __this,
-                                  const uint8_t output_bytes[max_send_size],
+                                  const uint8_t output_bytes[256U],
                                   size_t nbytes, CharDevResult * const result);
 
 _Bool UARTDriver__tf_is_full(const UARTDriver * const self);

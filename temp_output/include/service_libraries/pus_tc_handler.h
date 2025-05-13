@@ -3,7 +3,7 @@
 
 #include <termina.h>
 
-#include "service_libraries/pus_services/pus_services.h"
+#include "service_libraries/errors.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
 
 #include "option.h"

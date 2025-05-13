@@ -47,6 +47,8 @@ const uint8_t TM_1_4_TC_20_X_INVALID_PID = 22U;
 
 const uint8_t TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC = 23U;
 
+const uint8_t TM_1_4_ERROR_IN_ACCEPTANCE = 24U;
+
 const uint8_t TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA = 1U;
 
 const uint8_t TM_1_8_TM_2_1_DEV_COMMAND_EXEC_ERROR = 2U;
@@ -491,6 +493,25 @@ void build_tm_1_4_PID_read_only_via_TC(TMHandlerT * const p_tm_handler,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC, PID,
                                   current_obt, result);
+
+    return;
+
+}
+
+void build_tm_1_4_error_in_acceptance(TMHandlerT * const p_tm_handler,
+                                      uint16_t tm_seq_counter,
+                                      uint16_t tc_packet_id,
+                                      uint16_t tc_packet_error_ctrl,
+                                      MissionObt current_obt,
+                                      MyResult * const result) {
+    
+    TCVerifyStage verify_stage;
+    verify_stage.__variant = TCVerifyStage__ExecStart;
+
+    build_tm_1_X_no_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
+                                 tc_packet_error_ctrl, verify_stage,
+                                 TM_1_4_ERROR_IN_ACCEPTANCE, current_obt,
+                                 result);
 
     return;
 

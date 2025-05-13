@@ -1,7 +1,7 @@
 import service_libraries.serialize;
 
 
-const max_tc_size : usize = 256 : usize;
+constexpr max_tc_size : usize = 256 : usize;
 
 struct CCSDSPUSTCPacketHeaderT {
 

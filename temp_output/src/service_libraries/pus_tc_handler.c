@@ -13,7 +13,7 @@ TCHandlerT tc_handler_init() {
     tc_handler.packet_header.packet_id = 0U;
     tc_handler.packet_header.packet_length = 0U;
     tc_handler.packet_header.packet_seq_ctrl = 0U;
-    for (size_t __i0 = 0U; __i0 < max_tc_size; __i0 = __i0 + 1U) {
+    for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
         tc_handler.tc_descriptor.tc_bytes[__i0] = 0U;
     }
     tc_handler.tc_descriptor.tc_num_bytes = 0U;
@@ -25,10 +25,10 @@ TCHandlerT tc_handler_init() {
 void tc_handler_build_from_descriptor(TCHandlerT * const tc_handler,
                                       const TCDescriptorT * const telecommand) {
     
-    for (size_t i = 0U; i < max_tc_size && i < telecommand->tc_num_bytes; i = i + 1U) {
+    for (size_t i = 0U; i < 256U && i < telecommand->tc_num_bytes; i = i + 1U) {
         
-        tc_handler->tc_descriptor.tc_bytes[__termina_array__index(max_tc_size,
-                                                                  i)] = telecommand->tc_bytes[__termina_array__index(max_tc_size,
+        tc_handler->tc_descriptor.tc_bytes[__termina_array__index(256U,
+                                                                  i)] = telecommand->tc_bytes[__termina_array__index(256U,
                                                                                                                      i)];
 
     }
@@ -69,7 +69,7 @@ MyResult tc_handler_get_u8_appdata_field(TCHandlerT * const tc_handler,
 
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 1U)) {
         
-        *data = tc_handler->tc_descriptor.tc_bytes[__termina_array__index(max_tc_size,
+        *data = tc_handler->tc_descriptor.tc_bytes[__termina_array__index(256U,
                                                                           tc_handler->app_data_index)];
 
         tc_handler->app_data_index = tc_handler->app_data_index + 1U;
@@ -92,7 +92,7 @@ MyResult tc_handler_get_u16_appdata_field(TCHandlerT * const tc_handler,
 
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 2U)) {
         
-        *data = deserialize_uint16(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(max_tc_size,
+        *data = deserialize_uint16(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(256U,
                                                                                               2U,
                                                                                               tc_handler->app_data_index,
                                                                                               tc_handler->app_data_index + 2U)]);
@@ -117,7 +117,7 @@ MyResult tc_handler_get_u32_appdata_field(TCHandlerT * const tc_handler,
 
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 4U)) {
         
-        *data = deserialize_uint32(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(max_tc_size,
+        *data = deserialize_uint32(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(256U,
                                                                                               4U,
                                                                                               tc_handler->app_data_index,
                                                                                               tc_handler->app_data_index + 4U)]);

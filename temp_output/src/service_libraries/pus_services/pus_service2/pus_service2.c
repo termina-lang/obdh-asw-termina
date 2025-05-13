@@ -1,0 +1,647 @@
+
+#include "service_libraries/pus_services/pus_service2/pus_service2.h"
+
+MyResult PUSService2__dev_drv_on_off(PUSService2 * const self) {
+    
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    uint8_t led = (uint8_t)(self->exec_tc_req_status_update.dev_address & 0x10000000U);
+
+    uint8_t on_off = (uint8_t)(self->exec_tc_req_status_update.dev_address & 0x1U);
+
+    self->gpio_driver.write_led(self->gpio_driver.__that, led, on_off, &result);
+
+    return result;
+
+}
+
+_Bool PUSService2__device_drv_is_on_off_address_valid(const PUSService2 * const self) {
+    
+    _Bool is_valid = 0;
+
+    uint32_t device_address = self->exec_tc_req_status_update.dev_address;
+
+    if (device_address == 0x1U || device_address == 0x10000001U || device_address == 0x20000001U || device_address == 0x30000001U || device_address == 0x0U || device_address == 0x10000000U || device_address == 0x20000000U || device_address == 0x30000000U) {
+        
+        is_valid = 1;
+
+    }
+
+    return is_valid;
+
+}
+
+PSExecTCReqStatus PUSService2__exec2_1TC(PUSService2 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        if (self->exec_tc_req_status_update.N != 1U) {
+            
+            self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                                &current_obt);
+
+            build_tm_1_4_num_of_instr_not_valid((TMHandlerT *)b_tm_handler.data,
+                                                tm_count,
+                                                self->exec_tc_req_status_update.packet_id,
+                                                self->exec_tc_req_status_update.packet_error_ctrl,
+                                                self->exec_tc_req_status_update.N,
+                                                current_obt, &result);
+
+            if (result.__variant == MyResult__Ok) {
+                
+                self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                         &result);
+
+                if (result.__variant == MyResult__Error) {
+                    
+                    next_status.__variant = PSExecTCReqStatus__Failure;
+                    next_status.Failure.__0 = TM_SEND_FAILURE;
+
+                }
+
+            } else {
+                
+                self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                             b_tm_handler);
+
+                next_status.__variant = PSExecTCReqStatus__Error;
+                next_status.Error.__0 = BUILD_TM_ERROR;
+
+            }
+
+        } else {
+            
+            if (PUSService2__device_drv_is_on_off_address_valid(self)) {
+                
+                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                                    &current_obt);
+
+                build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count,
+                             current_obt, &result);
+
+                if (result.__variant == MyResult__Ok) {
+                    
+                    self->tm_channel.send_tm(self->tm_channel.__that,
+                                             b_tm_handler, &result);
+
+                    if (result.__variant == MyResult__Error) {
+                        
+                        next_status.__variant = PSExecTCReqStatus__Failure;
+                        next_status.Failure.__0 = TM_SEND_FAILURE;
+
+                    }
+
+                } else {
+                    
+                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                                 b_tm_handler);
+
+                    next_status.__variant = PSExecTCReqStatus__Error;
+                    next_status.Error.__0 = BUILD_TM_ERROR;
+
+                }
+
+                result = PUSService2__dev_drv_on_off(self);
+
+                if (result.__variant == MyResult__Error) {
+                    
+                    __option_box_t tm_handler2;
+                    tm_handler2.__variant = None;
+
+                    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
+                                                  &tm_handler2);
+
+                    if (tm_handler2.__variant == Some) {
+                        
+                        __termina_box_t b_tm_handler2 = tm_handler2.Some.__0;
+
+                        uint16_t tm_count2 = 0U;
+
+                        self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                                                           &tm_count2);
+
+                        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                                            &current_obt);
+
+                        build_tm_1_8_device_command_exec_error((TMHandlerT *)b_tm_handler2.data,
+                                                               tm_count2,
+                                                               self->exec_tc_req_status_update.packet_id,
+                                                               self->exec_tc_req_status_update.packet_error_ctrl,
+                                                               self->exec_tc_req_status_update.dev_address,
+                                                               current_obt,
+                                                               &result);
+
+                        if (result.__variant == MyResult__Ok) {
+                            
+                            self->tm_channel.send_tm(self->tm_channel.__that,
+                                                     b_tm_handler2, &result);
+
+                            if (result.__variant == MyResult__Error) {
+                                
+                                next_status.__variant = PSExecTCReqStatus__Failure;
+                                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+                            }
+
+                        } else {
+                            
+                            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                                         b_tm_handler2);
+
+                            next_status.__variant = PSExecTCReqStatus__Error;
+                            next_status.Error.__0 = BUILD_TM_ERROR;
+
+                        }
+
+                    } else {
+                        
+                        next_status.__variant = PSExecTCReqStatus__Failure;
+                        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+                    }
+
+                } else {
+                    
+                    __option_box_t tm_handler2;
+                    tm_handler2.__variant = None;
+
+                    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
+                                                  &tm_handler2);
+
+                    if (tm_handler2.__variant == Some) {
+                        
+                        __termina_box_t b_tm_handler2 = tm_handler2.Some.__0;
+
+                        uint16_t tm_count2 = 0U;
+
+                        self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                                                           &tm_count2);
+
+                        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                                            &current_obt);
+
+                        build_tm_1_7((TMHandlerT *)b_tm_handler2.data,
+                                     tm_count2, current_obt, &result);
+
+                        if (result.__variant == MyResult__Ok) {
+                            
+                            self->tm_channel.send_tm(self->tm_channel.__that,
+                                                     b_tm_handler2, &result);
+
+                            if (result.__variant == MyResult__Error) {
+                                
+                                next_status.__variant = PSExecTCReqStatus__Failure;
+                                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+                            }
+
+                        } else {
+                            
+                            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                                         b_tm_handler2);
+
+                            next_status.__variant = PSExecTCReqStatus__Error;
+                            next_status.Error.__0 = BUILD_TM_ERROR;
+
+                        }
+
+                    } else {
+                        
+                        next_status.__variant = PSExecTCReqStatus__Failure;
+                        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+                    }
+
+                }
+
+            } else {
+                
+                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                                    &current_obt);
+
+                build_tm_1_4_device_address_not_valid((TMHandlerT *)b_tm_handler.data,
+                                                      tm_count,
+                                                      self->exec_tc_req_status_update.packet_id,
+                                                      self->exec_tc_req_status_update.packet_error_ctrl,
+                                                      self->exec_tc_req_status_update.dev_address,
+                                                      current_obt, &result);
+
+                if (result.__variant == MyResult__Ok) {
+                    
+                    self->tm_channel.send_tm(self->tm_channel.__that,
+                                             b_tm_handler, &result);
+
+                    if (result.__variant == MyResult__Error) {
+                        
+                        next_status.__variant = PSExecTCReqStatus__Failure;
+                        next_status.Failure.__0 = TM_SEND_FAILURE;
+
+                    }
+
+                } else {
+                    
+                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                                 b_tm_handler);
+
+                    next_status.__variant = PSExecTCReqStatus__Error;
+                    next_status.Error.__0 = BUILD_TM_ERROR;
+
+                }
+
+            }
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
+
+}
+
+PS2ExecTCReqStatusUpdate PUSService2__get_TC_params(const PUSService2 * const self,
+                                                    TCHandlerT * const tc_handler,
+                                                    uint8_t * const subtype,
+                                                    MyResult * const result) {
+    
+    *subtype = tc_handler->df_header.subtype;
+
+    PS2ExecTCReqStatusUpdate tc_data;
+    tc_data.N = 0U;
+    tc_data.dev_address = 0U;
+    tc_data.packet_error_ctrl = 0U;
+    tc_data.packet_id = 0U;
+    tc_data.tc_num_bytes = 0U;
+
+    tc_data.packet_id = tc_handler->packet_header.packet_id;
+
+    tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+
+    tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
+
+    *result = tc_handler_get_u8_appdata_field(tc_handler, &tc_data.N);
+
+    *result = tc_handler_get_u32_appdata_field(tc_handler,
+                                               &tc_data.dev_address);
+
+    return tc_data;
+
+}
+
+PSExecTCReqStatus PUSService2__manage_error_in_acceptance(const PUSService2 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                            &current_obt);
+
+        build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                         tm_count,
+                                         self->exec_tc_req_status_update.packet_id,
+                                         self->exec_tc_req_status_update.packet_error_ctrl,
+                                         current_obt, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
+
+}
+
+PSExecTCReqStatus PUSService2__manage_short_pack_length_error(const PUSService2 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                            &current_obt);
+
+        build_tm_1_4_short_pack_length((TMHandlerT *)b_tm_handler.data,
+                                       tm_count,
+                                       self->exec_tc_req_status_update.packet_id,
+                                       self->exec_tc_req_status_update.packet_error_ctrl,
+                                       self->exec_tc_req_status_update.tc_num_bytes,
+                                       current_obt, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
+
+}
+
+PSExecTCReqStatus PUSService2__manage_tm_limit_app_data_reached(const PUSService2 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                            &current_obt);
+
+        build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
+                                             tm_count,
+                                             self->exec_tc_req_status_update.packet_id,
+                                             self->exec_tc_req_status_update.packet_error_ctrl,
+                                             current_obt, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
+
+}
+
+void PUSService2__exec_tc(void * const __this, TCHandlerT * const tc_handler,
+                          __status_int32_t * const action_status) {
+    
+    PUSService2 * self = (PUSService2 *)__this;
+
+    uint8_t subtype = 0U;
+
+    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
+        
+        if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Init) {
+            
+            MyResult result;
+            result.__variant = MyResult__Ok;
+
+            self->exec_tc_req_status_update = PUSService2__get_TC_params(self,
+                                                                         tc_handler,
+                                                                         &subtype,
+                                                                         &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
+                self->exec_tc_req_status.Error.__0 = TC_DATA_OUT_OF_RANGE_ERROR;
+
+            } else {
+                
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__ExecTC;
+
+            }
+
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__ExecTC) {
+            
+            if (subtype == 1U) {
+                
+                self->exec_tc_req_status = PUSService2__exec2_1TC(self);
+
+            } else {
+                
+                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
+                self->exec_tc_req_status.Error.__0 = ACCEPTANCE_ERROR;
+
+            }
+
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Error) {
+            
+            int32_t error_code = self->exec_tc_req_status.Error.__0;
+
+            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
+
+            if (error_code == ACCEPTANCE_ERROR) {
+                
+                self->exec_tc_req_status = PUSService2__manage_error_in_acceptance(self);
+
+            } else if (error_code == BUILD_TM_ERROR) {
+                
+                self->exec_tc_req_status = PUSService2__manage_tm_limit_app_data_reached(self);
+
+            } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+                
+                self->exec_tc_req_status = PUSService2__manage_short_pack_length_error(self);
+
+            } else {
+                
+
+            }
+
+        } else if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Failure) {
+            
+            int32_t failure_code = self->exec_tc_req_status.Failure.__0;
+
+            (*action_status).__variant = Failure;
+            (*action_status).Failure.__0 = failure_code;
+
+            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
+
+        } else {
+            
+
+        }
+
+    }
+
+    if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit) {
+        
+        self->exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+
+    }
+
+    return;
+
+}
+
+void PUSService2__exec_tc__mutex_lock(void * const __this,
+                                      TCHandlerT * const tc_handler,
+                                      __status_int32_t * const action_status) {
+    
+    PUSService2 * self = (PUSService2 *)__this;
+
+    int32_t __status = 0L;
+
+    __termina_mutex__lock(self->__mutex_id, &__status);
+    PUSService2__exec_tc(self, tc_handler, action_status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
+
+}
+
+void PUSService2__exec_tc__task_lock(void * const __this,
+                                     TCHandlerT * const tc_handler,
+                                     __status_int32_t * const action_status) {
+    
+    __termina_task_lock_t lock;
+
+    lock = __termina_task__lock();
+    PUSService2__exec_tc(__this, tc_handler, action_status);
+    __termina_task__unlock(lock);
+
+}
+
+void PUSService2__exec_tc__event_lock(void * const __this,
+                                      TCHandlerT * const tc_handler,
+                                      __status_int32_t * const action_status) {
+    
+    __termina_event_lock_t lock;
+
+    lock = __termina_event__lock();
+    PUSService2__exec_tc(__this, tc_handler, action_status);
+    __termina_event__unlock(lock);
+
+}

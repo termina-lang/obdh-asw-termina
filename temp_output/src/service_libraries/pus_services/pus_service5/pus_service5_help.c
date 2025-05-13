@@ -11,6 +11,8 @@ const uint16_t high_severity_anomaly_Ev_IDs = 16U;
 
 const uint16_t offset_mask = 0x1FU;
 
+const uint16_t EvID_build_tm_error = 0x2100U;
+
 Ev_IDType get_Ev_ID_type(uint16_t Ev_ID) {
     
     Ev_IDType Ev_ID_type;

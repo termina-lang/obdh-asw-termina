@@ -7,6 +7,6 @@
 
 #include "option.h"
 
-uint16_t cal_crc_16(const uint8_t data[max_tc_size], size_t nbytes);
+uint16_t cal_crc_16(const uint8_t data[256U], size_t nbytes);
 
 #endif

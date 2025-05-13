@@ -27,8 +27,8 @@ typedef struct {
     } pus_service_19;
     struct {
         void * __that;
-        void (* build_and_tx_tm_5_x)(void * const, MyResult * const, uint16_t,
-                                     FaultInfo);
+        void (* build_and_tx_tm_5_x)(void * const, __status_int32_t * const,
+                                     uint16_t, FaultInfo);
         void (* is_Ev_ID_enabled_ext)(void * const, uint16_t, _Bool * const);
     } pus_service_5;
     struct {

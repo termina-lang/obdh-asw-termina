@@ -5,10 +5,6 @@
 
 #include "option.h"
 
-extern const size_t sdp_num_u32_params;
-
-extern const size_t sdp_num_u8_params;
-
 extern const size_t sdp_last_u32_param_id;
 
 extern const size_t sdp_last_u8_param_id;

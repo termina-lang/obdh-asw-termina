@@ -48,7 +48,11 @@ PS20ExecTCReqStatusUpdate PUSService20__get_TC_params(const PUSService20 * const
                                                       uint8_t * const subtype,
                                                       MyResult * const result);
 
+PSExecTCReqStatus PUSService20__manage_error_in_acceptance(const PUSService20 * const self);
+
 PSExecTCReqStatus PUSService20__manage_short_pack_length_error(const PUSService20 * const self);
+
+PSExecTCReqStatus PUSService20__manage_tm_limit_app_data_reached(const PUSService20 * const self);
 
 void PUSService20__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                            __status_int32_t * const action_status);

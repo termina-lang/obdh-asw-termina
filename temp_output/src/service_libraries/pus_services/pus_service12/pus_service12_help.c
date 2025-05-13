@@ -1,10 +1,6 @@
 
 #include "service_libraries/pus_services/pus_service12/pus_service12_help.h"
 
-const size_t max_num_pmon_ids = 8U;
-
-const size_t max_num_transitions = 1U;
-
 uint8_t get_check_status_index(CheckState status) {
     
     uint8_t index = 0U;

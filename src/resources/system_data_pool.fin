@@ -1,5 +1,5 @@
-const sdp_num_u32_params : usize = 12;
-const sdp_num_u8_params : usize = 18;
+constexpr sdp_num_u32_params : usize = 12;
+constexpr sdp_num_u8_params : usize = 18;
 //const sdp_last_u32_param_id : usize = sdp_num_u32_params - 1;
 //const sdp_last_u8_param_id : usize = (sdp_num_u32_params - 1) + sdp_num_u8_params - 1;
 const sdp_last_u32_param_id : usize = 11;

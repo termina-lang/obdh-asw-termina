@@ -12,13 +12,13 @@ __status_int32_t Init__init(void * const __this, TimeVal _boot_time) {
 
     self->gpio_driver.init_gpio(self->gpio_driver.__that);
 
-    for (size_t i = 0U; i < sdp_num_u32_params; i = i + 1U) {
+    for (size_t i = 0U; i < 12U; i = i + 1U) {
         
         atomic_store(&self->system_data_pool_u32[i], (uint32_t)i);
 
     }
 
-    for (size_t i = 0U; i < sdp_num_u8_params; i = i + 1U) {
+    for (size_t i = 0U; i < 18U; i = i + 1U) {
         
         atomic_store(&self->system_data_pool_u8[i], (uint8_t)i);
 

@@ -24,6 +24,7 @@ const TM_1_4_TC_19_1_EV_ACTION_REJECTED 		: u8 = 20;
 const TM_1_4_TC_19_X_EV_ACTION_NOT_DEFINED      : u8 = 21;
 const TM_1_4_TC_20_X_INVALID_PID 				: u8 = 22;
 const TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC 		: u8 = 23;
+const TM_1_4_ERROR_IN_ACCEPTANCE 				: u8 = 24;	
 
 //Error codes for TM[1,8] packets
 const TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA	   : u8 = 1;
@@ -32,6 +33,7 @@ const TM_1_8_TC_4_1_NOT_FREE_PID_STATS_CONFIG  : u8 = 3;
 const TM_1_8_TC_6_X_MEM_ACCESS_FAIL			   : u8 = 4;
 const TM_1_8_TC_11_X_SCHED_TC_POOL_EMPTY	   : u8 = 5;
 const TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED    : u8 = 6;
+
 
 
 function build_tm_1_1(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, 
@@ -312,6 +314,17 @@ function build_tm_1_4_PID_read_only_via_TC (p_tm_handler : &mut TMHandlerT, tm_s
 	return;
 }
 
+function build_tm_1_4_error_in_acceptance (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
+		 tc_packet_error_ctrl: u16, current_obt: MissionObt, result : &mut MyResult) {
+	
+	var verify_stage : TCVerifyStage = TCVerifyStage::ExecStart;
+	
+	build_tm_1_X_no_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id, tc_packet_error_ctrl, verify_stage,
+	    TM_1_4_ERROR_IN_ACCEPTANCE, current_obt, result);
+
+	return;
+}
+
 function build_tm_1_7(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, 
 							current_obt: MissionObt, result : &mut MyResult) {
 
@@ -379,7 +392,6 @@ function build_tm_1_8_mem_access_error (p_tm_handler : &mut TMHandlerT, tm_seq_c
 
 	return;
 }
-
 
 
 

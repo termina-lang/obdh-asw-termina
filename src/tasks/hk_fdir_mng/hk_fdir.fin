@@ -49,9 +49,7 @@ task class HouseKeepingFDIR {
 
                     if(is_Ev_ID_enabled){
 
-                        var res: MyResult = MyResult::Ok;
-
-                        self->pus_service_5.build_and_tx_tm_5_x(&mut res, evID, fault_info);
+                        self->pus_service_5.build_and_tx_tm_5_x(&mut result, evID, fault_info);
                         self->pus_service_19.manage_event_action(evID);
                     } 
 
@@ -70,7 +68,7 @@ task class HouseKeepingFDIR {
 
         var result : Status<i32> = Success;
 
-        self->pus_service_4.update_all_stats();
+        self->pus_service_4.update_all_stats(); 
         self->pus_service_3.do_hk(&mut result);
         result = self->do_fdir();
 
@@ -113,6 +111,7 @@ task class HouseKeepingFDIR {
 
                 }
                 case None => {
+                    result = Failure(TM_POOL_ALLOC_FAILURE);
                 
                 }
             }

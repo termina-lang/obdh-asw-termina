@@ -3,6 +3,8 @@
 
 #include <termina.h>
 
+#include "service_libraries/errors.h"
+
 #include "option.h"
 
 typedef struct {

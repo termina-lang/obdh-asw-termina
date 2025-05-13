@@ -3,14 +3,7 @@
 
 #include <termina.h>
 
-#include "resources/system_data_pool.h"
-#include "resources/tm_channel.h"
-#include "resources/tm_counter.h"
-#include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/pus_services/pus_service3/pus_service3_help.h"
-#include "service_libraries/serialize.h"
-#include "service_libraries/tc_ccsds_pus_format.h"
-#include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
 
@@ -23,6 +16,10 @@ typedef struct {
 
 typedef struct {
     __termina_id_t __mutex_id;
+    struct {
+        void * __that;
+        void (* build_and_tx_tm_5_2)(void * const, __status_int32_t * const);
+    } pus_service_5;
     struct {
         void * __that;
         void (* get_current_obt)(void * const, MissionObt * const);
@@ -40,7 +37,7 @@ typedef struct {
     _Atomic uint32_t * system_data_pool_u32;
     PS3ExecTCReqStatusUpdate exec_tc_req_status_update;
     PSExecTCReqStatus exec_tc_req_status;
-    HKConfiguration hk_config_table[max_num_of_SIDs];
+    HKConfiguration hk_config_table[8U];
 } PUSService3;
 
 void PUSService3__build_tm_3_25(const PUSService3 * const self,
@@ -70,7 +67,11 @@ PS3TCData PUSService3__get_TC_params(const PUSService3 * const self,
                                      uint8_t * const subtype,
                                      MyResult * const result);
 
+PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const PUSService3 * const self);
+
 PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const PUSService3 * const self);
+
+PSExecTCReqStatus PUSService3__manage_tm_limit_app_data_reached(const PUSService3 * const self);
 
 void PUSService3__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                           __status_int32_t * const action_status);

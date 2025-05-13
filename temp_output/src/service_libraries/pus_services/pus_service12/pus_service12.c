@@ -8,7 +8,7 @@ _Bool PUSService12__PID_has_expected_masked_value(const PUSService12 * const sel
 
     _Bool res = 0;
 
-    uint16_t PID = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    uint16_t PID = self->param_mon_config_table[__termina_array__index(8U,
                                                                        current_PMON_ID)].PID;
 
     uint32_t SDP_value = 0U;
@@ -51,7 +51,7 @@ _Bool PUSService12__PID_is_above_upper_limit(const PUSService12 * const self,
 
     uint32_t upper_limit = limit_check_def->high_limit;
 
-    uint16_t PID = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    uint16_t PID = self->param_mon_config_table[__termina_array__index(8U,
                                                                        current_PMON_ID)].PID;
 
     DataPoolItemType type = sys_data_pool_get_item_type(PID);
@@ -94,7 +94,7 @@ _Bool PUSService12__PID_is_below_lower_limit(const PUSService12 * const self,
 
     uint32_t lower_limit = limit_check_def->low_limit;
 
-    uint16_t PID = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    uint16_t PID = self->param_mon_config_table[__termina_array__index(8U,
                                                                        current_PMON_ID)].PID;
 
     DataPoolItemType type = sys_data_pool_get_item_type(PID);
@@ -138,50 +138,50 @@ void PUSService12__build_tm_12_12(const PUSService12 * const self,
     append_u8_appdata_field(p_tm_handler, self->monitoring_transition_counter,
                             result);
 
-    for (size_t i = 0U; i < max_num_transitions && i < (size_t)self->monitoring_transition_counter; i = i + 1U) {
+    for (size_t i = 0U; i < 1U && i < (size_t)self->monitoring_transition_counter; i = i + 1U) {
         
         uint8_t aux_prev_status = 0U;
 
         uint8_t aux_new_status = 0U;
 
         append_u16_appdata_field(p_tm_handler,
-                                 self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+                                 self->param_mon_transitions_table[__termina_array__index(1U,
                                                                                           i)].PMONID,
                                  result);
 
         append_u16_appdata_field(p_tm_handler,
-                                 self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+                                 self->param_mon_transitions_table[__termina_array__index(1U,
                                                                                           i)].PID,
                                  result);
 
-        uint8_t type_id = get_type_index(self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+        uint8_t type_id = get_type_index(self->param_mon_transitions_table[__termina_array__index(1U,
                                                                                                   i)].type);
 
         append_u8_appdata_field(p_tm_handler, type_id, result);
 
-        if (self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+        if (self->param_mon_transitions_table[__termina_array__index(1U,
                                                                      i)].type.__variant == MonitorCheckType__ExpectedValue) {
             
             append_u32_appdata_field(p_tm_handler,
-                                     self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+                                     self->param_mon_transitions_table[__termina_array__index(1U,
                                                                                               i)].mask_value,
                                      result);
 
         }
 
-        aux_prev_status = get_check_status_index(self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+        aux_prev_status = get_check_status_index(self->param_mon_transitions_table[__termina_array__index(1U,
                                                                                                           i)].prev_status);
 
-        aux_new_status = get_check_status_index(self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+        aux_new_status = get_check_status_index(self->param_mon_transitions_table[__termina_array__index(1U,
                                                                                                          i)].new_status);
 
         append_u32_appdata_field(p_tm_handler,
-                                 self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+                                 self->param_mon_transitions_table[__termina_array__index(1U,
                                                                                           i)].new_value,
                                  result);
 
         append_u32_appdata_field(p_tm_handler,
-                                 self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+                                 self->param_mon_transitions_table[__termina_array__index(1U,
                                                                                           i)].limit_value,
                                  result);
 
@@ -190,7 +190,7 @@ void PUSService12__build_tm_12_12(const PUSService12 * const self,
         append_u8_appdata_field(p_tm_handler, aux_new_status, result);
 
         append_u32_appdata_field(p_tm_handler,
-                                 self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+                                 self->param_mon_transitions_table[__termina_array__index(1U,
                                                                                           i)].trans_obt.seconds,
                                  result);
 
@@ -218,39 +218,39 @@ void PUSService12__add_monitoring_transition(PUSService12 * const self) {
     MyResult result;
     result.__variant = MyResult__Ok;
 
-    if ((size_t)self->monitoring_transition_counter < max_num_transitions) {
+    if ((size_t)self->monitoring_transition_counter < 1U) {
         
         size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
 
-        self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
-                                                                 (size_t)self->monitoring_transition_counter)].PID = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_transitions_table[__termina_array__index(1U,
+                                                                 (size_t)self->monitoring_transition_counter)].PID = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                                                                          current_PMON_ID)].PID;
 
-        self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+        self->param_mon_transitions_table[__termina_array__index(1U,
                                                                  (size_t)self->monitoring_transition_counter)].PMONID = self->do_monitoring_req_status_update.PMONID;
 
-        self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
-                                                                 (size_t)self->monitoring_transition_counter)].type = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_transitions_table[__termina_array__index(1U,
+                                                                 (size_t)self->monitoring_transition_counter)].type = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                                                                           current_PMON_ID)].type;
 
         if (self->do_monitoring_req_status_update.fault_info.__variant == FaultInfo__ParamOutOfLimit) {
             
             ParamOutOfLimitInfo out_of_limit_info = self->do_monitoring_req_status_update.fault_info.ParamOutOfLimit.__0;
 
-            self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+            self->param_mon_transitions_table[__termina_array__index(1U,
                                                                      (size_t)self->monitoring_transition_counter)].limit_value = out_of_limit_info.PID_limit;
 
-            self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+            self->param_mon_transitions_table[__termina_array__index(1U,
                                                                      (size_t)self->monitoring_transition_counter)].new_value = out_of_limit_info.PID_value;
 
         } else if (self->do_monitoring_req_status_update.fault_info.__variant == FaultInfo__ParamFaultValue) {
             
             ParamFaultValueInfo fault_value_info = self->do_monitoring_req_status_update.fault_info.ParamFaultValue.__0;
 
-            self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+            self->param_mon_transitions_table[__termina_array__index(1U,
                                                                      (size_t)self->monitoring_transition_counter)].limit_value = fault_value_info.PID_expected_value;
 
-            self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+            self->param_mon_transitions_table[__termina_array__index(1U,
                                                                      (size_t)self->monitoring_transition_counter)].new_value = fault_value_info.PID_value;
 
         } else {
@@ -258,13 +258,13 @@ void PUSService12__add_monitoring_transition(PUSService12 * const self) {
 
         }
 
-        if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        if (self->param_mon_config_table[__termina_array__index(8U,
                                                                 current_PMON_ID)].definition.__variant == MonitorDefinition__ParamValueCheck) {
             
-            ParamValueCheckDefinition value_definition = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            ParamValueCheckDefinition value_definition = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                              current_PMON_ID)].definition.ParamValueCheck.__0;
 
-            self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+            self->param_mon_transitions_table[__termina_array__index(1U,
                                                                      (size_t)self->monitoring_transition_counter)].mask_value = value_definition.mask_value;
 
         } else {
@@ -272,22 +272,22 @@ void PUSService12__add_monitoring_transition(PUSService12 * const self) {
 
         }
 
-        self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
+        self->param_mon_transitions_table[__termina_array__index(1U,
                                                                  (size_t)self->monitoring_transition_counter)].new_status = self->do_monitoring_req_status_update.new_status;
 
-        self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
-                                                                 (size_t)self->monitoring_transition_counter)].prev_status = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_transitions_table[__termina_array__index(1U,
+                                                                 (size_t)self->monitoring_transition_counter)].prev_status = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                                                                                  current_PMON_ID)].current_state;
 
-        self->param_mon_transitions_table[__termina_array__index(max_num_transitions,
-                                                                 (size_t)self->monitoring_transition_counter)].trans_obt = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_transitions_table[__termina_array__index(1U,
+                                                                 (size_t)self->monitoring_transition_counter)].trans_obt = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                                                                                current_PMON_ID)].transition_obt;
 
         self->monitoring_transition_counter = self->monitoring_transition_counter + 1U;
 
     }
 
-    if ((size_t)self->monitoring_transition_counter == max_num_transitions) {
+    if ((size_t)self->monitoring_transition_counter == 1U) {
         
         __option_box_t tm_handler;
         tm_handler.__variant = None;
@@ -337,45 +337,45 @@ void PUSService12__add_valid_mng_mon_def(PUSService12 * const self) {
     
     size_t PMONID = (size_t)self->exec_tc_req_status_update.tc_data_5.mon_config.PID;
 
-    self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    self->param_mon_config_table[__termina_array__index(8U,
                                                         PMONID)] = self->exec_tc_req_status_update.tc_data_5.mon_config;
 
-    self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    self->param_mon_config_table[__termina_array__index(8U,
                                                         PMONID)].enabled = 0;
 
-    if (PMONID < max_num_pmon_ids) {
+    if (PMONID < 8U) {
         
-        if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        if (self->param_mon_config_table[__termina_array__index(8U,
                                                                 PMONID)].type.__variant == MonitorCheckType__ExpectedValue) {
             
             CheckValueStatus status;
             status.__variant = CheckValueStatus__MonitorUnchecked;
 
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 PMONID)].current_state.__variant = CheckState__ParamValueStatus;
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 PMONID)].current_state.ParamValueStatus.__0 = status;
 
-        } else if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        } else if (self->param_mon_config_table[__termina_array__index(8U,
                                                                        PMONID)].type.__variant == MonitorCheckType__Limits) {
             
             CheckLimitsStatus status;
             status.__variant = CheckLimitsStatus__MonitorUnchecked;
 
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 PMONID)].current_state.__variant = CheckState__ParamLimitStatus;
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 PMONID)].current_state.ParamLimitStatus.__0 = status;
 
-        } else if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        } else if (self->param_mon_config_table[__termina_array__index(8U,
                                                                        PMONID)].type.__variant == MonitorCheckType__Delta) {
             
             CheckDeltaStatus status;
             status.__variant = CheckDeltaStatus__MonitorUnchecked;
 
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 PMONID)].current_state.__variant = CheckState__ParamDeltaStatus;
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 PMONID)].current_state.ParamDeltaStatus.__0 = status;
 
         } else {
@@ -407,10 +407,10 @@ ParamValueCheckDefinition PUSService12__get_expected_value_monitoring_definition
     monitoring_definition.expected_value = 0U;
     monitoring_definition.mask_value = 0U;
 
-    if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    if (self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].definition.__variant == MonitorDefinition__ParamValueCheck) {
         
-        ParamValueCheckDefinition param_check_definition = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        ParamValueCheckDefinition param_check_definition = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                current_PMON_ID)].definition.ParamValueCheck.__0;
 
         monitoring_definition = param_check_definition;
@@ -456,10 +456,10 @@ ParamLimitCheckDefinition PUSService12__get_limits_monitoring_definition(const P
     monitoring_definition.low_limit = 0U;
     monitoring_definition.low_limit_evID = 0U;
 
-    if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    if (self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].definition.__variant == MonitorDefinition__ParamLimitCheck) {
         
-        ParamLimitCheckDefinition limit_check_def = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        ParamLimitCheckDefinition limit_check_def = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                         current_PMON_ID)].definition.ParamLimitCheck.__0;
 
         monitoring_definition = limit_check_def;
@@ -506,7 +506,7 @@ _Bool PUSService12__is_expected_value_monitoring(const PUSService12 * const self
 
     _Bool is_exp_val_mon = 0;
 
-    if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    if (self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].type.__variant == MonitorCheckType__ExpectedValue) {
         
         is_exp_val_mon = 1;
@@ -523,7 +523,7 @@ _Bool PUSService12__is_limits_monitoring(const PUSService12 * const self) {
 
     _Bool is_limits_mon = 0;
 
-    if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    if (self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].type.__variant == MonitorCheckType__Limits) {
         
         is_limits_mon = 1;
@@ -538,7 +538,7 @@ _Bool PUSService12__is_valid_PMONID(const PUSService12 * const self) {
     
     _Bool is_valid = 0;
 
-    if ((size_t)self->do_monitoring_req_status_update.PMONID < max_num_pmon_ids) {
+    if ((size_t)self->do_monitoring_req_status_update.PMONID < 8U) {
         
         is_valid = 1;
 
@@ -556,26 +556,26 @@ _Bool PUSService12__manage_new_status(PUSService12 * const self) {
 
     CheckState new_state = self->do_monitoring_req_status_update.new_status;
 
-    CheckState current_state = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    CheckState current_state = self->param_mon_config_table[__termina_array__index(8U,
                                                                                    current_PMON_ID)].current_state;
 
-    CheckState temp_state = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    CheckState temp_state = self->param_mon_config_table[__termina_array__index(8U,
                                                                                 current_PMON_ID)].temp_state;
 
     if (PUSService12__are_status_equal(self, new_state, current_state) == 0) {
         
         if (are_status_equal(new_state, temp_state)) {
             
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
-                                                                current_PMON_ID)].repetition_control = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
+                                                                current_PMON_ID)].repetition_control = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                                                            current_PMON_ID)].repetition_control + 1U;
 
         } else {
             
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 current_PMON_ID)].temp_state = new_state;
 
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 current_PMON_ID)].repetition_control = 1U;
 
             MissionObt current_obt;
@@ -585,19 +585,19 @@ _Bool PUSService12__manage_new_status(PUSService12 * const self) {
             self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                 &current_obt);
 
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 current_PMON_ID)].transition_obt = current_obt;
 
         }
 
-        if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
-                                                                current_PMON_ID)].repetition_control >= self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        if (self->param_mon_config_table[__termina_array__index(8U,
+                                                                current_PMON_ID)].repetition_control >= self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                                                             current_PMON_ID)].repetition) {
             
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 current_PMON_ID)].repetition_control = 0U;
 
-            self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            self->param_mon_config_table[__termina_array__index(8U,
                                                                 current_PMON_ID)].current_state = new_state;
 
             transition = 1;
@@ -606,10 +606,10 @@ _Bool PUSService12__manage_new_status(PUSService12 * const self) {
 
     } else {
         
-        self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].temp_state = new_state;
 
-        self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].repetition_control = 0U;
 
     }
@@ -646,15 +646,15 @@ DoMonitoringReqStatus PUSService12__manage_interval_control(PUSService12 * const
     DoMonitoringReqStatus next_status;
     next_status.__variant = DoMonitoringReqStatus__Exit;
 
-    self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
-                                                        current_PMON_ID)].interval_control = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    self->param_mon_config_table[__termina_array__index(8U,
+                                                        current_PMON_ID)].interval_control = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                                                  current_PMON_ID)].interval_control + 1U;
 
-    if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
-                                                            current_PMON_ID)].interval_control >= self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    if (self->param_mon_config_table[__termina_array__index(8U,
+                                                            current_PMON_ID)].interval_control >= self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                                                       current_PMON_ID)].interval) {
         
-        self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].interval_control = 0U;
 
         next_status.__variant = DoMonitoringReqStatus__GetMonitoringType;
@@ -687,13 +687,13 @@ DoMonitoringReqStatus PUSService12__manage_param_above_upper_limit(PUSService12 
 
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
 
-    if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    if (self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].definition.__variant == MonitorDefinition__ParamLimitCheck) {
         
-        ParamLimitCheckDefinition check_definition = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        ParamLimitCheckDefinition check_definition = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                          current_PMON_ID)].definition.ParamLimitCheck.__0;
 
-        fault_info.PID = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        fault_info.PID = self->param_mon_config_table[__termina_array__index(8U,
                                                                              current_PMON_ID)].PID;
 
         fault_info.PID_limit = check_definition.high_limit;
@@ -714,6 +714,7 @@ DoMonitoringReqStatus PUSService12__manage_param_above_upper_limit(PUSService12 
 
         } else {
             
+            next_status.__variant = DoMonitoringReqStatus__Exit;
 
         }
 
@@ -732,6 +733,7 @@ DoMonitoringReqStatus PUSService12__manage_param_above_upper_limit(PUSService12 
 
     } else {
         
+        next_status.__variant = DoMonitoringReqStatus__Exit;
 
     }
 
@@ -757,13 +759,13 @@ DoMonitoringReqStatus PUSService12__manage_param_below_lower_limit(PUSService12 
 
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
 
-    if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    if (self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].definition.__variant == MonitorDefinition__ParamLimitCheck) {
         
-        ParamLimitCheckDefinition check_definition = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        ParamLimitCheckDefinition check_definition = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                          current_PMON_ID)].definition.ParamLimitCheck.__0;
 
-        fault_info.PID = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        fault_info.PID = self->param_mon_config_table[__termina_array__index(8U,
                                                                              current_PMON_ID)].PID;
 
         fault_info.PID_limit = check_definition.low_limit;
@@ -784,6 +786,7 @@ DoMonitoringReqStatus PUSService12__manage_param_below_lower_limit(PUSService12 
 
         } else {
             
+            next_status.__variant = DoMonitoringReqStatus__Exit;
 
         }
 
@@ -802,6 +805,7 @@ DoMonitoringReqStatus PUSService12__manage_param_below_lower_limit(PUSService12 
 
     } else {
         
+        next_status.__variant = DoMonitoringReqStatus__Exit;
 
     }
 
@@ -825,7 +829,7 @@ DoMonitoringReqStatus PUSService12__manage_param_within_limits(PUSService12 * co
 
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
 
-    CheckState current_status = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    CheckState current_status = self->param_mon_config_table[__termina_array__index(8U,
                                                                                     current_PMON_ID)].current_state;
 
     if (PUSService12__are_status_equal(self, new_status, current_status) == 0) {
@@ -861,13 +865,13 @@ DoMonitoringReqStatus PUSService12__manage_unexpected_value(PUSService12 * const
 
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
 
-    if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    if (self->param_mon_config_table[__termina_array__index(8U,
                                                             current_PMON_ID)].definition.__variant == MonitorDefinition__ParamValueCheck) {
         
-        ParamValueCheckDefinition check_definition = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        ParamValueCheckDefinition check_definition = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                          current_PMON_ID)].definition.ParamValueCheck.__0;
 
-        fault_info.PID = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        fault_info.PID = self->param_mon_config_table[__termina_array__index(8U,
                                                                              current_PMON_ID)].PID;
 
         fault_info.PID_expected_value = check_definition.expected_value;
@@ -890,6 +894,7 @@ DoMonitoringReqStatus PUSService12__manage_unexpected_value(PUSService12 * const
 
         } else {
             
+            next_status.__variant = DoMonitoringReqStatus__Exit;
 
         }
 
@@ -908,6 +913,7 @@ DoMonitoringReqStatus PUSService12__manage_unexpected_value(PUSService12 * const
 
     } else {
         
+        next_status.__variant = DoMonitoringReqStatus__Exit;
 
     }
 
@@ -950,7 +956,7 @@ void PUSService12__do_monitoring(void * const __this, uint16_t PMONID,
 
         } else if (self->do_monitoring_req_status.__variant == DoMonitoringReqStatus__GetMonitoringType) {
             
-            if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            if (self->param_mon_config_table[__termina_array__index(8U,
                                                                     (size_t)PMONID)].enabled == 1) {
                 
                 if (PUSService12__is_limits_monitoring(self)) {
@@ -1146,11 +1152,11 @@ PSExecTCReqStatus PUSService12__exec12_1TC(PUSService12 * const self) {
             
             size_t PMONID = (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID;
 
-            _Bool is_valid_PMONID = PMONID < max_num_pmon_ids;
+            _Bool is_valid_PMONID = PMONID < 8U;
 
             if (is_valid_PMONID) {
                 
-                if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+                if (self->param_mon_config_table[__termina_array__index(8U,
                                                                         (size_t)PMONID)].type.__variant == MonitorCheckType__Free == 0) {
                     
                     self->pus_service_9.get_current_obt(self->pus_service_9.__that,
@@ -1181,13 +1187,13 @@ PSExecTCReqStatus PUSService12__exec12_1TC(PUSService12 * const self) {
 
                     }
 
-                    self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+                    self->param_mon_config_table[__termina_array__index(8U,
                                                                         (size_t)PMONID)].enabled = 1;
 
-                    self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+                    self->param_mon_config_table[__termina_array__index(8U,
                                                                         (size_t)PMONID)].interval_control = 0U;
 
-                    self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+                    self->param_mon_config_table[__termina_array__index(8U,
                                                                         (size_t)PMONID)].repetition_control = 0U;
 
                     __option_box_t tm_handler2;
@@ -1329,37 +1335,37 @@ void PUSService12__set_unchecked(PUSService12 * const self) {
     
     size_t valid_PMONID = (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID;
 
-    if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    if (self->param_mon_config_table[__termina_array__index(8U,
                                                             valid_PMONID)].type.__variant == MonitorCheckType__ExpectedValue) {
         
         CheckValueStatus monitor_unchecked;
         monitor_unchecked.__variant = CheckValueStatus__MonitorUnchecked;
 
-        self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_config_table[__termina_array__index(8U,
                                                             valid_PMONID)].current_state.__variant = CheckState__ParamValueStatus;
-        self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_config_table[__termina_array__index(8U,
                                                             valid_PMONID)].current_state.ParamValueStatus.__0 = monitor_unchecked;
 
-    } else if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    } else if (self->param_mon_config_table[__termina_array__index(8U,
                                                                    valid_PMONID)].type.__variant == MonitorCheckType__Limits) {
         
         CheckLimitsStatus monitor_unchecked;
         monitor_unchecked.__variant = CheckLimitsStatus__MonitorUnchecked;
 
-        self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_config_table[__termina_array__index(8U,
                                                             valid_PMONID)].current_state.__variant = CheckState__ParamLimitStatus;
-        self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_config_table[__termina_array__index(8U,
                                                             valid_PMONID)].current_state.ParamLimitStatus.__0 = monitor_unchecked;
 
-    } else if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    } else if (self->param_mon_config_table[__termina_array__index(8U,
                                                                    valid_PMONID)].type.__variant == MonitorCheckType__Delta) {
         
         CheckDeltaStatus monitor_unchecked;
         monitor_unchecked.__variant = CheckDeltaStatus__MonitorUnchecked;
 
-        self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_config_table[__termina_array__index(8U,
                                                             valid_PMONID)].current_state.__variant = CheckState__ParamDeltaStatus;
-        self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        self->param_mon_config_table[__termina_array__index(8U,
                                                             valid_PMONID)].current_state.ParamDeltaStatus.__0 = monitor_unchecked;
 
     } else {
@@ -1367,8 +1373,8 @@ void PUSService12__set_unchecked(PUSService12 * const self) {
 
     }
 
-    self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
-                                                        valid_PMONID)].temp_state = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+    self->param_mon_config_table[__termina_array__index(8U,
+                                                        valid_PMONID)].temp_state = self->param_mon_config_table[__termina_array__index(8U,
                                                                                                                                         valid_PMONID)].current_state;
 
     return;
@@ -1436,11 +1442,11 @@ PSExecTCReqStatus PUSService12__exec12_2TC(PUSService12 * const self) {
 
         } else {
             
-            _Bool is_valid_PMONID = (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID < max_num_pmon_ids;
+            _Bool is_valid_PMONID = (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID < 8U;
 
             if (is_valid_PMONID) {
                 
-                if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+                if (self->param_mon_config_table[__termina_array__index(8U,
                                                                         (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID)].type.__variant == MonitorCheckType__Free == 0) {
                     
                     self->pus_service_9.get_current_obt(self->pus_service_9.__that,
@@ -1471,7 +1477,7 @@ PSExecTCReqStatus PUSService12__exec12_2TC(PUSService12 * const self) {
 
                     }
 
-                    self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+                    self->param_mon_config_table[__termina_array__index(8U,
                                                                         (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID)].enabled = 0;
 
                     PUSService12__set_unchecked(self);
@@ -2050,7 +2056,7 @@ PSExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self) {
 
                 }
 
-            } else if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            } else if (self->param_mon_config_table[__termina_array__index(8U,
                                                                            (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID)].enabled == 0) {
                 
                 self->pus_service_9.get_current_obt(self->pus_service_9.__that,
@@ -2081,7 +2087,7 @@ PSExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self) {
 
                 }
 
-                self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+                self->param_mon_config_table[__termina_array__index(8U,
                                                                     (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID)].type.__variant = MonitorCheckType__Free;
 
                 __option_box_t tm_handler2;
@@ -2411,6 +2417,73 @@ PS12ExecTCReqStatusUpdate PUSService12__get_TC_params(const PUSService12 * const
 
 }
 
+PSExecTCReqStatus PUSService12__manage_error_in_acceptance(const PUSService12 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                            &current_obt);
+
+        build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                         tm_count,
+                                         self->exec_tc_req_status_update.packet_id,
+                                         self->exec_tc_req_status_update.packet_error_ctrl,
+                                         current_obt, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
+
+}
+
 PSExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSService12 * const self) {
     
     PSExecTCReqStatus next_status;
@@ -2445,6 +2518,73 @@ PSExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSService1
                                        self->exec_tc_req_status_update.packet_error_ctrl,
                                        self->exec_tc_req_status_update.tc_num_bytes,
                                        current_obt, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
+
+}
+
+PSExecTCReqStatus PUSService12__manage_tm_limit_app_data_reached(const PUSService12 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                            &current_obt);
+
+        build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
+                                             tm_count,
+                                             self->exec_tc_req_status_update.packet_id,
+                                             self->exec_tc_req_status_update.packet_error_ctrl,
+                                             current_obt, &result);
 
         if (result.__variant == MyResult__Ok) {
             
@@ -2542,9 +2682,11 @@ void PUSService12__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             if (error_code == ACCEPTANCE_ERROR) {
                 
+                self->exec_tc_req_status = PUSService12__manage_error_in_acceptance(self);
 
             } else if (error_code == BUILD_TM_ERROR) {
                 
+                self->exec_tc_req_status = PUSService12__manage_tm_limit_app_data_reached(self);
 
             } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
                 
@@ -2625,9 +2767,9 @@ MonitorCheckType PUSService12__get_PMON_type(const PUSService12 * const self,
     MonitorCheckType mon_type;
     mon_type.__variant = MonitorCheckType__Free;
 
-    if (PMONID < max_num_pmon_ids) {
+    if (PMONID < 8U) {
         
-        mon_type = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        mon_type = self->param_mon_config_table[__termina_array__index(8U,
                                                                        (size_t)PMONID)].type;
 
     }
@@ -2641,12 +2783,12 @@ void PUSService12__is_PMON_enabled(void * const __this, size_t PMONID,
     
     PUSService12 * self = (PUSService12 *)__this;
 
-    if (PMONID < max_num_pmon_ids) {
+    if (PMONID < 8U) {
         
-        if (self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+        if (self->param_mon_config_table[__termina_array__index(8U,
                                                                 PMONID)].type.__variant == MonitorCheckType__Free == 0) {
             
-            *is_enabled = self->param_mon_config_table[__termina_array__index(max_num_pmon_ids,
+            *is_enabled = self->param_mon_config_table[__termina_array__index(8U,
                                                                               (size_t)PMONID)].enabled;
 
         }

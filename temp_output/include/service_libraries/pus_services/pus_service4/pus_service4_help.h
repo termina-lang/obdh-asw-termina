@@ -3,12 +3,11 @@
 
 #include <termina.h>
 
+#include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/pus_services/pus_service9/pus_service9.h"
 #include "service_libraries/pus_services/pus_services.h"
 
 #include "option.h"
-
-extern const size_t max_num_of_stats;
 
 typedef struct {
     uint32_t min;
@@ -20,9 +19,9 @@ typedef struct {
 } StatsDef;
 
 typedef struct {
-    _Bool defined[max_num_of_stats];
-    uint16_t PID[max_num_of_stats];
-    MissionObt start_time[max_num_of_stats];
+    _Bool defined[4U];
+    uint16_t PID[4U];
+    MissionObt start_time[4U];
 } StatsConfig;
 
 typedef struct {

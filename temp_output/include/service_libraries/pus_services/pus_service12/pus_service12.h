@@ -33,9 +33,9 @@ typedef struct {
     } tm_channel;
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
-    ParamMonitoringTransition param_mon_transitions_table[max_num_transitions];
+    ParamMonitoringTransition param_mon_transitions_table[1U];
     uint8_t monitoring_transition_counter;
-    ParamMonitoringConfiguration param_mon_config_table[max_num_pmon_ids];
+    ParamMonitoringConfiguration param_mon_config_table[8U];
     PS12ExecTCReqStatusUpdate exec_tc_req_status_update;
     PSExecTCReqStatus exec_tc_req_status;
     DoMonitoringReqStatusUpdate do_monitoring_req_status_update;
@@ -134,7 +134,11 @@ PS12ExecTCReqStatusUpdate PUSService12__get_TC_params(const PUSService12 * const
                                                       uint8_t * const subtype,
                                                       MyResult * const result);
 
+PSExecTCReqStatus PUSService12__manage_error_in_acceptance(const PUSService12 * const self);
+
 PSExecTCReqStatus PUSService12__manage_short_pack_length_error(const PUSService12 * const self);
+
+PSExecTCReqStatus PUSService12__manage_tm_limit_app_data_reached(const PUSService12 * const self);
 
 void PUSService12__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                            __status_int32_t * const action_status);

@@ -5,8 +5,6 @@
 
 #include "option.h"
 
-extern const size_t queue_max_noe;
-
 typedef enum {
     QueueResult__Success,
     QueueResult__QueueFull
@@ -17,7 +15,7 @@ typedef struct {
 } QueueResult;
 
 typedef struct {
-    uint8_t elements[queue_max_noe];
+    uint8_t elements[1024U];
     size_t head_index;
     size_t num_elements;
 } QueueU8;

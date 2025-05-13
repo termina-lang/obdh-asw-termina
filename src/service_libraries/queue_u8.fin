@@ -1,4 +1,4 @@
-const queue_max_noe: usize = 1024: usize;
+constexpr queue_max_noe: usize = 1024: usize;
 
 enum QueueResult {
     Success,

@@ -10,15 +10,14 @@
 #include "resources/uart.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/pus_services/pus_service12/pus_service12.h"
-#include "service_libraries/pus_services/pus_service17.h"
+#include "service_libraries/pus_services/pus_service17/pus_service17.h"
 #include "service_libraries/pus_services/pus_service19/pus_service19.h"
-#include "service_libraries/pus_services/pus_service2.h"
+#include "service_libraries/pus_services/pus_service2/pus_service2.h"
 #include "service_libraries/pus_services/pus_service20/pus_service20.h"
 #include "service_libraries/pus_services/pus_service3/pus_service3.h"
 #include "service_libraries/pus_services/pus_service4/pus_service4.h"
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
 #include "service_libraries/pus_services/pus_service9/pus_service9.h"
-#include "service_libraries/pus_tc_handler.h"
 #include "tasks/bkgtcexec.h"
 #include "tasks/hk_fdir_mng/hk_fdir.h"
 #include "tasks/icu_manager/icu_manager.h"
@@ -42,9 +41,9 @@ extern __termina_pool_t tm_pool;
 
 extern __termina_pool_t tc_pool;
 
-extern _Atomic uint32_t u32_system_data_pool[sdp_num_u32_params];
+extern _Atomic uint32_t u32_system_data_pool[12U];
 
-extern _Atomic uint8_t u8_system_data_pool[sdp_num_u8_params];
+extern _Atomic uint8_t u8_system_data_pool[18U];
 
 extern UARTDriver uart_drv;
 
@@ -56,9 +55,9 @@ extern TMCounter telemetry_counter;
 
 extern PUSService9 pus_service_9;
 
-extern PUSService3 pus_service_3;
-
 extern PUSService5 pus_service_5;
+
+extern PUSService3 pus_service_3;
 
 extern PUSService12 pus_service_12;
 

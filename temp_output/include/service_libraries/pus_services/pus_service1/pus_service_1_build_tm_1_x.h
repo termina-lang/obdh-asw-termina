@@ -53,6 +53,8 @@ extern const uint8_t TM_1_4_TC_20_X_INVALID_PID;
 
 extern const uint8_t TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC;
 
+extern const uint8_t TM_1_4_ERROR_IN_ACCEPTANCE;
+
 extern const uint8_t TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA;
 
 extern const uint8_t TM_1_8_TM_2_1_DEV_COMMAND_EXEC_ERROR;
@@ -196,6 +198,13 @@ void build_tm_1_4_PID_read_only_via_TC(TMHandlerT * const p_tm_handler,
                                        uint16_t tc_packet_error_ctrl,
                                        uint16_t PID, MissionObt current_obt,
                                        MyResult * const result);
+
+void build_tm_1_4_error_in_acceptance(TMHandlerT * const p_tm_handler,
+                                      uint16_t tm_seq_counter,
+                                      uint16_t tc_packet_id,
+                                      uint16_t tc_packet_error_ctrl,
+                                      MissionObt current_obt,
+                                      MyResult * const result);
 
 void build_tm_1_7(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
                   MissionObt current_obt, MyResult * const result);

@@ -17,9 +17,9 @@ __termina_pool_t tm_pool;
 
 __termina_pool_t tc_pool;
 
-_Atomic uint32_t u32_system_data_pool[sdp_num_u32_params];
+_Atomic uint32_t u32_system_data_pool[12U];
 
-_Atomic uint8_t u8_system_data_pool[sdp_num_u8_params];
+_Atomic uint8_t u8_system_data_pool[18U];
 
 UARTDriver uart_drv;
 
@@ -31,9 +31,9 @@ TMCounter telemetry_counter;
 
 PUSService9 pus_service_9;
 
-PUSService3 pus_service_3;
-
 PUSService5 pus_service_5;
+
+PUSService3 pus_service_3;
 
 PUSService12 pus_service_12;
 

@@ -1,10 +1,6 @@
 
 #include "resources/system_data_pool.h"
 
-const size_t sdp_num_u32_params = 12U;
-
-const size_t sdp_num_u8_params = 18U;
-
 const size_t sdp_last_u32_param_id = 11U;
 
 const size_t sdp_last_u8_param_id = 28U;

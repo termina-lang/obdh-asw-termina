@@ -1,5 +1,6 @@
 import resources.uart;
 import service_libraries.tm_ccsds_pus_format;
+import service_libraries.pus_tm_handler;
 
 interface TMChannelIface {
 
@@ -14,27 +15,6 @@ resource class TMChannel provides TMChannelIface {
     uart : access CharDevSend;
     a_tm_handler_pool : access Allocator<TMHandlerT>;
 
-    /*
-   procedure send_tm(&mut self, tm_descriptor: &TMDescriptorT, result : &mut Result) {
-
-        var queue_state : CharDevResult = CharDevResult::Success;
-
-        self->uart.send(&(tm_descriptor->tm_bytes), tm_descriptor->tm_num_bytes, &mut queue_state);
-
-        if (queue_state is CharDevResult::Success) {
-
-            *result = Result :: Ok;
-                    
-        } else {
-
-            *result = Result :: Error;
-            
-        }
-
-        self->a_tm_descriptor_pool.free(tm_descriptor);
-
-        return;
-   }*/
 
     procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult) {
 

@@ -3,13 +3,12 @@
 
 #include <termina.h>
 
+#include "resources/system_data_pool.h"
+#include "service_libraries/pus_services/pus_service1/pus_service1.h"
+#include "service_libraries/pus_services/pus_service5/pus_service5.h"
 #include "service_libraries/pus_services/pus_services.h"
 
 #include "option.h"
-
-extern const size_t max_num_of_SIDs;
-
-extern const size_t max_params_per_SID;
 
 typedef struct {
     _Bool found;
@@ -36,7 +35,7 @@ typedef struct {
     uint8_t interval;
     uint8_t interval_control;
     uint8_t num_params;
-    uint16_t params_def[max_params_per_SID];
+    uint16_t params_def[16U];
 } HKConfiguration;
 
 #endif

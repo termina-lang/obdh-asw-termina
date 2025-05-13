@@ -10,7 +10,7 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
 
     _Bool is_monitor_enabled = 0;
 
-    for (size_t i = 0U; i < max_num_pmon_ids; i = i + 1U) {
+    for (size_t i = 0U; i < 8U; i = i + 1U) {
         
         self->pus_service_12.is_PMON_enabled(self->pus_service_12.__that, i,
                                              &is_monitor_enabled);
@@ -38,11 +38,8 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
 
                 if (is_Ev_ID_enabled) {
                     
-                    MyResult res;
-                    res.__variant = MyResult__Ok;
-
                     self->pus_service_5.build_and_tx_tm_5_x(self->pus_service_5.__that,
-                                                            &res, evID,
+                                                            &result, evID,
                                                             fault_info);
 
                     self->pus_service_19.manage_event_action(self->pus_service_19.__that,
@@ -125,6 +122,8 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
 
         } else {
             
+            result.__variant = Failure;
+            result.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
         }
 

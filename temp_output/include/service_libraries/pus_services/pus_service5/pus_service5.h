@@ -12,8 +12,9 @@ typedef struct {
     void (* exec_tc)(void * const, TCHandlerT * const,
                      __status_int32_t * const);
     void (* is_Ev_ID_enabled_ext)(void * const, uint16_t, _Bool * const);
-    void (* build_and_tx_tm_5_x)(void * const, MyResult * const, uint16_t,
-                                 FaultInfo);
+    void (* build_and_tx_tm_5_x)(void * const, __status_int32_t * const,
+                                 uint16_t, FaultInfo);
+    void (* build_and_tx_tm_5_2)(void * const, __status_int32_t * const);
 } PUSS5Iface;
 
 typedef struct {
@@ -36,6 +37,15 @@ typedef struct {
     uint32_t Ev_ID_enable_config[4U];
 } PUSService5;
 
+void PUSService5__build_and_tx_tm_5_2(void * const __this,
+                                      __status_int32_t * const status);
+void PUSService5__build_and_tx_tm_5_2__mutex_lock(void * const __this,
+                                                  __status_int32_t * const status);
+void PUSService5__build_and_tx_tm_5_2__task_lock(void * const __this,
+                                                 __status_int32_t * const status);
+void PUSService5__build_and_tx_tm_5_2__event_lock(void * const __this,
+                                                  __status_int32_t * const status);
+
 void PUSService5__build_tm_5_x_param_check_value_fail(const PUSService5 * const self,
                                                       TMHandlerT * const p_tm_handler,
                                                       uint16_t tm_seq_counter,
@@ -51,18 +61,18 @@ void PUSService5__build_tm_5_x_param_out_of_limit(const PUSService5 * const self
                                                   MyResult * const result);
 
 void PUSService5__build_and_tx_tm_5_x(void * const __this,
-                                      MyResult * const result, uint16_t evID,
-                                      FaultInfo fault_info);
+                                      __status_int32_t * const status,
+                                      uint16_t evID, FaultInfo fault_info);
 void PUSService5__build_and_tx_tm_5_x__mutex_lock(void * const __this,
-                                                  MyResult * const result,
+                                                  __status_int32_t * const status,
                                                   uint16_t evID,
                                                   FaultInfo fault_info);
 void PUSService5__build_and_tx_tm_5_x__task_lock(void * const __this,
-                                                 MyResult * const result,
+                                                 __status_int32_t * const status,
                                                  uint16_t evID,
                                                  FaultInfo fault_info);
 void PUSService5__build_and_tx_tm_5_x__event_lock(void * const __this,
-                                                  MyResult * const result,
+                                                  __status_int32_t * const status,
                                                   uint16_t evID,
                                                   FaultInfo fault_info);
 
@@ -75,7 +85,11 @@ PS5ExecTCReqStatusUpdate PUSService5__get_TC_params(const PUSService5 * const se
                                                     uint8_t * const subtype,
                                                     MyResult * const result);
 
+PSExecTCReqStatus PUSService5__manage_error_in_acceptance(const PUSService5 * const self);
+
 PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 * const self);
+
+PSExecTCReqStatus PUSService5__manage_tm_limit_app_data_reached(const PUSService5 * const self);
 
 void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
                           __status_int32_t * const action_status);

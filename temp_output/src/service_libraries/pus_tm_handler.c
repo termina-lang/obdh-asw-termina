@@ -12,9 +12,9 @@ const size_t tm_app_data_offset = 19U;
 void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
                              MyResult * const result) {
     
-    if (tm_handler->app_data_index < max_send_size) {
+    if (tm_handler->app_data_index < 256U) {
         
-        tm_handler->tm_descriptor.tm_bytes[__termina_array__index(max_send_size,
+        tm_handler->tm_descriptor.tm_bytes[__termina_array__index(256U,
                                                                   tm_handler->app_data_index)] = data;
 
         tm_handler->app_data_index = tm_handler->app_data_index + 1U;
@@ -34,10 +34,10 @@ void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
 void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
                               MyResult * const result) {
     
-    if ((size_t)(tm_handler->app_data_index + 1U) < max_send_size) {
+    if ((size_t)(tm_handler->app_data_index + 1U) < 256U) {
         
         serialize_uint16(data,
-                         &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(max_send_size,
+                         &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(256U,
                                                                                     2U,
                                                                                     tm_handler->app_data_index,
                                                                                     tm_handler->app_data_index + 2U)]);
@@ -59,10 +59,10 @@ void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
 void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
                               MyResult * const result) {
     
-    if ((size_t)(tm_handler->app_data_index + 3U) < max_send_size) {
+    if ((size_t)(tm_handler->app_data_index + 3U) < 256U) {
         
         serialize_uint32(data,
-                         &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(max_send_size,
+                         &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(256U,
                                                                                     4U,
                                                                                     tm_handler->app_data_index,
                                                                                     tm_handler->app_data_index + 4U)]);
@@ -134,7 +134,7 @@ void close_tm(TMHandlerT * const tm_handler, uint8_t type, uint8_t subtype,
 
 void startup_tm(TMHandlerT * const tm_handler) {
     
-    tm_handler->tm_descriptor.tm_num_bytes = max_send_size;
+    tm_handler->tm_descriptor.tm_num_bytes = 256U;
 
     tm_handler->app_data_index = tm_app_data_offset;
 

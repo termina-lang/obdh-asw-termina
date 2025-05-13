@@ -7,3 +7,9 @@ const  BUILD_TM_ERROR : i32 = 3;
 const ACCEPTANCE_ERROR : i32 = 4;
 const TC_DATA_OUT_OF_RANGE_ERROR : i32 = 5;
 const UNREACHABLE_BRANCH_ERROR : i32 = 6;
+
+
+enum MyResult {
+    Ok,
+    Error
+};

@@ -1,3 +1,4 @@
+import service_libraries.errors;
 
 struct GPIO_registers {
     Data : u32;

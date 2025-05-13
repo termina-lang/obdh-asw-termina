@@ -4,6 +4,7 @@
 #include <termina.h>
 
 #include "resources/uart.h"
+#include "service_libraries/pus_tm_handler.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"

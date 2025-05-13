@@ -1,6 +1,112 @@
 
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
 
+void PUSService5__build_and_tx_tm_5_2(void * const __this,
+                                      __status_int32_t * const status) {
+    
+    PUSService5 * self = (PUSService5 *)__this;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        startup_tm((TMHandlerT *)b_tm_handler.data);
+
+        append_u16_appdata_field((TMHandlerT *)b_tm_handler.data,
+                                 EvID_build_tm_error, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            uint16_t tm_count = 0U;
+
+            self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                                               &tm_count);
+
+            MissionObt current_obt;
+            current_obt.finetime = 0U;
+            current_obt.seconds = 0U;
+
+            self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                                &current_obt);
+
+            close_tm((TMHandlerT *)b_tm_handler.data, 5U, 2U, tm_count,
+                     current_obt);
+
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                (*status).__variant = Failure;
+                (*status).Failure.__0 = TM_SEND_FAILURE;
+
+            } else {
+                
+                (*status).__variant = Success;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+        }
+
+    } else {
+        
+        (*status).__variant = Failure;
+        (*status).Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return;
+
+}
+
+void PUSService5__build_and_tx_tm_5_2__mutex_lock(void * const __this,
+                                                  __status_int32_t * const status) {
+    
+    PUSService5 * self = (PUSService5 *)__this;
+
+    int32_t __status = 0L;
+
+    __termina_mutex__lock(self->__mutex_id, &__status);
+    PUSService5__build_and_tx_tm_5_2(self, status);
+    __termina_mutex__unlock(self->__mutex_id, &__status);
+
+}
+
+void PUSService5__build_and_tx_tm_5_2__task_lock(void * const __this,
+                                                 __status_int32_t * const status) {
+    
+    __termina_task_lock_t lock;
+
+    lock = __termina_task__lock();
+    PUSService5__build_and_tx_tm_5_2(__this, status);
+    __termina_task__unlock(lock);
+
+}
+
+void PUSService5__build_and_tx_tm_5_2__event_lock(void * const __this,
+                                                  __status_int32_t * const status) {
+    
+    __termina_event_lock_t lock;
+
+    lock = __termina_event__lock();
+    PUSService5__build_and_tx_tm_5_2(__this, status);
+    __termina_event__unlock(lock);
+
+}
+
 void PUSService5__build_tm_5_x_param_check_value_fail(const PUSService5 * const self,
                                                       TMHandlerT * const p_tm_handler,
                                                       uint16_t tm_seq_counter,
@@ -69,10 +175,13 @@ void PUSService5__build_tm_5_x_param_out_of_limit(const PUSService5 * const self
 }
 
 void PUSService5__build_and_tx_tm_5_x(void * const __this,
-                                      MyResult * const result, uint16_t evID,
-                                      FaultInfo fault_info) {
+                                      __status_int32_t * const status,
+                                      uint16_t evID, FaultInfo fault_info) {
     
     PUSService5 * self = (PUSService5 *)__this;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
 
     __option_box_t tm_handler;
     tm_handler.__variant = None;
@@ -95,7 +204,7 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
                                                          (TMHandlerT *)b_tm_handler.data,
                                                          tm_count,
                                                          fault_value_info, evID,
-                                                         result);
+                                                         &result);
 
         } else if (fault_info.__variant == FaultInfo__ParamFaultValue) {
             
@@ -105,18 +214,29 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
                                                              (TMHandlerT *)b_tm_handler.data,
                                                              tm_count,
                                                              fault_value_info,
-                                                             evID, result);
+                                                             evID, &result);
 
         } else {
             
-            (*result).__variant = MyResult__Error;
+            result.__variant = MyResult__Error;
 
         }
 
-        if ((*result).__variant == MyResult__Ok) {
+        if (result.__variant == MyResult__Ok) {
             
             self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     result);
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                (*status).__variant = Failure;
+                (*status).Failure.__0 = TM_SEND_FAILURE;
+
+            } else {
+                
+                (*status).__variant = Success;
+
+            }
 
         } else {
             
@@ -127,7 +247,8 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
 
     } else {
         
-        (*result).__variant = MyResult__Error;
+        (*status).__variant = Failure;
+        (*status).Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
@@ -136,7 +257,7 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
 }
 
 void PUSService5__build_and_tx_tm_5_x__mutex_lock(void * const __this,
-                                                  MyResult * const result,
+                                                  __status_int32_t * const status,
                                                   uint16_t evID,
                                                   FaultInfo fault_info) {
     
@@ -145,33 +266,33 @@ void PUSService5__build_and_tx_tm_5_x__mutex_lock(void * const __this,
     int32_t __status = 0L;
 
     __termina_mutex__lock(self->__mutex_id, &__status);
-    PUSService5__build_and_tx_tm_5_x(self, result, evID, fault_info);
+    PUSService5__build_and_tx_tm_5_x(self, status, evID, fault_info);
     __termina_mutex__unlock(self->__mutex_id, &__status);
 
 }
 
 void PUSService5__build_and_tx_tm_5_x__task_lock(void * const __this,
-                                                 MyResult * const result,
+                                                 __status_int32_t * const status,
                                                  uint16_t evID,
                                                  FaultInfo fault_info) {
     
     __termina_task_lock_t lock;
 
     lock = __termina_task__lock();
-    PUSService5__build_and_tx_tm_5_x(__this, result, evID, fault_info);
+    PUSService5__build_and_tx_tm_5_x(__this, status, evID, fault_info);
     __termina_task__unlock(lock);
 
 }
 
 void PUSService5__build_and_tx_tm_5_x__event_lock(void * const __this,
-                                                  MyResult * const result,
+                                                  __status_int32_t * const status,
                                                   uint16_t evID,
                                                   FaultInfo fault_info) {
     
     __termina_event_lock_t lock;
 
     lock = __termina_event__lock();
-    PUSService5__build_and_tx_tm_5_x(__this, result, evID, fault_info);
+    PUSService5__build_and_tx_tm_5_x(__this, status, evID, fault_info);
     __termina_event__unlock(lock);
 
 }
@@ -604,6 +725,73 @@ PS5ExecTCReqStatusUpdate PUSService5__get_TC_params(const PUSService5 * const se
 
 }
 
+PSExecTCReqStatus PUSService5__manage_error_in_acceptance(const PUSService5 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                            &current_obt);
+
+        build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                         tm_count,
+                                         self->exec_tc_req_status_update.packet_id,
+                                         self->exec_tc_req_status_update.packet_error_ctrl,
+                                         current_obt, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
+
+}
+
 PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 * const self) {
     
     PSExecTCReqStatus next_status;
@@ -638,6 +826,73 @@ PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 
                                        self->exec_tc_req_status_update.packet_error_ctrl,
                                        self->exec_tc_req_status_update.tc_num_bytes,
                                        current_obt, &result);
+
+        if (result.__variant == MyResult__Ok) {
+            
+            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
+                                     &result);
+
+            if (result.__variant == MyResult__Error) {
+                
+                next_status.__variant = PSExecTCReqStatus__Failure;
+                next_status.Failure.__0 = TM_SEND_FAILURE;
+
+            }
+
+        } else {
+            
+            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+            next_status.__variant = PSExecTCReqStatus__Error;
+            next_status.Error.__0 = BUILD_TM_ERROR;
+
+        }
+
+    } else {
+        
+        next_status.__variant = PSExecTCReqStatus__Failure;
+        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+    }
+
+    return next_status;
+
+}
+
+PSExecTCReqStatus PUSService5__manage_tm_limit_app_data_reached(const PUSService5 * const self) {
+    
+    PSExecTCReqStatus next_status;
+    next_status.__variant = PSExecTCReqStatus__Exit;
+
+    MyResult result;
+    result.__variant = MyResult__Ok;
+
+    MissionObt current_obt;
+    current_obt.finetime = 0U;
+    current_obt.seconds = 0U;
+
+    __option_box_t tm_handler;
+    tm_handler.__variant = None;
+
+    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+
+    if (tm_handler.__variant == Some) {
+        
+        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+        uint16_t tm_count = 0U;
+
+        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+
+        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                                            &current_obt);
+
+        build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
+                                             tm_count,
+                                             self->exec_tc_req_status_update.packet_id,
+                                             self->exec_tc_req_status_update.packet_error_ctrl,
+                                             current_obt, &result);
 
         if (result.__variant == MyResult__Ok) {
             
@@ -727,9 +982,11 @@ void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
             if (error_code == ACCEPTANCE_ERROR) {
                 
+                self->exec_tc_req_status = PUSService5__manage_error_in_acceptance(self);
 
             } else if (error_code == BUILD_TM_ERROR) {
                 
+                self->exec_tc_req_status = PUSService5__manage_tm_limit_app_data_reached(self);
 
             } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
                 
