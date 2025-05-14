@@ -5,9 +5,6 @@
 
 void __termina_app__init_globals();
 
-_Atomic uint32_t u32_system_data_pool[12U];
-_Atomic uint8_t u8_system_data_pool[18U];
-
 static uint8_t __pool_tc_pool_memory[__termina_pool__size(sizeof(TCHandlerT),
                                                           20U)];
 static uint8_t __pool_tm_pool_memory[__termina_pool__size(sizeof(TMHandlerT),
@@ -300,21 +297,31 @@ static void __termina_app__init_channel_connections(int32_t * const status) {
     action_tc_message_queue.channel_msg_queue_id = __action_tc_message_queue__channel_msg_queue_id;
     action_tc_message_queue.port_id = __ICUManager__action_tc_message_queue_input;
 
+    icu_manager.action_tc_message_queue_input = __action_tc_message_queue__channel_msg_queue_id;
+
     bkg_message_queue.task_msg_queue_id = __pus_bkg_tc_executor__task_msg_queue_id;
     bkg_message_queue.channel_msg_queue_id = __bkg_message_queue__channel_msg_queue_id;
     bkg_message_queue.port_id = __PUSBKGTCExecutor__bkg_message_queue_input;
+
+    pus_bkg_tc_executor.bkg_message_queue_input = __bkg_message_queue__channel_msg_queue_id;
 
     byte_message_queue.task_msg_queue_id = __tc_rx_bottom_half_task__task_msg_queue_id;
     byte_message_queue.channel_msg_queue_id = __byte_message_queue__channel_msg_queue_id;
     byte_message_queue.port_id = __TCRXBottomHalfTask__byte_message_queue_input;
 
+    tc_rx_bottom_half_task.byte_message_queue_input = __byte_message_queue__channel_msg_queue_id;
+
     hkfdir_message_queue.task_msg_queue_id = __hk_fdir__task_msg_queue_id;
     hkfdir_message_queue.channel_msg_queue_id = __hkfdir_message_queue__channel_msg_queue_id;
     hkfdir_message_queue.port_id = __HouseKeepingFDIR__hkfdir_message_queue_input;
 
+    hk_fdir.hkfdir_message_queue_input = __hkfdir_message_queue__channel_msg_queue_id;
+
     tc_message_queue.task_msg_queue_id = __icu_manager__task_msg_queue_id;
     tc_message_queue.channel_msg_queue_id = __tc_message_queue__channel_msg_queue_id;
     tc_message_queue.port_id = __ICUManager__tc_message_queue_input;
+
+    icu_manager.tc_message_queue_input = __tc_message_queue__channel_msg_queue_id;
 
 }
 

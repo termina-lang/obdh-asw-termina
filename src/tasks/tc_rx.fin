@@ -1,6 +1,7 @@
 import service_libraries.tc_ccsds_pus_format;
 import service_libraries.serialize;
 import service_libraries.errors;
+import service_libraries.pus_tc_handler;
 
 enum RXStatus {
     SyncBytesRx,

@@ -46,10 +46,10 @@ void __termina_app__init_globals() {
     hk_fdir_timer.period.tv_sec = 1U;
     hk_fdir_timer.period.tv_usec = 0U;
     for (size_t __i0 = 0U; __i0 < 12U; __i0 = __i0 + 1U) {
-        u32_system_data_pool.values[__i0] = 0U;
+        atomic_store(&u32_system_data_pool[__i0], 0U);
     }
     for (size_t __i0 = 0U; __i0 < 18U; __i0 = __i0 + 1U) {
-        u8_system_data_pool.values[__i0] = 0U;
+        atomic_store(&u8_system_data_pool[__i0], 0U);
     }
     uart_drv.registers = (volatile UARTRegs *)4227862528U;
     uart_drv.rem_bytes = 0;
@@ -535,20 +535,29 @@ void __termina_app__init_globals() {
     icu_manager.hkfdir_message_queue_output = &hkfdir_message_queue;
     icu_manager.tc_executor.__that = &mng_tc_executor;
     icu_manager.tc_executor.PUS_prio_exec_tc = ManagerTCExecutor__PUS_prio_exec_tc;
+    icu_manager.tc_executor.mng_tc_acceptation = ManagerTCExecutor__mng_tc_acceptation;
+    icu_manager.tc_executor.mng_tc_rejection = ManagerTCExecutor__mng_tc_rejection;
     hk_fdir.a_tc_handler_pool.__that = &tc_pool;
     hk_fdir.a_tc_handler_pool.alloc = __termina_pool__alloc;
     hk_fdir.a_tc_handler_pool.free = __termina_pool__free;
     hk_fdir.action_tc_message_queue_output = &action_tc_message_queue;
     hk_fdir.pus_service_12.__that = &pus_service_12;
+    hk_fdir.pus_service_12.exec_tc = PUSService12__exec_tc;
     hk_fdir.pus_service_12.do_monitoring = PUSService12__do_monitoring;
     hk_fdir.pus_service_12.is_PMON_enabled = PUSService12__is_PMON_enabled;
     hk_fdir.pus_service_19.__that = &pus_service_19;
+    hk_fdir.pus_service_19.exec_tc = PUSService19__exec_tc;
     hk_fdir.pus_service_19.manage_event_action = PUSService19__manage_event_action;
+    hk_fdir.pus_service_19.get_pending_action_number = PUSService19__get_pending_action_number;
+    hk_fdir.pus_service_19.extract_action = PUSService19__extract_action;
     hk_fdir.pus_service_3.__that = &pus_service_3;
+    hk_fdir.pus_service_3.do_hk = PUSService3__do_hk;
     hk_fdir.pus_service_3.exec_tc = PUSService3__exec_tc;
     hk_fdir.pus_service_4.__that = &pus_service_4;
     hk_fdir.pus_service_4.exec_tc = PUSService4__exec_tc;
+    hk_fdir.pus_service_4.update_all_stats = PUSService4__update_all_stats;
     hk_fdir.pus_service_5.__that = &pus_service_5;
+    hk_fdir.pus_service_5.exec_tc = PUSService5__exec_tc;
     hk_fdir.pus_service_5.is_Ev_ID_enabled_ext = PUSService5__is_Ev_ID_enabled_ext;
     hk_fdir.pus_service_5.build_and_tx_tm_5_x = PUSService5__build_and_tx_tm_5_x;
     pus_bkg_tc_executor.a_tc_handler_pool.__that = &tc_pool;

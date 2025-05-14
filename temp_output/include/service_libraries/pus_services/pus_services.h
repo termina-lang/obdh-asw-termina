@@ -3,6 +3,8 @@
 
 #include <termina.h>
 
+#include "resources/system_data_pool.h"
+#include "resources/tm_counter.h"
 #include "service_libraries/errors.h"
 #include "service_libraries/pus_tc_handler.h"
 #include "service_libraries/serialize.h"
@@ -34,5 +36,10 @@ typedef struct {
         __enum_PSExecTCReqStatus__Failure_params_t Failure;
     };
 } PSExecTCReqStatus;
+
+typedef struct {
+    uint32_t seconds;
+    uint16_t finetime;
+} MissionObt;
 
 #endif

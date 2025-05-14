@@ -1,5 +1,6 @@
 import service_libraries.pus_services.pus_service5.pus_service5;
 import service_libraries.pus_services.pus_service1.pus_service1;
+import service_libraries.pus_services.pus_service9.pus_service9;
 import service_libraries.pus_services.pus_services;
 
 const event_action_max_bytes : usize = 242;

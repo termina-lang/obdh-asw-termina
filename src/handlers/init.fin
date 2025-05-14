@@ -1,5 +1,6 @@
 import resources.uart;
 import resources.system_data_pool;
+import resources.gpio_driver;
 
 handler class Init {
 

@@ -3,14 +3,12 @@
 
 #include <termina.h>
 
+#include "resources/tm_channel.h"
+#include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/pus_services/pus_services.h"
+#include "service_libraries/pus_tm_handler.h"
 
 #include "option.h"
-
-typedef struct {
-    uint32_t seconds;
-    uint16_t finetime;
-} MissionObt;
 
 typedef struct {
     uint16_t packet_id;

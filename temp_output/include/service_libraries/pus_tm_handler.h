@@ -3,7 +3,7 @@
 
 #include <termina.h>
 
-#include "service_libraries/pus_services/pus_service9/pus_service9_help.h"
+#include "service_libraries/pus_services/pus_services.h"
 #include "service_libraries/serialize.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
 

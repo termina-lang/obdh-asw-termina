@@ -3,6 +3,7 @@
 
 #include <termina.h>
 
+#include "resources/gpio_driver.h"
 #include "resources/system_data_pool.h"
 #include "resources/uart.h"
 

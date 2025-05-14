@@ -1,6 +1,6 @@
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.serialize;
-import service_libraries.pus_services.pus_service9.pus_service9_help;
+import service_libraries.pus_services.pus_services;
 
 
 struct TMHandlerT {

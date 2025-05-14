@@ -7,6 +7,7 @@
 #include "service_libraries/pus_services/pus_service12/pus_service12.h"
 #include "service_libraries/pus_services/pus_service19/pus_service19.h"
 #include "service_libraries/pus_services/pus_service3/pus_service3.h"
+#include "service_libraries/pus_services/pus_service4/pus_service4.h"
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
 
 #include "option.h"
@@ -20,25 +21,35 @@ typedef struct {
         void * __that;
         void (* exec_tc)(void * const, TCHandlerT * const,
                          __status_int32_t * const);
+        void (* update_all_stats)(void * const);
     } pus_service_4;
     struct {
         void * __that;
+        void (* exec_tc)(void * const, TCHandlerT * const,
+                         __status_int32_t * const);
+        void (* extract_action)(void * const, size_t, TCHandlerT * const);
+        void (* get_pending_action_number)(void * const, size_t *);
         void (* manage_event_action)(void * const, uint16_t);
     } pus_service_19;
     struct {
         void * __that;
         void (* build_and_tx_tm_5_x)(void * const, __status_int32_t * const,
                                      uint16_t, FaultInfo);
+        void (* exec_tc)(void * const, TCHandlerT * const,
+                         __status_int32_t * const);
         void (* is_Ev_ID_enabled_ext)(void * const, uint16_t, _Bool * const);
     } pus_service_5;
     struct {
         void * __that;
         void (* do_monitoring)(void * const, uint16_t, uint16_t * const,
                                FaultInfo * const, _Bool * const);
+        void (* exec_tc)(void * const, TCHandlerT * const,
+                         __status_int32_t * const);
         void (* is_PMON_enabled)(void * const, size_t, _Bool * const);
     } pus_service_12;
     struct {
         void * __that;
+        void (* do_hk)(void * const, __status_int32_t * const);
         void (* exec_tc)(void * const, TCHandlerT * const,
                          __status_int32_t * const);
     } pus_service_3;
