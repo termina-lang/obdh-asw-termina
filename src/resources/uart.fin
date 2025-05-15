@@ -106,7 +106,7 @@ resource class UARTDriver provides
 
     
 
-            for i : usize in 0 : usize .. 4 while (sent_bytes < num_elements) {
+            for i : usize in 0 : usize .. 6 while (sent_bytes < num_elements) {
 
                 dequeue(&mut(self->uart_queue), &mut extracted_elem);
 
