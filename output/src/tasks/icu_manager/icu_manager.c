@@ -6,44 +6,63 @@ __status_int32_t ICUManager__process_action_tc(void * const __this,
     
     ICUManager * self = (ICUManager *)__this;
 
+    #line 73 "src/tasks/icu_manager/icu_manager.fin"
     __status_int32_t ret;
+    #line 73 "src/tasks/icu_manager/icu_manager.fin"
     ret.__variant = Success;
 
+    #line 75 "src/tasks/icu_manager/icu_manager.fin"
     TCExecutionCtrl execution_status = handle_tc(&(*(TCHandlerT *)tc_handler.data).tc_descriptor);
 
+    #line 79 "src/tasks/icu_manager/icu_manager.fin"
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlReboot) {
         
+        #line 82 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
                                            (TCHandlerT *)tc_handler.data, &ret);
 
+        #line 83 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                      tc_handler);
 
-    } else if (execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
+    } else
+    #line 85 "src/tasks/icu_manager/icu_manager.fin"
+    if (execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
         
+        #line 87 "src/tasks/icu_manager/icu_manager.fin"
         __termina_out_port__send(self->hkfdir_message_queue_output,
                                  (void *)&tc_handler);
 
-    } else if (execution_status.__variant == TCExecutionCtrl__ExecCtrlBKGTC) {
+    } else
+    #line 89 "src/tasks/icu_manager/icu_manager.fin"
+    if (execution_status.__variant == TCExecutionCtrl__ExecCtrlBKGTC) {
         
+        #line 91 "src/tasks/icu_manager/icu_manager.fin"
         __termina_out_port__send(self->bkg_message_queue_output,
                                  (void *)&tc_handler);
 
-    } else if (execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
+    } else
+    #line 94 "src/tasks/icu_manager/icu_manager.fin"
+    if (execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
         
+        #line 97 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
                                            (TCHandlerT *)tc_handler.data, &ret);
 
+        #line 98 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                      tc_handler);
 
-    } else {
+    } else
+    {
         
+        #line 102 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                      tc_handler);
 
     }
 
+    #line 107 "src/tasks/icu_manager/icu_manager.fin"
     return ret;
 
 }
@@ -53,67 +72,94 @@ __status_int32_t ICUManager__process_tc(void * const __this,
     
     ICUManager * self = (ICUManager *)__this;
 
+    #line 15 "src/tasks/icu_manager/icu_manager.fin"
     __status_int32_t ret;
+    #line 15 "src/tasks/icu_manager/icu_manager.fin"
     ret.__variant = Success;
 
+    #line 17 "src/tasks/icu_manager/icu_manager.fin"
     TCStatus current_tc_status = try_tc_acceptation(&(*(TCHandlerT *)tc_handler.data).tc_descriptor);
 
+    #line 21 "src/tasks/icu_manager/icu_manager.fin"
     if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Accepted) {
         
+        #line 23 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.mng_tc_acceptation(self->tc_executor.__that,
                                              (TCHandlerT *)tc_handler.data,
                                              &ret);
 
+        #line 27 "src/tasks/icu_manager/icu_manager.fin"
         if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlReboot) {
             
+            #line 30 "src/tasks/icu_manager/icu_manager.fin"
             self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
                                                (TCHandlerT *)tc_handler.data,
                                                &ret);
 
+            #line 31 "src/tasks/icu_manager/icu_manager.fin"
             self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                          tc_handler);
 
-        } else if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
+        } else
+        #line 34 "src/tasks/icu_manager/icu_manager.fin"
+        if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
             
+            #line 36 "src/tasks/icu_manager/icu_manager.fin"
             __termina_out_port__send(self->hkfdir_message_queue_output,
                                      (void *)&tc_handler);
 
-        } else if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlBKGTC) {
+        } else
+        #line 38 "src/tasks/icu_manager/icu_manager.fin"
+        if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlBKGTC) {
             
+            #line 40 "src/tasks/icu_manager/icu_manager.fin"
             __termina_out_port__send(self->bkg_message_queue_output,
                                      (void *)&tc_handler);
 
-        } else if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
+        } else
+        #line 43 "src/tasks/icu_manager/icu_manager.fin"
+        if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
             
+            #line 46 "src/tasks/icu_manager/icu_manager.fin"
             self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
                                                (TCHandlerT *)tc_handler.data,
                                                &ret);
 
+            #line 47 "src/tasks/icu_manager/icu_manager.fin"
             self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                          tc_handler);
 
-        } else {
+        } else
+        {
             
+            #line 52 "src/tasks/icu_manager/icu_manager.fin"
             self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                          tc_handler);
 
         }
 
-    } else if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Rejected) {
+    } else
+    #line 57 "src/tasks/icu_manager/icu_manager.fin"
+    if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Rejected) {
         
+        #line 59 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.mng_tc_rejection(self->tc_executor.__that,
                                            (TCHandlerT *)tc_handler.data, &ret);
 
+        #line 60 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                      tc_handler);
 
-    } else {
+    } else
+    {
         
+        #line 64 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                      tc_handler);
 
     }
 
+    #line 67 "src/tasks/icu_manager/icu_manager.fin"
     return ret;
 
 }

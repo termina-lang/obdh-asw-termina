@@ -5,8 +5,10 @@ void GPIODriver__init_gpio(void * const __this) {
     
     GPIODriver * self = (GPIODriver *)__this;
 
+    #line 25 "src/resources/gpio_driver.fin"
     self->registers->Direction = self->registers->Direction | (uint32_t)((uint32_t)((uint32_t)((uint32_t)(1U << 16U) | (uint32_t)(1U << 17U)) | (uint32_t)(1U << 18U)) | (uint32_t)(1U << 19U));
 
+    #line 27 "src/resources/gpio_driver.fin"
     return;
 
 }
@@ -48,30 +50,41 @@ void GPIODriver__write_led(void * const __this, uint8_t led, uint8_t value,
     
     GPIODriver * self = (GPIODriver *)__this;
 
+    #line 32 "src/resources/gpio_driver.fin"
     if (led < 4U) {
         
+        #line 33 "src/resources/gpio_driver.fin"
         (*result).__variant = MyResult__Ok;
 
+        #line 34 "src/resources/gpio_driver.fin"
         uint8_t bit = led + 16U;
 
+        #line 35 "src/resources/gpio_driver.fin"
         if (value == 0U) {
             
+            #line 36 "src/resources/gpio_driver.fin"
             uint32_t mask = 0xFFFFFFFFU ^ (uint32_t)(1U << bit);
 
+            #line 37 "src/resources/gpio_driver.fin"
             self->registers->Output = self->registers->Output & mask;
 
-        } else {
+        } else
+        {
             
+            #line 39 "src/resources/gpio_driver.fin"
             self->registers->Output = self->registers->Output | (uint32_t)(1U << bit);
 
         }
 
-    } else {
+    } else
+    {
         
+        #line 43 "src/resources/gpio_driver.fin"
         (*result).__variant = MyResult__Error;
 
     }
 
+    #line 46 "src/resources/gpio_driver.fin"
     return;
 
 }

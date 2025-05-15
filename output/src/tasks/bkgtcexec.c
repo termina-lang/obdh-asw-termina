@@ -6,25 +6,35 @@ __status_int32_t PUSBKGTCExecutor__exec_tc(void * const __this,
     
     PUSBKGTCExecutor * self = (PUSBKGTCExecutor *)__this;
 
+    #line 19 "src/tasks/bkgtcexec.fin"
     __status_int32_t res;
+    #line 19 "src/tasks/bkgtcexec.fin"
     res.__variant = Success;
 
+    #line 21 "src/tasks/bkgtcexec.fin"
     uint8_t tc_type = get_type((*(TCHandlerT *)tc_handler.data).tc_descriptor.tc_bytes);
 
+    #line 23 "src/tasks/bkgtcexec.fin"
     if (tc_type == 20U) {
         
+        #line 25 "src/tasks/bkgtcexec.fin"
         self->pus_service_20.exec_tc(self->pus_service_20.__that,
                                      (TCHandlerT *)tc_handler.data, &res);
 
-    } else {
+    } else
+    {
         
+        #line 29 "src/tasks/bkgtcexec.fin"
         res.__variant = Failure;
+        #line 29 "src/tasks/bkgtcexec.fin"
         res.Failure.__0 = ACCEPTANCE_ERROR;
 
     }
 
+    #line 34 "src/tasks/bkgtcexec.fin"
     self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that, tc_handler);
 
+    #line 36 "src/tasks/bkgtcexec.fin"
     return res;
 
 }

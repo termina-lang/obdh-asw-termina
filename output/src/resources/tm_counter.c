@@ -5,10 +5,13 @@ void TMCounter__get_next_tm_count(void * const __this, uint16_t * const count) {
     
     TMCounter * self = (TMCounter *)__this;
 
+    #line 12 "src/resources/tm_counter.fin"
     *count = self->tm_count;
 
+    #line 13 "src/resources/tm_counter.fin"
     self->tm_count = (uint16_t)(self->tm_count + 1U) & 0x3FFFU;
 
+    #line 15 "src/resources/tm_counter.fin"
     return;
 
 }

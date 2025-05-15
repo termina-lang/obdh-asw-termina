@@ -5,86 +5,123 @@ __status_int32_t TCRXBottomHalfTask__get_tc(void * const __this, uint8_t data) {
     
     TCRXBottomHalfTask * self = (TCRXBottomHalfTask *)__this;
 
+    #line 29 "src/tasks/tc_rx.fin"
     __status_int32_t ret;
+    #line 29 "src/tasks/tc_rx.fin"
     ret.__variant = Success;
 
+    #line 33 "src/tasks/tc_rx.fin"
     if (self->rx_status.__variant == RXStatus__SyncBytesRx) {
         
+        #line 35 "src/tasks/tc_rx.fin"
         if (data == self->sync_word[__termina_array__index(4U,
                                                            self->aux_index)]) {
             
+            #line 37 "src/tasks/tc_rx.fin"
             if (3U == self->aux_index) {
                 
+                #line 38 "src/tasks/tc_rx.fin"
                 self->aux_index = 0U;
 
+                #line 39 "src/tasks/tc_rx.fin"
                 self->rx_status.__variant = RXStatus__SyncLengthRx;
 
-            } else {
+            } else
+            {
                 
+                #line 41 "src/tasks/tc_rx.fin"
                 self->aux_index = self->aux_index + 1U;
 
             }
 
-        } else {
+        } else
+        {
             
+            #line 45 "src/tasks/tc_rx.fin"
             self->aux_index = 0U;
 
         }
 
-    } else if (self->rx_status.__variant == RXStatus__SyncLengthRx) {
+    } else
+    #line 49 "src/tasks/tc_rx.fin"
+    if (self->rx_status.__variant == RXStatus__SyncLengthRx) {
         
+        #line 51 "src/tasks/tc_rx.fin"
         self->RX_tc_length[__termina_array__index(2U, self->aux_index)] = data;
 
+        #line 52 "src/tasks/tc_rx.fin"
         self->aux_index = self->aux_index + 1U;
 
+        #line 54 "src/tasks/tc_rx.fin"
         if (2U == self->aux_index) {
             
+            #line 56 "src/tasks/tc_rx.fin"
             self->telecommand.tc_num_bytes = (size_t)deserialize_uint16(self->RX_tc_length);
 
+            #line 58 "src/tasks/tc_rx.fin"
             if (self->telecommand.tc_num_bytes < 256U) {
                 
+                #line 60 "src/tasks/tc_rx.fin"
                 self->rx_status.__variant = RXStatus__TCBytesRx;
 
-            } else {
+            } else
+            {
                 
+                #line 64 "src/tasks/tc_rx.fin"
                 self->rx_status.__variant = RXStatus__SyncBytesRx;
 
             }
 
+            #line 66 "src/tasks/tc_rx.fin"
             self->aux_index = 0U;
 
         }
 
-    } else {
+    } else
+    {
         
+        #line 73 "src/tasks/tc_rx.fin"
         self->telecommand.tc_bytes[__termina_array__index(256U,
                                                           self->aux_index)] = data;
 
+        #line 74 "src/tasks/tc_rx.fin"
         self->aux_index = self->aux_index + 1U;
 
+        #line 76 "src/tasks/tc_rx.fin"
         if (self->aux_index == (size_t)self->telecommand.tc_num_bytes) {
             
+            #line 78 "src/tasks/tc_rx.fin"
             self->rx_status.__variant = RXStatus__SyncBytesRx;
 
+            #line 80 "src/tasks/tc_rx.fin"
             __option_box_t tc_handler;
+            #line 80 "src/tasks/tc_rx.fin"
             tc_handler.__variant = None;
 
+            #line 81 "src/tasks/tc_rx.fin"
             self->a_tc_handler_pool.alloc(self->a_tc_handler_pool.__that,
                                           &tc_handler);
 
+            #line 85 "src/tasks/tc_rx.fin"
             if (tc_handler.__variant == Some) {
                 
+                #line 83 "src/tasks/tc_rx.fin"
                 __termina_box_t tc_handler_b = tc_handler.Some.__0;
 
+                #line 87 "src/tasks/tc_rx.fin"
                 tc_handler_build_from_descriptor((TCHandlerT *)tc_handler_b.data,
                                                  &self->telecommand);
 
+                #line 89 "src/tasks/tc_rx.fin"
                 __termina_out_port__send(self->tc_message_queue_output,
                                          (void *)&tc_handler_b);
 
-            } else {
+            } else
+            {
                 
+                #line 92 "src/tasks/tc_rx.fin"
                 ret.__variant = Failure;
+                #line 92 "src/tasks/tc_rx.fin"
                 ret.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
             }
@@ -93,6 +130,7 @@ __status_int32_t TCRXBottomHalfTask__get_tc(void * const __this, uint8_t data) {
 
     }
 
+    #line 98 "src/tasks/tc_rx.fin"
     return ret;
 
 }
