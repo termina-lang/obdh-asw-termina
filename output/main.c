@@ -287,6 +287,101 @@ static void __termina_app__enable_protection() {
 
     uart_hdlr.uart.release_tx = UARTDriver__release_tx__event_lock;
 
+    mng_tc_executor.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    mng_tc_executor.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    mng_tc_executor.pus_service_9.exec_tc = PUSService9__exec_tc__mutex_lock;
+
+    mng_tc_executor.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    mng_tc_executor.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    pus_service_12.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_service_12.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_service_12.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    pus_service_12.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_service_12.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    pus_service_17.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_service_17.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_service_17.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    pus_service_17.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_service_17.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    pus_service_19.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_service_19.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_service_19.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    pus_service_19.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_service_19.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    pus_service_2.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_service_2.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_service_2.gpio_driver.write_led = GPIODriver__write_led__task_lock;
+
+    pus_service_2.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    pus_service_2.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_service_2.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    pus_service_20.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_service_20.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_service_20.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    pus_service_20.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_service_20.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_service_3.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_service_3.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    pus_service_3.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_service_3.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    pus_service_4.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_service_4.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_service_4.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    pus_service_4.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_service_4.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    pus_service_5.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_service_5.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_service_5.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    pus_service_5.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_service_5.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_service_9.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_service_9.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_service_9.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
+    telemetry_channel.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    telemetry_channel.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    telemetry_channel.uart.send = UARTDriver__send__task_lock;
+
 }
 
 static void __termina_app__init_channel_connections(int32_t * const status) {
