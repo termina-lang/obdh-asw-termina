@@ -4,7 +4,7 @@ import resources.gpio_driver;
 
 handler class Init {
 
-    uart : access CharDevInit;
+    uart : access UARTDriver;
     gpio_driver : access GPIODrvIface;
     system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
@@ -16,7 +16,12 @@ handler class Init {
 
         var ret : Status<i32> = Success;
 
-        self->uart.initialize();
+        // Initialize the UART driver
+        self->uart.riscv_uart_enable_RX();
+        self->uart.riscv_uart_enable_TX();
+        self->uart.riscv_uart_enable_RI();
+
+        //Initialize GPIO driver
         self->gpio_driver.init_gpio();
 
         for i : usize in 0 .. sdp_num_u32_params {
@@ -25,6 +30,7 @@ handler class Init {
         for i : usize in 0 .. sdp_num_u8_params {
             self->system_data_pool_u8.store_index(i,i as u8);
         }
+
 
 
         return ret;

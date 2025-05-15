@@ -3,8 +3,6 @@
 
 #include <termina.h>
 
-#include "service_libraries/queue_u8.h"
-
 #include "option.h"
 
 typedef struct {
@@ -14,73 +12,63 @@ typedef struct {
     uint32_t scaler;
 } UARTRegs;
 
-typedef enum {
-    CharDevResult__Success,
-    CharDevResult__TXFIFOFull
-} __enum_CharDevResult_t;
-
-typedef struct {
-    __enum_CharDevResult_t __variant;
-} CharDevResult;
-
 typedef struct {
     void * __that;
-    void (* send)(void * const, const uint8_t *, size_t, CharDevResult * const);
-} CharDevSend;
-
-typedef struct {
-    void * __that;
-    void (* initialize)(void * const);
-} CharDevInit;
-
-typedef struct {
-    void * __that;
-    void (* release_tx)(void * const);
-} CharDevRelayIrq;
+    void (* riscv_uart_tf_is_empty)(void * const, _Bool * const);
+    void (* riscv_uart_enable_TX)(void * const);
+    void (* riscv_uart_enable_RX)(void * const);
+    void (* riscv_uart_enable_RI)(void * const);
+    void (* riscv_putchar)(void * const, uint8_t, __status_int32_t * const);
+    void (* riscv_getchar)(void * const, __option_uint8_t * const);
+} UARTDriver;
 
 typedef struct {
     __termina_id_t __mutex_id;
-    QueueU8 uart_queue;
-    _Bool rem_bytes;
-    volatile UARTRegs * registers;
-} UARTDriver;
+    volatile UARTRegs * uart_regs;
+} CRISCVUARTDriver;
 
-void UARTDriver__disable_RF(UARTDriver * const self);
+void CRISCVUARTDriver__riscv_getchar(void * const __this,
+                                     __option_uint8_t * const uart_data);
+void CRISCVUARTDriver__riscv_getchar__mutex_lock(void * const __this,
+                                                 __option_uint8_t * const uart_data);
+void CRISCVUARTDriver__riscv_getchar__task_lock(void * const __this,
+                                                __option_uint8_t * const uart_data);
+void CRISCVUARTDriver__riscv_getchar__event_lock(void * const __this,
+                                                 __option_uint8_t * const uart_data);
 
-void UARTDriver__disable_TF(UARTDriver * const self);
+_Bool CRISCVUARTDriver__riscv_uart_tf_is_full(const CRISCVUARTDriver * const self);
 
-void UARTDriver__enable_RI(UARTDriver * const self);
+void CRISCVUARTDriver__riscv_putchar(void * const __this, uint8_t c,
+                                     __status_int32_t * const status);
+void CRISCVUARTDriver__riscv_putchar__mutex_lock(void * const __this, uint8_t c,
+                                                 __status_int32_t * const status);
+void CRISCVUARTDriver__riscv_putchar__task_lock(void * const __this, uint8_t c,
+                                                __status_int32_t * const status);
+void CRISCVUARTDriver__riscv_putchar__event_lock(void * const __this, uint8_t c,
+                                                 __status_int32_t * const status);
 
-void UARTDriver__enable_RX(UARTDriver * const self);
+void CRISCVUARTDriver__riscv_uart_enable_RI(void * const __this);
+void CRISCVUARTDriver__riscv_uart_enable_RI__mutex_lock(void * const __this);
+void CRISCVUARTDriver__riscv_uart_enable_RI__task_lock(void * const __this);
+void CRISCVUARTDriver__riscv_uart_enable_RI__event_lock(void * const __this);
 
-void UARTDriver__enable_TI(UARTDriver * const self);
+void CRISCVUARTDriver__riscv_uart_enable_RX(void * const __this);
+void CRISCVUARTDriver__riscv_uart_enable_RX__mutex_lock(void * const __this);
+void CRISCVUARTDriver__riscv_uart_enable_RX__task_lock(void * const __this);
+void CRISCVUARTDriver__riscv_uart_enable_RX__event_lock(void * const __this);
 
-void UARTDriver__enable_TX(UARTDriver * const self);
+void CRISCVUARTDriver__riscv_uart_enable_TX(void * const __this);
+void CRISCVUARTDriver__riscv_uart_enable_TX__mutex_lock(void * const __this);
+void CRISCVUARTDriver__riscv_uart_enable_TX__task_lock(void * const __this);
+void CRISCVUARTDriver__riscv_uart_enable_TX__event_lock(void * const __this);
 
-void UARTDriver__initialize(void * const __this);
-void UARTDriver__initialize__mutex_lock(void * const __this);
-void UARTDriver__initialize__task_lock(void * const __this);
-void UARTDriver__initialize__event_lock(void * const __this);
-
-void UARTDriver__release_tx(void * const __this);
-void UARTDriver__release_tx__mutex_lock(void * const __this);
-void UARTDriver__release_tx__task_lock(void * const __this);
-void UARTDriver__release_tx__event_lock(void * const __this);
-
-_Bool UARTDriver__tf_is_empty(const UARTDriver * const self);
-
-void UARTDriver__send(void * const __this, const uint8_t output_bytes[256U],
-                      size_t nbytes, CharDevResult * const result);
-void UARTDriver__send__mutex_lock(void * const __this,
-                                  const uint8_t output_bytes[256U],
-                                  size_t nbytes, CharDevResult * const result);
-void UARTDriver__send__task_lock(void * const __this,
-                                 const uint8_t output_bytes[256U],
-                                 size_t nbytes, CharDevResult * const result);
-void UARTDriver__send__event_lock(void * const __this,
-                                  const uint8_t output_bytes[256U],
-                                  size_t nbytes, CharDevResult * const result);
-
-_Bool UARTDriver__tf_is_full(const UARTDriver * const self);
+void CRISCVUARTDriver__riscv_uart_tf_is_empty(void * const __this,
+                                              _Bool * const res);
+void CRISCVUARTDriver__riscv_uart_tf_is_empty__mutex_lock(void * const __this,
+                                                          _Bool * const res);
+void CRISCVUARTDriver__riscv_uart_tf_is_empty__task_lock(void * const __this,
+                                                         _Bool * const res);
+void CRISCVUARTDriver__riscv_uart_tf_is_empty__event_lock(void * const __this,
+                                                          _Bool * const res);
 
 #endif

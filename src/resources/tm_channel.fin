@@ -4,7 +4,6 @@ import service_libraries.pus_tm_handler;
 
 interface TMChannelIface {
 
-    //procedure send_tm(&mut self, tm_descriptor: &TMDescriptorT, result : &mut Result);
     procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult);
 
 };
@@ -12,30 +11,63 @@ interface TMChannelIface {
 
 resource class TMChannel provides TMChannelIface {
 
-    uart : access CharDevSend;
+    uart : access UARTDriver;
     a_tm_handler_pool : access Allocator<TMHandlerT>;
 
 
-    procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult) {
+     procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult) {
 
-        var queue_state : CharDevResult = CharDevResult::Success;
+        var tm_descriptor : TMDescriptorT = tm_handler.tm_descriptor;
 
-        self->uart.send(&(tm_handler.tm_descriptor.tm_bytes), tm_handler.tm_descriptor.tm_num_bytes, &mut queue_state);
+        var frame_header : [u8;6] = [0 : u8;6];
+        var write_timeout : u32 = 0 : u32;
+        var check : bool = false;
 
-        if (queue_state is CharDevResult::Success) {
+        *result = MyResult::Ok;
 
-            *result = MyResult::Ok;
-                    
-        } else {
+        frame_header[0 : usize] = 0xBE : u8;
+        frame_header[1 : usize] = 0xBA : u8;
+        frame_header[2 : usize] = 0xBE : u8;
+        frame_header[3 : usize] = 0xEF : u8;
 
-            *result = MyResult::Error;
-            
+    
+        serialize_uint16(tm_descriptor.tm_num_bytes as u16, &mut frame_header[4 : usize .. 6 : usize]);
+
+        var status : Status<i32> = Success;
+
+        for i : u8 in 0 : u8 .. 6 : u8 while status is Success {
+
+            self->uart.riscv_putchar(frame_header[i as usize], &mut status);
+
         }
 
+        for j : usize in 0 .. 256 while (j < tm_descriptor.tm_num_bytes) && (status is Success) {
+
+            self->uart.riscv_putchar(tm_descriptor.tm_bytes[j as usize], &mut status);
+
+        }
+        
+        self->uart.riscv_uart_tf_is_empty(&mut check);
+
+        for k : u32 in 0 : u32 .. uart_timeout while check == false {
+            
+            self->uart.riscv_uart_tf_is_empty(&mut check);
+            write_timeout = write_timeout + 1 : u32;
+
+        }
+
+        if (write_timeout < uart_timeout){
+
+            //
+
+        }
+  
         self->a_tm_handler_pool.free(tm_handler);
+        
 
         return;
-   }
+
+    }
 
          
 

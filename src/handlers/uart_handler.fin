@@ -1,0 +1,135 @@
+import resources.uart;
+import service_libraries.serialize;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.pus_tc_handler;
+
+enum RISCVUARTHandlerState {
+
+    RXFrameHeader(usize),
+    RXTelecommandSize(bool),
+    RXTelecommand(usize),
+    RXTelecommandFinished
+
+};
+
+handler class CRISCVUARTHandler {
+
+    tc_message_queue_output: out box TCHandlerT;
+    uart: access UARTDriver;
+    a_tc_handler_pool : access Allocator<TCHandlerT>;
+
+    irq_entry : sink u32 triggers handle;
+
+    telecommand : TCDescriptorT;
+
+    handler_state : RISCVUARTHandlerState;
+   
+    action handle(&priv self, _vector : u32) -> Status<i32> {
+
+        var result : Option<u8> = None;
+        var ret : Status<i32> = Success;
+        let tc_frame : [u8; 4] = { 0xBE, 0xBA, 0xBE, 0xEF };
+
+        self->uart.riscv_getchar(&mut result);
+
+        for i : usize in 0 .. 256 while (
+            (result is Some) 
+            && (ret is Success) 
+            && ((self->handler_state is RISCVUARTHandlerState::RXTelecommandFinished) == false)) {
+
+            match result {
+
+                case Some(data) => {
+
+                    match self->handler_state {
+
+                        case RXFrameHeader(current) => {
+
+                            if (tc_frame[current] == data) {
+
+                                // We can move to the next state
+                                if (current == 3) {
+                                    self->handler_state = RISCVUARTHandlerState::RXTelecommandSize(true);
+                                } else {
+                                    self->handler_state = RISCVUARTHandlerState::RXFrameHeader(current + 1);
+                                }
+
+                            } else {
+
+                                self->handler_state = RISCVUARTHandlerState::RXFrameHeader(0);
+
+                            }
+
+                        }
+
+                        case RXTelecommandSize(first) => {
+
+                            if (first == true) {
+                                self->telecommand.tc_num_bytes = (data as usize);
+                                self->handler_state = RISCVUARTHandlerState::RXTelecommandSize(false);
+                            } else {
+                                self->telecommand.tc_num_bytes = self->telecommand.tc_num_bytes << 8 : usize | (data as usize);
+                                self->handler_state = RISCVUARTHandlerState::RXTelecommand(0);
+                            }
+
+                        }
+
+                        case RXTelecommand(current) => {
+
+                            self->telecommand.tc_bytes[current as usize] = data;
+
+                            
+                            if (self->telecommand.tc_num_bytes == current + 1) {
+                                self->handler_state = RISCVUARTHandlerState::RXTelecommandFinished;
+                            } else {
+                                self->handler_state = RISCVUARTHandlerState::RXTelecommand(current + 1);
+                            }
+
+                        }
+
+                        case RXTelecommandFinished => {
+
+                        }
+
+                    }
+
+                    self->uart.riscv_getchar(&mut result);
+
+                }
+                case None => {
+
+                }
+            }
+
+        }
+
+        if (self->handler_state is RISCVUARTHandlerState::RXTelecommandFinished) {
+
+            // We have finished
+
+            var tc_handler : Option<box TCHandlerT> = None;
+            self->a_tc_handler_pool.alloc(&mut tc_handler);
+
+            match tc_handler {
+
+                case Some(b_tc_handler) => {
+
+                    tc_handler_build_from_descriptor(&mut b_tc_handler, &self->telecommand);
+
+                    self->handler_state = RISCVUARTHandlerState::RXFrameHeader(0);
+                    self->tc_message_queue_output.send(b_tc_handler);
+                
+                }
+                case None => {
+            
+                    ret = Failure(TM_POOL_ALLOC_FAILURE);
+                }
+            }  
+
+        }
+
+        return ret;
+
+    }
+
+};

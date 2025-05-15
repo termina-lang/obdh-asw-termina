@@ -1,6 +1,7 @@
 import service_libraries.serialize;
 import resources.uart;
 
+constexpr max_send_size : usize = 256;
 
 struct CCSDSPUSTMPacketHeaderT {
 
