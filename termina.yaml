@@ -1,7 +1,7 @@
 app-file: app
 app-folder: app
 name: obdhlab-termina 
-output-folder: temp_output
+output-folder: output
 platform: rtems5-leon3-qemu
 source-modules: src
 profile: release
