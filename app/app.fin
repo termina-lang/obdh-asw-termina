@@ -48,7 +48,7 @@ resource u8_system_data_pool : AtomicArray<u8; sdp_num_u8_params> = {
 
 
 resource uart_drv : UARTDriver = {
-    registers @ 0xFC001000, //0x80000100
+    registers @ 0x80000100, 
     rem_bytes = false,
     uart_queue = {
         elements = [0 ; queue_max_noe],

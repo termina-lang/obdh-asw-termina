@@ -51,7 +51,7 @@ void __termina_app__init_globals() {
     for (size_t __i0 = 0U; __i0 < 18U; __i0 = __i0 + 1U) {
         atomic_store(&u8_system_data_pool[__i0], 0U);
     }
-    uart_drv.registers = (volatile UARTRegs *)4227862528U;
+    uart_drv.registers = (volatile UARTRegs *)2147483904U;
     uart_drv.rem_bytes = 0;
     for (size_t __i0 = 0U; __i0 < 1024U; __i0 = __i0 + 1U) {
         #line 54 "app/app.fin"
