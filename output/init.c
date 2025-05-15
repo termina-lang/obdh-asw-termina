@@ -716,7 +716,7 @@ void __termina_app__init_globals() {
     uart_hdlr.uart.__that = &uart_drv;
     #line 226 "app/app.fin"
     uart_hdlr.uart.release_tx = UARTDriver__release_tx;
-    uart_hdlr.uart_registers = (volatile UARTRegs *)4227862528U;
+    uart_hdlr.uart_registers = (volatile UARTRegs *)2147483904U;
     #line 238 "app/app.fin"
     tc_rx_bottom_half_task.RX_tc_length[0U] = 0U;
     #line 238 "app/app.fin"
