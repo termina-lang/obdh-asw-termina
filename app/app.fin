@@ -105,7 +105,8 @@ resource pus_service_3 : PUSService3 = {
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
     pus_service_9 <-> pus_service_9,
-    pus_service_5 <-> pus_service_5
+    pus_service_5 <-> pus_service_5,
+    random_seed = 42
 } : PUSService3;
 
 

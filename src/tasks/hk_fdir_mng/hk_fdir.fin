@@ -65,10 +65,13 @@ task class HouseKeepingFDIR {
         return result;
     }
 
+
+
     action do_hk_fdir(&priv self, _current_time : TimeVal) -> Status<i32> {
 
         var result : Status<i32> = Success;
 
+        self->pus_service_3.update_params();
         self->pus_service_4.update_all_stats(); 
         self->pus_service_3.do_hk(&mut result);
         result = self->do_fdir();

@@ -4,6 +4,7 @@
 #include <termina.h>
 
 #include "resources/system_data_pool.h"
+#include "service_libraries/crc.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
 #include "service_libraries/pus_services/pus_service9/pus_service9.h"

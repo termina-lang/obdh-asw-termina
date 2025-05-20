@@ -9,6 +9,12 @@
 
 #include "option.h"
 
+extern const uint32_t Zero;
+
+extern const uint32_t Unit;
+
+extern const uint32_t Dec;
+
 typedef struct {
     __termina_id_t __handler_id;
     _Atomic uint8_t * system_data_pool_u8;

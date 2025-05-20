@@ -4,7 +4,7 @@
 uint16_t ccsds_pus_tm_build_packet_id(uint16_t apid) {
     
     #line 41 "src/service_libraries/tm_ccsds_pus_format.fin"
-    return (uint16_t)(1U << 11U) | (uint16_t)(apid & 0x7FFU);
+    return (uint16_t)((uint16_t)(1U << 14U) | (uint16_t)(1U << 11U)) | (uint16_t)(apid & 0x7FFU);
 
 }
 
@@ -12,7 +12,7 @@ uint16_t ccsds_pus_tm_build_packet_seq_ctrl(uint16_t sequence_flags,
                                             uint16_t tm_count) {
     
     #line 48 "src/service_libraries/tm_ccsds_pus_format.fin"
-    return (uint16_t)(sequence_flags << 14U) | tm_count;
+    return (uint16_t)((uint16_t)(sequence_flags & 0x3U) << 14U) | (uint16_t)(tm_count & 0x3FFFU);
 
 }
 
@@ -28,7 +28,7 @@ uint32_t ccsds_pus_tm_build_df_header(uint8_t service_type,
 uint8_t ccsds_pus_tm_build_df_header_version(uint8_t version) {
     
     #line 62 "src/service_libraries/tm_ccsds_pus_format.fin"
-    return (uint8_t)(version & 0x7U) << 4U;
+    return (uint8_t)(version & 0xFU) << 4U;
 
 }
 

@@ -44,3 +44,52 @@ uint16_t cal_crc_16(const uint8_t data[256U], size_t nbytes) {
     return crc_value;
 
 }
+
+uint32_t rand_r(uint32_t * const mutseed) {
+    
+    #line 30 "src/service_libraries/crc.fin"
+    uint32_t next = *mutseed;
+
+    #line 31 "src/service_libraries/crc.fin"
+    uint32_t result = 0U;
+
+    #line 33 "src/service_libraries/crc.fin"
+    next = next * 1103515245U;
+
+    #line 34 "src/service_libraries/crc.fin"
+    next = next + 12345U;
+
+    #line 35 "src/service_libraries/crc.fin"
+    result = (uint32_t)(next / 65536U) % 2048U;
+
+    #line 37 "src/service_libraries/crc.fin"
+    next = next * 1103515245U;
+
+    #line 38 "src/service_libraries/crc.fin"
+    next = next + 12345U;
+
+    #line 39 "src/service_libraries/crc.fin"
+    result = result << 10U;
+
+    #line 40 "src/service_libraries/crc.fin"
+    result = result ^ (uint32_t)((uint32_t)(next / 65536U) % 1024U);
+
+    #line 42 "src/service_libraries/crc.fin"
+    next = next * 1103515245U;
+
+    #line 43 "src/service_libraries/crc.fin"
+    next = next + 12345U;
+
+    #line 44 "src/service_libraries/crc.fin"
+    result = result << 10U;
+
+    #line 45 "src/service_libraries/crc.fin"
+    result = result ^ (uint32_t)((uint32_t)(next / 65536U) % 1024U);
+
+    #line 47 "src/service_libraries/crc.fin"
+    *mutseed = next;
+
+    #line 49 "src/service_libraries/crc.fin"
+    return result;
+
+}

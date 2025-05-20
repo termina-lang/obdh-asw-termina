@@ -23,3 +23,28 @@ function cal_crc_16 (data : & [u8; max_tc_size], nbytes : usize) -> u16  {
 
 	return crc_value;
 }
+
+
+function rand_r (mutseed : &mut u32) -> u32 {
+    
+    var next : u32 = *mutseed;
+    var result : u32 = 0 : u32;
+
+    next = next * 1103515245 : u32;
+    next = next + 12345 : u32;
+    result = (next / 65536 : u32) % 2048 : u32;
+
+    next = next * 1103515245 : u32;
+    next = next + 12345 : u32;
+    result = result << 10 : u32;
+    result = result ^(next / 65536 : u32) % 1024 : u32;
+
+    next = next * 1103515245 : u32;
+    next = next + 12345 : u32;
+    result = result << 10 : u32;
+    result = result ^ (next / 65536 : u32) % 1024 : u32;
+
+    *mutseed = next;
+
+    return result;
+}

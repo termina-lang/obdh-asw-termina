@@ -12,10 +12,12 @@ typedef struct {
     void (* do_hk)(void * const, __status_int32_t * const);
     void (* exec_tc)(void * const, TCHandlerT * const,
                      __status_int32_t * const);
+    void (* update_params)(void * const);
 } PUSS3Iface;
 
 typedef struct {
     __termina_id_t __mutex_id;
+    uint32_t random_seed;
     struct {
         void * __that;
         void (* build_and_tx_tm_5_2)(void * const, __status_int32_t * const);
@@ -84,5 +86,10 @@ void PUSService3__exec_tc__task_lock(void * const __this,
 void PUSService3__exec_tc__event_lock(void * const __this,
                                       TCHandlerT * const tc_handler,
                                       __status_int32_t * const action_status);
+
+void PUSService3__update_params(void * const __this);
+void PUSService3__update_params__mutex_lock(void * const __this);
+void PUSService3__update_params__task_lock(void * const __this);
+void PUSService3__update_params__event_lock(void * const __this);
 
 #endif

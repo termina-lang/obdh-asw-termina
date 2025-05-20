@@ -9,6 +9,7 @@ interface PUSS3Iface {
 
     procedure do_hk (&mut self, action_status : &mut Status<i32>);    
     procedure exec_tc(&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>);
+    procedure update_params(&mut self);
 
 };
 
@@ -27,7 +28,7 @@ resource class PUSService3 provides PUSS3Iface {
     pus_service_9 : access PUSS9Iface;
     pus_service_5 : access PUSS5Iface;
 
-
+    random_seed : u32;
 
     method get_SIDindex (&priv self) -> IndexFound {
 
@@ -750,6 +751,22 @@ resource class PUSService3 provides PUSS3Iface {
                     }       
                 }
             }
+        }
+
+        return;
+    }
+
+    procedure update_params(&mut self) {
+
+        for i : usize in 0 .. 5 {
+
+            var random_noise : u32 = (rand_r(&mut (self->random_seed)) % 11) - 5;
+            var data : u32 = 0;
+
+            self->system_data_pool_u32.load_index(i, &mut data);
+            data = data + random_noise;
+
+           self->system_data_pool_u32.store_index(i, data);
         }
 
         return;

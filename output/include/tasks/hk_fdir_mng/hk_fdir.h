@@ -52,6 +52,7 @@ typedef struct {
         void (* do_hk)(void * const, __status_int32_t * const);
         void (* exec_tc)(void * const, TCHandlerT * const,
                          __status_int32_t * const);
+        void (* update_params)(void * const);
     } pus_service_3;
     __termina_allocator_t a_tc_handler_pool;
     __termina_out_port_t action_tc_message_queue_output;

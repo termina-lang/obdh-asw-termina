@@ -108,14 +108,13 @@ void tm_handler_build_packet_header(TMHandlerT * const tm_handler,
     #line 76 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->packet_header.packet_id = ccsds_pus_tm_build_packet_id(APID);
 
-    #line 78 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->packet_header.packet_seq_ctrl = ccsds_pus_tm_build_packet_seq_ctrl(0x3U,
-                                                                                   tm_seq_counter);
+    #line 79 "src/service_libraries/pus_tm_handler.fin"
+    tm_handler->packet_header.packet_seq_ctrl = tm_seq_counter & 0x3FFFU;
 
-    #line 80 "src/service_libraries/pus_tm_handler.fin"
+    #line 81 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->packet_header.packet_length = (uint16_t)(tm_handler->app_data_index - 7U);
 
-    #line 82 "src/service_libraries/pus_tm_handler.fin"
+    #line 83 "src/service_libraries/pus_tm_handler.fin"
     return;
 
 }
@@ -123,28 +122,28 @@ void tm_handler_build_packet_header(TMHandlerT * const tm_handler,
 void tm_handler_build_df_header(TMHandlerT * const tm_handler, uint8_t tm_type,
                                 uint8_t tm_subtype, MissionObt current_obt) {
     
-    #line 88 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->df_header.version = ccsds_pus_tm_build_df_header_version(0x1U);
-
     #line 89 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->df_header.type = tm_type;
+    tm_handler->df_header.version = 0x20U;
 
     #line 90 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->df_header.subtype = tm_subtype;
+    tm_handler->df_header.type = tm_type;
 
     #line 91 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->df_header.msg_type_counter = 0U;
+    tm_handler->df_header.subtype = tm_subtype;
 
     #line 92 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->df_header.destinationID = destinationID;
+    tm_handler->df_header.msg_type_counter = 0U;
 
     #line 93 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->df_header.obt_secs = current_obt.seconds;
+    tm_handler->df_header.destinationID = destinationID;
 
     #line 94 "src/service_libraries/pus_tm_handler.fin"
+    tm_handler->df_header.obt_secs = current_obt.seconds;
+
+    #line 95 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->df_header.obt_finetime = current_obt.finetime;
 
-    #line 96 "src/service_libraries/pus_tm_handler.fin"
+    #line 97 "src/service_libraries/pus_tm_handler.fin"
     return;
 
 }
@@ -152,33 +151,33 @@ void tm_handler_build_df_header(TMHandlerT * const tm_handler, uint8_t tm_type,
 void close_tm(TMHandlerT * const tm_handler, uint8_t type, uint8_t subtype,
               uint16_t tm_count, MissionObt current_obt) {
     
-    #line 102 "src/service_libraries/pus_tm_handler.fin"
+    #line 103 "src/service_libraries/pus_tm_handler.fin"
     tm_handler_build_packet_header(tm_handler, tm_count);
 
-    #line 103 "src/service_libraries/pus_tm_handler.fin"
+    #line 104 "src/service_libraries/pus_tm_handler.fin"
     tm_handler_build_df_header(tm_handler, type, subtype, current_obt);
 
-    #line 105 "src/service_libraries/pus_tm_handler.fin"
+    #line 106 "src/service_libraries/pus_tm_handler.fin"
     ccsds_pus_tm_set_fields(&tm_handler->tm_descriptor.tm_bytes[0U],
                             &tm_handler->packet_header, &tm_handler->df_header);
 
-    #line 107 "src/service_libraries/pus_tm_handler.fin"
+    #line 108 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->tm_descriptor.tm_num_bytes = (size_t)tm_handler->packet_header.packet_length + 7U;
 
-    #line 109 "src/service_libraries/pus_tm_handler.fin"
+    #line 110 "src/service_libraries/pus_tm_handler.fin"
     return;
 
 }
 
 void startup_tm(TMHandlerT * const tm_handler) {
     
-    #line 114 "src/service_libraries/pus_tm_handler.fin"
+    #line 115 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->tm_descriptor.tm_num_bytes = 256U;
 
-    #line 115 "src/service_libraries/pus_tm_handler.fin"
+    #line 116 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->app_data_index = tm_app_data_offset;
 
-    #line 117 "src/service_libraries/pus_tm_handler.fin"
+    #line 118 "src/service_libraries/pus_tm_handler.fin"
     return;
 
 }
