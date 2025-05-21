@@ -91,10 +91,10 @@ uint8_t get_subtype(const uint8_t tc_bytes[256U]) {
 
 }
 
-uint8_t get_source_id(const uint8_t tc_bytes[256U]) {
+uint16_t get_source_id(const uint8_t tc_bytes[256U]) {
     
     #line 98 "src/service_libraries/tc_ccsds_pus_format.fin"
-    uint8_t sourceID = tc_bytes[9U];
+    uint16_t sourceID = deserialize_uint16(&tc_bytes[9U]);
 
     #line 99 "src/service_libraries/tc_ccsds_pus_format.fin"
     return sourceID;

@@ -37,12 +37,20 @@ const TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED    : u8 = 6;
 
 
 function build_tm_1_1(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, 
-				tc_packet_id: u16, tc_packet_error_ctrl: u16, current_obt: MissionObt, result : &mut MyResult) {
+				tc_packet_id: u16, tc_packet_error_ctrl: u16, flags_ack : u8, current_obt: MissionObt, result : &mut MyResult, enabled : &mut bool) {
 
-    startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
-	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
-	close_tm(p_tm_handler, 1, 1, tm_seq_counter, current_obt);	
+	if (is_tc_ack_accept_enabled(flags_ack)) {
+
+		startup_tm(p_tm_handler);
+		append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
+		append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
+		close_tm(p_tm_handler, 1, 1, tm_seq_counter, current_obt);	
+		*enabled = true;
+	}
+	else {
+
+		*enabled = false;
+	}
 
 	return;
 }
@@ -103,13 +111,24 @@ function build_tm_1_2 (status : &TCStatus, p_tm_handler : &mut TMHandlerT,
 }
 
 
-function build_tm_1_3(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16,
-							 current_obt: MissionObt, result : &mut MyResult) {
-	
-	startup_tm(p_tm_handler);
-	close_tm(p_tm_handler, 1, 3, tm_seq_counter, current_obt);
-	*result = MyResult::Ok;
+function build_tm_1_3(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, flags_ack : u8,
+							 current_obt: MissionObt, result : &mut MyResult, enabled : &mut bool) {
 
+	if (is_tc_ack_start_exec_enabled(flags_ack)) {
+
+		startup_tm(p_tm_handler);
+		close_tm(p_tm_handler, 1, 3, tm_seq_counter, current_obt);
+		*enabled = true;
+	}
+	else {
+
+		*enabled = false;
+	}
+
+
+
+	*result = MyResult::Ok;
+	
 	return;
 }
 
@@ -325,11 +344,20 @@ function build_tm_1_4_error_in_acceptance (p_tm_handler : &mut TMHandlerT, tm_se
 	return;
 }
 
-function build_tm_1_7(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, 
-							current_obt: MissionObt, result : &mut MyResult) {
+function build_tm_1_7(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, flags_ack : u8, 
+							current_obt: MissionObt, result : &mut MyResult, enabled : &mut bool) {
 
-	startup_tm(p_tm_handler);
-	close_tm(p_tm_handler, 1, 7, tm_seq_counter, current_obt);
+	if (is_tc_ack_completion_exec_enabled(flags_ack)) {
+
+		startup_tm(p_tm_handler);
+		close_tm(p_tm_handler, 1, 7, tm_seq_counter, current_obt);
+		*enabled = true;
+	} 
+	else {
+
+		*enabled = false;
+	}
+
 	*result = MyResult::Ok;
 
 	return;

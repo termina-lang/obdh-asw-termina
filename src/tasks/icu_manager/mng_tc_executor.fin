@@ -71,9 +71,20 @@ resource class ManagerTCExecutor provides MngTCExecIface {
                     finetime = 0
                 };
                 var result : MyResult = MyResult::Ok;
-                //self->pus_service_9.get_current_obt(&mut current_obt); OJOOO CORREGIR
-                build_tm_1_1(&mut b_tm_handler, tm_count, tc_handler->packet_header.packet_id, tc_handler->packet_error_ctrl, current_obt, &mut result);
-                self->tm_channel.send_tm(b_tm_handler, &mut result);
+                var ack_enabled : bool = false;
+
+                self->pus_service_9.get_current_obt(&mut current_obt); 
+                build_tm_1_1(&mut b_tm_handler, tm_count, tc_handler->packet_header.packet_id, tc_handler->packet_error_ctrl, tc_handler->df_header.flag_ver_ack,
+                     current_obt, &mut result, &mut ack_enabled);
+
+                if (ack_enabled) {
+
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                } else {
+                    self->a_tm_handler_pool.free(b_tm_handler);
+                }
+                
                         
             }
             case None => {

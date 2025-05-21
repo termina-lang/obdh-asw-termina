@@ -24,6 +24,7 @@ struct StatsConfig {
 struct PS4ExecTCReqStatusUpdate {
     packet_id : u16;
     packet_error_ctrl : u16;
+    flags_ack : u8;
     tc_num_bytes : usize;
     N: u8;
     PID: u16;
@@ -33,6 +34,7 @@ struct PS4ExecTCReqStatusUpdate {
 constexpr ps4_init_tc_req_status_update : PS4ExecTCReqStatusUpdate = {
     packet_id = 0,
     packet_error_ctrl = 0,
+    flags_ack = 0,
     tc_num_bytes = 0,
     N = 0,
     PID = 0,

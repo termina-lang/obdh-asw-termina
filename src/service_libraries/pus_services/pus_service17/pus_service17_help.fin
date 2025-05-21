@@ -7,9 +7,11 @@ import service_libraries.pus_services.pus_service9.pus_service9;
 struct PS17ExecTCReqStatusUpdate {
     packet_id : u16;
     packet_error_ctrl : u16;
+    flags_ack : u8;
 };
 
 constexpr ps17_init_tc_req_status_update : PS17ExecTCReqStatusUpdate = {
     packet_id = 0,
-    packet_error_ctrl = 0
+    packet_error_ctrl = 0,
+    flags_ack = 0
 };

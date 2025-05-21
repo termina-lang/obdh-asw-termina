@@ -19,6 +19,7 @@ struct IndexFound {
 struct PS3TCData {
     packet_id : u16;
     packet_error_ctrl : u16;
+    flags_ack : u8;
     tc_num_bytes : usize;
     N : u8;
     SID: u16;
@@ -31,7 +32,7 @@ struct PS3ExecTCReqStatusUpdate {
 };
 
 constexpr ps3_init_tc_req_status_update : PS3ExecTCReqStatusUpdate  = {
-    index = {found = false, index = 0}, tc_data = {packet_id = 0, packet_error_ctrl = 0, tc_num_bytes = 0, N = 0, SID = 0, collection_interval = 0}  
+    index = {found = false, index = 0}, tc_data = {packet_id = 0, packet_error_ctrl = 0, flags_ack = 0, tc_num_bytes = 0, N = 0, SID = 0, collection_interval = 0}  
 };
 
 struct HKConfiguration {

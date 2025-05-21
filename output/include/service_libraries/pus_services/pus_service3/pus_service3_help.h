@@ -20,6 +20,7 @@ typedef struct {
 typedef struct {
     uint16_t packet_id;
     uint16_t packet_error_ctrl;
+    uint8_t flags_ack;
     size_t tc_num_bytes;
     uint8_t N;
     uint16_t SID;

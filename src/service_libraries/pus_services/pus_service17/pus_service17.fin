@@ -39,23 +39,42 @@ resource class PUSService17 provides PUSS17Iface {
 
 		var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
 		var result : MyResult = MyResult::Ok;
-		
+        var ack_enabled : bool = false;
 
-		var tm_handler : Option<box TMHandlerT> = None;
-		self->a_tm_handler_pool.alloc(&mut tm_handler);
+        var current_obt : MissionObt = {seconds = 0, finetime = 0};
 
-		match tm_handler {
+        var tm_handler1 : Option<box TMHandlerT> = None;
+		self->a_tm_handler_pool.alloc(&mut tm_handler1);
 
-			case Some(b_tm_handler) => {
+		match tm_handler1 {
 
-				var tm_count : u16 = 0 : u16;
-				self->tm_counter.get_next_tm_count(&mut tm_count);
-				self->build_tm_17_2(&mut b_tm_handler, tm_count);
-				self->tm_channel.send_tm(b_tm_handler, &mut result);
+			case Some(b_tm_handler1) => {
 
-				if (result is MyResult::Error){
-					next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
-				}
+				var tm_count1 : u16 = 0 : u16;
+				self->tm_counter.get_next_tm_count(&mut tm_count1);
+				self->pus_service_9.get_current_obt(&mut current_obt);
+                build_tm_1_3(&mut b_tm_handler1, tm_count1, self->exec_tc_req_status_update.flags_ack, current_obt, &mut result, &mut ack_enabled);
+
+                if (ack_enabled) {
+
+                    if (result is MyResult::Ok){
+
+                        self->tm_channel.send_tm(b_tm_handler1, &mut result);
+
+                        if (result is MyResult::Error){
+                            next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                        }
+                    }
+                    else {
+                        self->a_tm_handler_pool.free(b_tm_handler1);
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                    }
+
+                } else {
+                    
+                    self->a_tm_handler_pool.free(b_tm_handler1);
+                }
+				
 			} 
 			case None => {
 
@@ -64,6 +83,80 @@ resource class PUSService17 provides PUSS17Iface {
 			}
 			
 		}
+		
+        if (next_status is PSExecTCReqStatus::Exit) {
+
+            var tm_handler2 : Option<box TMHandlerT> = None;
+		    self->a_tm_handler_pool.alloc(&mut tm_handler2);
+
+		    match tm_handler2 {
+
+                case Some(b_tm_handler2) => {
+
+                    var tm_count2 : u16 = 0 : u16;
+                    self->tm_counter.get_next_tm_count(&mut tm_count2);
+                    self->build_tm_17_2(&mut b_tm_handler2, tm_count2);
+                    self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                    if (result is MyResult::Error){
+                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                    }
+                } 
+                case None => {
+
+                    next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
+                    
+                }
+			
+		    }
+
+        }
+
+		
+        if (next_status is PSExecTCReqStatus::Exit){
+
+            var tm_handler3 : Option<box TMHandlerT> = None;
+		    self->a_tm_handler_pool.alloc(&mut tm_handler3);
+
+            match tm_handler3 {
+
+                case Some(b_tm_handler3) => {
+
+                    var tm_count3 : u16 = 0 : u16;
+                    self->tm_counter.get_next_tm_count(&mut tm_count3);
+                    self->pus_service_9.get_current_obt(&mut current_obt);
+                    build_tm_1_7(&mut b_tm_handler3, tm_count3, self->exec_tc_req_status_update.flags_ack, current_obt, &mut result, &mut ack_enabled);
+                    
+                    if (ack_enabled) {
+
+                        if (result is MyResult::Ok){
+
+                            self->tm_channel.send_tm(b_tm_handler3, &mut result);
+
+                            if (result is MyResult::Error){
+                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                            }
+                        }
+                        else {
+                            self->a_tm_handler_pool.free(b_tm_handler3);
+                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                        }
+
+                    } else {
+                        
+                        self->a_tm_handler_pool.free(b_tm_handler3);
+                       
+                    }
+                } 
+                case None => {
+
+                    next_status = PSExecTCReqStatus::Failure(TM_POOL_ALLOC_FAILURE);
+                    
+                }
+			
+		    }
+
+        }
 
 		return next_status;
 	}
@@ -75,6 +168,7 @@ resource class PUSService17 provides PUSS17Iface {
         var tc_data : PS17ExecTCReqStatusUpdate = ps17_init_tc_req_status_update;
         tc_data.packet_id = tc_handler->packet_header.packet_id;
         tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+        tc_data.flags_ack = tc_handler->df_header.flag_ver_ack;
 
         return tc_data;
 

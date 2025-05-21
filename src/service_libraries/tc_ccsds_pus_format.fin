@@ -93,9 +93,9 @@ function get_subtype(tc_bytes : &[u8 ; max_tc_size]) -> u8 {
 	return subtype;
 }
 
-function get_source_id(tc_bytes : &[u8 ; max_tc_size]) -> u8 {
+function get_source_id(tc_bytes : &[u8 ; max_tc_size]) -> u16 {
 
-	var sourceID : u8 = (*tc_bytes)[9 : usize];
+	var sourceID : u16 = deserialize_uint16(&(*tc_bytes)[9 : usize .. 11 : usize]);
 	return sourceID;
 }
 

@@ -165,7 +165,7 @@ resource pus_service_20 : PUSService20 = {
 
 
 resource pus_service_17 : PUSService17 = {
-    exec_tc_req_status = PSExecTCReqStatus::ExecTC,
+    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps17_init_tc_req_status_update,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,

@@ -6,6 +6,11 @@ import service_libraries.pus_tc_handler;
 import service_libraries.pus_tm_handler;
 
 
+const ACCEPT_ACK_ENABLED_MASK : u8 = 0x01;
+const EXEC_START_ACK_ENABLED_MASK : u8 = 0x02;
+const EXEC_PROGRESS_ACK_ENABLED_MASK : u8 = 0x04;
+const EXEC_COMPLETION_ACK_ENABLED_MASK : u8 = 0x08;
+
 enum TCAcceptationStatus {
 	Accepted,
 	Rejected,
@@ -62,19 +67,58 @@ function is_apid_valid(tc_descriptor : &TCDescriptorT) -> bool {
 
 function is_sourceID_valid(tc_descriptor : &TCDescriptorT) -> bool {
 	
-	let Mission_TimeLine_SourceID : u8 = 110;
-	let TC_Sequences_SourceID : u8 = 111;
-	let Direct_Commands_SourceID : u8 = 120;
+	let System_SourceID : u16 = 0x78;
 
-	var sourceID : u8 = get_source_id(&(tc_descriptor->tc_bytes));
+	var sourceID : u16 = get_source_id(&(tc_descriptor->tc_bytes));
 
-	var is_valid : bool = ((Mission_TimeLine_SourceID == sourceID)
-		 || (TC_Sequences_SourceID == sourceID)
-		 || (Direct_Commands_SourceID == sourceID));
+	var is_valid : bool = (System_SourceID == sourceID);
 
 	return is_valid;
 }
 
+function is_tc_ack_accept_enabled(flags_ack : u8) -> bool{
+
+	var ack_enabled : bool = false;
+
+	if ((flags_ack & ACCEPT_ACK_ENABLED_MASK) != 0) {
+		ack_enabled = true;
+	}
+	return ack_enabled;
+
+}
+
+function is_tc_ack_start_exec_enabled(flags_ack : u8) -> bool{
+
+	var ack_enabled : bool = false;
+	
+	if ((flags_ack & EXEC_START_ACK_ENABLED_MASK) != 0) {
+		ack_enabled = true;
+	}
+	return ack_enabled;
+
+}
+
+function is_tc_ack_progress_exec_enabled(flags_ack : u8) -> bool{
+
+	var ack_enabled : bool = false;
+	
+	if ((flags_ack & EXEC_PROGRESS_ACK_ENABLED_MASK) != 0) {
+		ack_enabled = true;
+	}
+	return ack_enabled;
+
+}
+
+function is_tc_ack_completion_exec_enabled(flags_ack : u8) -> bool{
+
+	var ack_enabled : bool = false;
+	
+	if ((flags_ack & EXEC_COMPLETION_ACK_ENABLED_MASK) != 0) {
+		ack_enabled = true;
+	}
+	return ack_enabled;
+
+}
 
 
 function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {

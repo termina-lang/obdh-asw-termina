@@ -194,6 +194,7 @@ typedef struct {
 typedef struct {
     uint16_t packet_id;
     uint16_t packet_error_ctrl;
+    uint8_t flags_ack;
     size_t tc_num_bytes;
     PS12TC_1_2_6_Data tc_data_1_2_6;
     PS12TC_5_Data tc_data_5;

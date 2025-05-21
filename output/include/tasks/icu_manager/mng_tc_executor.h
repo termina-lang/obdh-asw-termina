@@ -31,6 +31,7 @@ typedef struct {
         void * __that;
         void (* exec_tc)(void * const, TCHandlerT * const,
                          __status_int32_t * const);
+        void (* get_current_obt)(void * const, MissionObt * const);
     } pus_service_9;
     struct {
         void * __that;
