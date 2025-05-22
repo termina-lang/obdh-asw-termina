@@ -30,7 +30,7 @@ function tc_handler_build_from_descriptor (tc_handler : &mut TCHandlerT, telecom
 
     tc_get_fields(&(telecommand->tc_bytes), &mut (tc_handler->packet_header), &mut (tc_handler->df_header), &mut (tc_handler->packet_error_ctrl));
 
-    tc_handler->app_data_index = 10;
+    tc_handler->app_data_index = 11;
 
     return;
 

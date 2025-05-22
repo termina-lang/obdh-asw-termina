@@ -57,7 +57,7 @@ void tc_handler_build_from_descriptor(TCHandlerT * const tc_handler,
                   &tc_handler->df_header, &tc_handler->packet_error_ctrl);
 
     #line 33 "src/service_libraries/pus_tc_handler.fin"
-    tc_handler->app_data_index = 10U;
+    tc_handler->app_data_index = 11U;
 
     #line 35 "src/service_libraries/pus_tc_handler.fin"
     return;
