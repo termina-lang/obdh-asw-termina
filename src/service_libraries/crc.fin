@@ -1,5 +1,16 @@
 import service_libraries.tc_ccsds_pus_format;
 
+/**
+ * @brief Computes the CRC-16 checksum of a byte array
+ * 
+ * This function implements the CRC-16-CCITT algorithm with the polynomial 0x1021 
+ * and initial value 0xFFFF. It is commonly used in CCSDS packet error detection.
+ * 
+ * @param[in] data     Reference to the array containing the bytes to be processed
+ * @param[in] nbytes   Number of bytes to process from the data array
+ * 
+ * @return The computed 16-bit CRC value
+ */
 function cal_crc_16 (data : & [u8; max_tc_size], nbytes : usize) -> u16  {
     
     var crc_value : u16 = 0xFFFF : u16;
@@ -25,26 +36,3 @@ function cal_crc_16 (data : & [u8; max_tc_size], nbytes : usize) -> u16  {
 }
 
 
-function rand_r (mutseed : &mut u32) -> u32 {
-    
-    var next : u32 = *mutseed;
-    var result : u32 = 0 : u32;
-
-    next = next * 1103515245 : u32;
-    next = next + 12345 : u32;
-    result = (next / 65536 : u32) % 2048 : u32;
-
-    next = next * 1103515245 : u32;
-    next = next + 12345 : u32;
-    result = result << 10 : u32;
-    result = result ^(next / 65536 : u32) % 1024 : u32;
-
-    next = next * 1103515245 : u32;
-    next = next + 12345 : u32;
-    result = result << 10 : u32;
-    result = result ^ (next / 65536 : u32) % 1024 : u32;
-
-    *mutseed = next;
-
-    return result;
-}

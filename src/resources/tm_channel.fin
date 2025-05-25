@@ -1,7 +1,17 @@
+/**
+ * @file tm_channel.fin
+ * @brief Implementation of a telemetry (TM) channel using UART communication.
+ */
+
 import resources.uart;
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.pus_tm_handler;
 
+
+/**
+ * @interface TMChannelIface
+ * @brief Interface for sending telemetry data.
+ */
 interface TMChannelIface {
 
     procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult);
@@ -9,59 +19,92 @@ interface TMChannelIface {
 };
 
 
+/**
+ * @class TMChannel
+ * @brief Concrete implementation of a telemetry channel using UART.
+ * 
+ * This class uses a UART driver to send CCSDS-PUS TM packets and handles memory management
+ * via an allocator.
+ */
 resource class TMChannel provides TMChannelIface {
 
-    uart : access UARTDriver;
+    /**
+     * @brief UART driver interface used to transmit telemetry data.
+     */
+    uart : access UARTDriverIface;
+
+    /**
+     * @brief Allocator pool for telemetry handlers.
+     */
     a_tm_handler_pool : access Allocator<TMHandlerT>;
 
 
+    /**
+     * @brief Sends a telemetry packet via UART using a framing protocol.
+     *
+     * The frame consists of a 4-byte preamble (0xBEBA BEEF), a 2-byte payload length,
+     * followed by the telemetry packet bytes. After transmission, the buffer is checked
+     * to ensure it is empty before releasing the telemetry handler back to the pool.
+     *
+     * @param[in] tm_handler  Boxed telemetry handler containing the TM packet to send.
+     * @param[out] result     Result object to indicate success or failure.
+     */
      procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult) {
 
         var tm_descriptor : TMDescriptorT = tm_handler.tm_descriptor;
 
+         /** @brief 6-byte frame header with preamble and length field */
         var frame_header : [u8;6] = [0 : u8;6];
+
+        /** @brief Timeout counter used while waiting for UART TX buffer to empty */
         var write_timeout : u32 = 0 : u32;
+
+        /** @brief Status flag to check if UART TX buffer is empty */
         var check : bool = false;
 
         *result = MyResult::Ok;
 
+        // Set preamble bytes
         frame_header[0 : usize] = 0xBE : u8;
         frame_header[1 : usize] = 0xBA : u8;
         frame_header[2 : usize] = 0xBE : u8;
         frame_header[3 : usize] = 0xEF : u8;
 
-    
+        // Set TM length in frame
         serialize_uint16(tm_descriptor.tm_num_bytes as u16, &mut frame_header[4 : usize .. 6 : usize]);
 
         var status : Status<i32> = Success;
 
+        // Send frame header bytes
         for i : u8 in 0 : u8 .. 6 : u8 while status is Success {
 
-            self->uart.riscv_putchar(frame_header[i as usize], &mut status);
+            self->uart.putchar(frame_header[i as usize], &mut status);
 
         }
 
+        // Send telemetry packet bytes
         for j : usize in 0 .. 256 while (j < tm_descriptor.tm_num_bytes) && (status is Success) {
 
-            self->uart.riscv_putchar(tm_descriptor.tm_bytes[j as usize], &mut status);
+            self->uart.putchar(tm_descriptor.tm_bytes[j as usize], &mut status);
 
         }
         
-        self->uart.riscv_uart_tf_is_empty(&mut check);
-
+        // Wait for UART TX buffer to become empty
+        self->uart.uart_tf_is_empty(&mut check);
         for k : u32 in 0 : u32 .. uart_timeout while check == false {
             
-            self->uart.riscv_uart_tf_is_empty(&mut check);
+            self->uart.uart_tf_is_empty(&mut check);
             write_timeout = write_timeout + 1 : u32;
 
         }
 
         if (write_timeout < uart_timeout){
 
-            //
+            // UART transmit buffer emptied within timeout
 
         }
   
+        // Free the telemetry handler back to the memory pool
         self->a_tm_handler_pool.free(tm_handler);
         
 
@@ -69,7 +112,6 @@ resource class TMChannel provides TMChannelIface {
 
     }
 
-         
 
    
-   };
+};

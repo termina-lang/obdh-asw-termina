@@ -1,0 +1,33 @@
+/**
+ * @brief Generates a pseudo-random number using a linear congruential generator
+ * 
+ * This function implements a simple reentrant pseudo-random number generator.
+ * The seed is updated on each call, allowing deterministic sequences per seed value.
+ * 
+ * @param[in,out] mutseed Pointer to a 32-bit seed value, which is updated internally
+ * 
+ * @return A 32-bit pseudo-random number
+ */
+function rand_r (mutseed : &mut u32) -> u32 {
+    
+    var next : u32 = *mutseed;
+    var result : u32 = 0 : u32;
+
+    next = next * 1103515245 : u32;
+    next = next + 12345 : u32;
+    result = (next / 65536 : u32) % 2048 : u32;
+
+    next = next * 1103515245 : u32;
+    next = next + 12345 : u32;
+    result = result << 10 : u32;
+    result = result ^(next / 65536 : u32) % 1024 : u32;
+
+    next = next * 1103515245 : u32;
+    next = next + 12345 : u32;
+    result = result << 10 : u32;
+    result = result ^ (next / 65536 : u32) % 1024 : u32;
+
+    *mutseed = next;
+
+    return result;
+}

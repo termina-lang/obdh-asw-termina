@@ -1,72 +1,133 @@
+/**
+ * @file uart.fin
+ * @brief UART driver implementation using memory-mapped register access.
+ */
 
-//#[packed]
+
+/**
+ * @struct UARTRegs
+ * @brief Memory-mapped UART register block.
+ *
+ * This structure represents the UART hardware registers.
+ */
+#[packed]
 struct UARTRegs {
+    /** Data register (read/write). */
     data : u32;
+
+    /** Status register (read-only). */
     status : u32;
-    control :  u32;
+
+    /** Control register (read/write). */
+    control : u32;
+
+    /** Clock scaler register (read/write). */
     scaler : u32;
 };
 
-interface UARTDriver {
 
-    procedure riscv_uart_tf_is_empty(&mut self, res : &mut bool);
+/**
+ * @interface UARTDriverIface
+ * @brief Interface for UART driver operations.
+ *
+ * Defines the basic UART functionality such as enabling features,
+ * checking buffer states, and transmitting/receiving data.
+ */
+interface UARTDriverIface {
 
-    procedure riscv_uart_enable_TX(&mut self);
+    procedure uart_tf_is_empty(&mut self, res : &mut bool);
 
-    procedure riscv_uart_enable_RX(&mut self);
+    procedure uart_enable_TX(&mut self);
 
-    procedure riscv_uart_enable_RI(&mut self);
+    procedure uart_enable_RX(&mut self);
+
+    procedure uart_enable_RI(&mut self);
     
-    procedure riscv_putchar(&mut self, c : u8, status : &mut Status<i32>);
+    procedure putchar(&mut self, c : u8, status : &mut Status<i32>);
 
-    procedure riscv_getchar(&mut self, uart_data : &mut Option<u8>);
+    procedure getchar(&mut self, uart_data : &mut Option<u8>);
 
 };
 
+
+/** 
+ * @brief Timeout value for UART transmit operations.
+ */
 constexpr uart_timeout : u32 = 0xAAAAA : u32;
 
-resource class CRISCVUARTDriver provides UARTDriver {
+
+/**
+ * @class UARTDriver
+ * @brief Concrete UART driver implementation.
+ *
+ * Provides memory-mapped register access to control and interact with the UART peripheral.
+ */
+resource class UARTDriver provides UARTDriverIface {
 
     uart_regs: loc UARTRegs;
 
-    viewer riscv_uart_tf_is_full(&self) -> bool {
+    /**
+     * @brief Checks if the transmit FIFO is full.
+     *
+     * @return True if the FIFO is full, false otherwise.
+     */
+    viewer uart_tf_is_full(&self) -> bool {
         let riscv_uart_tf : u32 = 0x00000200 : u32;
         return ((self->uart_regs.status & riscv_uart_tf) != 0);
     }
 
-    procedure riscv_uart_tf_is_empty(&mut self, res : &mut bool) {
+    /**
+     * @brief Check if the transmit FIFO is empty.
+     *
+     * @param[out] res Boolean value indicating if the transmit FIFO is empty.
+     */
+    procedure uart_tf_is_empty(&mut self, res : &mut bool) {
         let riscv_uart_te : u32 = 0x00000004 : u32;
         *res = ((self->uart_regs.status & riscv_uart_te) != 0);
         return;
     }
 
-
-    procedure riscv_uart_enable_TX(&mut self) {
+    /**
+     * @brief Enable UART transmitter.
+     */
+    procedure uart_enable_TX(&mut self) {
         let riscv_uart_txe : u32 = 0x00000002 : u32;
         self->uart_regs.control = self->uart_regs.control | riscv_uart_txe;
         return;
     }
 
-    procedure riscv_uart_enable_RX(&mut self) {
+    /**
+     * @brief Enable UART receiver.
+     */
+    procedure uart_enable_RX(&mut self) {
         let riscv_uart_rxe : u32 = 0x00000001 : u32;
         self->uart_regs.control = self->uart_regs.control | riscv_uart_rxe;
         return;
     }
 
-    procedure riscv_uart_enable_RI(&mut self) {
+    /**
+     * @brief Enable UART receive interrupt.
+     */
+    procedure uart_enable_RI(&mut self) {
         let riscv_uart_ri : u32 = 0x00000004 : u32;
         self->uart_regs.control = self->uart_regs.control | riscv_uart_ri;
         return;
     }
 
     
-    procedure riscv_putchar(&mut self, c : u8, status : &mut Status<i32>) {
+     /**
+     * @brief Transmit a single character through UART.
+     *
+     * @param[in] c Character to transmit.
+     * @param[out] status Indicates success or timeout failure.
+     */
+    procedure putchar(&mut self, c : u8, status : &mut Status<i32>) {
         
         var write_timeout : u32 = 0 : u32;
 
         *status = Failure(-1);
 
-        for i : u32 in 0 : u32 .. uart_timeout while self->riscv_uart_tf_is_full() {
+        for i : u32 in 0 : u32 .. uart_timeout while self->uart_tf_is_full() {
             
             write_timeout = write_timeout + 1 : u32;
 
@@ -82,7 +143,12 @@ resource class CRISCVUARTDriver provides UARTDriver {
     }
 
 
-  procedure riscv_getchar(&mut self, uart_data : &mut Option<u8>) {
+    /**
+     * @brief Receive a character from UART if available.
+     *
+     * @param[out] uart_data Option containing received character or None if not available.
+     */
+    procedure getchar(&mut self, uart_data : &mut Option<u8>) {
         
         let riscv_uart_dr : u32 = 0x00000001;
 

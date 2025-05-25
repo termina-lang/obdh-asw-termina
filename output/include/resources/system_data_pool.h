@@ -5,14 +5,6 @@
 
 #include "option.h"
 
-extern const size_t sdp_last_u32_param_id;
-
-extern const size_t sdp_last_u8_param_id;
-
-extern const size_t sdp_first_u32_param_id;
-
-extern const size_t sdp_first_u8_param_id;
-
 typedef enum {
     DataPoolItemType__u8_t,
     DataPoolItemType__u32_t,

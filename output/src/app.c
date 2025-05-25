@@ -19,7 +19,7 @@ _Atomic uint32_t u32_system_data_pool[12U];
 
 _Atomic uint8_t u8_system_data_pool[18U];
 
-CRISCVUARTDriver uart_driver;
+UARTDriver uart_driver;
 
 GPIODriver gpio_drv;
 
@@ -51,7 +51,7 @@ ManagerTCExecutor mng_tc_executor;
 
 Init init;
 
-CRISCVUARTHandler uart_handler;
+UARTHandler uart_handler;
 
 ICUManager icu_manager;
 

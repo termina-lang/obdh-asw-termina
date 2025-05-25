@@ -42,7 +42,7 @@ extern _Atomic uint32_t u32_system_data_pool[12U];
 
 extern _Atomic uint8_t u8_system_data_pool[18U];
 
-extern CRISCVUARTDriver uart_driver;
+extern UARTDriver uart_driver;
 
 extern GPIODriver gpio_drv;
 
@@ -74,7 +74,7 @@ extern ManagerTCExecutor mng_tc_executor;
 
 extern Init init;
 
-extern CRISCVUARTHandler uart_handler;
+extern UARTHandler uart_handler;
 
 extern ICUManager icu_manager;
 

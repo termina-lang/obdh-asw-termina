@@ -85,7 +85,7 @@ static void __termina_app__init_emitters(int32_t * const status) {
         __termina_interrupt_connection_t connection;
         connection.type = __TerminaEmitterConnectionType__Handler;
         connection.handler.handler_object = (void *)&uart_handler;
-        connection.handler.handler_action = CRISCVUARTHandler__handle;
+        connection.handler.handler_action = UARTHandler__handle;
 
         __termina_interrupt__init(3, &connection, status);
 
@@ -237,22 +237,40 @@ static void __termina_app__enable_protection() {
     hk_fdir.a_tc_handler_pool.alloc = __termina_pool__alloc__task_lock;
     hk_fdir.a_tc_handler_pool.free = __termina_pool__free__task_lock;
 
+    hk_fdir.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    hk_fdir.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    hk_fdir.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    hk_fdir.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    hk_fdir.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
     icu_manager.a_tc_handler_pool.alloc = __termina_pool__alloc__task_lock;
     icu_manager.a_tc_handler_pool.free = __termina_pool__free__task_lock;
 
     pus_bkg_tc_executor.a_tc_handler_pool.alloc = __termina_pool__alloc__task_lock;
     pus_bkg_tc_executor.a_tc_handler_pool.free = __termina_pool__free__task_lock;
 
+    pus_bkg_tc_executor.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
+    pus_bkg_tc_executor.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
+
+    pus_bkg_tc_executor.pus_service_9.get_current_obt = PUSService9__get_current_obt__mutex_lock;
+
+    pus_bkg_tc_executor.tm_channel.send_tm = TMChannel__send_tm__mutex_lock;
+
+    pus_bkg_tc_executor.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count__mutex_lock;
+
     init.gpio_driver.init_gpio = GPIODriver__init_gpio__event_lock;
 
-    init.uart.riscv_uart_enable_TX = CRISCVUARTDriver__riscv_uart_enable_TX__event_lock;
-    init.uart.riscv_uart_enable_RX = CRISCVUARTDriver__riscv_uart_enable_RX__event_lock;
-    init.uart.riscv_uart_enable_RI = CRISCVUARTDriver__riscv_uart_enable_RI__event_lock;
+    init.uart.uart_enable_TX = UARTDriver__uart_enable_TX__event_lock;
+    init.uart.uart_enable_RX = UARTDriver__uart_enable_RX__event_lock;
+    init.uart.uart_enable_RI = UARTDriver__uart_enable_RI__event_lock;
 
     uart_handler.a_tc_handler_pool.alloc = __termina_pool__alloc__event_lock;
     uart_handler.a_tc_handler_pool.free = __termina_pool__free__event_lock;
 
-    uart_handler.uart.riscv_getchar = CRISCVUARTDriver__riscv_getchar__event_lock;
+    uart_handler.uart.getchar = UARTDriver__getchar__event_lock;
 
 }
 

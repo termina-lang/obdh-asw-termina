@@ -59,6 +59,10 @@ typedef struct {
     } tm_channel;
 } ManagerTCExecutor;
 
+void ManagerTCExecutor__manage_error_in_acceptance(const ManagerTCExecutor * const self,
+                                                   const TCHandlerT * const tc_handler,
+                                                   __status_int32_t * const ret);
+
 void ManagerTCExecutor__PUS_prio_exec_tc(void * const __this,
                                          TCHandlerT * const tc_handler,
                                          __status_int32_t * const ret,

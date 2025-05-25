@@ -2,17 +2,26 @@ import service_libraries.tc_ccsds_pus_format;
 import service_libraries.errors;
 
 
+/**
+ * @brief Structure to handle telecommands (TC) and facilitate field extraction
+ *
+ * This structure holds the parsed components of a TC packet, including headers and
+ * indexing information for accessing application data fields.
+ */
 struct TCHandlerT {
-
-    tc_descriptor : TCDescriptorT;
-    packet_header : CCSDSPUSTCPacketHeaderT;
-    df_header : CCSDSPUSTCDFHeaderT;
-    packet_error_ctrl : u16;
-    app_data_index : usize;
-
+    tc_descriptor : TCDescriptorT;                 ///< Raw telecommand descriptor
+    packet_header : CCSDSPUSTCPacketHeaderT;       ///< CCSDS primary header
+    df_header : CCSDSPUSTCDFHeaderT;               ///< PUS data field header
+    packet_error_ctrl : u16;                       ///< Error control field
+    app_data_index : usize;                        ///< Index to the next application data byte
 };
 
 
+/**
+ * @brief Initializes a TC handler structure with default values
+ *
+ * @return A new TCHandlerT instance with all fields set to zero or empty
+ */
 function tc_handler_init () -> TCHandlerT {
 
     var tc_handler : TCHandlerT = {tc_descriptor = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0}, packet_header = {packet_id = 0, packet_seq_ctrl = 0, packet_length = 0}, df_header = {flag_ver_ack = 0, type = 0, subtype = 0, sourceID = 0}, packet_error_ctrl = 0, app_data_index = 0};
@@ -20,6 +29,14 @@ function tc_handler_init () -> TCHandlerT {
     return tc_handler;
 }
 
+/**
+ * @brief Fills a TC handler with data from a telecommand descriptor
+ *
+ * Parses the TC header and DF header and sets the internal app data index.
+ *
+ * @param tc_handler Pointer to the TC handler structure to populate
+ * @param telecommand Pointer to the telecommand descriptor to parse
+ */
 function tc_handler_build_from_descriptor (tc_handler : &mut TCHandlerT, telecommand : &TCDescriptorT) {
 
 
@@ -36,6 +53,14 @@ function tc_handler_build_from_descriptor (tc_handler : &mut TCHandlerT, telecom
 
 }
 
+/**
+ * @brief Checks if the next application data field can be read safely
+ *
+ * @param tc_handler Pointer to the TC handler
+ * @param field_size Number of bytes to check
+ *
+ * @return true if enough bytes are available, false otherwise
+ */
 function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandlerT, field_size : usize) -> bool {
 
 	var res : bool = false;
@@ -52,6 +77,17 @@ function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandlerT, field
 
 }
 
+
+/**
+ * @brief Extracts a single byte from the application data
+ *
+ * Advances the internal application data index by 1 if successful.
+ *
+ * @param tc_handler Pointer to the TC handler
+ * @param data Output parameter to store the extracted byte
+ *
+ * @return MyResult::Ok if successful, MyResult::Error otherwise
+ */
 function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u8) -> MyResult {
 
 	var res : MyResult = MyResult::Ok;
@@ -71,6 +107,16 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &
 
 }
 
+/**
+ * @brief Extracts a 16-bit unsigned integer from the application data
+ *
+ * Advances the internal application data index by 2 if successful.
+ *
+ * @param tc_handler Pointer to the TC handler
+ * @param data Output parameter to store the extracted 16-bit word
+ *
+ * @return MyResult::Ok if successful, MyResult::Error otherwise
+ */
 function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> MyResult {
 
 	var res : MyResult = MyResult::Ok;
@@ -90,6 +136,16 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
 }
 
+/**
+ * @brief Extracts a 32-bit unsigned integer from the application data
+ *
+ * Advances the internal application data index by 4 if successful.
+ *
+ * @param tc_handler Pointer to the TC handler
+ * @param data Output parameter to store the extracted 32-bit word
+ *
+ * @return MyResult::Ok if successful, MyResult::Error otherwise
+ */
 function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u32) -> MyResult {
 
 	var res : MyResult = MyResult::Ok;

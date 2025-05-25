@@ -1,10 +1,20 @@
+/**
+ * @file pus_service9_help.fin
+ * @brief Imports and definitions related to PUS Service 9.
+ */
+
 import service_libraries.pus_services.pus_services;
 import service_libraries.pus_tm_handler;
 import resources.tm_channel;
 import service_libraries.pus_services.pus_service1.pus_service1;
 
 
-
+/**
+ * @struct PS9ExecTCReqStatusUpdate
+ * @brief Data structure representing the updated status of a telecommand execution request.
+ *
+ * Contains tc packet fields needed for complete telecommand execution.
+ */
 struct PS9ExecTCReqStatusUpdate {
     packet_id : u16;
     packet_error_ctrl : u16;
@@ -14,7 +24,16 @@ struct PS9ExecTCReqStatusUpdate {
 };
 
 
-
+/**
+ * @brief Subtracts two TimeVal structures.
+ * 
+ * Computes the difference between timeval1 and timeval2 and returns the resulting TimeVal.
+ * Handles microseconds underflow by borrowing one second.
+ * 
+ * @param timeval1 First time value (minuend)
+ * @param timeval2 Second time value (subtrahend)
+ * @return TimeVal The result of the subtraction (timeval1 - timeval2)
+ */
 function substract_TimeVal(timeval1: TimeVal, timeval2: TimeVal) -> TimeVal {
     var result : TimeVal = {tv_sec = 0, tv_usec = 0};
     result.tv_sec = timeval1.tv_sec - timeval2.tv_sec;
@@ -26,7 +45,11 @@ function substract_TimeVal(timeval1: TimeVal, timeval2: TimeVal) -> TimeVal {
     return result;
 }
 
-
+/**
+ * @brief Constant initialization of the PS17ExecTCReqStatusUpdate structure.
+ *
+ * Default initialization with zeroed fields.
+ */
 constexpr ps9_init_tc_req_status_update : PS9ExecTCReqStatusUpdate = {
     packet_id = 0, packet_error_ctrl = 0, flags_ack = 0, tc_num_bytes = 0, next_OBT = {seconds = 0, finetime = 0}
 };

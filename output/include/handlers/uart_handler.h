@@ -11,46 +11,45 @@
 #include "option.h"
 
 typedef enum {
-    RISCVUARTHandlerState__RXFrameHeader,
-    RISCVUARTHandlerState__RXTelecommandSize,
-    RISCVUARTHandlerState__RXTelecommand,
-    RISCVUARTHandlerState__RXTelecommandFinished
-} __enum_RISCVUARTHandlerState_t;
+    UARTHandlerState__RXFrameHeader,
+    UARTHandlerState__RXTelecommandSize,
+    UARTHandlerState__RXTelecommand,
+    UARTHandlerState__RXTelecommandFinished
+} __enum_UARTHandlerState_t;
 
 typedef struct {
     size_t __0;
-} __enum_RISCVUARTHandlerState__RXFrameHeader_params_t;
+} __enum_UARTHandlerState__RXFrameHeader_params_t;
 
 typedef struct {
     _Bool __0;
-} __enum_RISCVUARTHandlerState__RXTelecommandSize_params_t;
+} __enum_UARTHandlerState__RXTelecommandSize_params_t;
 
 typedef struct {
     size_t __0;
-} __enum_RISCVUARTHandlerState__RXTelecommand_params_t;
+} __enum_UARTHandlerState__RXTelecommand_params_t;
 
 typedef struct {
-    __enum_RISCVUARTHandlerState_t __variant;
+    __enum_UARTHandlerState_t __variant;
     union {
-        __enum_RISCVUARTHandlerState__RXFrameHeader_params_t RXFrameHeader;
-        __enum_RISCVUARTHandlerState__RXTelecommandSize_params_t RXTelecommandSize;
-        __enum_RISCVUARTHandlerState__RXTelecommand_params_t RXTelecommand;
+        __enum_UARTHandlerState__RXFrameHeader_params_t RXFrameHeader;
+        __enum_UARTHandlerState__RXTelecommandSize_params_t RXTelecommandSize;
+        __enum_UARTHandlerState__RXTelecommand_params_t RXTelecommand;
     };
-} RISCVUARTHandlerState;
+} UARTHandlerState;
 
 typedef struct {
     __termina_id_t __handler_id;
-    RISCVUARTHandlerState handler_state;
+    UARTHandlerState handler_state;
     TCDescriptorT telecommand;
     __termina_allocator_t a_tc_handler_pool;
     struct {
         void * __that;
-        void (* riscv_getchar)(void * const, __option_uint8_t * const);
+        void (* getchar)(void * const, __option_uint8_t * const);
     } uart;
     __termina_out_port_t tc_message_queue_output;
-} CRISCVUARTHandler;
+} UARTHandler;
 
-__status_int32_t CRISCVUARTHandler__handle(void * const __this,
-                                           uint32_t _vector);
+__status_int32_t UARTHandler__handle(void * const __this, uint32_t _vector);
 
 #endif

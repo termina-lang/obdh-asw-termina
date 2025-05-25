@@ -60,9 +60,9 @@ void __termina_app__init_globals() {
     telemetry_channel.a_tm_handler_pool.free = __termina_pool__free;
     telemetry_channel.uart.__that = &uart_driver;
     #line 58 "app/app.fin"
-    telemetry_channel.uart.riscv_uart_tf_is_empty = CRISCVUARTDriver__riscv_uart_tf_is_empty;
+    telemetry_channel.uart.uart_tf_is_empty = UARTDriver__uart_tf_is_empty;
     #line 58 "app/app.fin"
-    telemetry_channel.uart.riscv_putchar = CRISCVUARTDriver__riscv_putchar;
+    telemetry_channel.uart.putchar = UARTDriver__putchar;
     telemetry_counter.tm_count = 0U;
     pus_service_9.a_tm_handler_pool.__that = &tm_pool;
     pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
@@ -447,12 +447,12 @@ void __termina_app__init_globals() {
     pus_service_12.do_monitoring_req_status.__variant = DoMonitoringReqStatus__Init;
     pus_service_12.do_monitoring_req_status_update.EvID = 0U;
     pus_service_12.do_monitoring_req_status_update.PMONID = 0U;
-    #line 118 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 121 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.do_monitoring_req_status_update.current_monitor_definition.__variant = MonitorDefinition__Unselected;
     pus_service_12.do_monitoring_req_status_update.event_triggered = 0;
-    #line 119 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 122 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.do_monitoring_req_status_update.fault_info.__variant = FaultInfo__Empty;
-    #line 120 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 123 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.do_monitoring_req_status_update.new_status.__variant = CheckState__Unselected;
     #line 121 "app/app.fin"
     pus_service_12.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
@@ -464,20 +464,20 @@ void __termina_app__init_globals() {
     pus_service_12.exec_tc_req_status_update.tc_data_5.N = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.PMONID = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.PID = 0U;
-    #line 180 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 183 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.current_state.__variant = CheckState__Unselected;
-    #line 173 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 176 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.definition.__variant = MonitorDefinition__Unselected;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.enabled = 0;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.interval = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.interval_control = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.repetition = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.repetition_control = 0U;
-    #line 179 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 182 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.temp_state.__variant = CheckState__Unselected;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.transition_obt.finetime = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.transition_obt.seconds = 0U;
-    #line 171 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 174 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.type.__variant = MonitorCheckType__Free;
     pus_service_12.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_12.monitoring_transition_counter = 0U;
@@ -539,7 +539,7 @@ void __termina_app__init_globals() {
     #line 138 "app/app.fin"
     pus_service_19.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
-        #line 52 "src/service_libraries/pus_services/pus_service19/pus_service19_help.fin"
+        #line 57 "src/service_libraries/pus_services/pus_service19/pus_service19_help.fin"
         pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_bytes[__i0] = 0U;
     }
     pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_num_bytes = 0U;
@@ -741,16 +741,16 @@ void __termina_app__init_globals() {
     init.system_data_pool_u8 = u8_system_data_pool;
     init.uart.__that = &uart_driver;
     #line 221 "app/app.fin"
-    init.uart.riscv_uart_enable_TX = CRISCVUARTDriver__riscv_uart_enable_TX;
+    init.uart.uart_enable_TX = UARTDriver__uart_enable_TX;
     #line 221 "app/app.fin"
-    init.uart.riscv_uart_enable_RX = CRISCVUARTDriver__riscv_uart_enable_RX;
+    init.uart.uart_enable_RX = UARTDriver__uart_enable_RX;
     #line 221 "app/app.fin"
-    init.uart.riscv_uart_enable_RI = CRISCVUARTDriver__riscv_uart_enable_RI;
+    init.uart.uart_enable_RI = UARTDriver__uart_enable_RI;
     uart_handler.a_tc_handler_pool.__that = &tc_pool;
     uart_handler.a_tc_handler_pool.alloc = __termina_pool__alloc;
     uart_handler.a_tc_handler_pool.free = __termina_pool__free;
     #line 240 "app/app.fin"
-    uart_handler.handler_state.__variant = RISCVUARTHandlerState__RXFrameHeader;
+    uart_handler.handler_state.__variant = UARTHandlerState__RXFrameHeader;
     uart_handler.handler_state.RXFrameHeader.__0 = 0U;
     uart_handler.tc_message_queue_output = &tc_message_queue;
     for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
@@ -760,7 +760,7 @@ void __termina_app__init_globals() {
     uart_handler.telecommand.tc_num_bytes = 0U;
     uart_handler.uart.__that = &uart_driver;
     #line 230 "app/app.fin"
-    uart_handler.uart.riscv_getchar = CRISCVUARTDriver__riscv_getchar;
+    uart_handler.uart.getchar = UARTDriver__getchar;
     icu_manager.a_tc_handler_pool.__that = &tc_pool;
     icu_manager.a_tc_handler_pool.alloc = __termina_pool__alloc;
     icu_manager.a_tc_handler_pool.free = __termina_pool__free;
@@ -776,6 +776,9 @@ void __termina_app__init_globals() {
     hk_fdir.a_tc_handler_pool.__that = &tc_pool;
     hk_fdir.a_tc_handler_pool.alloc = __termina_pool__alloc;
     hk_fdir.a_tc_handler_pool.free = __termina_pool__free;
+    hk_fdir.a_tm_handler_pool.__that = &tm_pool;
+    hk_fdir.a_tm_handler_pool.alloc = __termina_pool__alloc;
+    hk_fdir.a_tm_handler_pool.free = __termina_pool__free;
     hk_fdir.action_tc_message_queue_output = &action_tc_message_queue;
     hk_fdir.pus_service_12.__that = &pus_service_12;
     #line 256 "app/app.fin"
@@ -812,12 +815,33 @@ void __termina_app__init_globals() {
     hk_fdir.pus_service_5.is_Ev_ID_enabled_ext = PUSService5__is_Ev_ID_enabled_ext;
     #line 256 "app/app.fin"
     hk_fdir.pus_service_5.build_and_tx_tm_5_x = PUSService5__build_and_tx_tm_5_x;
+    hk_fdir.pus_service_9.__that = &pus_service_9;
+    #line 256 "app/app.fin"
+    hk_fdir.pus_service_9.get_current_obt = PUSService9__get_current_obt;
+    hk_fdir.tm_channel.__that = &telemetry_channel;
+    #line 256 "app/app.fin"
+    hk_fdir.tm_channel.send_tm = TMChannel__send_tm;
+    hk_fdir.tm_counter.__that = &telemetry_counter;
+    #line 256 "app/app.fin"
+    hk_fdir.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
     pus_bkg_tc_executor.a_tc_handler_pool.__that = &tc_pool;
     pus_bkg_tc_executor.a_tc_handler_pool.alloc = __termina_pool__alloc;
     pus_bkg_tc_executor.a_tc_handler_pool.free = __termina_pool__free;
+    pus_bkg_tc_executor.a_tm_handler_pool.__that = &tm_pool;
+    pus_bkg_tc_executor.a_tm_handler_pool.alloc = __termina_pool__alloc;
+    pus_bkg_tc_executor.a_tm_handler_pool.free = __termina_pool__free;
     pus_bkg_tc_executor.pus_service_20.__that = &pus_service_20;
-    #line 270 "app/app.fin"
+    #line 274 "app/app.fin"
     pus_bkg_tc_executor.pus_service_20.exec_tc = PUSService20__exec_tc;
+    pus_bkg_tc_executor.pus_service_9.__that = &pus_service_9;
+    #line 274 "app/app.fin"
+    pus_bkg_tc_executor.pus_service_9.get_current_obt = PUSService9__get_current_obt;
+    pus_bkg_tc_executor.tm_channel.__that = &telemetry_channel;
+    #line 274 "app/app.fin"
+    pus_bkg_tc_executor.tm_channel.send_tm = TMChannel__send_tm;
+    pus_bkg_tc_executor.tm_counter.__that = &telemetry_counter;
+    #line 274 "app/app.fin"
+    pus_bkg_tc_executor.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
 
     return;
 

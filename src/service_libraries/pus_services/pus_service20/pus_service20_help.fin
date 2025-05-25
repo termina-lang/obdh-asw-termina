@@ -1,3 +1,7 @@
+/**
+ * @file pus_service20_help.fin
+ * @brief Imports and definitions related to PUS Service 20.
+ */
 
 import resources.system_data_pool;
 import service_libraries.pus_services.pus_services;

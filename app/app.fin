@@ -45,9 +45,9 @@ resource u8_system_data_pool : AtomicArray<u8; sdp_num_u8_params> = {
 } : AtomicArray<u8; sdp_num_u8_params>;
 
 
-resource uart_driver : CRISCVUARTDriver = {
+resource uart_driver : UARTDriver = {
     uart_regs @ 0x80000100 
-} : CRISCVUARTDriver;
+} : UARTDriver;
 
 
 resource gpio_drv : GPIODriver = {
@@ -227,7 +227,7 @@ handler init : Init = {
 } : Init;
 
 
-handler uart_handler : CRISCVUARTHandler = {
+handler uart_handler : UARTHandler = {
     tc_message_queue_output -> tc_message_queue,
     uart <-> uart_driver,
     a_tc_handler_pool <-> tc_pool,
@@ -237,8 +237,8 @@ handler uart_handler : CRISCVUARTHandler = {
             tc_bytes = [0 : u8; 256],
             tc_num_bytes = 0 : usize
         },
-    handler_state = RISCVUARTHandlerState::RXFrameHeader(0)
-} : CRISCVUARTHandler;
+    handler_state = UARTHandlerState::RXFrameHeader(0)
+} : UARTHandler;
 
 
 #[priority(5: u32)]
@@ -262,7 +262,11 @@ task hk_fdir : HouseKeepingFDIR = {
     pus_service_12 <-> pus_service_12,
     pus_service_5 <-> pus_service_5,
     pus_service_19 <-> pus_service_19,
-    pus_service_4 <-> pus_service_4
+    pus_service_4 <-> pus_service_4,
+    pus_service_9 <-> pus_service_9,
+    tm_channel <-> telemetry_channel,
+    tm_counter <-> telemetry_counter,
+    a_tm_handler_pool <-> tm_pool
 } : HouseKeepingFDIR;
 
 
@@ -270,7 +274,11 @@ task hk_fdir : HouseKeepingFDIR = {
 task pus_bkg_tc_executor : PUSBKGTCExecutor = {
     bkg_message_queue_input <- bkg_message_queue,
     a_tc_handler_pool  <-> tc_pool,
-    pus_service_20 <-> pus_service_20
+    pus_service_20 <-> pus_service_20,
+    pus_service_9 <-> pus_service_9,
+    tm_channel <-> telemetry_channel,
+    tm_counter <-> telemetry_counter,
+    a_tm_handler_pool <-> tm_pool
 } : PUSBKGTCExecutor;
 
 

@@ -9,6 +9,4 @@
 
 uint16_t cal_crc_16(const uint8_t data[256U], size_t nbytes);
 
-uint32_t rand_r(uint32_t * const mutseed);
-
 #endif

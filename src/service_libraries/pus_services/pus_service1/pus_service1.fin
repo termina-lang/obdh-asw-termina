@@ -1,11 +1,28 @@
-/*
-PUS SERVICE 1 : REQUEST VERIFICATION SERVICE
-*/
+/**
+ * @file pus_service1.fin
+ * @brief Implementation of PUS Service 1 (Request Verification Service)
+ */
 
 import service_libraries.pus_services.pus_service1.pus_service1_help;
 import service_libraries.pus_services.pus_service1.pus_service_1_build_tm_1_x;
 
-// Will I be using this function for action TCs???
+
+
+/**
+ * @brief Determines the execution control strategy for a given telecommand.
+ *
+ * This function classifies the telecommand (TC) based on its type, 
+ * and selects an appropriate execution control category.
+ *
+ * - Types 9, 17, and 128 → ExecCtrlPrioTC
+ * - Types 3, 5, 12, and 19 → ExecCtrlHK_FDIRTC
+ * - Type 20 → ExecCtrlBKGTC
+ *
+ * @note This function assumes the TC is already validated and only routes it.
+ *
+ * @param tc_descriptor Reference to the TCDescriptorT structure containing the TC bytes.
+ * @return TCExecutionCtrl indicating how the TC should be executed.
+ */
 function handle_tc(tc_descriptor: &TCDescriptorT) -> TCExecutionCtrl {
 
 	var type : u8 = get_type(&(tc_descriptor->tc_bytes));
@@ -30,6 +47,22 @@ function handle_tc(tc_descriptor: &TCDescriptorT) -> TCExecutionCtrl {
 	return exec_ctrl;
 } 
 
+
+/**
+ * @brief Verifies whether a telecommand (TC) is acceptable for execution.
+ *
+ * This function performs acceptation checks on a TC based on:
+ * - CRC validity
+ * - APID validity
+ * - Source ID validity
+ * 
+ * If the TC passes all checks, the function determines whether the type and subtype
+ * combination is supported and sets the execution category accordingly.
+ *
+ * @param tc_descriptor Reference to the TCDescriptorT structure to be verified.
+ * @return TCStatus structure indicating the result of the acceptation check,
+ *         including acceptation status, execution strategy, and error code (if any).
+ */
 function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 
 	var status : TCStatus = {acceptation_status = TCAcceptationStatus::Undefined,

@@ -1,41 +1,62 @@
 import service_libraries.pus_services.pus_service1.pus_service1_help;
 
-//Error codes for TM[1,4] packets
-const TM_1_4_TC_X_Y_TC_SHORT_PACK_LENGTH 		: u8 = 1;
-const TM_1_4_TC_X_Y_TC_NOT_VALID_NUM_OF_INSTR 	: u8 = 2;
-const TM_1_4_TC_2_X_DEVICE_NOT_VALID  			: u8 = 3;
-const TM_1_4_TC_2_X_DEVICE_ADDRESS_NOT_VALID 	: u8 = 4;
-const TM_1_4_TC_3_X_INVALID_SID 				: u8 = 5;
-const TM_1_4_TC_4_7_PID_STATS_UNDEFINED			: u8 = 6;
-const TM_1_4_TC_5_X_INVALID_EV_ID				: u8 = 7;
-const TM_1_4_TC_6_X_INVALID_MEMORY_ADDRESS		: u8 = 8;
-const TM_1_4_TC_6_X_MEMORY_ID_READ_ONLY			: u8 = 9;
-const TM_1_4_TC_6_X_OUT_OF_MEMORY_ID_LIMITS		: u8 = 10;
-const TM_1_4_TC_11_X_SCHED_TC_REJECTED 			: u8 = 11;
-const TM_1_4_TC_11_X_INVALID_SCHED_TIME			: u8 = 12;
-const TM_1_4_TC_12_X_PMON_UNDEFINED				: u8 = 13;
-const TM_1_4_TC_12_X_PMON_DEFINED				: u8 = 14;
-const TM_1_4_TC_12_X_PMON_ENABLED				: u8 = 15;
-const TM_1_4_TC_12_X_INVALID_PMONID				: u8 = 16;
-const TM_1_4_TC_12_X_INVALID_PMON_DEFINITION	: u8 = 17;
-const TM_1_4_TC_15_X_INVALID_PACKET_STORE		: u8 = 18;
-const TM_1_4_TC_19_X_EV_ACTION_IS_ENABLED  		: u8 = 19;
-const TM_1_4_TC_19_1_EV_ACTION_REJECTED 		: u8 = 20;
-const TM_1_4_TC_19_X_EV_ACTION_NOT_DEFINED      : u8 = 21;
-const TM_1_4_TC_20_X_INVALID_PID 				: u8 = 22;
-const TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC 		: u8 = 23;
-const TM_1_4_ERROR_IN_ACCEPTANCE 				: u8 = 24;	
+/// @defgroup TM_1_4_ErrorCodes Error Codes for TM[1,4] Packets
+/// @{
+/// Error codes used to indicate failure reasons in TM[1,4] packets.
 
-//Error codes for TM[1,8] packets
-const TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA	   : u8 = 1;
-const TM_1_8_TM_2_1_DEV_COMMAND_EXEC_ERROR	   : u8 = 2;
-const TM_1_8_TC_4_1_NOT_FREE_PID_STATS_CONFIG  : u8 = 3;
-const TM_1_8_TC_6_X_MEM_ACCESS_FAIL			   : u8 = 4;
-const TM_1_8_TC_11_X_SCHED_TC_POOL_EMPTY	   : u8 = 5;
-const TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED    : u8 = 6;
+const TM_1_4_TC_X_Y_TC_SHORT_PACK_LENGTH       : u8 = 1;  ///< TC packet is too short.
+const TM_1_4_TC_X_Y_TC_NOT_VALID_NUM_OF_INSTR  : u8 = 2;  ///< Invalid number of instructions.
+const TM_1_4_TC_2_X_DEVICE_NOT_VALID           : u8 = 3;  ///< Device not valid.
+const TM_1_4_TC_2_X_DEVICE_ADDRESS_NOT_VALID   : u8 = 4;  ///< Invalid device address.
+const TM_1_4_TC_3_X_INVALID_SID                : u8 = 5;  ///< Invalid SID (Structure Identifier).
+const TM_1_4_TC_4_7_PID_STATS_UNDEFINED        : u8 = 6;  ///< PID statistics undefined.
+const TM_1_4_TC_5_X_INVALID_EV_ID              : u8 = 7;  ///< Invalid event ID.
+const TM_1_4_TC_6_X_INVALID_MEMORY_ADDRESS     : u8 = 8;  ///< Invalid memory address.
+const TM_1_4_TC_6_X_MEMORY_ID_READ_ONLY        : u8 = 9;  ///< Memory ID is read-only.
+const TM_1_4_TC_6_X_OUT_OF_MEMORY_ID_LIMITS    : u8 = 10; ///< Memory ID out of valid range.
+const TM_1_4_TC_11_X_SCHED_TC_REJECTED         : u8 = 11; ///< Scheduled TC rejected.
+const TM_1_4_TC_11_X_INVALID_SCHED_TIME        : u8 = 12; ///< Invalid scheduling time.
+const TM_1_4_TC_12_X_PMON_UNDEFINED            : u8 = 13; ///< Performance monitor undefined.
+const TM_1_4_TC_12_X_PMON_DEFINED              : u8 = 14; ///< Performance monitor already defined.
+const TM_1_4_TC_12_X_PMON_ENABLED              : u8 = 15; ///< Performance monitor already enabled.
+const TM_1_4_TC_12_X_INVALID_PMONID            : u8 = 16; ///< Invalid performance monitor ID.
+const TM_1_4_TC_12_X_INVALID_PMON_DEFINITION   : u8 = 17; ///< Invalid performance monitor definition.
+const TM_1_4_TC_15_X_INVALID_PACKET_STORE      : u8 = 18; ///< Invalid packet store reference.
+const TM_1_4_TC_19_X_EV_ACTION_IS_ENABLED      : u8 = 19; ///< Event action is already enabled.
+const TM_1_4_TC_19_1_EV_ACTION_REJECTED        : u8 = 20; ///< Event action rejected.
+const TM_1_4_TC_19_X_EV_ACTION_NOT_DEFINED     : u8 = 21; ///< Event action not defined.
+const TM_1_4_TC_20_X_INVALID_PID               : u8 = 22; ///< Invalid PID.
+const TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC      : u8 = 23; ///< PID is read-only via TC.
+const TM_1_4_ERROR_IN_ACCEPTANCE               : u8 = 24; ///< Error occurred during acceptance.
+/// @}
 
 
+/// @defgroup TM_1_8_ErrorCodes Error Codes for TM[1,8] Packets
+/// @{
+/// Error codes used to indicate failure reasons in TM[1,8] packets.
 
+const TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA    : u8 = 1; ///< Application data exceeded limits.
+const TM_1_8_TM_2_1_DEV_COMMAND_EXEC_ERROR     : u8 = 2; ///< Device command execution error.
+const TM_1_8_TC_4_1_NOT_FREE_PID_STATS_CONFIG  : u8 = 3; ///< No free PID stats config slots.
+const TM_1_8_TC_6_X_MEM_ACCESS_FAIL            : u8 = 4; ///< Memory access failure.
+const TM_1_8_TC_11_X_SCHED_TC_POOL_EMPTY       : u8 = 5; ///< Schedule TC pool is empty.
+const TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED    : u8 = 6; ///< Maximum event actions reached.
+/// @}
+
+
+
+/**
+ * @brief Builds TM[1,1] packet (TC acceptance report).
+ *
+ * @param p_tm_handler TM handler to write the packet.
+ * @param tm_seq_counter Telemetry sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param flags_ack Acknowledgment flags.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ * @param enabled Output flag indicating whether the packet was generated.
+ */
 function build_tm_1_1(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, 
 				tc_packet_id: u16, tc_packet_error_ctrl: u16, flags_ack : u8, current_obt: MissionObt, result : &mut MyResult, enabled : &mut bool) {
 
@@ -54,6 +75,18 @@ function build_tm_1_1(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16,
 
 	return;
 }
+
+
+/**
+ * @brief Builds a TM[1,2] packet (TC rejection report) with specific error information.
+ *
+ * @param status Reference to the TC status containing the rejection reason.
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_handler Reference to the TC handler containing command information.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 
 function build_tm_1_2 (status : &TCStatus, p_tm_handler : &mut TMHandlerT,
 		tm_seq_counter : u16, tc_handler: &TCHandlerT, current_obt: MissionObt, result : &mut MyResult) {
@@ -110,6 +143,16 @@ function build_tm_1_2 (status : &TCStatus, p_tm_handler : &mut TMHandlerT,
 	return;
 }
 
+/**
+ * @brief Builds a TM[1,3] packet (Start of execution report).
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param flags_ack Acknowledgment flags from the TC.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ * @param enabled Output flag indicating whether the packet was generated.
+ */
 
 function build_tm_1_3(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, flags_ack : u8,
 							 current_obt: MissionObt, result : &mut MyResult, enabled : &mut bool) {
@@ -133,6 +176,17 @@ function build_tm_1_3(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, flag
 }
 
 
+/**
+ * @brief Builds a TM[1,4] packet indicating that the TC packet has a too short length.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param tc_bytes Number of bytes in the TC packet.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_short_pack_length(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
 		tc_packet_error_ctrl: u16, tc_bytes: usize, current_obt : MissionObt, result : &mut MyResult) {
 
@@ -146,6 +200,18 @@ function build_tm_1_4_short_pack_length(p_tm_handler : &mut TMHandlerT, tm_seq_c
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the number of instructions in the TC is not valid.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param N Number of instructions.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_num_of_instr_not_valid(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, N : u8, current_obt : MissionObt, result : &mut MyResult) {
 
@@ -157,6 +223,18 @@ function build_tm_1_4_num_of_instr_not_valid(p_tm_handler : &mut TMHandlerT, tm_
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the device address in the TC is not valid.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param device_address Invalid device address.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_device_address_not_valid(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, device_address : u32, current_obt: MissionObt, result : &mut MyResult) {
 	
@@ -168,6 +246,19 @@ function build_tm_1_4_device_address_not_valid(p_tm_handler : &mut TMHandlerT, t
 	return;
 }
 
+
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the SID in the TC is not valid.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param SID Invalid SID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_SID_not_valid(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
 		tc_packet_error_ctrl: u16, SID : u16, current_obt: MissionObt, result : &mut MyResult) {
 	
@@ -179,6 +270,20 @@ function build_tm_1_4_SID_not_valid(p_tm_handler : &mut TMHandlerT, tm_seq_count
 	return;
 }
 
+
+
+/**
+ * @brief Builds a TM[1,4] packet indicating an invalid memory address.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param mem_id Memory identifier.
+ * @param mem_address Invalid memory address.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_mem_address_not_valid (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
 		tc_packet_error_ctrl: u16, mem_id : u8, mem_address : u32, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -190,6 +295,19 @@ function build_tm_1_4_mem_address_not_valid (p_tm_handler : &mut TMHandlerT, tm_
 	return;
 }
 
+
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified memory ID is read-only.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param mem_id Read-only memory identifier.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_mem_id_read_only (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, mem_id : u8, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -201,6 +319,19 @@ function build_tm_1_4_mem_id_read_only (p_tm_handler : &mut TMHandlerT, tm_seq_c
 	return;
 }
 
+
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the Event ID (EvID) is not valid.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param EvID Invalid Event ID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_EvID_not_valid (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 			 tc_packet_error_ctrl: u16, EvID : u16, current_obt: MissionObt, result : &mut MyResult) {
 	
@@ -212,6 +343,19 @@ function build_tm_1_4_EvID_not_valid (p_tm_handler : &mut TMHandlerT, tm_seq_cou
 	return;
 }
 
+
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified PID is not valid.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param PID Invalid PID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_PID_not_valid (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, PID : u16, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -223,6 +367,19 @@ function build_tm_1_4_PID_not_valid (p_tm_handler : &mut TMHandlerT, tm_seq_coun
 	return;
 }
 
+
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified PMON ID is undefined.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param PMONID Undefined PMON ID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_PMON_undefined (p_tm_handler : &mut TMHandlerT,	tm_seq_counter : u16, tc_packet_id : u16, 
 		tc_packet_error_ctrl: u16, PMONID : u16, current_obt: MissionObt, result : &mut MyResult) {
 	
@@ -234,6 +391,18 @@ function build_tm_1_4_PMON_undefined (p_tm_handler : &mut TMHandlerT,	tm_seq_cou
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified PMON ID is already defined.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param PMONID Already defined PMON ID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_PMON_defined (p_tm_handler : &mut TMHandlerT,	tm_seq_counter : u16, tc_packet_id : u16, 
 		tc_packet_error_ctrl: u16, PMONID : u16, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -245,6 +414,18 @@ function build_tm_1_4_PMON_defined (p_tm_handler : &mut TMHandlerT,	tm_seq_count
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified PMON ID is already enabled.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param PMONID Enabled PMON ID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_PMON_enabled (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
 		tc_packet_error_ctrl: u16, PMONID : u16, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -256,6 +437,18 @@ function build_tm_1_4_PMON_enabled (p_tm_handler : &mut TMHandlerT, tm_seq_count
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified PMON ID is not valid.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param PMONID Enabled PMON ID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_PMONID_invalid (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
 		tc_packet_error_ctrl: u16, PMONID : u16, current_obt: MissionObt, result : &mut MyResult) {
 	
@@ -267,6 +460,18 @@ function build_tm_1_4_PMONID_invalid (p_tm_handler : &mut TMHandlerT, tm_seq_cou
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified PMON ID definition is not valid.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param PMONID Enabled PMON ID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_PMON_definition_invalid (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, PMONID : u16, current_obt: MissionObt, result : &mut MyResult) {
 	
@@ -278,6 +483,18 @@ function build_tm_1_4_PMON_definition_invalid (p_tm_handler : &mut TMHandlerT, t
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified Event-Action ID is enabled.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param event_ID Event-action ID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_ev_action_enabled (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, event_ID : u16, current_obt: MissionObt, result : &mut MyResult) {
 	
@@ -289,6 +506,17 @@ function build_tm_1_4_ev_action_enabled (p_tm_handler : &mut TMHandlerT, tm_seq_
 	return;
 }
 
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified Event-Action ID is rejected.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param event_ID Event-action ID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_ev_action_rejected (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
 		tc_packet_error_ctrl: u16, event_ID : u16, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -300,6 +528,19 @@ function build_tm_1_4_ev_action_rejected (p_tm_handler : &mut TMHandlerT, tm_seq
 	return;
 }
 
+
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified Event-Action ID is undefined.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param event_ID Event-action ID.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_ev_action_undefined (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, event_ID : u16, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -311,6 +552,18 @@ function build_tm_1_4_ev_action_undefined (p_tm_handler : &mut TMHandlerT, tm_se
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified PID statistics is not defined.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param PID Param ID
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_PID_stats_undefined (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
 		tc_packet_error_ctrl: u16, PID : u16, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -322,6 +575,18 @@ function build_tm_1_4_PID_stats_undefined (p_tm_handler : &mut TMHandlerT, tm_se
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that the specified PID is read only via TC.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param PID Param ID
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_PID_read_only_via_TC (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, PID : u16, current_obt: MissionObt, result : &mut MyResult) {
 	
@@ -333,6 +598,17 @@ function build_tm_1_4_PID_read_only_via_TC (p_tm_handler : &mut TMHandlerT, tm_s
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,4] packet indicating that an error occurred during the acceptance of a TC packet.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_4_error_in_acceptance (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, current_obt: MissionObt, result : &mut MyResult) {
 	
@@ -344,6 +620,17 @@ function build_tm_1_4_error_in_acceptance (p_tm_handler : &mut TMHandlerT, tm_se
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,7] packet (TC completion report).
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param flags_ack Acknowledgment flags from the TC.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ * @param enabled Output flag indicating whether the packet was generated.
+ */
 function build_tm_1_7(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, flags_ack : u8, 
 							current_obt: MissionObt, result : &mut MyResult, enabled : &mut bool) {
 
@@ -364,6 +651,17 @@ function build_tm_1_7(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, flag
 }
 
 
+/**
+ * @brief Builds a TM[1,8] packet indicating that the maximum number of event actions has been reached.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param evID Event ID that caused the error.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_8_max_ev_actions_defined (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
 			tc_packet_error_ctrl: u16, evID: u16, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -376,6 +674,17 @@ function build_tm_1_8_max_ev_actions_defined (p_tm_handler : &mut TMHandlerT, tm
 }
 
 
+
+/**
+ * @brief Builds a TM[1,8] packet indicating that the application data exceeds the limit.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_8_tm_exceed_limit_appdata (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -387,6 +696,18 @@ function build_tm_1_8_tm_exceed_limit_appdata (p_tm_handler : &mut TMHandlerT, t
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,8] packet indicating that a device command execution error occurred.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param on_off_command On/Off command that caused the error.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_8_device_command_exec_error (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 			 tc_packet_error_ctrl: u16, on_off_command : u32, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -399,6 +720,18 @@ function build_tm_1_8_device_command_exec_error (p_tm_handler : &mut TMHandlerT,
 }
 
 
+
+/**
+ * @brief Builds a TM[1,8] packet indicating that there are no free PID statistics configuration slots.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param PID PID that caused the error.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_8_not_free_stats_config (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
 			tc_packet_error_ctrl: u16, PID : u16, current_obt : MissionObt, result : &mut MyResult) {
 	
@@ -410,6 +743,18 @@ function build_tm_1_8_not_free_stats_config (p_tm_handler : &mut TMHandlerT, tm_
 	return;
 }
 
+
+/**
+ * @brief Builds a TM[1,8] packet indicating a memory access error.
+ *
+ * @param p_tm_handler Reference to the TM handler used to build the packet.
+ * @param tm_seq_counter TM sequence counter.
+ * @param tc_packet_id TC packet ID.
+ * @param tc_packet_error_ctrl TC packet error control.
+ * @param mem_ID Memory identifier that caused the error.
+ * @param current_obt Current onboard time.
+ * @param result Output result code.
+ */
 function build_tm_1_8_mem_access_error (p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
 		 tc_packet_error_ctrl: u16, mem_ID: u8, current_obt : MissionObt, result : &mut MyResult) {
 	

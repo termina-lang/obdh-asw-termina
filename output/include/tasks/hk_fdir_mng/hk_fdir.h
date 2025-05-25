@@ -17,6 +17,19 @@ extern const size_t num_actions_per_second;
 typedef struct {
     __termina_id_t __task_id;
     __termina_id_t __task_msg_queue_id;
+    __termina_allocator_t a_tm_handler_pool;
+    struct {
+        void * __that;
+        void (* get_next_tm_count)(void * const, uint16_t * const);
+    } tm_counter;
+    struct {
+        void * __that;
+        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+    } tm_channel;
+    struct {
+        void * __that;
+        void (* get_current_obt)(void * const, MissionObt * const);
+    } pus_service_9;
     struct {
         void * __that;
         void (* exec_tc)(void * const, TCHandlerT * const,
@@ -66,6 +79,10 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self);
 
 __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
                                               TimeVal _current_time);
+
+void HouseKeepingFDIR__manage_error_in_acceptance(const HouseKeepingFDIR * const self,
+                                                  const TCHandlerT * const tc_handler,
+                                                  __status_int32_t * const ret);
 
 __status_int32_t HouseKeepingFDIR__exec_tc(void * const __this,
                                            __termina_box_t tc_handler);

@@ -6,7 +6,7 @@ Keeping the focus on the main objective — **evaluating Termina as a language f
 
 The application implements a system that communicates with the outside world via a UART serial interface. Through this connection, **telecommands** are received (i.e., commands sent from the ground), and **telemetry** is transmitted, which reports the internal state of the system. Both message types follow the protocol defined by the **Consultative Committee for Space Data Systems (CCSDS)**. Additionally, the system incorporates several services from the **ECSS-E-ST-70-41C** standard, known as **PUS (Packet Utilisation Services)**, which structure and standardize common functionalities in space systems.
 
-![Application architecture diagram](docs/architecture_diagram.svg)
+![Application architecture diagram](docs/images/architecture_diagram_2.svg)
 
 These capabilities are implemented across different system components represented in the diagram above. At the top left, the `uart_handler` receives telecommands via an interrupt (`irq_3`), while the `tm_channel` resource handles the transmission of telemetry.
 
