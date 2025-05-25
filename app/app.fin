@@ -173,6 +173,15 @@ resource pus_service_17 : PUSService17 = {
     pus_service_9 <-> pus_service_9
 }: PUSService17;
 
+resource pus_service_128 : PUSService128 = {
+    exec_tc_req_status = PSExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps128_init_tc_req_status_update,
+    tm_channel <-> telemetry_channel,
+    a_tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    pus_service_9 <-> pus_service_9
+}: PUSService128;
+
 resource pus_service_2 : PUSService2 = {
     exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps2_init_tc_req_status_update,
@@ -204,7 +213,8 @@ resource mng_tc_executor : ManagerTCExecutor = {
     a_tm_handler_pool <-> tm_pool,
     pus_service_17 <-> pus_service_17,
     pus_service_2 <-> pus_service_2,
-    pus_service_9 <-> pus_service_9
+    pus_service_9 <-> pus_service_9,
+    pus_service_128 <-> pus_service_128
 } : ManagerTCExecutor;
 
 

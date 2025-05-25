@@ -6,26 +6,17 @@ __status_int32_t ICUManager__process_action_tc(void * const __this,
     
     ICUManager * self = (ICUManager *)__this;
 
-    #line 73 "src/tasks/icu_manager/icu_manager.fin"
+    #line 78 "src/tasks/icu_manager/icu_manager.fin"
     __status_int32_t ret;
-    #line 73 "src/tasks/icu_manager/icu_manager.fin"
+    #line 78 "src/tasks/icu_manager/icu_manager.fin"
     ret.__variant = Success;
 
-    #line 75 "src/tasks/icu_manager/icu_manager.fin"
+    #line 79 "src/tasks/icu_manager/icu_manager.fin"
+    _Bool reebot_flag = 0;
+
+    #line 81 "src/tasks/icu_manager/icu_manager.fin"
     TCExecutionCtrl execution_status = handle_tc(&(*(TCHandlerT *)tc_handler.data).tc_descriptor);
 
-    #line 79 "src/tasks/icu_manager/icu_manager.fin"
-    if (execution_status.__variant == TCExecutionCtrl__ExecCtrlReboot) {
-        
-        #line 82 "src/tasks/icu_manager/icu_manager.fin"
-        self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
-                                           (TCHandlerT *)tc_handler.data, &ret);
-
-        #line 83 "src/tasks/icu_manager/icu_manager.fin"
-        self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
-                                     tc_handler);
-
-    } else
     #line 85 "src/tasks/icu_manager/icu_manager.fin"
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
         
@@ -47,22 +38,33 @@ __status_int32_t ICUManager__process_action_tc(void * const __this,
         
         #line 97 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
-                                           (TCHandlerT *)tc_handler.data, &ret);
+                                           (TCHandlerT *)tc_handler.data, &ret,
+                                           &reebot_flag);
 
         #line 98 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                      tc_handler);
 
+        #line 100 "src/tasks/icu_manager/icu_manager.fin"
+        if (reebot_flag) {
+            
+            #line 101 "src/tasks/icu_manager/icu_manager.fin"
+            reebot_flag = 0;
+
+            __termina_exec__reboot();
+
+        }
+
     } else
     {
         
-        #line 102 "src/tasks/icu_manager/icu_manager.fin"
+        #line 107 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                      tc_handler);
 
     }
 
-    #line 107 "src/tasks/icu_manager/icu_manager.fin"
+    #line 113 "src/tasks/icu_manager/icu_manager.fin"
     return ret;
 
 }
@@ -77,89 +79,89 @@ __status_int32_t ICUManager__process_tc(void * const __this,
     #line 15 "src/tasks/icu_manager/icu_manager.fin"
     ret.__variant = Success;
 
-    #line 17 "src/tasks/icu_manager/icu_manager.fin"
+    #line 16 "src/tasks/icu_manager/icu_manager.fin"
+    _Bool reebot_flag = 0;
+
+    #line 18 "src/tasks/icu_manager/icu_manager.fin"
     TCStatus current_tc_status = try_tc_acceptation(&(*(TCHandlerT *)tc_handler.data).tc_descriptor);
 
-    #line 21 "src/tasks/icu_manager/icu_manager.fin"
+    #line 22 "src/tasks/icu_manager/icu_manager.fin"
     if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Accepted) {
         
-        #line 23 "src/tasks/icu_manager/icu_manager.fin"
+        #line 24 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.mng_tc_acceptation(self->tc_executor.__that,
                                              (TCHandlerT *)tc_handler.data,
                                              &ret);
 
-        #line 27 "src/tasks/icu_manager/icu_manager.fin"
-        if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlReboot) {
-            
-            #line 30 "src/tasks/icu_manager/icu_manager.fin"
-            self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
-                                               (TCHandlerT *)tc_handler.data,
-                                               &ret);
-
-            #line 31 "src/tasks/icu_manager/icu_manager.fin"
-            self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
-                                         tc_handler);
-
-        } else
-        #line 34 "src/tasks/icu_manager/icu_manager.fin"
+        #line 28 "src/tasks/icu_manager/icu_manager.fin"
         if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
             
-            #line 36 "src/tasks/icu_manager/icu_manager.fin"
+            #line 30 "src/tasks/icu_manager/icu_manager.fin"
             __termina_out_port__send(self->hkfdir_message_queue_output,
                                      (void *)&tc_handler);
 
         } else
-        #line 38 "src/tasks/icu_manager/icu_manager.fin"
+        #line 32 "src/tasks/icu_manager/icu_manager.fin"
         if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlBKGTC) {
             
-            #line 40 "src/tasks/icu_manager/icu_manager.fin"
+            #line 34 "src/tasks/icu_manager/icu_manager.fin"
             __termina_out_port__send(self->bkg_message_queue_output,
                                      (void *)&tc_handler);
 
         } else
-        #line 43 "src/tasks/icu_manager/icu_manager.fin"
+        #line 37 "src/tasks/icu_manager/icu_manager.fin"
         if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
             
-            #line 46 "src/tasks/icu_manager/icu_manager.fin"
+            #line 40 "src/tasks/icu_manager/icu_manager.fin"
             self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
                                                (TCHandlerT *)tc_handler.data,
-                                               &ret);
+                                               &ret, &reebot_flag);
 
-            #line 47 "src/tasks/icu_manager/icu_manager.fin"
+            #line 42 "src/tasks/icu_manager/icu_manager.fin"
             self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                          tc_handler);
+
+            #line 44 "src/tasks/icu_manager/icu_manager.fin"
+            if (reebot_flag) {
+                
+                #line 45 "src/tasks/icu_manager/icu_manager.fin"
+                reebot_flag = 0;
+
+                __termina_exec__reboot();
+
+            }
 
         } else
         {
             
-            #line 52 "src/tasks/icu_manager/icu_manager.fin"
+            #line 53 "src/tasks/icu_manager/icu_manager.fin"
             self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                          tc_handler);
 
         }
 
     } else
-    #line 57 "src/tasks/icu_manager/icu_manager.fin"
+    #line 58 "src/tasks/icu_manager/icu_manager.fin"
     if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Rejected) {
         
-        #line 59 "src/tasks/icu_manager/icu_manager.fin"
+        #line 60 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.mng_tc_rejection(self->tc_executor.__that,
                                            (TCHandlerT *)tc_handler.data, &ret);
 
-        #line 60 "src/tasks/icu_manager/icu_manager.fin"
+        #line 61 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                      tc_handler);
 
     } else
     {
         
-        #line 64 "src/tasks/icu_manager/icu_manager.fin"
+        #line 65 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
                                      tc_handler);
 
     }
 
-    #line 67 "src/tasks/icu_manager/icu_manager.fin"
+    #line 70 "src/tasks/icu_manager/icu_manager.fin"
     return ret;
 
 }

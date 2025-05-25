@@ -45,7 +45,6 @@ typedef struct {
 
 typedef enum {
     TCExecutionCtrl__ExecCtrlPrioTC,
-    TCExecutionCtrl__ExecCtrlReboot,
     TCExecutionCtrl__ExecCtrlHK_FDIRTC,
     TCExecutionCtrl__ExecCtrlBKGTC,
     TCExecutionCtrl__Undefined

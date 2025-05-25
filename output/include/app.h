@@ -64,6 +64,8 @@ extern PUSService20 pus_service_20;
 
 extern PUSService17 pus_service_17;
 
+extern PUSService128 pus_service_128;
+
 extern PUSService2 pus_service_2;
 
 extern PUSService4 pus_service_4;

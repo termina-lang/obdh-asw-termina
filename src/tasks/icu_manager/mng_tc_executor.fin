@@ -4,13 +4,13 @@ import service_libraries.pus_services.pus_service1.pus_service1;
 import service_libraries.pus_services.pus_service2.pus_service2;
 import service_libraries.pus_services.pus_service9.pus_service9;
 import service_libraries.pus_services.pus_service17.pus_service17;
-import service_libraries.pus_services.pus_service128;
+import service_libraries.pus_services.pus_service128.pus_service128;
 import resources.tm_counter;
 import resources.tm_channel;
 
 
 interface MngTCExecIface {
-  procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status<i32>);
+  procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status<i32>, reebot_flag: &mut bool);
   procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Status<i32>);
   procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Status<i32>);
 };
@@ -24,9 +24,11 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     pus_service_17 : access PUSS17Iface;
     pus_service_2 : access PUSS2Iface;
     pus_service_9 : access PUSS9Iface;
-    //pus_service_128 : access PUSS128Iface;  
+    pus_service_128 : access PUSS128Iface; 
+    
+    
 
-    procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status<i32>) {
+    procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status<i32>, reebot_flag: &mut bool) {
 
         var tc_type : u8 = tc_handler->df_header.type;
 
@@ -42,10 +44,10 @@ resource class ManagerTCExecutor provides MngTCExecIface {
 
             self->pus_service_9.exec_tc(tc_handler, ret);
     
-        /*} else if (tc_type == 128){
+        } else if (tc_type == 128){
 
-            self->pus_service_128.exec_tc(tc_handler, ret);
-        */
+            self->pus_service_128.exec_tc(tc_handler, ret, reebot_flag);
+        
         } else {
 
             //Generar TM[1,4] Error in acceptance
@@ -114,7 +116,7 @@ resource class ManagerTCExecutor provides MngTCExecIface {
                     finetime = 0
                 };
                 var result : MyResult = MyResult::Ok;
-                //self->pus_service_9.get_current_obt(&mut current_obt); OJOOO CORREGIR
+                self->pus_service_9.get_current_obt(&mut current_obt); 
                 build_tm_1_2(&tc_status, &mut b_tm_handler, tm_count, tc_handler, current_obt, &mut result);
                 self->tm_channel.send_tm(b_tm_handler, &mut result);
             

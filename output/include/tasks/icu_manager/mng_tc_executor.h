@@ -6,7 +6,7 @@
 #include "resources/tm_channel.h"
 #include "resources/tm_counter.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
-#include "service_libraries/pus_services/pus_service128.h"
+#include "service_libraries/pus_services/pus_service128/pus_service128.h"
 #include "service_libraries/pus_services/pus_service17/pus_service17.h"
 #include "service_libraries/pus_services/pus_service2/pus_service2.h"
 #include "service_libraries/pus_services/pus_service9/pus_service9.h"
@@ -18,7 +18,7 @@
 typedef struct {
     void * __that;
     void (* PUS_prio_exec_tc)(void * const, TCHandlerT * const,
-                              __status_int32_t * const);
+                              __status_int32_t * const, _Bool * const);
     void (* mng_tc_acceptation)(void * const, const TCHandlerT * const,
                                 __status_int32_t * const);
     void (* mng_tc_rejection)(void * const, const TCHandlerT * const,
@@ -27,6 +27,11 @@ typedef struct {
 
 typedef struct {
     __termina_id_t __mutex_id;
+    struct {
+        void * __that;
+        void (* exec_tc)(void * const, TCHandlerT * const,
+                         __status_int32_t * const, _Bool * const);
+    } pus_service_128;
     struct {
         void * __that;
         void (* exec_tc)(void * const, TCHandlerT * const,
@@ -56,16 +61,20 @@ typedef struct {
 
 void ManagerTCExecutor__PUS_prio_exec_tc(void * const __this,
                                          TCHandlerT * const tc_handler,
-                                         __status_int32_t * const ret);
+                                         __status_int32_t * const ret,
+                                         _Bool * const reebot_flag);
 void ManagerTCExecutor__PUS_prio_exec_tc__mutex_lock(void * const __this,
                                                      TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret);
+                                                     __status_int32_t * const ret,
+                                                     _Bool * const reebot_flag);
 void ManagerTCExecutor__PUS_prio_exec_tc__task_lock(void * const __this,
                                                     TCHandlerT * const tc_handler,
-                                                    __status_int32_t * const ret);
+                                                    __status_int32_t * const ret,
+                                                    _Bool * const reebot_flag);
 void ManagerTCExecutor__PUS_prio_exec_tc__event_lock(void * const __this,
                                                      TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret);
+                                                     __status_int32_t * const ret,
+                                                     _Bool * const reebot_flag);
 
 void ManagerTCExecutor__mng_tc_acceptation(void * const __this,
                                            const TCHandlerT * const tc_handler,

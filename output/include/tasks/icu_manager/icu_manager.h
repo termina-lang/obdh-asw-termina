@@ -13,7 +13,7 @@ typedef struct {
     struct {
         void * __that;
         void (* PUS_prio_exec_tc)(void * const, TCHandlerT * const,
-                                  __status_int32_t * const);
+                                  __status_int32_t * const, _Bool * const);
         void (* mng_tc_acceptation)(void * const, const TCHandlerT * const,
                                     __status_int32_t * const);
         void (* mng_tc_rejection)(void * const, const TCHandlerT * const,

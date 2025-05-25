@@ -13,6 +13,7 @@ task class ICUManager {
     action process_tc(&priv self, tc_handler: box TCHandlerT) -> Status<i32> {
 
         var ret : Status<i32> = Success;
+        var reebot_flag : bool = false;
 
         var current_tc_status : TCStatus = try_tc_acceptation(&(tc_handler.tc_descriptor));
 
@@ -24,13 +25,6 @@ task class ICUManager {
 
                 match current_tc_status.execution_status {
 
-                    case ExecCtrlReboot => {
-
-                        //Ejecutar tc como prioritario
-                        self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
-                        self->a_tc_handler_pool.free(tc_handler);
-                           
-                    }
                     case  ExecCtrlHK_FDIRTC => {
                     
                         self->hkfdir_message_queue_output.send(tc_handler);
@@ -43,8 +37,15 @@ task class ICUManager {
                     case ExecCtrlPrioTC => {
 
                         //Ejecutar tc como prioritario
-                        self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
+                        self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
+
                         self->a_tc_handler_pool.free(tc_handler);
+
+                        if(reebot_flag) {
+                            reebot_flag = false;
+                            reboot;
+                        }
+                        
                     }
                     case Undefined => {
                         //Generar TM[1,4] Error in acceptance
@@ -64,24 +65,23 @@ task class ICUManager {
                 self->a_tc_handler_pool.free(tc_handler);
             }
         }
-        return ret;            
+
+        
+        return ret;  
+
+                  
     }
 
 
     action process_action_tc(&priv self, tc_handler: box TCHandlerT) -> Status<i32> {
 
         var ret : Status<i32> = Success;
+        var reebot_flag : bool = false;
 
         var execution_status : TCExecutionCtrl = handle_tc((&(tc_handler.tc_descriptor)));
 
         match execution_status {
 
-            case ExecCtrlReboot => {
-
-                //Ejecutar tc como prioritario
-                self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
-                self->a_tc_handler_pool.free(tc_handler); 
-            }
             case  ExecCtrlHK_FDIRTC => {
             
                 self->hkfdir_message_queue_output.send(tc_handler);
@@ -94,8 +94,13 @@ task class ICUManager {
             case ExecCtrlPrioTC => {
 
             //Ejecutar tc como prioritario
-                self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
+                self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
                 self->a_tc_handler_pool.free(tc_handler); 
+
+                if(reebot_flag) {
+                    reebot_flag = false;
+                    reboot;
+                }
             }
             case Undefined => {
                 //Generar TM[1,4] Error in acceptance
@@ -104,7 +109,10 @@ task class ICUManager {
 
         }
         
-        return ret;            
+        
+        return ret;  
+
+             
     }
 
 

@@ -28,7 +28,7 @@ enum TCErrorType {
 };
 
 enum TCExecutionCtrl {
-    ExecCtrlPrioTC, ExecCtrlReboot, ExecCtrlHK_FDIRTC, ExecCtrlBKGTC, Undefined
+    ExecCtrlPrioTC, ExecCtrlHK_FDIRTC, ExecCtrlBKGTC, Undefined
 };
 
 
