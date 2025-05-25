@@ -51,7 +51,7 @@ resource uart_driver : CRISCVUARTDriver = {
 
 
 resource gpio_drv : GPIODriver = {
-    registers @ 0xFC083000
+    registers @ 0x80000900
 } : GPIODriver;
 
 

@@ -54,7 +54,7 @@ void __termina_app__init_globals() {
         atomic_store(&u8_system_data_pool[__i0], 0U);
     }
     uart_driver.uart_regs = (volatile UARTRegs *)2147483904U;
-    gpio_drv.registers = (volatile GPIO_registers *)4228395008U;
+    gpio_drv.registers = (volatile GPIO_registers *)2147485952U;
     telemetry_channel.a_tm_handler_pool.__that = &tm_pool;
     telemetry_channel.a_tm_handler_pool.alloc = __termina_pool__alloc;
     telemetry_channel.a_tm_handler_pool.free = __termina_pool__free;
