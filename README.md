@@ -1,4 +1,4 @@
-# obdhlab-termina
+# OBDH-ASW-Termina
 
 ### 🧩 Application Architecture
 
