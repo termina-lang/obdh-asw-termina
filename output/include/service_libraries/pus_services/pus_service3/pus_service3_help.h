@@ -8,6 +8,7 @@
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
 #include "service_libraries/pus_services/pus_service9/pus_service9.h"
 #include "service_libraries/pus_services/pus_services.h"
+#include "service_libraries/rand.h"
 
 #include "option.h"
 
@@ -19,6 +20,7 @@ typedef struct {
 typedef struct {
     uint16_t packet_id;
     uint16_t packet_error_ctrl;
+    uint8_t flags_ack;
     size_t tc_num_bytes;
     uint8_t N;
     uint16_t SID;

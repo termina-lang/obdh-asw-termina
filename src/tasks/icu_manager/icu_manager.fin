@@ -1,18 +1,58 @@
 import tasks.icu_manager.mng_tc_executor;
 
+
+/**
+ * @class ICUManager
+ * @brief Manages the execution flow of Telecommands (TCs) in the ICU.
+ *
+ * This task class handles the reception and classification of TCs. It determines whether the TC
+ * should be executed as a housekeeping/FDIR, background, or priority command, and forwards it accordingly.
+ * It also processes action-type TCs and handles TC rejection and reboot logic when necessary.
+ */
 task class ICUManager {
 
+    /// @var tc_message_queue_input
+    /// @brief Input message queue for receiving regular telecommands.
     tc_message_queue_input: in box TCHandlerT triggers process_tc;
+
+    /// @var action_tc_message_queue_input
+    /// @brief Input message queue for receiving action telecommands.
     action_tc_message_queue_input: in box TCHandlerT triggers process_action_tc;
+
+    /// @var a_tc_handler_pool
+    /// @brief Allocator interface for managing TC handler memory.
     a_tc_handler_pool : access Allocator<TCHandlerT>;
+
+    /// @var hkfdir_message_queue_output
+    /// @brief Output queue for housekeeping/FDIR-related TCs.
     hkfdir_message_queue_output: out box TCHandlerT;
+
+    /// @var bkg_message_queue_output
+    /// @brief Output queue for background telecommands.
     bkg_message_queue_output: out box TCHandlerT;
+
+    /// @var tc_executor
+    /// @brief Interface for TC execution and rejection management logic.
     tc_executor: access MngTCExecIface;
 
 
+
+    /**
+     * @brief Receives standard telecommands from the message queue and processes them.
+     * 
+     * This action determines whether a TC is acceptable and classifies it based on its execution category:
+     * housekeeping/FDIR, background, or priority. In the case of priority execution, it directly invokes
+     * the corresponding execution path. If rejection or undefined status is returned, it performs
+     * the corresponding management logic.
+     * 
+     * @param[in] self Reference to the ICUManager instance.
+     * @param[in] tc_handler Boxed TCHandlerT instance containing the telecommand to process.
+     * @return Status<i32> Success or failure code of the operation.
+     */
     action process_tc(&priv self, tc_handler: box TCHandlerT) -> Status<i32> {
 
         var ret : Status<i32> = Success;
+        var reebot_flag : bool = false;
 
         var current_tc_status : TCStatus = try_tc_acceptation(&(tc_handler.tc_descriptor));
 
@@ -24,13 +64,6 @@ task class ICUManager {
 
                 match current_tc_status.execution_status {
 
-                    case ExecCtrlReboot => {
-
-                        //Ejecutar tc como prioritario
-                        self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
-                        self->a_tc_handler_pool.free(tc_handler);
-                           
-                    }
                     case  ExecCtrlHK_FDIRTC => {
                     
                         self->hkfdir_message_queue_output.send(tc_handler);
@@ -42,12 +75,17 @@ task class ICUManager {
                     }
                     case ExecCtrlPrioTC => {
 
-                        //Ejecutar tc como prioritario
-                        self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
+                        self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
+
                         self->a_tc_handler_pool.free(tc_handler);
+
+                        if(reebot_flag) {
+                            reebot_flag = false;
+                            reboot;
+                        }
+                        
                     }
                     case Undefined => {
-                        //Generar TM[1,4] Error in acceptance
                         
                         self->a_tc_handler_pool.free(tc_handler);
                     }
@@ -60,28 +98,38 @@ task class ICUManager {
                 self->a_tc_handler_pool.free(tc_handler);
             }
             case Undefined => {
-                //Generar TM[1,4] Error in acceptance
+                
                 self->a_tc_handler_pool.free(tc_handler);
             }
         }
-        return ret;            
+
+        
+        return ret;  
+
+                  
     }
 
 
+    /**
+     * @brief Processes action telecommands from the message queue.
+     * 
+     * This action handles a subset of TCs defined as "action TCs", using the same
+     * classification logic as standard TCs (HK/FDIR, background, or priority).
+     * Priority TCs are executed immediately and may trigger a system reboot if needed.
+     * 
+     * @param[in] self Reference to the ICUManager instance.
+     * @param[in] tc_handler Boxed TCHandlerT instance representing the action TC.
+     * @return Status<i32> Success or failure code of the operation.
+     */
     action process_action_tc(&priv self, tc_handler: box TCHandlerT) -> Status<i32> {
 
         var ret : Status<i32> = Success;
+        var reebot_flag : bool = false;
 
         var execution_status : TCExecutionCtrl = handle_tc((&(tc_handler.tc_descriptor)));
 
         match execution_status {
 
-            case ExecCtrlReboot => {
-
-                //Ejecutar tc como prioritario
-                self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
-                self->a_tc_handler_pool.free(tc_handler); 
-            }
             case  ExecCtrlHK_FDIRTC => {
             
                 self->hkfdir_message_queue_output.send(tc_handler);
@@ -93,18 +141,25 @@ task class ICUManager {
             }
             case ExecCtrlPrioTC => {
 
-            //Ejecutar tc como prioritario
-                self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret);
+                self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
                 self->a_tc_handler_pool.free(tc_handler); 
+
+                if(reebot_flag) {
+                    reebot_flag = false;
+                    reboot;
+                }
             }
             case Undefined => {
-                //Generar TM[1,4] Error in acceptance
+                
                 self->a_tc_handler_pool.free(tc_handler);
             }
 
         }
         
-        return ret;            
+        
+        return ret;  
+
+             
     }
 
 

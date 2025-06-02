@@ -12,6 +12,14 @@
 
 #include "option.h"
 
+extern const uint8_t ACCEPT_ACK_ENABLED_MASK;
+
+extern const uint8_t EXEC_START_ACK_ENABLED_MASK;
+
+extern const uint8_t EXEC_PROGRESS_ACK_ENABLED_MASK;
+
+extern const uint8_t EXEC_COMPLETION_ACK_ENABLED_MASK;
+
 typedef enum {
     TCAcceptationStatus__Accepted,
     TCAcceptationStatus__Rejected,
@@ -37,7 +45,6 @@ typedef struct {
 
 typedef enum {
     TCExecutionCtrl__ExecCtrlPrioTC,
-    TCExecutionCtrl__ExecCtrlReboot,
     TCExecutionCtrl__ExecCtrlHK_FDIRTC,
     TCExecutionCtrl__ExecCtrlBKGTC,
     TCExecutionCtrl__Undefined
@@ -69,6 +76,14 @@ _Bool is_crc_valid(const TCDescriptorT * const tc_descriptor);
 _Bool is_apid_valid(const TCDescriptorT * const tc_descriptor);
 
 _Bool is_sourceID_valid(const TCDescriptorT * const tc_descriptor);
+
+_Bool is_tc_ack_accept_enabled(uint8_t flags_ack);
+
+_Bool is_tc_ack_start_exec_enabled(uint8_t flags_ack);
+
+_Bool is_tc_ack_progress_exec_enabled(uint8_t flags_ack);
+
+_Bool is_tc_ack_completion_exec_enabled(uint8_t flags_ack);
 
 uint8_t get_failure_subtype(TCVerifyStage verify_stage);
 

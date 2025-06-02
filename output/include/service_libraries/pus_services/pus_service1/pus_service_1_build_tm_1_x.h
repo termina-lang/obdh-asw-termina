@@ -69,7 +69,8 @@ extern const uint8_t TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED;
 
 void build_tm_1_1(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
                   uint16_t tc_packet_id, uint16_t tc_packet_error_ctrl,
-                  MissionObt current_obt, MyResult * const result);
+                  uint8_t flags_ack, MissionObt current_obt,
+                  MyResult * const result, _Bool * const enabled);
 
 void build_tm_1_2(const TCStatus * const status,
                   TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
@@ -77,7 +78,8 @@ void build_tm_1_2(const TCStatus * const status,
                   MyResult * const result);
 
 void build_tm_1_3(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                  MissionObt current_obt, MyResult * const result);
+                  uint8_t flags_ack, MissionObt current_obt,
+                  MyResult * const result, _Bool * const enabled);
 
 void build_tm_1_4_short_pack_length(TMHandlerT * const p_tm_handler,
                                     uint16_t tm_seq_counter,
@@ -207,7 +209,8 @@ void build_tm_1_4_error_in_acceptance(TMHandlerT * const p_tm_handler,
                                       MyResult * const result);
 
 void build_tm_1_7(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                  MissionObt current_obt, MyResult * const result);
+                  uint8_t flags_ack, MissionObt current_obt,
+                  MyResult * const result, _Bool * const enabled);
 
 void build_tm_1_8_max_ev_actions_defined(TMHandlerT * const p_tm_handler,
                                          uint16_t tm_seq_counter,

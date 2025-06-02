@@ -6,35 +6,91 @@ void TMChannel__send_tm(void * const __this, __termina_box_t tm_handler,
     
     TMChannel * self = (TMChannel *)__this;
 
-    #line 21 "src/resources/tm_channel.fin"
-    CharDevResult queue_state;
-    #line 21 "src/resources/tm_channel.fin"
-    queue_state.__variant = CharDevResult__Success;
+    #line 54 "src/resources/tm_channel.fin"
+    TMDescriptorT tm_descriptor = (*(TMHandlerT *)tm_handler.data).tm_descriptor;
 
-    #line 23 "src/resources/tm_channel.fin"
-    self->uart.send(self->uart.__that,
-                    (*(TMHandlerT *)tm_handler.data).tm_descriptor.tm_bytes,
-                    (*(TMHandlerT *)tm_handler.data).tm_descriptor.tm_num_bytes,
-                    &queue_state);
+    #line 57 "src/resources/tm_channel.fin"
+    uint8_t frame_header[6U];
+    #line 57 "src/resources/tm_channel.fin"
+    for (size_t __i0 = 0U; __i0 < 6U; __i0 = __i0 + 1U) {
+        #line 57 "src/resources/tm_channel.fin"
+        frame_header[__i0] = 0U;
+    }
 
-    #line 25 "src/resources/tm_channel.fin"
-    if (queue_state.__variant == CharDevResult__Success) {
+    #line 60 "src/resources/tm_channel.fin"
+    uint32_t write_timeout = 0U;
+
+    #line 63 "src/resources/tm_channel.fin"
+    _Bool check = 0;
+
+    #line 65 "src/resources/tm_channel.fin"
+    (*result).__variant = MyResult__Ok;
+
+    #line 68 "src/resources/tm_channel.fin"
+    frame_header[0U] = 0xBEU;
+
+    #line 69 "src/resources/tm_channel.fin"
+    frame_header[1U] = 0xBAU;
+
+    #line 70 "src/resources/tm_channel.fin"
+    frame_header[2U] = 0xBEU;
+
+    #line 71 "src/resources/tm_channel.fin"
+    frame_header[3U] = 0xEFU;
+
+    #line 74 "src/resources/tm_channel.fin"
+    serialize_uint16((uint16_t)tm_descriptor.tm_num_bytes, &frame_header[4U]);
+
+    #line 76 "src/resources/tm_channel.fin"
+    __status_int32_t status;
+    #line 76 "src/resources/tm_channel.fin"
+    status.__variant = Success;
+
+    #line 79 "src/resources/tm_channel.fin"
+    for (uint8_t i = 0U; i < 6U && status.__variant == Success; i = i + 1U) {
         
-        #line 27 "src/resources/tm_channel.fin"
-        (*result).__variant = MyResult__Ok;
-
-    } else
-    {
-        
-        #line 31 "src/resources/tm_channel.fin"
-        (*result).__variant = MyResult__Error;
+        #line 81 "src/resources/tm_channel.fin"
+        self->uart.putchar(self->uart.__that,
+                           frame_header[__termina_array__index(6U, (size_t)i)],
+                           &status);
 
     }
 
-    #line 35 "src/resources/tm_channel.fin"
+    #line 86 "src/resources/tm_channel.fin"
+    for (size_t j = 0U; j < 256U && (j < tm_descriptor.tm_num_bytes && status.__variant == Success); j = j + 1U) {
+        
+        #line 88 "src/resources/tm_channel.fin"
+        self->uart.putchar(self->uart.__that,
+                           tm_descriptor.tm_bytes[__termina_array__index(256U,
+                                                                         (size_t)j)],
+                           &status);
+
+    }
+
+    #line 93 "src/resources/tm_channel.fin"
+    self->uart.uart_tf_is_empty(self->uart.__that, &check);
+
+    #line 94 "src/resources/tm_channel.fin"
+    for (uint32_t k = 0U; k < 0xAAAAAU && check == 0; k = k + 1U) {
+        
+        #line 96 "src/resources/tm_channel.fin"
+        self->uart.uart_tf_is_empty(self->uart.__that, &check);
+
+        #line 97 "src/resources/tm_channel.fin"
+        write_timeout = write_timeout + 1U;
+
+    }
+
+    #line 101 "src/resources/tm_channel.fin"
+    if (write_timeout < 0xAAAAAU) {
+        
+
+    }
+
+    #line 108 "src/resources/tm_channel.fin"
     self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that, tm_handler);
 
-    #line 37 "src/resources/tm_channel.fin"
+    #line 111 "src/resources/tm_channel.fin"
     return;
 
 }

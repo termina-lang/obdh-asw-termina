@@ -1,9 +1,18 @@
-/*
-PUS SERVICE 9 : TIME MANAGEMENT
-*/
+/**
+ * @file pus_service9_time_management.fin
+ * @brief Implementation of PUS Service 9: Time Management.
+ */
 
 import service_libraries.pus_services.pus_service9.pus_service9_help;
 
+
+/**
+ * @interface PUSS9Iface
+ * @brief Interface for PUS Service 9 Time Management.
+ *
+ * Defines the methods required to get the current onboard time (OBT) and
+ * to execute telecommands related to time management.
+ */
 interface PUSS9Iface {
 
     procedure get_current_obt(&mut self, current_obt: &mut MissionObt);
@@ -11,19 +20,32 @@ interface PUSS9Iface {
 
 };
 
+
+/**
+ * @resourceclass PUSService9
+ * @brief Resource class implementing PUS Service 9: Time Management.
+ *
+ * Provides onboard time tracking, telecommand execution, and telemetry generation
+ * for time management telecommands according to PUS specifications.
+ */
 resource class PUSService9 provides PUSS9Iface {
 
-    ref_obt : MissionObt;
-    ref_time_val_from_power_on : TimeVal;
-    exec_tc_req_status : PSExecTCReqStatus;
-    exec_tc_req_status_update : PS9ExecTCReqStatusUpdate;
+    ref_obt : MissionObt; /**< Reference onboard time at last update */
+    ref_time_val_from_power_on : TimeVal; /**< System uptime reference from power on */
+    exec_tc_req_status : PSExecTCReqStatus; /**< Current execution status of the telecommand request */
+    exec_tc_req_status_update : PS9ExecTCReqStatusUpdate; /**< Data extracted from the telecommand */
 
-    tm_channel: access TMChannelIface;
-    a_tm_handler_pool : access Allocator<TMHandlerT>;
-    tm_counter : access TMCounterIface;
+    tm_channel: access TMChannelIface; /**< Telemetry channel interface */
+    a_tm_handler_pool : access Allocator<TMHandlerT>; /**< Allocator for telemetry handlers */
+    tm_counter : access TMCounterIface; /**< Telemetry counter interface */
 
-    system_port : access SystemAPI;
+    system_port : access SystemAPI; /**< System API port for clock and other system functions */
 
+    /**
+     * @brief Set the onboard time (OBT) reference from the telecommand request status.
+     *
+     * Updates the internal reference OBT and captures the current system uptime.
+     */
     method set_obt (&priv self) {
         self->ref_obt = self->exec_tc_req_status_update.next_OBT;
         var aux_time_val : TimeVal = {
@@ -36,6 +58,15 @@ resource class PUSService9 provides PUSS9Iface {
         return;
     }
 
+
+    /**
+     * @brief Compute and retrieve the current onboard time (OBT).
+     *
+     * Calculates the current OBT by adding the elapsed system uptime since
+     * the last reference to the stored reference OBT.
+     *
+     * @param[out] current_obt Pointer to MissionObt structure to store the computed current OBT.
+     */
     procedure get_current_obt(&mut self, current_obt: &mut MissionObt) {
 
         var fine_time_increment : u32 = 0;
@@ -60,6 +91,14 @@ resource class PUSService9 provides PUSS9Iface {
         return;
     }
 
+
+    /**
+     * @brief Viewer to get the current onboard time (OBT).
+     *
+     * Similar to get_current_obt but for inner use.
+     *
+     * @return MissionObt Current onboard time.
+     */
     viewer inner_get_current_obt(&self) -> MissionObt {
 
         var fine_time_increment : u32 = 0;
@@ -88,6 +127,16 @@ resource class PUSService9 provides PUSS9Iface {
     }
 
 
+    /**
+     * @brief Extract TC parameters from the telecommand handler.
+     *
+     * Extracts relevant parameters from the telecommand handler to build the execution request status.
+     *
+     * @param[in,out] tc_handler Telecommand handler reference.
+     * @param[out] subtype Subtype field extracted from the TC header.
+     * @param[out] result Result of the extraction operation (Ok or Error).
+     * @return PS9ExecTCReqStatusUpdate Struct containing the extracted TC parameters.
+     */
     viewer get_TC_params(&self, tc_handler : &mut TCHandlerT, subtype : &mut u8, result : &mut MyResult) -> PS9ExecTCReqStatusUpdate {
 
         *subtype = tc_handler->df_header.subtype;
@@ -95,6 +144,7 @@ resource class PUSService9 provides PUSS9Iface {
         var tc_data : PS9ExecTCReqStatusUpdate = {
             packet_id = 0,
             packet_error_ctrl = 0,
+            flags_ack = 0,
             tc_num_bytes = 0,
             next_OBT = {
                 seconds = 0,
@@ -103,6 +153,7 @@ resource class PUSService9 provides PUSS9Iface {
         };
         tc_data.packet_id = tc_handler->packet_header.packet_id;
         tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+        tc_data.flags_ack = tc_handler->df_header.flag_ver_ack;
         tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
         *result = tc_handler_get_u32_appdata_field(tc_handler, &mut (tc_data.next_OBT.seconds));
         *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data.next_OBT.finetime));
@@ -112,9 +163,20 @@ resource class PUSService9 provides PUSS9Iface {
 
     }
 
+
+    /**
+     * @brief Execute TC subtype 129 (specific time management TC - set current OBT).
+     *
+     * Handles execution of the TC with subtype 129 by generating telemetry
+     * reports TM[1,3] and TM[1,7] as acknowledgments, updating internal status,
+     * and managing telemetry handler resources.
+     *
+     * @return PSExecTCReqStatus Status of TC execution (Exit, Failure, or Error).
+     */
     method exec9_129TC (&priv self) -> PSExecTCReqStatus {
 
         var result : MyResult = MyResult::Ok;
+        var ack_enabled : bool = false;
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
 
         var current_obt : MissionObt = {seconds = 0, finetime = 0};
@@ -129,19 +191,26 @@ resource class PUSService9 provides PUSS9Iface {
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
                 current_obt = self->inner_get_current_obt();
-                build_tm_1_3(&mut b_tm_handler, tm_count, current_obt, &mut result);
+                build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.flags_ack, current_obt, &mut result, &mut ack_enabled);
 
-                if (result is MyResult::Ok){
+                if (ack_enabled) {
 
-                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    if (result is MyResult::Ok){
 
-                    if (result is MyResult::Error){
-                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                        self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                        if (result is MyResult::Error){
+                            next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                        }
                     }
-                } 
-                else {
+                    else {
+                        self->a_tm_handler_pool.free(b_tm_handler);
+                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                    }
+
+                } else {
+                    
                     self->a_tm_handler_pool.free(b_tm_handler);
-                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                 }
                 
                 self->set_obt();
@@ -156,19 +225,26 @@ resource class PUSService9 provides PUSS9Iface {
                         var tm_count2 : u16 = 0 : u16;
                         self->tm_counter.get_next_tm_count(&mut tm_count2);
                         current_obt = self->inner_get_current_obt();
-                        build_tm_1_7(&mut b_tm_handler2, tm_count2, current_obt, &mut result);
+                        build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.flags_ack, current_obt, &mut result, &mut ack_enabled);
 
-                        if (result is MyResult::Ok){
+                        if (ack_enabled) {
 
-                            self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                            if (result is MyResult::Ok){
 
-                            if (result is MyResult::Error){
-                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                                if (result is MyResult::Error){
+                                    next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                }
                             }
-                        } 
-                        else {
+                            else {
+                                self->a_tm_handler_pool.free(b_tm_handler2);
+                                next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                            }
+
+                        } else {
+                            
                             self->a_tm_handler_pool.free(b_tm_handler2);
-                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                         }
                     }
                     case None => {
@@ -190,6 +266,13 @@ resource class PUSService9 provides PUSS9Iface {
     }
 
 
+    /**
+     * @brief Manage short packet length error by generating TM[1,4].
+     *
+     * Sends telemetry indicating a short packet length error.
+     *
+     * @return PSExecTCReqStatus Status after sending TM.
+     */
     viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
 
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
@@ -232,6 +315,14 @@ resource class PUSService9 provides PUSS9Iface {
         return next_status;
     }
 
+
+    /**
+     * @brief Manage error in acceptance by generating TM[1,4] error message.
+     *
+     * Sends telemetry indicating an error in acceptance of the telecommand.
+     *
+     * @return PSExecTCReqStatus Status after sending TM.
+     */
     viewer manage_error_in_acceptance(&self) -> PSExecTCReqStatus {
 
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
@@ -275,6 +366,14 @@ resource class PUSService9 provides PUSS9Iface {
         return next_status;
     }
 
+
+    /**
+     * @brief Manage telemetry limit application data reached by generating TM[1,8].
+     *
+     * Sends telemetry indicating that telemetry application data limit has been reached.
+     *
+     * @return PSExecTCReqStatus Status after sending TM.
+     */
     viewer manage_tm_limit_app_data_reached(&self) -> PSExecTCReqStatus {
 
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
@@ -319,7 +418,15 @@ resource class PUSService9 provides PUSS9Iface {
     }
 
     
-
+    /**
+     * @brief Execute a time management telecommand.
+     *
+     * Main telecommand execution procedure that manages the TC lifecycle,
+     * including parameter extraction, execution based on subtype, and error handling.
+     *
+     * @param[in,out] tc_handler Reference to the telecommand handler.
+     * @param[in,out] action_status Status variable updated with execution outcome.
+    */
     procedure exec_tc (&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>){
 
         var subtype : u8 = tc_handler->df_header.subtype;
@@ -358,12 +465,10 @@ resource class PUSService9 provides PUSS9Iface {
 
                     if (error_code == ACCEPTANCE_ERROR) {
 
-                        //Generar TM[1,4] error en la aceptación
                         self->exec_tc_req_status = self->manage_error_in_acceptance();
                         
                     } else if (error_code == BUILD_TM_ERROR) {
 
-                        //Generar TM[1,8] error en la generación de TM
                         self->exec_tc_req_status = self->manage_tm_limit_app_data_reached();
                        
                     } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {

@@ -3,8 +3,6 @@
 
 PeriodicTimer hk_fdir_timer;
 
-__termina_msg_queue_t byte_message_queue;
-
 __termina_msg_queue_t tc_message_queue;
 
 __termina_msg_queue_t hkfdir_message_queue;
@@ -21,7 +19,7 @@ _Atomic uint32_t u32_system_data_pool[12U];
 
 _Atomic uint8_t u8_system_data_pool[18U];
 
-UARTDriver uart_drv;
+UARTDriver uart_driver;
 
 GPIODriver gpio_drv;
 
@@ -43,6 +41,8 @@ PUSService20 pus_service_20;
 
 PUSService17 pus_service_17;
 
+PUSService128 pus_service_128;
+
 PUSService2 pus_service_2;
 
 PUSService4 pus_service_4;
@@ -51,9 +51,7 @@ ManagerTCExecutor mng_tc_executor;
 
 Init init;
 
-UARTIrqHandler uart_hdlr;
-
-TCRXBottomHalfTask tc_rx_bottom_half_task;
+UARTHandler uart_handler;
 
 ICUManager icu_manager;
 

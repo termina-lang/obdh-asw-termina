@@ -1,15 +1,52 @@
-// FAILURE CODES
+/**
+ * @brief Telemetry pool allocation failure
+ *
+ * Indicates a failure occurred when trying to allocate memory
+ * from the telemetry pool.
+ */
 const TM_POOL_ALLOC_FAILURE : i32 = 1;
+
+/**
+ * @brief Telemetry send failure
+ *
+ * Indicates that the telemetry packet could not be sent.
+ */
 const TM_SEND_FAILURE : i32 = 2;
 
-// ERROR CODES
-const  BUILD_TM_ERROR : i32 = 3;
+/**
+ * @brief Telemetry building error
+ *
+ * Error during construction of the telemetry packet.
+ */
+const BUILD_TM_ERROR : i32 = 3;
+
+/**
+ * @brief TC acceptance error
+ *
+ * Error while accepting or validating a telecommand.
+ */
 const ACCEPTANCE_ERROR : i32 = 4;
+
+/**
+ * @brief TC data out of range
+ *
+ * Indicates that the telecommand data fields contain values out of the allowed range.
+ */
 const TC_DATA_OUT_OF_RANGE_ERROR : i32 = 5;
+
+/**
+ * @brief Unreachable code branch
+ *
+ * Indicates that execution reached a logically unreachable point in the code.
+ */
 const UNREACHABLE_BRANCH_ERROR : i32 = 6;
 
-
+/**
+ * @brief Result type used to signal success or error in operations
+ *
+ * Enum representing a simplified result type: either success (`Ok`) or error (`Error`).
+ */
 enum MyResult {
-    Ok,
-    Error
+    Ok,    ///< Operation completed successfully
+    Error  ///< Operation failed
 };

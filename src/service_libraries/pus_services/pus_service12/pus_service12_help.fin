@@ -1,4 +1,7 @@
-
+/**
+ * @file pus_service12_help.fin
+ * @brief Imports and definitions related to PUS Service 12.
+ */
 
 import resources.system_data_pool;
 import service_libraries.pus_services.pus_services;
@@ -148,6 +151,7 @@ struct PS12TC_5_Data {
 struct PS12ExecTCReqStatusUpdate {
     packet_id : u16;
     packet_error_ctrl : u16;
+    flags_ack : u8;
     tc_num_bytes : usize;
     tc_data_1_2_6: PS12TC_1_2_6_Data;
     tc_data_5: PS12TC_5_Data;  
@@ -156,6 +160,7 @@ struct PS12ExecTCReqStatusUpdate {
 constexpr ps12_init_tc_req_status_update : PS12ExecTCReqStatusUpdate = {
     packet_id = 0,
     packet_error_ctrl = 0,
+    flags_ack = 0,
     tc_num_bytes = 0,
     tc_data_1_2_6 = {
         N = 0,

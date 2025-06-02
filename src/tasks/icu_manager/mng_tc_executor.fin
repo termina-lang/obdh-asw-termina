@@ -4,29 +4,115 @@ import service_libraries.pus_services.pus_service1.pus_service1;
 import service_libraries.pus_services.pus_service2.pus_service2;
 import service_libraries.pus_services.pus_service9.pus_service9;
 import service_libraries.pus_services.pus_service17.pus_service17;
-import service_libraries.pus_services.pus_service128;
+import service_libraries.pus_services.pus_service128.pus_service128;
 import resources.tm_counter;
 import resources.tm_channel;
 
 
+/**
+ * @interface MngTCExecIface
+ * @brief Interface for managing the execution and processing of telecommands.
+ * 
+ * This interface provides procedures to handle priority execution, 
+ * telecommand acceptance, and telecommand rejection.
+ */
 interface MngTCExecIface {
-  procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status<i32>);
+  procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status<i32>, reebot_flag: &mut bool);
   procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Status<i32>);
   procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Status<i32>);
 };
 
+
+/**
+ * @class ManagerTCExecutor
+ * @brief Resource class that implements the telecommand management interface.
+ * 
+ * Manages the execution of priority telecommands and generates telemetry packets for
+ * acceptance and rejection. Supports error reporting in case of unhandled telecommands.
+ */
 resource class ManagerTCExecutor provides MngTCExecIface {
 
+    // Interface for telemetry (TM) channel to send telemetry packets.
     tm_channel: access TMChannelIface;
+
+    /// Interface to manage telemetry count.
     tm_counter: access TMCounterIface;
+
+    /// Allocator for TMHandler objects.
     a_tm_handler_pool : access Allocator<TMHandlerT>;
 
+    /// Pointer to the interface of PUS Service 17.
     pus_service_17 : access PUSS17Iface;
-    pus_service_2 : access PUSS2Iface;
-    pus_service_9 : access PUSS9Iface;
-    //pus_service_128 : access PUSS128Iface;  
 
-    procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status<i32>) {
+    /// Pointer to the interface of PUS Service 2.
+    pus_service_2 : access PUSS2Iface;
+
+    /// Pointer to the interface of PUS Service 9.
+    pus_service_9 : access PUSS9Iface;
+
+    /// Pointer to the interface of PUS Service 128.
+    pus_service_128 : access PUSS128Iface; 
+    
+    
+    /**
+     * @brief Handles error telemetry generation for unaccepted telecommands.
+     * 
+     * Allocates a telemetry handler and builds a TM[1,4] error report if the telecommand
+     * type is not supported or cannot be processed.
+     * 
+     * @param[in] tc_handler Pointer to the telecommand handler.
+     * @param[out] ret Status result of the operation.
+     */
+    viewer manage_error_in_acceptance(&self, tc_handler: &TCHandlerT, ret: &mut Status<i32>) {
+
+        var result : MyResult = MyResult::Ok;
+
+        var current_obt : MissionObt = {seconds = 0, finetime = 0};
+
+        var tm_handler : Option<box TMHandlerT> = None;
+        self->a_tm_handler_pool.alloc(&mut tm_handler);
+
+        match tm_handler {
+
+            case Some(b_tm_handler) => {
+
+                var tm_count : u16 = 0 : u16;
+                self->tm_counter.get_next_tm_count(&mut tm_count);
+
+                self->pus_service_9.get_current_obt(&mut current_obt);
+                build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, tc_handler->packet_header.packet_id, tc_handler->packet_error_ctrl,
+                                 current_obt, &mut result);
+                
+                if (result is MyResult::Ok){
+
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                } 
+                else {
+                    self->a_tm_handler_pool.free(b_tm_handler);
+                        
+                }
+                
+            }
+            case None => {
+                *ret = Failure(TM_POOL_ALLOC_FAILURE);
+                
+            }
+        }
+
+        return;
+    }
+
+    /**
+     * @brief Executes the telecommand with priority routing.
+     * 
+     * Routes the telecommand to the appropriate PUS service based on its type.
+     * If the type is unknown, an error acceptance report is generated.
+     * 
+     * @param[in,out] tc_handler Pointer to the telecommand handler.
+     * @param[out] ret Status result of the execution.
+     * @param[out] reebot_flag Flag to indicate if a reboot is required.
+     */
+    procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status<i32>, reebot_flag: &mut bool) {
 
         var tc_type : u8 = tc_handler->df_header.type;
 
@@ -42,18 +128,28 @@ resource class ManagerTCExecutor provides MngTCExecIface {
 
             self->pus_service_9.exec_tc(tc_handler, ret);
     
-        /*} else if (tc_type == 128){
+        } else if (tc_type == 128){
 
-            self->pus_service_128.exec_tc(tc_handler, ret);
-        */
+            self->pus_service_128.exec_tc(tc_handler, ret, reebot_flag);
+        
         } else {
 
-            //Generar TM[1,4] Error in acceptance
+           self->manage_error_in_acceptance(&(*tc_handler), ret);
         }
         
         return;
     }
 
+
+    /**
+     * @brief Sends an acceptance telemetry message.
+     * 
+     * If telemetry handler allocation is successful and acknowledgement is enabled,
+     * a TM[1,1] acceptance packet is built and sent through the TM channel.
+     * 
+     * @param[in] tc_handler Pointer to the telecommand handler.
+     * @param[out] ret Status result of the operation.
+    */
     procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Status<i32>) {
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -65,15 +161,26 @@ resource class ManagerTCExecutor provides MngTCExecIface {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
-                //generar TM(1,1)
+          
                 var current_obt : MissionObt = {
                     seconds = 0,
                     finetime = 0
                 };
                 var result : MyResult = MyResult::Ok;
-                //self->pus_service_9.get_current_obt(&mut current_obt); OJOOO CORREGIR
-                build_tm_1_1(&mut b_tm_handler, tm_count, tc_handler->packet_header.packet_id, tc_handler->packet_error_ctrl, current_obt, &mut result);
-                self->tm_channel.send_tm(b_tm_handler, &mut result);
+                var ack_enabled : bool = false;
+
+                self->pus_service_9.get_current_obt(&mut current_obt); 
+                build_tm_1_1(&mut b_tm_handler, tm_count, tc_handler->packet_header.packet_id, tc_handler->packet_error_ctrl, tc_handler->df_header.flag_ver_ack,
+                     current_obt, &mut result, &mut ack_enabled);
+
+                if (ack_enabled) {
+
+                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                } else {
+                    self->a_tm_handler_pool.free(b_tm_handler);
+                }
+                
                         
             }
             case None => {
@@ -85,6 +192,15 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     }
 
 
+    /**
+     * @brief Sends a rejection telemetry message.
+     * 
+     * If telemetry handler allocation is successful, a TM[1,2] rejection packet is built
+     * and sent through the TM channel. The acceptance status is evaluated before building the packet.
+     * 
+     * @param[in] tc_handler Pointer to the telecommand handler.
+     * @param[out] ret Status result of the operation.
+    */
     procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Status<i32>) {
 
         var tm_handler : Option<box TMHandlerT> = None;
@@ -97,13 +213,13 @@ resource class ManagerTCExecutor provides MngTCExecIface {
 
                 var tm_count : u16 = 0 : u16;
                 self->tm_counter.get_next_tm_count(&mut tm_count);
-                //generar TM(1,2)
+                
                 var current_obt : MissionObt = {
                     seconds = 0,
                     finetime = 0
                 };
                 var result : MyResult = MyResult::Ok;
-                //self->pus_service_9.get_current_obt(&mut current_obt); OJOOO CORREGIR
+                self->pus_service_9.get_current_obt(&mut current_obt); 
                 build_tm_1_2(&tc_status, &mut b_tm_handler, tm_count, tc_handler, current_obt, &mut result);
                 self->tm_channel.send_tm(b_tm_handler, &mut result);
             
@@ -114,7 +230,5 @@ resource class ManagerTCExecutor provides MngTCExecIface {
         }
         return;
     }
-
-
 
 };

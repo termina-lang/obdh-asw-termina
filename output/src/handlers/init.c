@@ -1,38 +1,69 @@
 
 #include "handlers/init.h"
 
+const uint32_t Zero = 2048U;
+
+const uint32_t Unit = 204U;
+
+const uint32_t Dec = 20U;
+
 __status_int32_t Init__init(void * const __this, TimeVal _boot_time) {
     
     Init * self = (Init *)__this;
 
-    #line 17 "src/handlers/init.fin"
+    #line 44 "src/handlers/init.fin"
     __status_int32_t ret;
-    #line 17 "src/handlers/init.fin"
+    #line 44 "src/handlers/init.fin"
     ret.__variant = Success;
 
-    #line 19 "src/handlers/init.fin"
-    self->uart.initialize(self->uart.__that);
+    #line 47 "src/handlers/init.fin"
+    self->uart.uart_enable_RX(self->uart.__that);
 
-    #line 20 "src/handlers/init.fin"
+    #line 48 "src/handlers/init.fin"
+    self->uart.uart_enable_TX(self->uart.__that);
+
+    #line 49 "src/handlers/init.fin"
+    self->uart.uart_enable_RI(self->uart.__that);
+
+    #line 52 "src/handlers/init.fin"
     self->gpio_driver.init_gpio(self->gpio_driver.__that);
 
-    #line 22 "src/handlers/init.fin"
-    for (size_t i = 0U; i < 12U; i = i + 1U) {
+    #line 55 "src/handlers/init.fin"
+    for (size_t i = 5U; i < 12U; i = i + 1U) {
         
-        #line 23 "src/handlers/init.fin"
+        #line 56 "src/handlers/init.fin"
         atomic_store(&self->system_data_pool_u32[i], (uint32_t)i);
 
     }
 
-    #line 25 "src/handlers/init.fin"
+    #line 60 "src/handlers/init.fin"
+    atomic_store(&self->system_data_pool_u32[0U],
+                 (uint32_t)(Zero + (uint32_t)(1U * Unit)) + (uint32_t)(1U * Dec));
+
+    #line 61 "src/handlers/init.fin"
+    atomic_store(&self->system_data_pool_u32[1U],
+                 (uint32_t)(Zero + (uint32_t)(2U * Unit)) + (uint32_t)(4U * Dec));
+
+    #line 62 "src/handlers/init.fin"
+    atomic_store(&self->system_data_pool_u32[2U],
+                 (uint32_t)(Zero + (uint32_t)(3U * Unit)) + (uint32_t)(2U * Dec));
+
+    #line 63 "src/handlers/init.fin"
+    atomic_store(&self->system_data_pool_u32[3U],
+                 (uint32_t)(Zero + (uint32_t)(4U * Unit)) + (uint32_t)(9U * Dec));
+
+    #line 64 "src/handlers/init.fin"
+    atomic_store(&self->system_data_pool_u32[4U], Zero + (uint32_t)(5U * Unit));
+
+    #line 67 "src/handlers/init.fin"
     for (size_t i = 0U; i < 18U; i = i + 1U) {
         
-        #line 26 "src/handlers/init.fin"
+        #line 68 "src/handlers/init.fin"
         atomic_store(&self->system_data_pool_u8[i], (uint8_t)i);
 
     }
 
-    #line 30 "src/handlers/init.fin"
+    #line 72 "src/handlers/init.fin"
     return ret;
 
 }

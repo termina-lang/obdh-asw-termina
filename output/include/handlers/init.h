@@ -9,6 +9,12 @@
 
 #include "option.h"
 
+extern const uint32_t Zero;
+
+extern const uint32_t Unit;
+
+extern const uint32_t Dec;
+
 typedef struct {
     __termina_id_t __handler_id;
     _Atomic uint8_t * system_data_pool_u8;
@@ -19,7 +25,9 @@ typedef struct {
     } gpio_driver;
     struct {
         void * __that;
-        void (* initialize)(void * const);
+        void (* uart_enable_RI)(void * const);
+        void (* uart_enable_RX)(void * const);
+        void (* uart_enable_TX)(void * const);
     } uart;
 } Init;
 

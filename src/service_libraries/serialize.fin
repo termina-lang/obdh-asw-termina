@@ -1,10 +1,13 @@
 
 /**
- * \brief Serializes a 16-bit word
+ * @brief Deserializes a 16-bit unsigned integer from two bytes
  *
- * \param data_bytes vector containing the MSB and LSB bytes of the word
+ * Converts a two-byte array into a 16-bit word, assuming big-endian order
+ * (i.e., the most significant byte is first).
  *
- * \return the serialized 16-bit word
+ * @param[in] data_bytes Vector containing the MSB and LSB of the 16-bit word
+ *
+ * @return The deserialized 16-bit word
  */
 function deserialize_uint16(data_bytes : &[u8 ; 2]) -> u16 {
 
@@ -20,11 +23,13 @@ function deserialize_uint16(data_bytes : &[u8 ; 2]) -> u16 {
 
 
 /**
- * \brief Serializes a 32-bit word
+ * @brief Deserializes a 32-bit unsigned integer from four bytes
  *
- * \param data_bytes vector containing the 4 bytes of the word
+ * Converts a four-byte array into a 32-bit word, assuming big-endian order.
  *
- * \return the serialized 32-bit word
+ * @param[in] data_bytes Vector containing the 4 bytes of the 32-bit word
+ *
+ * @return The deserialized 32-bit word
  */
 function deserialize_uint32(data_bytes : &[u8 ; 4]) -> u32 {
 
@@ -43,11 +48,12 @@ function deserialize_uint32(data_bytes : &[u8 ; 4]) -> u32 {
 
 
 /**
- * \brief Serializes a 16-bit word
+ * @brief Serializes a 16-bit unsigned integer into two bytes
  *
- * \param var the 16-bit word to serialize
- * \param data_bytes vector that will store the serialized 16-bit word
+ * Stores the big-endian byte representation of a 16-bit word into the provided array.
  *
+ * @param[in] aux 16-bit word to serialize
+ * @param[out] data_bytes Vector to store the serialized 2-byte result
  */
 function serialize_uint16(aux : u16, data_bytes : &mut[u8 ; 2]) {
 
@@ -59,11 +65,12 @@ function serialize_uint16(aux : u16, data_bytes : &mut[u8 ; 2]) {
 
 
 /**
- * \brief Serializes a 32-bit word
+ * @brief Serializes a 32-bit unsigned integer into four bytes
  *
- * \param var the 32-bit word to serialize
- * \param data_bytes vector that will store the serialized 32-bit word
+ * Stores the big-endian byte representation of a 32-bit word into the provided array.
  *
+ * @param[in] aux 32-bit word to serialize
+ * @param[out] data_bytes Vector to store the serialized 4-byte result
  */
 function serialize_uint32(aux : u32, data_bytes : &mut[u8 ; 4]) {
 

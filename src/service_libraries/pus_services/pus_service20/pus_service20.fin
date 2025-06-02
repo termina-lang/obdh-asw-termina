@@ -62,6 +62,7 @@ resource class PUSService20 provides PUSS20Iface {
 
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
         var result : MyResult = MyResult::Ok; 
+        var ack_enabled : bool = false;
 
         var current_obt : MissionObt = {seconds = 0, finetime = 0};
 
@@ -100,19 +101,25 @@ resource class PUSService20 provides PUSS20Iface {
                     if (sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID)){
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
-                        build_tm_1_3(&mut b_tm_handler, tm_count, current_obt, &mut result);
+                        build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.flags_ack, current_obt, &mut result, &mut ack_enabled);
 
-                        if (result is MyResult::Ok){
+                        if (ack_enabled) {
 
-                            self->tm_channel.send_tm(b_tm_handler, &mut result);
+                            if (result is MyResult::Ok){
 
-                            if (result is MyResult::Error){
-                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                                if (result is MyResult::Error){
+                                    next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                }
                             }
-                        } 
-                        else {
+                            else {
+                                self->a_tm_handler_pool.free(b_tm_handler);
+                                next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                            }
+
+                        } else {
                             self->a_tm_handler_pool.free(b_tm_handler);
-                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                         }
 
                         var tm_handler2 : Option<box TMHandlerT> = None;
@@ -158,19 +165,25 @@ resource class PUSService20 provides PUSS20Iface {
                                 var tm_count3 : u16 = 0 : u16;
                                 self->tm_counter.get_next_tm_count(&mut tm_count3);
                                 self->pus_service_9.get_current_obt(&mut current_obt);
-                                build_tm_1_7(&mut b_tm_handler3, tm_count3, current_obt, &mut result);
+                                build_tm_1_7(&mut b_tm_handler3, tm_count3, self->exec_tc_req_status_update.flags_ack, current_obt, &mut result, &mut ack_enabled);
 
-                                if (result is MyResult::Ok){
+                                if (ack_enabled) {
 
-                                    self->tm_channel.send_tm(b_tm_handler3, &mut result);
+                                    if (result is MyResult::Ok){
 
-                                    if (result is MyResult::Error){
-                                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                        self->tm_channel.send_tm(b_tm_handler3, &mut result);
+
+                                        if (result is MyResult::Error){
+                                            next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                        }
                                     }
-                                } 
-                                else {
+                                    else {
+                                        self->a_tm_handler_pool.free(b_tm_handler3);
+                                        next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                                    }
+
+                                } else {
                                     self->a_tm_handler_pool.free(b_tm_handler3);
-                                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                                 }
                                 
                             }
@@ -218,6 +231,7 @@ resource class PUSService20 provides PUSS20Iface {
 
         var next_status : PSExecTCReqStatus = PSExecTCReqStatus::Exit;
         var result : MyResult = MyResult::Ok;
+        var ack_enabled : bool = false;
 
         var current_obt : MissionObt = {seconds = 0, finetime = 0};
 
@@ -258,19 +272,25 @@ resource class PUSService20 provides PUSS20Iface {
                         if(sys_data_pool_is_PID_update_via_TC_enabled(self->exec_tc_req_status_update.PID)){
 
                             self->pus_service_9.get_current_obt(&mut current_obt);
-                            build_tm_1_3(&mut b_tm_handler, tm_count, current_obt, &mut result);
+                            build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.flags_ack, current_obt, &mut result, &mut ack_enabled);
 
-                            if (result is MyResult::Ok){
+                            if (ack_enabled) {
 
-                                self->tm_channel.send_tm(b_tm_handler, &mut result);
+                                if (result is MyResult::Ok){
 
-                                if (result is MyResult::Error){
-                                    next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+
+                                    if (result is MyResult::Error){
+                                        next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                    }
                                 }
-                            } 
-                            else {
+                                else {
+                                    self->a_tm_handler_pool.free(b_tm_handler);
+                                    next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                                }
+
+                            } else {
                                 self->a_tm_handler_pool.free(b_tm_handler);
-                                next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                             }
                             
 
@@ -306,19 +326,25 @@ resource class PUSService20 provides PUSS20Iface {
                                         var tm_count2 : u16 = 0 : u16;
                                         self->tm_counter.get_next_tm_count(&mut tm_count2);
                                         self->pus_service_9.get_current_obt(&mut current_obt);
-                                        build_tm_1_7(&mut b_tm_handler2, tm_count2, current_obt, &mut result);
+                                        build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.flags_ack, current_obt, &mut result, &mut ack_enabled);
 
-                                        if (result is MyResult::Ok){
+                                        if (ack_enabled) {
 
-                                            self->tm_channel.send_tm(b_tm_handler2, &mut result);
+                                            if (result is MyResult::Ok){
 
-                                            if (result is MyResult::Error){
-                                                next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                                self->tm_channel.send_tm(b_tm_handler2, &mut result);
+
+                                                if (result is MyResult::Error){
+                                                    next_status = PSExecTCReqStatus::Failure(TM_SEND_FAILURE);
+                                                }
                                             }
-                                        } 
-                                        else {
+                                            else {
+                                                self->a_tm_handler_pool.free(b_tm_handler2);
+                                                next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
+                                            }
+
+                                        } else {
                                             self->a_tm_handler_pool.free(b_tm_handler2);
-                                            next_status = PSExecTCReqStatus::Error(BUILD_TM_ERROR);
                                         }
                                         
                                     }
@@ -390,6 +416,7 @@ resource class PUSService20 provides PUSS20Iface {
         var tc_data : PS20ExecTCReqStatusUpdate = {
             packet_id = 0,
             packet_error_ctrl = 0,
+            flags_ack = 0,
             tc_num_bytes = 0,
             N = 0,
             PID = 0,
@@ -400,6 +427,7 @@ resource class PUSService20 provides PUSS20Iface {
         };
         tc_data.packet_id = tc_handler->packet_header.packet_id;
         tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+        tc_data.flags_ack = tc_handler->df_header.flag_ver_ack;
         tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
         *result = tc_handler_get_u8_appdata_field(tc_handler, &mut (tc_data.N));
         *result = tc_handler_get_u16_appdata_field(tc_handler, &mut (tc_data.PID));

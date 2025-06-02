@@ -1,0 +1,164 @@
+import resources.uart;
+import service_libraries.serialize;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.pus_tc_handler;
+
+/**
+ * @enum UARTHandlerState
+ * @brief States used in the UART handler state machine to process incoming telecommand bytes.
+ *
+ * This state machine follows the reception of:
+ * - Frame header bytes,
+ * - Telecommand size bytes,
+ * - Telecommand payload bytes,
+ * - Completion of telecommand reception.
+ */
+enum UARTHandlerState {
+    RXFrameHeader(usize),       /**< Receiving frame header bytes; current byte index */
+    RXTelecommandSize(bool),    /**< Receiving telecommand size bytes */
+    RXTelecommand(usize),       /**< Receiving telecommand payload bytes; current byte index */
+    RXTelecommandFinished       /**< Telecommand reception completed */
+};
+
+/**
+ * @class UARTHandler
+ * @brief Handler for receiving telecommands through UART interface.
+ *
+ * This handler implements a state machine to parse incoming telecommand frames
+ * from a UART byte stream. It verifies frame headers, extracts telecommand size,
+ * collects telecommand bytes, and queues completed telecommands for processing.
+ */
+handler class UARTHandler {
+
+    tc_message_queue_output: out box TCHandlerT;    /**< Output queue for processed telecommands */
+    uart: access UARTDriverIface;                   /**< Access to UART driver interface */
+    a_tc_handler_pool : access Allocator<TCHandlerT>; /**< Allocator for telecommand handler objects */
+
+    irq_entry : sink u32 triggers handle;           /**< Interrupt trigger for UART handling */
+
+    telecommand : TCDescriptorT;                     /**< Descriptor holding the current telecommand data */
+
+    handler_state : UARTHandlerState;                /**< Current reception state in the UART state machine */
+
+    /**
+     * @brief UART interrupt handler that reads and processes telecommand bytes.
+     *
+     * This action is triggered by UART interrupts. It reads bytes from the UART interface
+     * and parses them according to the telecommand frame structure:
+     * - Frame header of 4 bytes (0xBE, 0xBA, 0xBE, 0xEF),
+     * - Two-byte telecommand size,
+     * - Telecommand payload of the given size.
+     *
+     * The function updates the handler state accordingly and upon receiving a complete telecommand,
+     * it allocates a handler object, builds the telecommand, and sends it to the output queue.
+     *
+     * @param _vector Interrupt vector (unused parameter)
+     * @return Status<i32> Returns Success on successful handling,
+     *         or Failure(TM_POOL_ALLOC_FAILURE) if handler allocation fails.
+     */
+    action handle(&priv self, _vector : u32) -> Status<i32> {
+
+        var result : Option<u8> = None;
+        var ret : Status<i32> = Success;
+        let tc_frame : [u8; 4] = { 0xBE, 0xBA, 0xBE, 0xEF };
+
+        self->uart.getchar(&mut result);
+
+        for i : usize in 0 .. 256 while (
+            (result is Some) 
+            && (ret is Success) 
+            && ((self->handler_state is UARTHandlerState::RXTelecommandFinished) == false)) {
+
+            match result {
+
+                case Some(data) => {
+
+                    match self->handler_state {
+
+                        case RXFrameHeader(current) => {
+
+                            if (tc_frame[current] == data) {
+
+                                if (current == 3) {
+                                    self->handler_state = UARTHandlerState::RXTelecommandSize(true);
+                                } else {
+                                    self->handler_state = UARTHandlerState::RXFrameHeader(current + 1);
+                                }
+
+                            } else {
+
+                                self->handler_state = UARTHandlerState::RXFrameHeader(0);
+
+                            }
+
+                        }
+
+                        case RXTelecommandSize(first) => {
+
+                            if (first == true) {
+                                self->telecommand.tc_num_bytes = (data as usize);
+                                self->handler_state = UARTHandlerState::RXTelecommandSize(false);
+                            } else {
+                                self->telecommand.tc_num_bytes = self->telecommand.tc_num_bytes << 8 : usize | (data as usize);
+                                self->handler_state = UARTHandlerState::RXTelecommand(0);
+                            }
+
+                        }
+
+                        case RXTelecommand(current) => {
+
+                            self->telecommand.tc_bytes[current as usize] = data;
+
+                            
+                            if (self->telecommand.tc_num_bytes == current + 1) {
+                                self->handler_state = UARTHandlerState::RXTelecommandFinished;
+                            } else {
+                                self->handler_state = UARTHandlerState::RXTelecommand(current + 1);
+                            }
+
+                        }
+
+                        case RXTelecommandFinished => {
+
+                        }
+
+                    }
+
+                    self->uart.getchar(&mut result);
+
+                }
+                case None => {
+
+                }
+            }
+
+        }
+
+        if (self->handler_state is UARTHandlerState::RXTelecommandFinished) {
+
+            var tc_handler : Option<box TCHandlerT> = None;
+            self->a_tc_handler_pool.alloc(&mut tc_handler);
+
+            match tc_handler {
+
+                case Some(b_tc_handler) => {
+
+                    tc_handler_build_from_descriptor(&mut b_tc_handler, &self->telecommand);
+
+                    self->handler_state = UARTHandlerState::RXFrameHeader(0);
+                    self->tc_message_queue_output.send(b_tc_handler);
+                
+                }
+                case None => {
+            
+                    ret = Failure(TM_POOL_ALLOC_FAILURE);
+                }
+            }  
+
+        }
+
+        return ret;
+
+    }
+
+};

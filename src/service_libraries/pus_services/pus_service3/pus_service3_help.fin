@@ -1,8 +1,14 @@
+/**
+ * @file pus_service3_help.fin
+ * @brief Imports and definitions related to PUS Service 3.
+ */
+
 import service_libraries.pus_services.pus_services;
 import resources.system_data_pool;
 import service_libraries.pus_services.pus_service1.pus_service1;
 import service_libraries.pus_services.pus_service5.pus_service5;
 import service_libraries.pus_services.pus_service9.pus_service9;
+import service_libraries.rand;
 
 
 constexpr max_num_of_SIDs : usize = 8;
@@ -18,6 +24,7 @@ struct IndexFound {
 struct PS3TCData {
     packet_id : u16;
     packet_error_ctrl : u16;
+    flags_ack : u8;
     tc_num_bytes : usize;
     N : u8;
     SID: u16;
@@ -30,7 +37,7 @@ struct PS3ExecTCReqStatusUpdate {
 };
 
 constexpr ps3_init_tc_req_status_update : PS3ExecTCReqStatusUpdate  = {
-    index = {found = false, index = 0}, tc_data = {packet_id = 0, packet_error_ctrl = 0, tc_num_bytes = 0, N = 0, SID = 0, collection_interval = 0}  
+    index = {found = false, index = 0}, tc_data = {packet_id = 0, packet_error_ctrl = 0, flags_ack = 0, tc_num_bytes = 0, N = 0, SID = 0, collection_interval = 0}  
 };
 
 struct HKConfiguration {

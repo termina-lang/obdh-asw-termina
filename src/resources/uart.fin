@@ -1,254 +1,168 @@
-import service_libraries.queue_u8;
+/**
+ * @file uart.fin
+ * @brief UART driver implementation using memory-mapped register access.
+ */
 
-//#[packed]
+
+/**
+ * @struct UARTRegs
+ * @brief Memory-mapped UART register block.
+ *
+ * This structure represents the UART hardware registers.
+ */
+#[packed]
 struct UARTRegs {
+    /** Data register (read/write). */
     data : u32;
+
+    /** Status register (read-only). */
     status : u32;
-    control :  u32;
+
+    /** Control register (read/write). */
+    control : u32;
+
+    /** Clock scaler register (read/write). */
     scaler : u32;
 };
 
 
-enum CharDevResult {
-    Success,
-    TXFIFOFull
+/**
+ * @interface UARTDriverIface
+ * @brief Interface for UART driver operations.
+ *
+ * Defines the basic UART functionality such as enabling features,
+ * checking buffer states, and transmitting/receiving data.
+ */
+interface UARTDriverIface {
+
+    procedure uart_tf_is_empty(&mut self, res : &mut bool);
+
+    procedure uart_enable_TX(&mut self);
+
+    procedure uart_enable_RX(&mut self);
+
+    procedure uart_enable_RI(&mut self);
+    
+    procedure putchar(&mut self, c : u8, status : &mut Status<i32>);
+
+    procedure getchar(&mut self, uart_data : &mut Option<u8>);
+
 };
 
-constexpr max_send_size : usize = 256;
 
-interface CharDevSend {
-    procedure send(&mut self,
-                   output_bytes : & [u8; max_send_size], 
-                   nbytes : usize, 
-                   result : &mut CharDevResult);
-};
-
-interface CharDevInit {
-    procedure initialize(&mut self);
-};
-
-interface CharDevRelayIrq {
-     procedure release_tx(&mut self);
-};
+/** 
+ * @brief Timeout value for UART transmit operations.
+ */
+constexpr uart_timeout : u32 = 0xAAAAA : u32;
 
 
-resource class UARTDriver provides 
-        CharDevSend, CharDevInit, CharDevRelayIrq {
+/**
+ * @class UARTDriver
+ * @brief Concrete UART driver implementation.
+ *
+ * Provides memory-mapped register access to control and interact with the UART peripheral.
+ */
+resource class UARTDriver provides UARTDriverIface {
 
-    // UART registers
-    registers: loc UARTRegs;
+    uart_regs: loc UARTRegs;
 
-    //Flag to indicate that there are bytes enqueued that must be sent
-    rem_bytes : bool;
-
-    // TX queue
-    uart_queue : QueueU8;
-
-    viewer tf_is_full(&self) -> bool {
+    /**
+     * @brief Checks if the transmit FIFO is full.
+     *
+     * @return True if the FIFO is full, false otherwise.
+     */
+    viewer uart_tf_is_full(&self) -> bool {
         let riscv_uart_tf : u32 = 0x00000200 : u32;
-        return ((self->registers.status & riscv_uart_tf) != 0 : u32);
+        return ((self->uart_regs.status & riscv_uart_tf) != 0);
     }
 
-    viewer tf_is_empty(&self) -> bool {
+    /**
+     * @brief Check if the transmit FIFO is empty.
+     *
+     * @param[out] res Boolean value indicating if the transmit FIFO is empty.
+     */
+    procedure uart_tf_is_empty(&mut self, res : &mut bool) {
         let riscv_uart_te : u32 = 0x00000004 : u32;
-        return ((self->registers.status & riscv_uart_te) != 0 : u32);
+        *res = ((self->uart_regs.status & riscv_uart_te) != 0);
+        return;
     }
 
-
-    method enable_TX(&priv self) {
+    /**
+     * @brief Enable UART transmitter.
+     */
+    procedure uart_enable_TX(&mut self) {
         let riscv_uart_txe : u32 = 0x00000002 : u32;
-        self->registers.control = self->registers.control | riscv_uart_txe;
+        self->uart_regs.control = self->uart_regs.control | riscv_uart_txe;
         return;
-        
     }
 
-    method enable_RX(&priv self) {
+    /**
+     * @brief Enable UART receiver.
+     */
+    procedure uart_enable_RX(&mut self) {
         let riscv_uart_rxe : u32 = 0x00000001 : u32;
-        self->registers.control = self->registers.control | riscv_uart_rxe;
+        self->uart_regs.control = self->uart_regs.control | riscv_uart_rxe;
         return;
     }
 
-    method enable_RI(&priv self) {
+    /**
+     * @brief Enable UART receive interrupt.
+     */
+    procedure uart_enable_RI(&mut self) {
         let riscv_uart_ri : u32 = 0x00000004 : u32;
-        self->registers.control = self->registers.control | riscv_uart_ri;
+        self->uart_regs.control = self->uart_regs.control | riscv_uart_ri;
         return;
     }
-
-    method enable_TI(&priv self) {
-        let riscv_uart_ti : u32 = 0x00000008 : u32;
-        self->registers.control = self->registers.control | riscv_uart_ti;
-        return;
-    }
-
-    method disable_TF(&priv self) {
-        let riscv_uart_tf : u32 = 0xFFFFFCFF : u32;
-        self->registers.control = self->registers.control & riscv_uart_tf;
-        return;
-    }
-
-    method disable_RF(&priv self) {
-        let riscv_uart_rf : u32 = 0xFFFFFBFF : u32;
-        self->registers.control = self->registers.control & riscv_uart_rf;
-        return;
-    }
-
-
-    procedure release_tx(&mut self) {
-
-        if(self->rem_bytes){
-
-            var num_elements : usize = 0;
-
-            get_num_enqueued_elems (&(self->uart_queue),&mut num_elements);
-
-            var sent_bytes : usize = 0;
-            var extracted_elem : Option<u8> = None;
 
     
+     /**
+     * @brief Transmit a single character through UART.
+     *
+     * @param[in] c Character to transmit.
+     * @param[out] status Indicates success or timeout failure.
+     */
+    procedure putchar(&mut self, c : u8, status : &mut Status<i32>) {
+        
+        var write_timeout : u32 = 0 : u32;
 
-            for i : usize in 0 : usize .. 4 while (sent_bytes < num_elements) {
+        *status = Failure(-1);
 
-                dequeue(&mut(self->uart_queue), &mut extracted_elem);
-
-                match extracted_elem {
-                    case Some(elem) => {
-                        self->registers.data = elem as u32;
-                        sent_bytes = sent_bytes + 1;
-                    }
-                    case None => {
-                        //queue is empty
-                    }
-                }
-
-            }
-
+        for i : u32 in 0 : u32 .. uart_timeout while self->uart_tf_is_full() {
             
-
-            if (sent_bytes < num_elements) {
-                
-                self->rem_bytes = true;
-
-            } else {
-
-                self->rem_bytes = false;
-            }
-            
+            write_timeout = write_timeout + 1 : u32;
 
         }
 
-        return;
-    }
-
-    procedure send(&mut self, output_bytes : & [u8; max_send_size], 
-                   nbytes : usize, 
-                   result : &mut CharDevResult) {
-
-        *result = CharDevResult::Success;
-
-        if (self->rem_bytes){
-
-            var num_elements : usize = 0;
-            get_num_enqueued_elems(&(self->uart_queue), &mut num_elements);
-
-            if ((queue_max_noe-num_elements) >= nbytes) {
-
-                var inner_queue_result : QueueResult = QueueResult::Success;
-                var queued_bytes : usize = 0;
-                var error : bool = false;
-
-                for i : usize in 0 : usize .. max_send_size while (queued_bytes < nbytes && error == false) {
-
-                    inner_queue_result = enqueue(&mut(self->uart_queue), (*output_bytes)[i]);
-
-                    if (inner_queue_result is QueueResult::QueueFull) {
-                        
-                        error = true;
-                        *result = CharDevResult::TXFIFOFull;
-                    
-                    } else {
-                        queued_bytes = queued_bytes + 1;
-                    }
-                    
-                    
-                }
-
-
-            } else {
-                
-                *result = CharDevResult::TXFIFOFull;
-            }
-
-
-
-        } else {
-
-            var sent_bytes : usize = 0;
-
-            if (self->tf_is_empty()) {
-
-                for i : usize in 0 : usize .. 4 while (sent_bytes < nbytes) {
-
-                    self->registers.data = output_bytes[i] as u32;
-                    sent_bytes = sent_bytes + 1;
-                    
-                }
-
-            }
-
-            if (sent_bytes < nbytes) {
-
-                self->rem_bytes = true;
-
-                var left_bytes : usize = nbytes - sent_bytes;
-                var num_elements : usize = 0;
-
-                get_num_enqueued_elems(&(self-> uart_queue), &mut num_elements);
-
-                if ((queue_max_noe-num_elements) >= left_bytes) {
-
-                    var inner_queue_result : QueueResult = QueueResult::Success;
-                    var error : bool = false;
-
-                    for i : usize in 0 .. max_send_size while (i < left_bytes && error == false){
-
-                        inner_queue_result = enqueue(&mut(self->uart_queue), (*output_bytes)[i+sent_bytes]);
-
-                        if (inner_queue_result is QueueResult::QueueFull) {
-                        
-                            error = true;
-                            *result = CharDevResult::TXFIFOFull;
-                    
-                        } else {
-                            
-                        }
-                        
-                    }
-
-                } else {
-                    
-                    *result = CharDevResult::TXFIFOFull;
-                }
-
-            }
-
+        if (write_timeout < uart_timeout){
+            self->uart_regs.data = c as u32;
+            *status = Success;
         }
 
         return;
+    
     }
 
 
-    procedure initialize(&mut self) {
+    /**
+     * @brief Receive a character from UART if available.
+     *
+     * @param[out] uart_data Option containing received character or None if not available.
+     */
+    procedure getchar(&mut self, uart_data : &mut Option<u8>) {
+        
+        let riscv_uart_dr : u32 = 0x00000001;
 
-        self->enable_RX();
-        self->enable_TX();
-        self->enable_RI();
-        self->enable_TI();
-        self->disable_TF();
-        self->disable_RF();
+        if ((self->uart_regs.status & riscv_uart_dr) != 0) {
+            *uart_data = Some(self->uart_regs.data as u8);
+        }
+        else{
+            *uart_data = None;
+        }
 
         return;
 
     }
+
 
 };
 

@@ -16,8 +16,6 @@ typedef struct {
     size_t app_data_index;
 } TMHandlerT;
 
-extern const uint16_t base_length;
-
 extern const uint16_t APID;
 
 extern const uint16_t destinationID;
