@@ -1,75 +1,40 @@
-/**
- * @brief Maximum number of elements the queue can hold
- */
-constexpr queue_max_noe: usize = 1024: usize;
+const queue_max_noe: usize = 1024;
 
-/**
- * @brief Result codes for queue operations
- */
-enum QueueResult {
-    Success,    /**< Operation succeeded */
-    QueueFull   /**< Queue is full, operation failed */
-};
+constexpr QueueFull : i32 = -1;
 
-/**
- * @brief Structure representing a fixed-size queue of u8 elements
- */
+// QueueU8 struct
 struct QueueU8 {
-    elements: [u8; queue_max_noe]; /**< Array storing the queue elements */
-    head_index: usize;             /**< Index of the front (oldest) element */
-    num_elements: usize;           /**< Number of elements currently in the queue */
+    elements: [u8; queue_max_noe];
+    head_index: usize;
+    num_elements: usize;
 };
 
-/**
- * @brief Checks if the queue is full
- *
- * @param queue Pointer to the QueueU8 instance
- * @return true if the queue is full, false otherwise
- */
+
 function is_full(queue : &QueueU8) -> bool {
     var queue_is_full: bool = (queue->num_elements == queue_max_noe);
     return queue_is_full;
 }
 
-/**
- * @brief Checks if the queue is empty
- *
- * @param queue Pointer to the QueueU8 instance
- * @return true if the queue is empty, false otherwise
- */
 function is_empty(queue : &QueueU8) -> bool {
     var queue_is_empty: bool = (queue->num_elements == 0: usize);
     return queue_is_empty;
 }
 
-/**
- * @brief Adds an element to the tail of the queue if not full
- *
- * @param queue Pointer to the QueueU8 instance to modify
- * @param new_elem Element to enqueue
- * @return QueueResult::Success if element added, QueueResult::QueueFull if queue is full
- */
-function enqueue(queue: &mut QueueU8, new_elem: u8) -> QueueResult {
+function enqueue(queue: &mut QueueU8, new_elem: u8) -> Status<i32> {
 
     var queue_is_full: bool = is_full(&(*queue)); 
-    var result: QueueResult = QueueResult::Success;
+    var status : Status<i32> = Success;
 
     if (false == queue_is_full) {
         var next_tail_index: usize = (queue->head_index + queue->num_elements) % queue_max_noe;
         queue->elements[next_tail_index] = new_elem;
         queue->num_elements = queue->num_elements + 1: usize;
     } else {
-        result = QueueResult::QueueFull;
+        status = Failure(QueueFull);
     }
-    return result;
+    return status;
 }
 
-/**
- * @brief Removes and retrieves the element at the head of the queue if not empty
- *
- * @param queue Pointer to the QueueU8 instance to modify
- * @param old_elem Output parameter, Some(value) if element dequeued, None if queue empty
- */
 function dequeue(queue: &mut QueueU8, old_elem: &mut Option<u8>) {
 
     var queue_is_empty: bool = is_empty(&(*queue));
@@ -85,13 +50,10 @@ function dequeue(queue: &mut QueueU8, old_elem: &mut Option<u8>) {
     return;
 }
 
-/**
- * @brief Gets the current number of elements enqueued
- *
- * @param queue Pointer to the QueueU8 instance
- * @param nelems Output parameter to store the number of elements in the queue
- */
 function get_num_enqueued_elems(queue : &QueueU8, nelems: &mut usize) {
     *nelems = queue->num_elements;
     return;
 }
+
+
+

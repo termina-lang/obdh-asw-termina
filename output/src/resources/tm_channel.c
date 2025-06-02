@@ -12,85 +12,51 @@ void TMChannel__send_tm(void * const __this, __termina_box_t tm_handler,
     #line 57 "src/resources/tm_channel.fin"
     uint8_t frame_header[6U];
     #line 57 "src/resources/tm_channel.fin"
-    for (size_t __i0 = 0U; __i0 < 6U; __i0 = __i0 + 1U) {
-        #line 57 "src/resources/tm_channel.fin"
-        frame_header[__i0] = 0U;
-    }
+    frame_header[0U] = 0xBEU;
+    #line 57 "src/resources/tm_channel.fin"
+    frame_header[1U] = 0xBAU;
+    #line 57 "src/resources/tm_channel.fin"
+    frame_header[2U] = 0xBEU;
+    #line 57 "src/resources/tm_channel.fin"
+    frame_header[3U] = 0xEFU;
+    #line 57 "src/resources/tm_channel.fin"
+    frame_header[4U] = 0U;
+    #line 57 "src/resources/tm_channel.fin"
+    frame_header[5U] = 0U;
 
-    #line 60 "src/resources/tm_channel.fin"
-    uint32_t write_timeout = 0U;
-
-    #line 63 "src/resources/tm_channel.fin"
-    _Bool check = 0;
-
-    #line 65 "src/resources/tm_channel.fin"
+    #line 59 "src/resources/tm_channel.fin"
     (*result).__variant = MyResult__Ok;
 
-    #line 68 "src/resources/tm_channel.fin"
-    frame_header[0U] = 0xBEU;
-
-    #line 69 "src/resources/tm_channel.fin"
-    frame_header[1U] = 0xBAU;
-
-    #line 70 "src/resources/tm_channel.fin"
-    frame_header[2U] = 0xBEU;
-
-    #line 71 "src/resources/tm_channel.fin"
-    frame_header[3U] = 0xEFU;
-
-    #line 74 "src/resources/tm_channel.fin"
+    #line 62 "src/resources/tm_channel.fin"
     serialize_uint16((uint16_t)tm_descriptor.tm_num_bytes, &frame_header[4U]);
 
-    #line 76 "src/resources/tm_channel.fin"
+    #line 64 "src/resources/tm_channel.fin"
     __status_int32_t status;
-    #line 76 "src/resources/tm_channel.fin"
+    #line 64 "src/resources/tm_channel.fin"
     status.__variant = Success;
 
-    #line 79 "src/resources/tm_channel.fin"
-    for (uint8_t i = 0U; i < 6U && status.__variant == Success; i = i + 1U) {
+    #line 66 "src/resources/tm_channel.fin"
+    self->uart.send(self->uart.__that, 6U, frame_header, &status);
+
+    #line 69 "src/resources/tm_channel.fin"
+    for (size_t i = 0U; i < 256U && (i < tm_descriptor.tm_num_bytes && status.__variant == Success); i = i + 1U) {
         
-        #line 81 "src/resources/tm_channel.fin"
-        self->uart.putchar(self->uart.__that,
-                           frame_header[__termina_array__index(6U, (size_t)i)],
-                           &status);
+        #line 71 "src/resources/tm_channel.fin"
+        size_t index = (size_t)i;
+
+        #line 73 "src/resources/tm_channel.fin"
+        self->uart.send(self->uart.__that, 1U,
+                        &tm_descriptor.tm_bytes[__termina_array__slice(256U, 1U,
+                                                                       index,
+                                                                       index + 1U)],
+                        &status);
 
     }
 
-    #line 86 "src/resources/tm_channel.fin"
-    for (size_t j = 0U; j < 256U && (j < tm_descriptor.tm_num_bytes && status.__variant == Success); j = j + 1U) {
-        
-        #line 88 "src/resources/tm_channel.fin"
-        self->uart.putchar(self->uart.__that,
-                           tm_descriptor.tm_bytes[__termina_array__index(256U,
-                                                                         (size_t)j)],
-                           &status);
-
-    }
-
-    #line 93 "src/resources/tm_channel.fin"
-    self->uart.uart_tf_is_empty(self->uart.__that, &check);
-
-    #line 94 "src/resources/tm_channel.fin"
-    for (uint32_t k = 0U; k < 0xAAAAAU && check == 0; k = k + 1U) {
-        
-        #line 96 "src/resources/tm_channel.fin"
-        self->uart.uart_tf_is_empty(self->uart.__that, &check);
-
-        #line 97 "src/resources/tm_channel.fin"
-        write_timeout = write_timeout + 1U;
-
-    }
-
-    #line 101 "src/resources/tm_channel.fin"
-    if (write_timeout < 0xAAAAAU) {
-        
-
-    }
-
-    #line 108 "src/resources/tm_channel.fin"
+    #line 78 "src/resources/tm_channel.fin"
     self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that, tm_handler);
 
-    #line 111 "src/resources/tm_channel.fin"
+    #line 80 "src/resources/tm_channel.fin"
     return;
 
 }

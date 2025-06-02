@@ -15,7 +15,8 @@ import tasks.hk_fdir_mng.hk_fdir;
 import tasks.bkgtcexec;
 import tasks.icu_manager.icu_manager;
 import handlers.init;
-import handlers.uart_handler;
+import handlers.uart_irq_handler;
+import tasks.tc_rx;
 import resources.tm_counter;
 
 
@@ -28,6 +29,7 @@ emitter hk_fdir_timer : PeriodicTimer = {
 
 
 
+channel byte_message_queue : MsgQueue<u8;10>;
 channel tc_message_queue : MsgQueue<box TCHandlerT;10>;
 channel hkfdir_message_queue : MsgQueue<box TCHandlerT;10>;
 channel bkg_message_queue : MsgQueue<box TCHandlerT;10>;
@@ -45,10 +47,15 @@ resource u8_system_data_pool : AtomicArray<u8; sdp_num_u8_params> = {
 } : AtomicArray<u8; sdp_num_u8_params>;
 
 
-resource uart_driver : UARTDriver = {
-    uart_regs @ 0x80000100 
+resource uart_drv : UARTDriver = {
+    registers @ 0x80000100, 
+    rem_bytes = false,
+    uart_queue = {
+        elements = [0 ; queue_max_noe],
+        head_index = 0,
+        num_elements = 0
+    }: QueueU8
 } : UARTDriver;
-
 
 resource gpio_drv : GPIODriver = {
     registers @ 0x80000900
@@ -56,7 +63,7 @@ resource gpio_drv : GPIODriver = {
 
 
 resource telemetry_channel : TMChannel = {
-    uart <-> uart_driver,
+    uart <-> uart_drv,
     a_tm_handler_pool <-> tm_pool
 } : TMChannel;
 
@@ -219,7 +226,7 @@ resource mng_tc_executor : ManagerTCExecutor = {
 
 
 handler init : Init = {
-    uart <-> uart_driver,
+    uart <-> uart_drv,
     gpio_driver <-> gpio_drv,
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
@@ -227,18 +234,24 @@ handler init : Init = {
 } : Init;
 
 
-handler uart_handler : UARTHandler = {
-    tc_message_queue_output -> tc_message_queue,
-    uart <-> uart_driver,
-    a_tc_handler_pool <-> tc_pool,
+handler uart_hdlr : UARTIrqHandler = {
     irq_entry <- irq_3,
-    telecommand =
-        {
-            tc_bytes = [0 : u8; 256],
-            tc_num_bytes = 0 : usize
-        },
-    handler_state = UARTHandlerState::RXFrameHeader(0)
-} : UARTHandler;
+    uart <-> uart_drv,
+    uart_registers @ 0x80000100,
+    byte_message_queue_output -> byte_message_queue
+} : UARTIrqHandler;
+
+#[priority(4: u32)]
+task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
+    rx_status = RXStatus::SyncBytesRx,
+    sync_word = {0xBE, 0xBA, 0xBE, 0xEF},
+    aux_index = 0,
+    RX_tc_length = {0, 0},
+    telecommand = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0},
+    byte_message_queue_input <- byte_message_queue,
+    tc_message_queue_output -> tc_message_queue,
+    a_tc_handler_pool <-> tc_pool
+} : TCRXBottomHalfTask;
 
 
 #[priority(5: u32)]

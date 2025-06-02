@@ -1,10 +1,10 @@
 app-file: app
 app-folder: app
-name: obdhlab-termina 
+name: obdh-asw-termina 
 output-folder: output
 platform: rtems5-leon3-qemu
 source-modules: src
-profile: debug
+profile: debug 
 enable-system-init: true
 enable-system-port: true
 builder: make

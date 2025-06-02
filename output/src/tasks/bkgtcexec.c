@@ -123,7 +123,7 @@ void __PUSBKGTCExecutor__termina_task(void * arg) {
 
     int32_t status = 0L;
 
-    uint32_t next_msg = 0U;
+    __termina_id_t next_msg = 0;
 
     __status_int32_t result;
     result.__variant = Success;

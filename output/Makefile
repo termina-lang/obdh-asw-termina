@@ -2,7 +2,7 @@ R:=$(shell pwd)
 
 MKDIR:=mkdir
 
-PROJECT_NAME:=obdhlab-termina
+PROJECT_NAME:=obdh-asw-termina
 PLATFORM:=rtems5-leon3-qemu
 TERMINA_OSAL_DIR:=/opt/termina-osal
 

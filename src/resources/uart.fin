@@ -1,8 +1,9 @@
+import service_libraries.queue_u8;
+
 /**
  * @file uart.fin
  * @brief UART driver implementation using memory-mapped register access.
  */
-
 
 /**
  * @struct UARTRegs
@@ -10,159 +11,226 @@
  *
  * This structure represents the UART hardware registers.
  */
-#[packed]
+//#[packed]
 struct UARTRegs {
     /** Data register (read/write). */
     data : u32;
-
     /** Status register (read-only). */
     status : u32;
-
     /** Control register (read/write). */
-    control : u32;
-
+    control :  u32;
     /** Clock scaler register (read/write). */
     scaler : u32;
 };
 
+interface CharDevSend {
+    procedure send(&mut self,
+                   nbytes : const usize,
+                   output_bytes : & [u8; nbytes], 
+                   result : &mut Status<i32>);
+};
 
-/**
- * @interface UARTDriverIface
- * @brief Interface for UART driver operations.
- *
- * Defines the basic UART functionality such as enabling features,
- * checking buffer states, and transmitting/receiving data.
- */
-interface UARTDriverIface {
+interface CharDevInit {
+    procedure initialize(&mut self);
+};
 
-    procedure uart_tf_is_empty(&mut self, res : &mut bool);
-
-    procedure uart_enable_TX(&mut self);
-
-    procedure uart_enable_RX(&mut self);
-
-    procedure uart_enable_RI(&mut self);
-    
-    procedure putchar(&mut self, c : u8, status : &mut Status<i32>);
-
-    procedure getchar(&mut self, uart_data : &mut Option<u8>);
-
+interface CharDevRelayIrq {
+     procedure release_tx(&mut self);
 };
 
 
-/** 
- * @brief Timeout value for UART transmit operations.
- */
-constexpr uart_timeout : u32 = 0xAAAAA : u32;
+resource class UARTDriver provides 
+        CharDevSend, CharDevInit, CharDevRelayIrq {
 
+    // UART registers
+    registers: loc UARTRegs;
 
-/**
- * @class UARTDriver
- * @brief Concrete UART driver implementation.
- *
- * Provides memory-mapped register access to control and interact with the UART peripheral.
- */
-resource class UARTDriver provides UARTDriverIface {
+    //Flag to indicate that there are bytes enqueued that must be sent
+    rem_bytes : bool;
 
-    uart_regs: loc UARTRegs;
+    // TX queue
+    uart_queue : QueueU8;
 
-    /**
-     * @brief Checks if the transmit FIFO is full.
-     *
-     * @return True if the FIFO is full, false otherwise.
-     */
-    viewer uart_tf_is_full(&self) -> bool {
+    viewer tf_is_full(&self) -> bool {
         let riscv_uart_tf : u32 = 0x00000200 : u32;
-        return ((self->uart_regs.status & riscv_uart_tf) != 0);
+        return ((self->registers.status & riscv_uart_tf) != 0 : u32);
     }
 
-    /**
-     * @brief Check if the transmit FIFO is empty.
-     *
-     * @param[out] res Boolean value indicating if the transmit FIFO is empty.
-     */
-    procedure uart_tf_is_empty(&mut self, res : &mut bool) {
+    viewer tf_is_empty(&self) -> bool {
         let riscv_uart_te : u32 = 0x00000004 : u32;
-        *res = ((self->uart_regs.status & riscv_uart_te) != 0);
-        return;
+        return ((self->registers.status & riscv_uart_te) != 0 : u32);
     }
 
-    /**
-     * @brief Enable UART transmitter.
-     */
-    procedure uart_enable_TX(&mut self) {
+
+    method enable_TX(&priv self) {
         let riscv_uart_txe : u32 = 0x00000002 : u32;
-        self->uart_regs.control = self->uart_regs.control | riscv_uart_txe;
+        self->registers.control = self->registers.control | riscv_uart_txe;
         return;
     }
 
-    /**
-     * @brief Enable UART receiver.
-     */
-    procedure uart_enable_RX(&mut self) {
+    method enable_RX(&priv self) {
         let riscv_uart_rxe : u32 = 0x00000001 : u32;
-        self->uart_regs.control = self->uart_regs.control | riscv_uart_rxe;
+        self->registers.control = self->registers.control | riscv_uart_rxe;
         return;
     }
 
-    /**
-     * @brief Enable UART receive interrupt.
-     */
-    procedure uart_enable_RI(&mut self) {
+    method enable_RI(&priv self) {
         let riscv_uart_ri : u32 = 0x00000004 : u32;
-        self->uart_regs.control = self->uart_regs.control | riscv_uart_ri;
+        self->registers.control = self->registers.control | riscv_uart_ri;
         return;
     }
 
-    
-     /**
-     * @brief Transmit a single character through UART.
-     *
-     * @param[in] c Character to transmit.
-     * @param[out] status Indicates success or timeout failure.
-     */
-    procedure putchar(&mut self, c : u8, status : &mut Status<i32>) {
-        
-        var write_timeout : u32 = 0 : u32;
+    method enable_TI(&priv self) {
+        let riscv_uart_ti : u32 = 0x00000008 : u32;
+        self->registers.control = self->registers.control | riscv_uart_ti;
+        return;
+    }
 
-        *status = Failure(-1);
+    method disable_TF(&priv self) {
+        let riscv_uart_tf : u32 = 0xFFFFFCFF : u32;
+        self->registers.control = self->registers.control & riscv_uart_tf;
+        return;
+    }
 
-        for i : u32 in 0 : u32 .. uart_timeout while self->uart_tf_is_full() {
+    method disable_RF(&priv self) {
+        let riscv_uart_rf : u32 = 0xFFFFFBFF : u32;
+        self->registers.control = self->registers.control & riscv_uart_rf;
+        return;
+    }
+
+
+    procedure release_tx(&mut self) {
+
+        if(self->rem_bytes){
+
+            var num_elements : usize = 0;
+
+            get_num_enqueued_elems (&(self->uart_queue), &mut num_elements);
+
+            var sent_bytes : usize = 0;
+            var extracted_elem : Option<u8> = None;
+
+            for i : usize in 0 : usize .. queue_max_noe while 
+                    (sent_bytes < num_elements && self->tf_is_full() == false) {
+
+                dequeue(&mut(self->uart_queue), &mut extracted_elem);
+
+                match extracted_elem {
+                    case Some(elem) => {
+                        self->registers.data = elem as u32;
+                        sent_bytes = sent_bytes + 1;
+                    }
+                    case None => {
+                        //queue is empty
+                    }
+                }
+
+            }
+
             
-            write_timeout = write_timeout + 1 : u32;
 
-        }
+            if (sent_bytes < num_elements) {
+                
+                self->rem_bytes = true;
 
-        if (write_timeout < uart_timeout){
-            self->uart_regs.data = c as u32;
-            *status = Success;
+            } else {
+
+                self->rem_bytes = false;
+            }
+            
+
         }
 
         return;
-    
+    }
+
+    procedure send(&mut self, nbytes : const usize,
+                   output_bytes : & [u8; nbytes], 
+                   result : &mut Status<i32>) {
+
+        *result = Success;
+
+        if (self->rem_bytes) {
+
+            var num_elements : usize = 0;
+            get_num_enqueued_elems(&(self->uart_queue), &mut num_elements);
+
+            if ((queue_max_noe - num_elements) >= nbytes) {
+
+                var queued_bytes : usize = 0;
+
+                for i : usize in 0 : usize .. nbytes while (queued_bytes < nbytes && (*result is Failure) == false) {
+
+                    *result = enqueue(&mut(self->uart_queue), (*output_bytes)[i]);
+
+                    if ((*result is Failure) == false ) {
+                        queued_bytes = queued_bytes + 1;
+                    }
+                    
+                }
+
+            } else {
+                *result = Failure(QueueFull);
+            }
+
+        } else {
+
+            var sent_bytes : usize = 0;
+
+            if self->tf_is_empty() {
+
+                for i : usize in 0 .. nbytes while (self->tf_is_full() == false) {
+
+                    self->registers.data = output_bytes[i] as u32;
+                    sent_bytes = sent_bytes + 1;
+                    
+                }
+
+            }
+
+            if sent_bytes < nbytes {
+
+                self->rem_bytes = true;
+
+                var left_bytes : usize = nbytes - sent_bytes;
+                var num_elements : usize = 0;
+
+                get_num_enqueued_elems(&(self->uart_queue), &mut num_elements);
+
+                if ((queue_max_noe - num_elements) >= left_bytes) {
+
+                    for i : usize in 0 .. nbytes while (i < left_bytes && (*result is Failure) == false){
+
+                        *result = enqueue(&mut(self->uart_queue), (*output_bytes)[i+sent_bytes]);
+
+                    }
+
+                } else {
+                    
+                    *result = Failure(QueueFull);
+                }
+
+            }
+
+        }
+
+        return;
     }
 
 
-    /**
-     * @brief Receive a character from UART if available.
-     *
-     * @param[out] uart_data Option containing received character or None if not available.
-     */
-    procedure getchar(&mut self, uart_data : &mut Option<u8>) {
-        
-        let riscv_uart_dr : u32 = 0x00000001;
+    procedure initialize(&mut self) {
 
-        if ((self->uart_regs.status & riscv_uart_dr) != 0) {
-            *uart_data = Some(self->uart_regs.data as u8);
-        }
-        else{
-            *uart_data = None;
-        }
+        self->enable_RX();
+        self->enable_TX();
+        self->enable_RI();
+        self->enable_TI();
+        self->disable_TF();
+        self->disable_RF();
 
         return;
 
     }
-
 
 };
+
 

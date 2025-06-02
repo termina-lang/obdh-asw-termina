@@ -22,7 +22,7 @@ const Dec : u32 = 20;
  */
 handler class Init {
 
-    uart : access UARTDriverIface;                         /**< UART driver access */
+    uart : access CharDevInit;                         /**< UART driver access */
     gpio_driver : access GPIODrvIface;                /**< GPIO driver access */
     system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>; /**< Access to 32-bit system data pool array */
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;   /**< Access to 8-bit system data pool array */
@@ -44,9 +44,7 @@ handler class Init {
         var ret : Status<i32> = Success;
 
         // Initialize the UART driver
-        self->uart.uart_enable_RX();
-        self->uart.uart_enable_TX();
-        self->uart.uart_enable_RI();
+        self->uart.initialize();
 
         //Initialize GPIO driver
         self->gpio_driver.init_gpio();

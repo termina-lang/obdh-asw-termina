@@ -19,8 +19,8 @@ typedef struct {
     __termina_allocator_t a_tm_handler_pool;
     struct {
         void * __that;
-        void (* putchar)(void * const, uint8_t, __status_int32_t * const);
-        void (* uart_tf_is_empty)(void * const, _Bool * const);
+        void (* send)(void * const, const size_t, const uint8_t *,
+                      __status_int32_t * const);
     } uart;
 } TMChannel;
 

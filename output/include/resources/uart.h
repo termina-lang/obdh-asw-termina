@@ -3,6 +3,8 @@
 
 #include <termina.h>
 
+#include "service_libraries/queue_u8.h"
+
 #include "option.h"
 
 typedef struct {
@@ -10,64 +12,68 @@ typedef struct {
     uint32_t status;
     uint32_t control;
     uint32_t scaler;
-} __attribute__((packed)) UARTRegs;
+} UARTRegs;
 
 typedef struct {
     void * __that;
-    void (* uart_tf_is_empty)(void * const, _Bool * const);
-    void (* uart_enable_TX)(void * const);
-    void (* uart_enable_RX)(void * const);
-    void (* uart_enable_RI)(void * const);
-    void (* putchar)(void * const, uint8_t, __status_int32_t * const);
-    void (* getchar)(void * const, __option_uint8_t * const);
-} UARTDriverIface;
+    void (* send)(void * const, const size_t, const uint8_t *,
+                  __status_int32_t * const);
+} CharDevSend;
+
+typedef struct {
+    void * __that;
+    void (* initialize)(void * const);
+} CharDevInit;
+
+typedef struct {
+    void * __that;
+    void (* release_tx)(void * const);
+} CharDevRelayIrq;
 
 typedef struct {
     __termina_id_t __mutex_id;
-    volatile UARTRegs * uart_regs;
+    QueueU8 uart_queue;
+    _Bool rem_bytes;
+    volatile UARTRegs * registers;
 } UARTDriver;
 
-void UARTDriver__getchar(void * const __this,
-                         __option_uint8_t * const uart_data);
-void UARTDriver__getchar__mutex_lock(void * const __this,
-                                     __option_uint8_t * const uart_data);
-void UARTDriver__getchar__task_lock(void * const __this,
-                                    __option_uint8_t * const uart_data);
-void UARTDriver__getchar__event_lock(void * const __this,
-                                     __option_uint8_t * const uart_data);
+void UARTDriver__disable_RF(UARTDriver * const self);
 
-_Bool UARTDriver__uart_tf_is_full(const UARTDriver * const self);
+void UARTDriver__disable_TF(UARTDriver * const self);
 
-void UARTDriver__putchar(void * const __this, uint8_t c,
-                         __status_int32_t * const status);
-void UARTDriver__putchar__mutex_lock(void * const __this, uint8_t c,
-                                     __status_int32_t * const status);
-void UARTDriver__putchar__task_lock(void * const __this, uint8_t c,
-                                    __status_int32_t * const status);
-void UARTDriver__putchar__event_lock(void * const __this, uint8_t c,
-                                     __status_int32_t * const status);
+void UARTDriver__enable_RI(UARTDriver * const self);
 
-void UARTDriver__uart_enable_RI(void * const __this);
-void UARTDriver__uart_enable_RI__mutex_lock(void * const __this);
-void UARTDriver__uart_enable_RI__task_lock(void * const __this);
-void UARTDriver__uart_enable_RI__event_lock(void * const __this);
+void UARTDriver__enable_RX(UARTDriver * const self);
 
-void UARTDriver__uart_enable_RX(void * const __this);
-void UARTDriver__uart_enable_RX__mutex_lock(void * const __this);
-void UARTDriver__uart_enable_RX__task_lock(void * const __this);
-void UARTDriver__uart_enable_RX__event_lock(void * const __this);
+void UARTDriver__enable_TI(UARTDriver * const self);
 
-void UARTDriver__uart_enable_TX(void * const __this);
-void UARTDriver__uart_enable_TX__mutex_lock(void * const __this);
-void UARTDriver__uart_enable_TX__task_lock(void * const __this);
-void UARTDriver__uart_enable_TX__event_lock(void * const __this);
+void UARTDriver__enable_TX(UARTDriver * const self);
 
-void UARTDriver__uart_tf_is_empty(void * const __this, _Bool * const res);
-void UARTDriver__uart_tf_is_empty__mutex_lock(void * const __this,
-                                              _Bool * const res);
-void UARTDriver__uart_tf_is_empty__task_lock(void * const __this,
-                                             _Bool * const res);
-void UARTDriver__uart_tf_is_empty__event_lock(void * const __this,
-                                              _Bool * const res);
+void UARTDriver__initialize(void * const __this);
+void UARTDriver__initialize__mutex_lock(void * const __this);
+void UARTDriver__initialize__task_lock(void * const __this);
+void UARTDriver__initialize__event_lock(void * const __this);
+
+_Bool UARTDriver__tf_is_full(const UARTDriver * const self);
+
+void UARTDriver__release_tx(void * const __this);
+void UARTDriver__release_tx__mutex_lock(void * const __this);
+void UARTDriver__release_tx__task_lock(void * const __this);
+void UARTDriver__release_tx__event_lock(void * const __this);
+
+_Bool UARTDriver__tf_is_empty(const UARTDriver * const self);
+
+void UARTDriver__send(void * const __this, const size_t nbytes,
+                      const uint8_t output_bytes[nbytes],
+                      __status_int32_t * const result);
+void UARTDriver__send__mutex_lock(void * const __this, const size_t nbytes,
+                                  const uint8_t output_bytes[nbytes],
+                                  __status_int32_t * const result);
+void UARTDriver__send__task_lock(void * const __this, const size_t nbytes,
+                                 const uint8_t output_bytes[nbytes],
+                                 __status_int32_t * const result);
+void UARTDriver__send__event_lock(void * const __this, const size_t nbytes,
+                                  const uint8_t output_bytes[nbytes],
+                                  __status_int32_t * const result);
 
 #endif

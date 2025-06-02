@@ -4,7 +4,7 @@
 #include <termina.h>
 
 #include "handlers/init.h"
-#include "handlers/uart_handler.h"
+#include "handlers/uart_irq_handler.h"
 #include "resources/gpio_driver.h"
 #include "resources/tm_counter.h"
 #include "resources/uart.h"
@@ -21,10 +21,13 @@
 #include "tasks/bkgtcexec.h"
 #include "tasks/hk_fdir_mng/hk_fdir.h"
 #include "tasks/icu_manager/icu_manager.h"
+#include "tasks/tc_rx.h"
 
 #include "option.h"
 
 extern PeriodicTimer hk_fdir_timer;
+
+extern __termina_msg_queue_t byte_message_queue;
 
 extern __termina_msg_queue_t tc_message_queue;
 
@@ -42,7 +45,7 @@ extern _Atomic uint32_t u32_system_data_pool[12U];
 
 extern _Atomic uint8_t u8_system_data_pool[18U];
 
-extern UARTDriver uart_driver;
+extern UARTDriver uart_drv;
 
 extern GPIODriver gpio_drv;
 
@@ -74,7 +77,9 @@ extern ManagerTCExecutor mng_tc_executor;
 
 extern Init init;
 
-extern UARTHandler uart_handler;
+extern UARTIrqHandler uart_hdlr;
+
+extern TCRXBottomHalfTask tc_rx_bottom_half_task;
 
 extern ICUManager icu_manager;
 

@@ -5,7 +5,7 @@
           "name": "(gdb) Launch",
           "type": "cppdbg",
           "request": "launch",
-          "program": "${workspaceFolder}/output/bin/obdhlab-termina",
+          "program": "${workspaceFolder}/output/bin/obdh-asw-termina",
           "preLaunchTask": "build",
           "args": [],
           "stopAtEntry": false,
@@ -14,8 +14,7 @@
           "externalConsole": false,
           "MIMode": "gdb",
           "miDebuggerPath": "/opt/rcc/bin/sparc-gaisler-rtems5-gdb",
-          //"miDebuggerServerAddress": "localhost:1234",
-          "miDebuggerServerAddress": "localhost:2222",
+          "miDebuggerServerAddress": "localhost:1234",
           "useExtendedRemote": true
         }
       ]

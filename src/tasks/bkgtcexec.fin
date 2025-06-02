@@ -107,7 +107,7 @@ task class PUSBKGTCExecutor {
 
         var tc_type : u8 = get_type(&(tc_handler.tc_descriptor.tc_bytes));
 
-        if (tc_type == 20){
+        if (tc_type == 20) {
 
             self->pus_service_20.exec_tc(&mut tc_handler, &mut res);
 
@@ -121,9 +121,5 @@ task class PUSBKGTCExecutor {
 
         return res;
     }
-
-
-        
-
 
 };

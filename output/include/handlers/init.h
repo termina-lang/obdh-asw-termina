@@ -25,9 +25,7 @@ typedef struct {
     } gpio_driver;
     struct {
         void * __that;
-        void (* uart_enable_RI)(void * const);
-        void (* uart_enable_RX)(void * const);
-        void (* uart_enable_TX)(void * const);
+        void (* initialize)(void * const);
     } uart;
 } Init;
 
