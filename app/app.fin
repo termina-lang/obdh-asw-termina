@@ -29,7 +29,7 @@ emitter hk_fdir_timer : PeriodicTimer = {
 
 
 
-channel byte_message_queue : MsgQueue<u8;10>;
+channel rx_task_message_queue : MsgQueue<unit; 10>;
 channel tc_message_queue : MsgQueue<box TCHandlerT;10>;
 channel hkfdir_message_queue : MsgQueue<box TCHandlerT;10>;
 channel bkg_message_queue : MsgQueue<box TCHandlerT;10>;
@@ -50,11 +50,17 @@ resource u8_system_data_pool : AtomicArray<u8; sdp_num_u8_params> = {
 resource uart_drv : UARTDriver = {
     registers @ 0x80000100, 
     rem_bytes = false,
-    uart_queue = {
+    uart_rx_queue = {
         elements = [0 ; queue_max_noe],
         head_index = 0,
         num_elements = 0
-    }: QueueU8
+    },
+    uart_tx_queue = {
+        elements = [0 ; queue_max_noe],
+        head_index = 0,
+        num_elements = 0
+    }
+
 } : UARTDriver;
 
 resource gpio_drv : GPIODriver = {
@@ -238,7 +244,7 @@ handler uart_hdlr : UARTIrqHandler = {
     irq_entry <- irq_3,
     uart <-> uart_drv,
     uart_registers @ 0x80000100,
-    byte_message_queue_output -> byte_message_queue
+    rx_task_conn -> rx_task_message_queue
 } : UARTIrqHandler;
 
 #[priority(4: u32)]
@@ -248,7 +254,7 @@ task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
     aux_index = 0,
     RX_tc_length = {0, 0},
     telecommand = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0},
-    byte_message_queue_input <- byte_message_queue,
+    byte_message_queue_input <- rx_task_message_queue,
     tc_message_queue_output -> tc_message_queue,
     a_tc_handler_pool <-> tc_pool
 } : TCRXBottomHalfTask;

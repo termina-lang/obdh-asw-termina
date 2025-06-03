@@ -27,7 +27,14 @@ interface CharDevSend {
     procedure send(&mut self,
                    nbytes : const usize,
                    output_bytes : & [u8; nbytes], 
-                   result : &mut Status<i32>);
+                   result : &mut Result<usize; i32>);
+};
+
+interface CharDevRecv {
+    procedure receive(&mut self,
+                      nbytes : const usize,
+                      input_bytes : &mut [u8; nbytes], 
+                      result : &mut Result<usize; i32>);
 };
 
 interface CharDevInit {
@@ -35,12 +42,13 @@ interface CharDevInit {
 };
 
 interface CharDevRelayIrq {
-     procedure release_tx(&mut self);
+    procedure release_tx(&mut self);
+    procedure enqueue_rx(&mut self);
 };
 
 
 resource class UARTDriver provides 
-        CharDevSend, CharDevInit, CharDevRelayIrq {
+        CharDevSend, CharDevInit, CharDevRecv, CharDevRelayIrq {
 
     // UART registers
     registers: loc UARTRegs;
@@ -49,7 +57,10 @@ resource class UARTDriver provides
     rem_bytes : bool;
 
     // TX queue
-    uart_queue : QueueU8;
+    uart_tx_queue : QueueU8;
+
+    // RX queue
+    uart_rx_queue : QueueU8;
 
     viewer tf_is_full(&self) -> bool {
         let riscv_uart_tf : u32 = 0x00000200 : u32;
@@ -59,6 +70,11 @@ resource class UARTDriver provides
     viewer tf_is_empty(&self) -> bool {
         let riscv_uart_te : u32 = 0x00000004 : u32;
         return ((self->registers.status & riscv_uart_te) != 0 : u32);
+    }
+
+    viewer rf_is_empty(&self) -> bool {
+        let riscv_uart_rf : u32 = 0x00000001 : u32;
+        return ((self->registers.status & riscv_uart_rf) != 0 : u32);
     }
 
 
@@ -98,14 +114,63 @@ resource class UARTDriver provides
         return;
     }
 
+    procedure receive(&mut self, nbytes : const usize,
+                      input_bytes : &mut [u8; nbytes], 
+                      result : &mut Result<usize; i32>) {
+
+        *result = Ok(0);
+
+        var extracted_elements : usize = 0;
+
+        for i : usize in 0 : usize .. nbytes while (extracted_elements < nbytes && is_empty(&self->uart_rx_queue) == false) {
+
+            var extracted_elem : Option<u8> = None;
+
+            dequeue(&mut(self->uart_rx_queue), &mut extracted_elem);
+
+            match extracted_elem {
+                case Some(elem) => {
+                    input_bytes[extracted_elements] = elem;
+                    extracted_elements = extracted_elements + 1;
+                }
+                case None => {
+                    //queue is empty
+                }
+            }
+
+        }
+
+        *result = Ok(extracted_elements);
+
+        return;
+
+    }
+    
+    procedure enqueue_rx(&mut self) {
+
+        var status : Status<i32> = Success;
+
+        for i : usize in 0 .. queue_max_noe while 
+                is_full(&self->uart_rx_queue) == false 
+                && self->rf_is_empty() == false 
+                && (status is Failure) == false {
+
+            var byte : u8 = self->registers.data as u8;
+
+            status = enqueue(&mut(self->uart_tx_queue), byte);
+
+        }
+
+    }
+
 
     procedure release_tx(&mut self) {
 
-        if(self->rem_bytes){
+        if self->rem_bytes {
 
             var num_elements : usize = 0;
 
-            get_num_enqueued_elems (&(self->uart_queue), &mut num_elements);
+            get_num_enqueued_elems (&(self->uart_tx_queue), &mut num_elements);
 
             var sent_bytes : usize = 0;
             var extracted_elem : Option<u8> = None;
@@ -113,7 +178,7 @@ resource class UARTDriver provides
             for i : usize in 0 : usize .. queue_max_noe while 
                     (sent_bytes < num_elements && self->tf_is_full() == false) {
 
-                dequeue(&mut(self->uart_queue), &mut extracted_elem);
+                dequeue(&mut(self->uart_tx_queue), &mut extracted_elem);
 
                 match extracted_elem {
                     case Some(elem) => {
@@ -126,8 +191,6 @@ resource class UARTDriver provides
                 }
 
             }
-
-            
 
             if (sent_bytes < num_elements) {
                 
@@ -146,31 +209,33 @@ resource class UARTDriver provides
 
     procedure send(&mut self, nbytes : const usize,
                    output_bytes : & [u8; nbytes], 
-                   result : &mut Status<i32>) {
+                   result : &mut Result<usize; i32>) {
 
-        *result = Success;
+        *result = Ok(0);
 
         if (self->rem_bytes) {
 
             var num_elements : usize = 0;
-            get_num_enqueued_elems(&(self->uart_queue), &mut num_elements);
+            get_num_enqueued_elems(&(self->uart_tx_queue), &mut num_elements);
 
-            if ((queue_max_noe - num_elements) >= nbytes) {
+            if queue_max_noe - num_elements >= nbytes {
 
-                var queued_bytes : usize = 0;
+                var status : Status<i32> = Success;
 
-                for i : usize in 0 : usize .. nbytes while (queued_bytes < nbytes && (*result is Failure) == false) {
+                for i : usize in 0 : usize .. nbytes while (status is Failure) == false {
 
-                    *result = enqueue(&mut(self->uart_queue), (*output_bytes)[i]);
+                    status = enqueue(&mut(self->uart_tx_queue), output_bytes[i]);
 
-                    if ((*result is Failure) == false ) {
-                        queued_bytes = queued_bytes + 1;
-                    }
-                    
+                }
+
+                if status is Success {
+                    *result = Ok(nbytes);
+                } else {
+                    *result = Error(QueueFull);
                 }
 
             } else {
-                *result = Failure(QueueFull);
+                *result = Error(QueueFull);
             }
 
         } else {
@@ -195,26 +260,39 @@ resource class UARTDriver provides
                 var left_bytes : usize = nbytes - sent_bytes;
                 var num_elements : usize = 0;
 
-                get_num_enqueued_elems(&(self->uart_queue), &mut num_elements);
+                get_num_enqueued_elems(&(self->uart_tx_queue), &mut num_elements);
 
-                if ((queue_max_noe - num_elements) >= left_bytes) {
+                if queue_max_noe - num_elements >= left_bytes {
 
-                    for i : usize in 0 .. nbytes while (i < left_bytes && (*result is Failure) == false){
+                    var status : Status<i32> = Success;
 
-                        *result = enqueue(&mut(self->uart_queue), (*output_bytes)[i+sent_bytes]);
+                    for i : usize in 0 .. nbytes while (i < left_bytes && (status is Failure) == false){
 
+                        status = enqueue(&mut(self->uart_tx_queue), output_bytes[i + sent_bytes]);
+
+                    }
+
+                    if (status is Success) {
+                        *result = Ok(nbytes);
+                    } else {
+                        *result = Error(QueueFull);
                     }
 
                 } else {
                     
-                    *result = Failure(QueueFull);
+                    *result = Error(QueueFull);
                 }
 
+            } else {
+
+                *result = Ok(nbytes);
+                
             }
 
         }
 
         return;
+
     }
 
 

@@ -19,83 +19,111 @@ task class TCRXBottomHalfTask {
     RX_tc_length : [u8 ; 2];
     telecommand : TCDescriptorT;
 
-    byte_message_queue_input: in u8 triggers get_tc;
+    uart : access CharDevRecv;
+
+    rx_bytes : in unit triggers get_tc;
     tc_message_queue_output: out box TCHandlerT;
     a_tc_handler_pool : access Allocator<TCHandlerT>;
 
-    action get_tc (&priv self, data: u8) -> Status<i32> {
+    action get_tc (&priv self) -> Status<i32> {
 
         var ret : Status<i32> = Success;
+        var result : Result<usize; i32> = Ok(0);
+        var data : [u8; queue_max_noe] = [0; queue_max_noe];
+        var read_bytes : usize = 0;
 
-        match self->rx_status {
+        self->uart.receive(queue_max_noe, &mut data, &mut result);
 
-            case SyncBytesRx => {
+        match result {
 
-                if (data == self->sync_word[self->aux_index]) {
+            case Ok(n) => {
+                read_bytes = n;
+            }
+            case Error(e) => {
+                ret = Failure(e);
+            }
 
-                    if (3 == self->aux_index){
-                        self->aux_index = 0;
-                        self->rx_status = RXStatus::SyncLengthRx;
-                    } else {
+        }
+        
+        if ret is Success {
+
+            for i : usize in 0 .. queue_max_noe while i < read_bytes {
+
+                match self->rx_status {
+
+                    case SyncBytesRx => {
+
+                        if (data[i] == self->sync_word[self->aux_index]) {
+
+                            if (3 == self->aux_index){
+                                self->aux_index = 0;
+                                self->rx_status = RXStatus::SyncLengthRx;
+                            } else {
+                                self->aux_index = self->aux_index + 1;
+                            }
+
+                        } else {
+                            self->aux_index = 0;
+                        }  
+                    }
+
+                    case SyncLengthRx => {
+
+                        self->RX_tc_length[self->aux_index] = data[i];
                         self->aux_index = self->aux_index + 1;
+                        
+                        if (2 == self->aux_index){
+
+                            self->telecommand.tc_num_bytes = deserialize_uint16(&self->RX_tc_length) as usize;
+
+                            if(self->telecommand.tc_num_bytes < max_tc_size){
+
+                                self->rx_status = RXStatus::TCBytesRx;
+
+                            } else {
+
+                                self->rx_status = RXStatus::SyncBytesRx;
+                            }
+                            self->aux_index = 0;
+
+                        } 
                     }
 
-                } else {
-                    self->aux_index = 0;
-                }  
-            }
+                    case TCBytesRx => {
 
-            case SyncLengthRx => {
+                        self->telecommand.tc_bytes[self->aux_index] = data[i];
+                        self->aux_index = self->aux_index + 1;
 
-                self->RX_tc_length[self->aux_index] = data;
-                self->aux_index = self->aux_index + 1;
-                
-                if (2 == self->aux_index){
+                        if(self->aux_index == self->telecommand.tc_num_bytes as usize){
 
-                    self->telecommand.tc_num_bytes = deserialize_uint16(&self->RX_tc_length) as usize;
+                            self->rx_status = RXStatus::SyncBytesRx;
+                            self->aux_index = 0;
 
-                    if(self->telecommand.tc_num_bytes < max_tc_size){
+                            var tc_handler : Option<box TCHandlerT> = None;
+                            self->a_tc_handler_pool.alloc(&mut tc_handler);
 
-                        self->rx_status = RXStatus::TCBytesRx;
+                            match tc_handler {
 
-                    } else {
+                                case Some(tc_handler_b) => {
 
-                        self->rx_status = RXStatus::SyncBytesRx;
-                    }
-                    self->aux_index = 0;
+                                    tc_handler_build_from_descriptor(&mut tc_handler_b, &self->telecommand);
 
-                } 
-            }
-
-            case TCBytesRx => {
-
-                self->telecommand.tc_bytes[self->aux_index] = data;
-                self->aux_index = self->aux_index + 1;
-
-                if(self->aux_index == self->telecommand.tc_num_bytes as usize){
-
-                    self->rx_status = RXStatus::SyncBytesRx;
-                    self->aux_index = 0;
-
-                    var tc_handler : Option<box TCHandlerT> = None;
-                    self->a_tc_handler_pool.alloc(&mut tc_handler);
-
-                    match tc_handler {
-
-                        case Some(tc_handler_b) => {
-
-                            tc_handler_build_from_descriptor(&mut tc_handler_b, &self->telecommand);
-
-                            self->tc_message_queue_output.send(tc_handler_b);
-                        }
-                        case None => {
-                            ret = Failure(TM_POOL_ALLOC_FAILURE);
+                                    self->tc_message_queue_output.send(tc_handler_b);
+                                }
+                                case None => {
+                                    ret = Failure(TM_POOL_ALLOC_FAILURE);
+                                }
+                            }
                         }
                     }
                 }
+
             }
+
         }
+
         return ret;
+
     }
     
 };
