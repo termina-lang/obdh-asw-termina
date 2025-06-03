@@ -1,7 +1,7 @@
 import resources.uart;
 
-const riscv_uart_dr : u32 = 0x01;
-const riscv_uart_te : u32 = 0x04;
+constexpr riscv_uart_dr : u32 = 0x01;
+constexpr riscv_uart_te : u32 = 0x04;
 
 handler class UARTIrqHandler {
 
@@ -9,7 +9,9 @@ handler class UARTIrqHandler {
 
     uart : access CharDevRelayIrq;
     uart_registers : loc UARTRegs;
-    rx_task_conn : out unit;
+
+    // Connection to the top half of the UART driver
+    rx_frame : out usize;
 
     action irq_handler(&priv self, _vector : u32) -> Status<i32> {
 
@@ -24,9 +26,18 @@ handler class UARTIrqHandler {
 
         if ((uart_status & riscv_uart_dr) != 0 : u32) {
 
-            self->uart.enqueue_rx();
-            self->rx_task_conn.send(null);
-            
+            var tc_completed : Option<usize> = None;
+            self->uart.enqueue_rx(&mut tc_completed);
+
+            match tc_completed {
+                case Some(size) => {
+                    self->rx_frame.send(size);
+                }
+                case None => {
+                    // No complete frame received, continue receiving
+                }
+            }
+
         }
 
         return status;

@@ -4,6 +4,7 @@
 #include <termina.h>
 
 #include "option.h"
+#include "result.h"
 
 extern const int32_t TM_POOL_ALLOC_FAILURE;
 

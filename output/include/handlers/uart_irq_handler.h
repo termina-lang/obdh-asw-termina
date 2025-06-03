@@ -6,17 +6,15 @@
 #include "resources/uart.h"
 
 #include "option.h"
-
-extern const uint32_t riscv_uart_dr;
-
-extern const uint32_t riscv_uart_te;
+#include "result.h"
 
 typedef struct {
     __termina_id_t __handler_id;
-    __termina_out_port_t byte_message_queue_output;
+    __termina_out_port_t rx_frame;
     volatile UARTRegs * uart_registers;
     struct {
         void * __that;
+        void (* enqueue_rx)(void * const, __option_size_t * const);
         void (* release_tx)(void * const);
     } uart;
 } UARTIrqHandler;

@@ -12,4 +12,13 @@ typedef struct {
     __enum_option_t __variant;
 } __option_uint8_t;
 
+typedef struct {
+    size_t __0;
+} __option_size__Some_params_t;
+
+typedef struct {
+    __option_size__Some_params_t Some;
+    __enum_option_t __variant;
+} __option_size_t;
+
 #endif

@@ -7,6 +7,7 @@
 #include "service_libraries/tc_ccsds_pus_format.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     TCDescriptorT tc_descriptor;

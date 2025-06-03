@@ -6,7 +6,6 @@ import service_libraries.serialize;
  */
 constexpr max_tc_size : usize = 256 : usize;
 
-
 /**
  * @brief CCSDS PUS TC Packet Header structure
  */

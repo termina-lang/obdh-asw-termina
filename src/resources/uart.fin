@@ -1,9 +1,19 @@
 import service_libraries.queue_u8;
+import service_libraries.serialize;
 
 /**
  * @file uart.fin
  * @brief UART driver implementation using memory-mapped register access.
  */
+
+ 
+enum RXStatus {
+    SyncBytesRx,
+    SyncLengthRx, 
+    TCBytesRx,
+    FinishedTCRx
+};
+
 
 /**
  * @struct UARTRegs
@@ -27,14 +37,12 @@ interface CharDevSend {
     procedure send(&mut self,
                    nbytes : const usize,
                    output_bytes : & [u8; nbytes], 
-                   result : &mut Result<usize; i32>);
+                   status : &mut Status<i32>);
 };
 
 interface CharDevRecv {
     procedure receive(&mut self,
-                      nbytes : const usize,
-                      input_bytes : &mut [u8; nbytes], 
-                      result : &mut Result<usize; i32>);
+                      byte : &mut Option<u8>);
 };
 
 interface CharDevInit {
@@ -43,12 +51,20 @@ interface CharDevInit {
 
 interface CharDevRelayIrq {
     procedure release_tx(&mut self);
-    procedure enqueue_rx(&mut self);
+    procedure enqueue_rx(&mut self, tc_completed : &mut Option<usize>);
 };
 
 
 resource class UARTDriver provides 
         CharDevSend, CharDevInit, CharDevRecv, CharDevRelayIrq {
+    
+    sync_word : [u8; 4]; //{0xBE, 0xBA, 0xBE, 0xEF}
+
+    aux_index : usize;
+    raw_rx_tc_length : [u8; 2];
+    tc_num_bytes : usize;
+
+    rx_status : RXStatus;
 
     // UART registers
     registers: loc UARTRegs;
@@ -72,7 +88,7 @@ resource class UARTDriver provides
         return ((self->registers.status & riscv_uart_te) != 0 : u32);
     }
 
-    viewer rf_is_empty(&self) -> bool {
+    viewer rf_data_ready(&self) -> bool {
         let riscv_uart_rf : u32 = 0x00000001 : u32;
         return ((self->registers.status & riscv_uart_rf) != 0 : u32);
     }
@@ -114,52 +130,96 @@ resource class UARTDriver provides
         return;
     }
 
-    procedure receive(&mut self, nbytes : const usize,
-                      input_bytes : &mut [u8; nbytes], 
-                      result : &mut Result<usize; i32>) {
+    procedure receive(&mut self, 
+                      byte : &mut Option<u8>) {
 
-        *result = Ok(0);
-
-        var extracted_elements : usize = 0;
-
-        for i : usize in 0 : usize .. nbytes while (extracted_elements < nbytes && is_empty(&self->uart_rx_queue) == false) {
-
-            var extracted_elem : Option<u8> = None;
-
-            dequeue(&mut(self->uart_rx_queue), &mut extracted_elem);
-
-            match extracted_elem {
-                case Some(elem) => {
-                    input_bytes[extracted_elements] = elem;
-                    extracted_elements = extracted_elements + 1;
-                }
-                case None => {
-                    //queue is empty
-                }
-            }
-
-        }
-
-        *result = Ok(extracted_elements);
+        dequeue(&mut(self->uart_rx_queue), byte);
 
         return;
 
     }
     
-    procedure enqueue_rx(&mut self) {
+    procedure enqueue_rx(&mut self, tc_completed : &mut Option<usize>) {
 
         var status : Status<i32> = Success;
+        *tc_completed = None;
 
         for i : usize in 0 .. queue_max_noe while 
                 is_full(&self->uart_rx_queue) == false 
-                && self->rf_is_empty() == false 
-                && (status is Failure) == false {
+                && self->rf_data_ready()
+                && (status is Failure) == false
+                && (self->rx_status is RXStatus::FinishedTCRx) == false {
 
             var byte : u8 = self->registers.data as u8;
 
-            status = enqueue(&mut(self->uart_tx_queue), byte);
+            match self->rx_status {
+
+                case SyncBytesRx => {
+
+                    if (byte == self->sync_word[self->aux_index]) {
+
+                        if (3 == self->aux_index){
+                            self->aux_index = 0;
+                            self->rx_status = RXStatus::SyncLengthRx;
+                        } else {
+                            self->aux_index = self->aux_index + 1;
+                        }
+
+                    } else {
+                        self->aux_index = 0;
+                    }  
+                }
+
+                case SyncLengthRx => {
+
+                    self->raw_rx_tc_length[self->aux_index] = byte;
+                    self->aux_index = self->aux_index + 1;
+                    
+                    if (2 == self->aux_index){
+
+                        self->tc_num_bytes = deserialize_uint16(&self->raw_rx_tc_length) as usize;
+
+                        if(self->tc_num_bytes < max_tc_size){
+
+                            self->rx_status = RXStatus::TCBytesRx;
+
+                        } else {
+
+                            self->rx_status = RXStatus::SyncBytesRx;
+
+                        }
+                        self->aux_index = 0;
+
+                    } 
+                }
+
+                case TCBytesRx => {
+
+                    status = enqueue(&mut(self->uart_rx_queue), byte);
+                    self->aux_index = self->aux_index + 1;
+
+                    if self->aux_index == self->tc_num_bytes {
+
+                        self->rx_status = RXStatus::FinishedTCRx;
+
+                    }
+                }
+                case FinishedTCRx => {
+                    // Do nothing. This should not happen
+                }
+            }
+            
+        }
+
+        if (self->rx_status is RXStatus::FinishedTCRx) {
+
+            *tc_completed = Some(self->tc_num_bytes);
+            self->rx_status = RXStatus::SyncBytesRx;
+            self->aux_index = 0;
 
         }
+
+        return;
 
     }
 
@@ -209,9 +269,9 @@ resource class UARTDriver provides
 
     procedure send(&mut self, nbytes : const usize,
                    output_bytes : & [u8; nbytes], 
-                   result : &mut Result<usize; i32>) {
+                   status : &mut Status<i32>) {
 
-        *result = Ok(0);
+        *status = Success;
 
         if (self->rem_bytes) {
 
@@ -220,22 +280,14 @@ resource class UARTDriver provides
 
             if queue_max_noe - num_elements >= nbytes {
 
-                var status : Status<i32> = Success;
+                for i : usize in 0 : usize .. nbytes while (*status is Failure) == false {
 
-                for i : usize in 0 : usize .. nbytes while (status is Failure) == false {
+                    *status = enqueue(&mut(self->uart_tx_queue), output_bytes[i]);
 
-                    status = enqueue(&mut(self->uart_tx_queue), output_bytes[i]);
-
-                }
-
-                if status is Success {
-                    *result = Ok(nbytes);
-                } else {
-                    *result = Error(QueueFull);
                 }
 
             } else {
-                *result = Error(QueueFull);
+                *status = Failure(QueueFull);
             }
 
         } else {
@@ -264,29 +316,18 @@ resource class UARTDriver provides
 
                 if queue_max_noe - num_elements >= left_bytes {
 
-                    var status : Status<i32> = Success;
+                    for i : usize in 0 .. nbytes while (i < left_bytes && (*status is Failure) == false){
 
-                    for i : usize in 0 .. nbytes while (i < left_bytes && (status is Failure) == false){
+                        *status = enqueue(&mut(self->uart_tx_queue), output_bytes[i + sent_bytes]);
 
-                        status = enqueue(&mut(self->uart_tx_queue), output_bytes[i + sent_bytes]);
-
-                    }
-
-                    if (status is Success) {
-                        *result = Ok(nbytes);
-                    } else {
-                        *result = Error(QueueFull);
                     }
 
                 } else {
                     
-                    *result = Error(QueueFull);
+                    *status = Failure(QueueFull);
+                     
                 }
 
-            } else {
-
-                *result = Ok(nbytes);
-                
             }
 
         }

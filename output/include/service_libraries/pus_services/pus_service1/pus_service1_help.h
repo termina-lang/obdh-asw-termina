@@ -11,6 +11,7 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
+#include "result.h"
 
 extern const uint8_t ACCEPT_ACK_ENABLED_MASK;
 

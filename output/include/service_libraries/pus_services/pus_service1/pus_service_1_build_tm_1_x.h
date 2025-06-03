@@ -6,6 +6,7 @@
 #include "service_libraries/pus_services/pus_service1/pus_service1_help.h"
 
 #include "option.h"
+#include "result.h"
 
 extern const uint8_t TM_1_4_TC_X_Y_TC_SHORT_PACK_LENGTH;
 

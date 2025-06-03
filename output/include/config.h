@@ -9,7 +9,7 @@
 
 #define __PUSBKGTCExecutor__bkg_message_queue_input 0
 
-#define __TCRXBottomHalfTask__byte_message_queue_input 0
+#define __TCRXBottomHalfTask__rx_frame 0
 
 #define __pus_service_9__mutex_id 0
 #define __system_entry__mutex_id 1
@@ -32,8 +32,8 @@
 #define __hk_fdir__task_msg_queue_id 3
 #define __hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id 4
 #define __tc_message_queue__channel_msg_queue_id 5
-#define __hkfdir_message_queue__channel_msg_queue_id 6
-#define __byte_message_queue__channel_msg_queue_id 7
+#define __rx_task_message_queue__channel_msg_queue_id 6
+#define __hkfdir_message_queue__channel_msg_queue_id 7
 #define __bkg_message_queue__channel_msg_queue_id 8
 #define __action_tc_message_queue__channel_msg_queue_id 9
 
@@ -85,12 +85,12 @@
     + \
         __TERMINA_APP_CONFIG_MESSAGE_QUEUE_BUFFER( \
             10U, \
-            sizeof(__termina_box_t) \
+            sizeof(size_t) \
         ) \
     + \
         __TERMINA_APP_CONFIG_MESSAGE_QUEUE_BUFFER( \
             10U, \
-            sizeof(uint8_t) \
+            sizeof(__termina_box_t) \
         ) \
     + \
         __TERMINA_APP_CONFIG_MESSAGE_QUEUE_BUFFER( \

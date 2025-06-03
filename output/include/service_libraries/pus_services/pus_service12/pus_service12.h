@@ -6,6 +6,7 @@
 #include "service_libraries/pus_services/pus_service12/pus_service12_help.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     void * __that;

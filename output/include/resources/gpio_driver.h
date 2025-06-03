@@ -6,6 +6,7 @@
 #include "service_libraries/errors.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     uint32_t Data;

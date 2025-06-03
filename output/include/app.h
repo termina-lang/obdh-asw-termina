@@ -24,10 +24,11 @@
 #include "tasks/tc_rx.h"
 
 #include "option.h"
+#include "result.h"
 
 extern PeriodicTimer hk_fdir_timer;
 
-extern __termina_msg_queue_t byte_message_queue;
+extern __termina_msg_queue_t rx_task_message_queue;
 
 extern __termina_msg_queue_t tc_message_queue;
 

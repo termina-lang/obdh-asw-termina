@@ -239,15 +239,15 @@ static void __termina_app__init_msg_queues(int32_t * const status) {
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__hkfdir_message_queue__channel_msg_queue_id,
-                                  sizeof(__termina_box_t), 10U, status);
+        __termina_msg_queue__init(__rx_task_message_queue__channel_msg_queue_id,
+                                  sizeof(size_t), 10U, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__byte_message_queue__channel_msg_queue_id,
-                                  sizeof(uint8_t), 10U, status);
+        __termina_msg_queue__init(__hkfdir_message_queue__channel_msg_queue_id,
+                                  sizeof(__termina_box_t), 10U, status);
 
     }
 
@@ -299,11 +299,14 @@ static void __termina_app__enable_protection() {
     tc_rx_bottom_half_task.a_tc_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
     tc_rx_bottom_half_task.a_tc_handler_pool.free = __termina_pool__free__mutex_lock;
 
+    tc_rx_bottom_half_task.uart.receive = UARTDriver__receive__task_lock;
+
     init.gpio_driver.init_gpio = GPIODriver__init_gpio__event_lock;
 
     init.uart.initialize = UARTDriver__initialize__event_lock;
 
     uart_hdlr.uart.release_tx = UARTDriver__release_tx__event_lock;
+    uart_hdlr.uart.enqueue_rx = UARTDriver__enqueue_rx__event_lock;
 
     mng_tc_executor.a_tm_handler_pool.alloc = __termina_pool__alloc__mutex_lock;
     mng_tc_executor.a_tm_handler_pool.free = __termina_pool__free__mutex_lock;
@@ -428,17 +431,17 @@ static void __termina_app__init_channel_connections(int32_t * const status) {
 
     pus_bkg_tc_executor.bkg_message_queue_input = __bkg_message_queue__channel_msg_queue_id;
 
-    byte_message_queue.task_msg_queue_id = __tc_rx_bottom_half_task__task_msg_queue_id;
-    byte_message_queue.channel_msg_queue_id = __byte_message_queue__channel_msg_queue_id;
-    byte_message_queue.port_id = __TCRXBottomHalfTask__byte_message_queue_input;
-
-    tc_rx_bottom_half_task.byte_message_queue_input = __byte_message_queue__channel_msg_queue_id;
-
     hkfdir_message_queue.task_msg_queue_id = __hk_fdir__task_msg_queue_id;
     hkfdir_message_queue.channel_msg_queue_id = __hkfdir_message_queue__channel_msg_queue_id;
     hkfdir_message_queue.port_id = __HouseKeepingFDIR__hkfdir_message_queue_input;
 
     hk_fdir.hkfdir_message_queue_input = __hkfdir_message_queue__channel_msg_queue_id;
+
+    rx_task_message_queue.task_msg_queue_id = __tc_rx_bottom_half_task__task_msg_queue_id;
+    rx_task_message_queue.channel_msg_queue_id = __rx_task_message_queue__channel_msg_queue_id;
+    rx_task_message_queue.port_id = __TCRXBottomHalfTask__rx_frame;
+
+    tc_rx_bottom_half_task.rx_frame = __rx_task_message_queue__channel_msg_queue_id;
 
     tc_message_queue.task_msg_queue_id = __icu_manager__task_msg_queue_id;
     tc_message_queue.channel_msg_queue_id = __tc_message_queue__channel_msg_queue_id;

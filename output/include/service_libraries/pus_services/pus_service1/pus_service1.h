@@ -7,6 +7,7 @@
 #include "service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.h"
 
 #include "option.h"
+#include "result.h"
 
 TCExecutionCtrl handle_tc(const TCDescriptorT * const tc_descriptor);
 

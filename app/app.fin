@@ -29,7 +29,7 @@ emitter hk_fdir_timer : PeriodicTimer = {
 
 
 
-channel rx_task_message_queue : MsgQueue<unit; 10>;
+channel rx_task_message_queue : MsgQueue<usize; 10>;
 channel tc_message_queue : MsgQueue<box TCHandlerT;10>;
 channel hkfdir_message_queue : MsgQueue<box TCHandlerT;10>;
 channel bkg_message_queue : MsgQueue<box TCHandlerT;10>;
@@ -59,7 +59,12 @@ resource uart_drv : UARTDriver = {
         elements = [0 ; queue_max_noe],
         head_index = 0,
         num_elements = 0
-    }
+    },
+    rx_status = RXStatus::SyncBytesRx,
+    sync_word = {0xBE, 0xBA, 0xBE, 0xEF},
+    aux_index = 0,
+    raw_rx_tc_length = {0, 0},
+    tc_num_bytes = 0
 
 } : UARTDriver;
 
@@ -244,17 +249,14 @@ handler uart_hdlr : UARTIrqHandler = {
     irq_entry <- irq_3,
     uart <-> uart_drv,
     uart_registers @ 0x80000100,
-    rx_task_conn -> rx_task_message_queue
+    rx_frame -> rx_task_message_queue
 } : UARTIrqHandler;
 
 #[priority(4: u32)]
 task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
-    rx_status = RXStatus::SyncBytesRx,
-    sync_word = {0xBE, 0xBA, 0xBE, 0xEF},
-    aux_index = 0,
-    RX_tc_length = {0, 0},
     telecommand = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0},
-    byte_message_queue_input <- rx_task_message_queue,
+    rx_frame <- rx_task_message_queue,
+    uart <-> uart_drv,
     tc_message_queue_output -> tc_message_queue,
     a_tc_handler_pool <-> tc_pool
 } : TCRXBottomHalfTask;

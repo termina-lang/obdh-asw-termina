@@ -8,6 +8,7 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     TMDescriptorT tm_descriptor;
