@@ -86,11 +86,13 @@ function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandlerT, field
  * @param tc_handler Pointer to the TC handler
  * @param data Output parameter to store the extracted byte
  *
- * @return MyResult::Ok if successful, MyResult::Error otherwise
+ * @return Status::Ok if successful, Status::Error otherwise
  */
-function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u8) -> MyResult {
+function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u8) -> Status<i32> {
 
-	var res : MyResult = MyResult::Ok;
+    // Initialize the result status
+
+	var res : Status<i32> = Success;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 1)){
 
@@ -99,7 +101,7 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &
 
     } else {
 
-        res = MyResult::Error;
+        res = Failure(TC_DATA_OUT_OF_RANGE_ERROR);
 
     }
 
@@ -115,11 +117,11 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &
  * @param tc_handler Pointer to the TC handler
  * @param data Output parameter to store the extracted 16-bit word
  *
- * @return MyResult::Ok if successful, MyResult::Error otherwise
+ * @return Status::Ok if successful, Status::Error otherwise
  */
-function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> MyResult {
+function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> Status<i32> {
 
-	var res : MyResult = MyResult::Ok;
+	var res : Status<i32> = Success;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 2)){
 
@@ -128,7 +130,7 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
     } else {
 
-        res = MyResult::Error;
+        res = Failure(TC_DATA_OUT_OF_RANGE_ERROR);
 
     }
     
@@ -144,11 +146,11 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
  * @param tc_handler Pointer to the TC handler
  * @param data Output parameter to store the extracted 32-bit word
  *
- * @return MyResult::Ok if successful, MyResult::Error otherwise
+ * @return Status::Ok if successful, Status::Error otherwise
  */
-function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u32) -> MyResult {
+function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u32) -> Status<i32> {
 
-	var res : MyResult = MyResult::Ok;
+	var res : Status<i32> = Success;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 4)){
 
@@ -157,7 +159,7 @@ function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
     } else {
 
-        res = MyResult::Error;
+        res = Failure(TC_DATA_OUT_OF_RANGE_ERROR);
 
     }
 

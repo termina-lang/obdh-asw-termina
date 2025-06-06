@@ -20,12 +20,12 @@ const EXEC_COMPLETION_ACK_ENABLED_MASK : u8 = 0x08;
 
 /**
  * @enum TCAcceptationStatus
- * @brief Status representing whether a telecommand has been accepted or rejected.
+ * @brief statusrepresenting whether a telecommand has been accepted or rejected.
  */
-enum TCAcceptationStatus {
+enum TCAcceptationStatus{
 	Accepted,      /**< TC accepted */
 	Rejected,      /**< TC rejected */
-	Undefined      /**< TC status undefined */
+	Undefined      /**< TC statusundefined */
 };
 
 /**
@@ -54,11 +54,13 @@ enum TCExecutionCtrl {
 
 /**
  * @struct TCStatus
- * @brief Encapsulates the status of a TC verification and execution result.
+ * @brief Encapsulates the statusof a TC verification and execution status.
  */
-struct TCStatus {
-	acceptation_status : TCAcceptationStatus;  /**< Acceptation result */
-    execution_status : TCExecutionCtrl;        /**< Execution control type */
+
+ 
+struct TCStatus{
+	acceptation_status: TCAcceptationStatus;  /**< Acceptation status */
+    execution_status: TCExecutionCtrl;        /**< Execution control type */
 	error_code : TCErrorType;                  /**< Error code (if any) */
 };
 
@@ -229,17 +231,17 @@ function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
  * @param verify_stage The TC verification stage.
  * @param failure_code The failure reason code.
  * @param current_obt The current onboard time.
- * @param result Result container.
+ * @param status status container.
  */
 function build_tm_1_X_no_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
-			tc_packet_error_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, current_obt : MissionObt, result : &mut MyResult) {
+			tc_packet_error_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, current_obt : MissionObt, status: &mut Status<i32>) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
-	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
-	append_u8_appdata_field(p_tm_handler, failure_code, result);
+	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+	append_u8_appdata_field(p_tm_handler, failure_code, status);
 	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
 
 	return;
@@ -251,15 +253,15 @@ function build_tm_1_X_no_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_cou
  * @param failure_data Failure-specific data (u8).
  */
 function build_tm_1_X_u8_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
-		 tc_packet_error_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8, current_obt : MissionObt, result : &mut MyResult) {
+		 tc_packet_error_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8, current_obt : MissionObt, status: &mut Status<i32>) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
-	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
-	append_u8_appdata_field(p_tm_handler, failure_code, result);
-	append_u8_appdata_field(p_tm_handler, failure_data, result);
+	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+	append_u8_appdata_field(p_tm_handler, failure_code, status);
+	append_u8_appdata_field(p_tm_handler, failure_data, status);
 	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
 
 	return;
@@ -271,15 +273,15 @@ function build_tm_1_X_u8_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_cou
  * @param failure_data Failure-specific data (u16).
  */
 function build_tm_1_X_u16_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
-		 tc_packet_error_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16, current_obt : MissionObt, result : &mut MyResult) {
+		 tc_packet_error_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16, current_obt : MissionObt, status: &mut Status<i32>) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
-	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
-	append_u8_appdata_field(p_tm_handler, failure_code, result);
-	append_u16_appdata_field(p_tm_handler, failure_data, result);
+	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+	append_u8_appdata_field(p_tm_handler, failure_code, status);
+	append_u16_appdata_field(p_tm_handler, failure_data, status);
 	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
 
 	return;
@@ -291,15 +293,15 @@ function build_tm_1_X_u16_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_co
  * @param failure_data Failure-specific data (u32).
  */
 function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_error_ctrl: u16,
-		 verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32, current_obt : MissionObt, result : &mut MyResult) {
+		 verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32, current_obt : MissionObt, status: &mut Status<i32>) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
-	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
-	append_u8_appdata_field(p_tm_handler, failure_code, result);
-	append_u32_appdata_field(p_tm_handler, failure_data, result);
+	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+	append_u8_appdata_field(p_tm_handler, failure_code, status);
+	append_u32_appdata_field(p_tm_handler, failure_data, status);
 	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
 
 	return;
@@ -313,16 +315,16 @@ function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_co
  * @param failure_data2 Second failure data (u32).
  */
 function build_tm_1_X_u8_u32_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_error_ctrl: u16,
- 					verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32, current_obt : MissionObt, result : &mut MyResult) {
+ 					verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32, current_obt : MissionObt, status: &mut Status<i32>) {
 
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
-	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
-	append_u8_appdata_field(p_tm_handler, failure_code, result);
-	append_u8_appdata_field(p_tm_handler, failure_data1, result);
-	append_u32_appdata_field(p_tm_handler, failure_data2, result);
+	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+	append_u8_appdata_field(p_tm_handler, failure_code, status);
+	append_u8_appdata_field(p_tm_handler, failure_data1, status);
+	append_u32_appdata_field(p_tm_handler, failure_data2, status);
 	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
 
 	return;

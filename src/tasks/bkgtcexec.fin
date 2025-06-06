@@ -51,9 +51,7 @@ task class PUSBKGTCExecutor {
      * @param tc_handler Pointer to the telecommand handler that caused the failure.
      * @param ret Output parameter to return the status of the operation.
      */
-    viewer manage_error_in_acceptance(&self, tc_handler: &TCHandlerT, ret: &mut Status<i32>) {
-
-        var result : MyResult = MyResult::Ok;
+    viewer manage_error_in_acceptance(&self, tc_handler: &TCHandlerT, status: &mut Status<i32>) {
 
         var current_obt : MissionObt = {seconds = 0, finetime = 0};
 
@@ -69,11 +67,11 @@ task class PUSBKGTCExecutor {
 
                 self->pus_service_9.get_current_obt(&mut current_obt);
                 build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, tc_handler->packet_header.packet_id, tc_handler->packet_error_ctrl,
-                                 current_obt, &mut result);
+                                 current_obt, status);
                 
-                if (result is MyResult::Ok){
+                if (*status is Success){
 
-                    self->tm_channel.send_tm(b_tm_handler, &mut result);
+                    self->tm_channel.send_tm(b_tm_handler, status);
                 } 
                 else {
                     self->a_tm_handler_pool.free(b_tm_handler);
@@ -82,7 +80,7 @@ task class PUSBKGTCExecutor {
                 
             }
             case None => {
-                *ret = Failure(TM_POOL_ALLOC_FAILURE);
+                *status = Failure(TM_POOL_ALLOC_FAILURE);
                 
             }
         }

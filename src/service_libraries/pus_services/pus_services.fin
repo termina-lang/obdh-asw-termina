@@ -8,14 +8,16 @@ import resources.system_data_pool;
 
 // PUS Services
 
-enum PSExecTCReqStatus {
+enum PSReqStatus {
     Init,
     ExecTC,
-    Error(i32),
-    Failure(i32),
     Exit
 };
 
+struct PSExecTCReqStatus {
+    exec_tc_status : PSReqStatus;
+    status : Status<i32>;
+};
 
 struct MissionObt {
     seconds: u32;

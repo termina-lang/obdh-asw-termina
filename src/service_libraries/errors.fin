@@ -41,12 +41,17 @@ const TC_DATA_OUT_OF_RANGE_ERROR : i32 = 5;
  */
 const UNREACHABLE_BRANCH_ERROR : i32 = 6;
 
-/**
- * @brief Result type used to signal success or error in operations
- *
- * Enum representing a simplified result type: either success (`Ok`) or error (`Error`).
- */
-enum MyResult {
-    Ok,    ///< Operation completed successfully
-    Error  ///< Operation failed
-};
+
+
+const INVALID_LED_INDEX_ERROR : i32 = 7;
+
+const INVALID_FAULT_INFO_ERROR : i32 = 8;
+
+const SDP_ITEM_TYPE_ERROR : i32 = 9;
+
+const INVALID_PID_ERROR : i32 = 10;
+
+const EVENT_ACTION_NOT_DEFINED_ERROR : i32 = 11;
+
+const NO_FREE_STATS_INDEX_ERROR : i32 = 12;
+

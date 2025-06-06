@@ -14,7 +14,7 @@ import service_libraries.pus_tm_handler;
  */
 interface TMChannelIface {
 
-    procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult);
+    procedure send_tm(&mut self, tm_handler : box TMHandlerT, status : &mut Status<i32>);
 
 };
 
@@ -49,28 +49,26 @@ resource class TMChannel provides TMChannelIface {
      * @param[in] tm_handler  Boxed telemetry handler containing the TM packet to send.
      * @param[out] result     Result object to indicate success or failure.
      */
-     procedure send_tm(&mut self, tm_handler : box TMHandlerT, result : &mut MyResult) {
+     procedure send_tm(&mut self, tm_handler : box TMHandlerT, status : &mut Status<i32>) {
 
         var tm_descriptor : TMDescriptorT = tm_handler.tm_descriptor;
 
          /** @brief 6-byte frame header with preamble and length field */
         var frame_header : [u8; 6] = { 0xBE, 0xBA, 0xBE, 0xEF, 0, 0 };
 
-        *result = MyResult::Ok;
 
         // Set TM length in frame
         serialize_uint16(tm_descriptor.tm_num_bytes as u16, &mut frame_header[4 .. 6]);
 
-        var status : Status<i32> = Success;
 
-        self->uart.send(6, &frame_header, &mut status);
+        self->uart.send(6, &frame_header, status);
 
         // Send telemetry packet bytes
-        for i : usize in 0 .. 256 while (i < tm_descriptor.tm_num_bytes) && (status is Success) {
+        for i : usize in 0 .. 256 while (i < tm_descriptor.tm_num_bytes) && (*status is Success) {
 
             let index : usize = i as usize;
 
-            self->uart.send(1, &tm_descriptor.tm_bytes[index .. index + 1], &mut status);
+            self->uart.send(1, &tm_descriptor.tm_bytes[index .. index + 1], status);
 
         }
         

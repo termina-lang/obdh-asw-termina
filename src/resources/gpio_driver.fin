@@ -27,7 +27,7 @@ struct GPIO_registers {
  */
 interface GPIODrvIface {
     procedure init_gpio (&mut self);
-    procedure write_led (&mut self, led : u8, value : u8, result: &mut MyResult);
+    procedure write_led (&mut self, led : u8, value : u8, status : &mut Status<i32>);
 };
 
 
@@ -64,10 +64,12 @@ resource class GPIODriver provides GPIODrvIface {
      * @param value Value to set the LED (0 = off, non-zero = on)
      * @param result Output parameter indicating success (Ok) or failure (Error) if led index is invalid
      */
-    procedure write_led (&mut self, led : u8, value : u8, result: &mut MyResult) {
+    procedure write_led (&mut self, led : u8, value : u8, status : &mut Status<i32>) {
 
         if (led < 4) {
-            *result = MyResult::Ok;
+           
+            *status = Success;
+            
             let bit : u8 = led + 16;
             if (value == 0) {
                 let mask : u32 = 0xFFFFFFFF ^ (1 << bit);
@@ -77,7 +79,9 @@ resource class GPIODriver provides GPIODrvIface {
             }
         }
         else {
-            *result = MyResult::Error;
+
+            *status = Failure(INVALID_LED_INDEX_ERROR);
+    
         }
 
         return; 
