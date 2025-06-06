@@ -64,7 +64,7 @@ const uint8_t TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED = 6U;
 void build_tm_1_1(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
                   uint16_t tc_packet_id, uint16_t tc_packet_error_ctrl,
                   uint8_t flags_ack, MissionObt current_obt,
-                  MyResult * const result, _Bool * const enabled) {
+                  __status_int32_t * const status, _Bool * const enabled) {
     
     #line 63 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     if (is_tc_ack_accept_enabled(flags_ack)) {
@@ -73,10 +73,10 @@ void build_tm_1_1(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
         startup_tm(p_tm_handler);
 
         #line 66 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-        append_u16_appdata_field(p_tm_handler, tc_packet_id, result);
+        append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
 
         #line 67 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, result);
+        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
 
         #line 68 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
         close_tm(p_tm_handler, 1U, 1U, tm_seq_counter, current_obt);
@@ -97,10 +97,10 @@ void build_tm_1_1(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
 
 }
 
-void build_tm_1_2(const TCStatus * const status,
+void build_tm_1_2(const TCStatus * const tc_status,
                   TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
                   const TCHandlerT * const tc_handler, MissionObt current_obt,
-                  MyResult * const result) {
+                  __status_int32_t * const status) {
     
     #line 94 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     uint8_t error_code = 0U;
@@ -110,20 +110,20 @@ void build_tm_1_2(const TCStatus * const status,
 
     #line 97 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     append_u16_appdata_field(p_tm_handler, tc_handler->packet_header.packet_id,
-                             result);
+                             status);
 
     #line 98 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl,
-                             result);
+                             status);
 
     #line 102 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-    if ((*status).error_code.__variant == TCErrorType__CRCError) {
+    if ((*tc_status).error_code.__variant == TCErrorType__CRCError) {
         
         #line 104 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
         error_code = 2U;
 
         #line 105 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-        append_u8_appdata_field(p_tm_handler, error_code, result);
+        append_u8_appdata_field(p_tm_handler, error_code, status);
 
         #line 106 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
         uint16_t calculated_crc = cal_crc_16(tc_handler->tc_descriptor.tc_bytes,
@@ -131,55 +131,55 @@ void build_tm_1_2(const TCStatus * const status,
 
         #line 107 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
         append_u16_appdata_field(p_tm_handler, tc_handler->packet_error_ctrl,
-                                 result);
+                                 status);
 
         #line 108 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-        append_u16_appdata_field(p_tm_handler, calculated_crc, result);
+        append_u16_appdata_field(p_tm_handler, calculated_crc, status);
 
     } else
     #line 111 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-    if ((*status).error_code.__variant == TCErrorType__APIDError) {
+    if ((*tc_status).error_code.__variant == TCErrorType__APIDError) {
         
         #line 113 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
         error_code = 3U;
 
         #line 114 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-        append_u8_appdata_field(p_tm_handler, error_code, result);
+        append_u8_appdata_field(p_tm_handler, error_code, status);
 
     } else
     #line 117 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-    if ((*status).error_code.__variant == TCErrorType__SourceIDError) {
+    if ((*tc_status).error_code.__variant == TCErrorType__SourceIDError) {
         
         #line 119 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
         error_code = 4U;
 
         #line 120 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-        append_u8_appdata_field(p_tm_handler, error_code, result);
+        append_u8_appdata_field(p_tm_handler, error_code, status);
 
         #line 121 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
         append_u16_appdata_field(p_tm_handler,
                                  (uint16_t)tc_handler->df_header.sourceID,
-                                 result);
+                                 status);
 
     } else
     #line 124 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-    if ((*status).error_code.__variant == TCErrorType__TypeError) {
+    if ((*tc_status).error_code.__variant == TCErrorType__TypeError) {
         
         #line 126 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
         error_code = 5U;
 
         #line 127 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-        append_u8_appdata_field(p_tm_handler, error_code, result);
+        append_u8_appdata_field(p_tm_handler, error_code, status);
 
     } else
     #line 130 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-    if ((*status).error_code.__variant == TCErrorType__SubTypeError) {
+    if ((*tc_status).error_code.__variant == TCErrorType__SubTypeError) {
         
         #line 132 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
         error_code = 6U;
 
         #line 133 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-        append_u8_appdata_field(p_tm_handler, error_code, result);
+        append_u8_appdata_field(p_tm_handler, error_code, status);
 
     } else
     {
@@ -197,7 +197,7 @@ void build_tm_1_2(const TCStatus * const status,
 
 void build_tm_1_3(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
                   uint8_t flags_ack, MissionObt current_obt,
-                  MyResult * const result, _Bool * const enabled) {
+                  __status_int32_t * const status, _Bool * const enabled) {
     
     #line 160 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     if (is_tc_ack_start_exec_enabled(flags_ack)) {
@@ -220,7 +220,7 @@ void build_tm_1_3(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
     }
 
     #line 173 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-    (*result).__variant = MyResult__Ok;
+    (*status).__variant = Success;
 
     #line 175 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -232,7 +232,7 @@ void build_tm_1_4_short_pack_length(TMHandlerT * const p_tm_handler,
                                     uint16_t tc_packet_id,
                                     uint16_t tc_packet_error_ctrl,
                                     size_t tc_bytes, MissionObt current_obt,
-                                    MyResult * const result) {
+                                    __status_int32_t * const status) {
     
     #line 193 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -246,7 +246,7 @@ void build_tm_1_4_short_pack_length(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_X_Y_TC_SHORT_PACK_LENGTH,
-                                  failure_data, current_obt, result);
+                                  failure_data, current_obt, status);
 
     #line 200 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -258,7 +258,7 @@ void build_tm_1_4_num_of_instr_not_valid(TMHandlerT * const p_tm_handler,
                                          uint16_t tc_packet_id,
                                          uint16_t tc_packet_error_ctrl,
                                          uint8_t N, MissionObt current_obt,
-                                         MyResult * const result) {
+                                         __status_int32_t * const status) {
     
     #line 218 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -269,7 +269,7 @@ void build_tm_1_4_num_of_instr_not_valid(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u8_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                  tc_packet_error_ctrl, verify_stage,
                                  TM_1_4_TC_X_Y_TC_NOT_VALID_NUM_OF_INSTR, N,
-                                 current_obt, result);
+                                 current_obt, status);
 
     #line 223 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -282,7 +282,7 @@ void build_tm_1_4_device_address_not_valid(TMHandlerT * const p_tm_handler,
                                            uint16_t tc_packet_error_ctrl,
                                            uint32_t device_address,
                                            MissionObt current_obt,
-                                           MyResult * const result) {
+                                           __status_int32_t * const status) {
     
     #line 241 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -293,7 +293,7 @@ void build_tm_1_4_device_address_not_valid(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u32_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_2_X_DEVICE_ADDRESS_NOT_VALID,
-                                  device_address, current_obt, result);
+                                  device_address, current_obt, status);
 
     #line 246 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -304,7 +304,7 @@ void build_tm_1_4_SID_not_valid(TMHandlerT * const p_tm_handler,
                                 uint16_t tm_seq_counter, uint16_t tc_packet_id,
                                 uint16_t tc_packet_error_ctrl, uint16_t SID,
                                 MissionObt current_obt,
-                                MyResult * const result) {
+                                __status_int32_t * const status) {
     
     #line 265 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -315,7 +315,7 @@ void build_tm_1_4_SID_not_valid(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_3_X_INVALID_SID, SID, current_obt,
-                                  result);
+                                  status);
 
     #line 270 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -328,7 +328,7 @@ void build_tm_1_4_mem_address_not_valid(TMHandlerT * const p_tm_handler,
                                         uint16_t tc_packet_error_ctrl,
                                         uint8_t mem_id, uint32_t mem_address,
                                         MissionObt current_obt,
-                                        MyResult * const result) {
+                                        __status_int32_t * const status) {
     
     #line 290 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -339,7 +339,7 @@ void build_tm_1_4_mem_address_not_valid(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u8_u32_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                      tc_packet_error_ctrl, verify_stage,
                                      TM_1_4_TC_6_X_INVALID_MEMORY_ADDRESS,
-                                     mem_id, mem_address, current_obt, result);
+                                     mem_id, mem_address, current_obt, status);
 
     #line 295 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -351,7 +351,7 @@ void build_tm_1_4_mem_id_read_only(TMHandlerT * const p_tm_handler,
                                    uint16_t tc_packet_id,
                                    uint16_t tc_packet_error_ctrl,
                                    uint8_t mem_id, MissionObt current_obt,
-                                   MyResult * const result) {
+                                   __status_int32_t * const status) {
     
     #line 314 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -362,7 +362,7 @@ void build_tm_1_4_mem_id_read_only(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u8_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                  tc_packet_error_ctrl, verify_stage,
                                  TM_1_4_TC_6_X_MEMORY_ID_READ_ONLY, mem_id,
-                                 current_obt, result);
+                                 current_obt, status);
 
     #line 319 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -373,7 +373,7 @@ void build_tm_1_4_EvID_not_valid(TMHandlerT * const p_tm_handler,
                                  uint16_t tm_seq_counter, uint16_t tc_packet_id,
                                  uint16_t tc_packet_error_ctrl, uint16_t EvID,
                                  MissionObt current_obt,
-                                 MyResult * const result) {
+                                 __status_int32_t * const status) {
     
     #line 338 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -384,7 +384,7 @@ void build_tm_1_4_EvID_not_valid(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_5_X_INVALID_EV_ID, EvID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 343 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -395,7 +395,7 @@ void build_tm_1_4_PID_not_valid(TMHandlerT * const p_tm_handler,
                                 uint16_t tm_seq_counter, uint16_t tc_packet_id,
                                 uint16_t tc_packet_error_ctrl, uint16_t PID,
                                 MissionObt current_obt,
-                                MyResult * const result) {
+                                __status_int32_t * const status) {
     
     #line 362 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -406,7 +406,7 @@ void build_tm_1_4_PID_not_valid(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_20_X_INVALID_PID, PID, current_obt,
-                                  result);
+                                  status);
 
     #line 367 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -417,7 +417,7 @@ void build_tm_1_4_PMON_undefined(TMHandlerT * const p_tm_handler,
                                  uint16_t tm_seq_counter, uint16_t tc_packet_id,
                                  uint16_t tc_packet_error_ctrl, uint16_t PMONID,
                                  MissionObt current_obt,
-                                 MyResult * const result) {
+                                 __status_int32_t * const status) {
     
     #line 386 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -428,7 +428,7 @@ void build_tm_1_4_PMON_undefined(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_12_X_PMON_UNDEFINED, PMONID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 391 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -439,7 +439,7 @@ void build_tm_1_4_PMON_defined(TMHandlerT * const p_tm_handler,
                                uint16_t tm_seq_counter, uint16_t tc_packet_id,
                                uint16_t tc_packet_error_ctrl, uint16_t PMONID,
                                MissionObt current_obt,
-                               MyResult * const result) {
+                               __status_int32_t * const status) {
     
     #line 409 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -450,7 +450,7 @@ void build_tm_1_4_PMON_defined(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_12_X_PMON_DEFINED, PMONID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 414 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -461,7 +461,7 @@ void build_tm_1_4_PMON_enabled(TMHandlerT * const p_tm_handler,
                                uint16_t tm_seq_counter, uint16_t tc_packet_id,
                                uint16_t tc_packet_error_ctrl, uint16_t PMONID,
                                MissionObt current_obt,
-                               MyResult * const result) {
+                               __status_int32_t * const status) {
     
     #line 432 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -472,7 +472,7 @@ void build_tm_1_4_PMON_enabled(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_12_X_PMON_ENABLED, PMONID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 437 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -483,7 +483,7 @@ void build_tm_1_4_PMONID_invalid(TMHandlerT * const p_tm_handler,
                                  uint16_t tm_seq_counter, uint16_t tc_packet_id,
                                  uint16_t tc_packet_error_ctrl, uint16_t PMONID,
                                  MissionObt current_obt,
-                                 MyResult * const result) {
+                                 __status_int32_t * const status) {
     
     #line 455 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -494,7 +494,7 @@ void build_tm_1_4_PMONID_invalid(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_12_X_INVALID_PMONID, PMONID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 460 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -507,7 +507,7 @@ void build_tm_1_4_PMON_definition_invalid(TMHandlerT * const p_tm_handler,
                                           uint16_t tc_packet_error_ctrl,
                                           uint16_t PMONID,
                                           MissionObt current_obt,
-                                          MyResult * const result) {
+                                          __status_int32_t * const status) {
     
     #line 478 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -518,7 +518,7 @@ void build_tm_1_4_PMON_definition_invalid(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_12_X_INVALID_PMON_DEFINITION,
-                                  PMONID, current_obt, result);
+                                  PMONID, current_obt, status);
 
     #line 483 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -530,7 +530,7 @@ void build_tm_1_4_ev_action_enabled(TMHandlerT * const p_tm_handler,
                                     uint16_t tc_packet_id,
                                     uint16_t tc_packet_error_ctrl,
                                     uint16_t event_ID, MissionObt current_obt,
-                                    MyResult * const result) {
+                                    __status_int32_t * const status) {
     
     #line 501 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -541,7 +541,7 @@ void build_tm_1_4_ev_action_enabled(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_19_X_EV_ACTION_IS_ENABLED, event_ID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 506 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -553,7 +553,7 @@ void build_tm_1_4_ev_action_rejected(TMHandlerT * const p_tm_handler,
                                      uint16_t tc_packet_id,
                                      uint16_t tc_packet_error_ctrl,
                                      uint16_t event_ID, MissionObt current_obt,
-                                     MyResult * const result) {
+                                     __status_int32_t * const status) {
     
     #line 523 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -564,7 +564,7 @@ void build_tm_1_4_ev_action_rejected(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_19_1_EV_ACTION_REJECTED, event_ID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 528 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -576,7 +576,7 @@ void build_tm_1_4_ev_action_undefined(TMHandlerT * const p_tm_handler,
                                       uint16_t tc_packet_id,
                                       uint16_t tc_packet_error_ctrl,
                                       uint16_t event_ID, MissionObt current_obt,
-                                      MyResult * const result) {
+                                      __status_int32_t * const status) {
     
     #line 547 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -587,7 +587,7 @@ void build_tm_1_4_ev_action_undefined(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_19_X_EV_ACTION_NOT_DEFINED,
-                                  event_ID, current_obt, result);
+                                  event_ID, current_obt, status);
 
     #line 552 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -599,7 +599,7 @@ void build_tm_1_4_PID_stats_undefined(TMHandlerT * const p_tm_handler,
                                       uint16_t tc_packet_id,
                                       uint16_t tc_packet_error_ctrl,
                                       uint16_t PID, MissionObt current_obt,
-                                      MyResult * const result) {
+                                      __status_int32_t * const status) {
     
     #line 570 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -610,7 +610,7 @@ void build_tm_1_4_PID_stats_undefined(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_4_7_PID_STATS_UNDEFINED, PID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 575 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -622,7 +622,7 @@ void build_tm_1_4_PID_read_only_via_TC(TMHandlerT * const p_tm_handler,
                                        uint16_t tc_packet_id,
                                        uint16_t tc_packet_error_ctrl,
                                        uint16_t PID, MissionObt current_obt,
-                                       MyResult * const result) {
+                                       __status_int32_t * const status) {
     
     #line 593 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -633,7 +633,7 @@ void build_tm_1_4_PID_read_only_via_TC(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC, PID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 598 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -645,7 +645,7 @@ void build_tm_1_4_error_in_acceptance(TMHandlerT * const p_tm_handler,
                                       uint16_t tc_packet_id,
                                       uint16_t tc_packet_error_ctrl,
                                       MissionObt current_obt,
-                                      MyResult * const result) {
+                                      __status_int32_t * const status) {
     
     #line 615 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -656,7 +656,7 @@ void build_tm_1_4_error_in_acceptance(TMHandlerT * const p_tm_handler,
     build_tm_1_X_no_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                  tc_packet_error_ctrl, verify_stage,
                                  TM_1_4_ERROR_IN_ACCEPTANCE, current_obt,
-                                 result);
+                                 status);
 
     #line 620 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -665,7 +665,7 @@ void build_tm_1_4_error_in_acceptance(TMHandlerT * const p_tm_handler,
 
 void build_tm_1_7(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
                   uint8_t flags_ack, MissionObt current_obt,
-                  MyResult * const result, _Bool * const enabled) {
+                  __status_int32_t * const status, _Bool * const enabled) {
     
     #line 637 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     if (is_tc_ack_completion_exec_enabled(flags_ack)) {
@@ -688,7 +688,7 @@ void build_tm_1_7(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
     }
 
     #line 648 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
-    (*result).__variant = MyResult__Ok;
+    (*status).__variant = Success;
 
     #line 650 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -700,7 +700,7 @@ void build_tm_1_8_max_ev_actions_defined(TMHandlerT * const p_tm_handler,
                                          uint16_t tc_packet_id,
                                          uint16_t tc_packet_error_ctrl,
                                          uint16_t evID, MissionObt current_obt,
-                                         MyResult * const result) {
+                                         __status_int32_t * const status) {
     
     #line 668 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -711,7 +711,7 @@ void build_tm_1_8_max_ev_actions_defined(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED, evID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 673 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -723,7 +723,7 @@ void build_tm_1_8_tm_exceed_limit_appdata(TMHandlerT * const p_tm_handler,
                                           uint16_t tc_packet_id,
                                           uint16_t tc_packet_error_ctrl,
                                           MissionObt current_obt,
-                                          MyResult * const result) {
+                                          __status_int32_t * const status) {
     
     #line 691 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -734,7 +734,7 @@ void build_tm_1_8_tm_exceed_limit_appdata(TMHandlerT * const p_tm_handler,
     build_tm_1_X_no_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                  tc_packet_error_ctrl, verify_stage,
                                  TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA,
-                                 current_obt, result);
+                                 current_obt, status);
 
     #line 696 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -747,7 +747,7 @@ void build_tm_1_8_device_command_exec_error(TMHandlerT * const p_tm_handler,
                                             uint16_t tc_packet_error_ctrl,
                                             uint32_t on_off_command,
                                             MissionObt current_obt,
-                                            MyResult * const result) {
+                                            __status_int32_t * const status) {
     
     #line 714 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -758,7 +758,7 @@ void build_tm_1_8_device_command_exec_error(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u32_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_8_TM_2_1_DEV_COMMAND_EXEC_ERROR,
-                                  on_off_command, current_obt, result);
+                                  on_off_command, current_obt, status);
 
     #line 719 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -770,7 +770,7 @@ void build_tm_1_8_not_free_stats_config(TMHandlerT * const p_tm_handler,
                                         uint16_t tc_packet_id,
                                         uint16_t tc_packet_error_ctrl,
                                         uint16_t PID, MissionObt current_obt,
-                                        MyResult * const result) {
+                                        __status_int32_t * const status) {
     
     #line 738 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -781,7 +781,7 @@ void build_tm_1_8_not_free_stats_config(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u16_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                   tc_packet_error_ctrl, verify_stage,
                                   TM_1_8_TC_4_1_NOT_FREE_PID_STATS_CONFIG, PID,
-                                  current_obt, result);
+                                  current_obt, status);
 
     #line 743 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;
@@ -793,7 +793,7 @@ void build_tm_1_8_mem_access_error(TMHandlerT * const p_tm_handler,
                                    uint16_t tc_packet_id,
                                    uint16_t tc_packet_error_ctrl,
                                    uint8_t mem_ID, MissionObt current_obt,
-                                   MyResult * const result) {
+                                   __status_int32_t * const status) {
     
     #line 761 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     TCVerifyStage verify_stage;
@@ -804,7 +804,7 @@ void build_tm_1_8_mem_access_error(TMHandlerT * const p_tm_handler,
     build_tm_1_X_u8_failure_data(p_tm_handler, tm_seq_counter, tc_packet_id,
                                  tc_packet_error_ctrl, verify_stage,
                                  TM_1_8_TC_6_X_MEM_ACCESS_FAIL, mem_ID,
-                                 current_obt, result);
+                                 current_obt, status);
 
     #line 766 "src/service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.fin"
     return;

@@ -14,7 +14,6 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     void * __that;
@@ -56,55 +55,56 @@ typedef struct {
     } tm_counter;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+        void (* send_tm)(void * const, __termina_box_t,
+                         __status_int32_t * const);
     } tm_channel;
 } ManagerTCExecutor;
 
 void ManagerTCExecutor__manage_error_in_acceptance(const ManagerTCExecutor * const self,
                                                    const TCHandlerT * const tc_handler,
-                                                   __status_int32_t * const ret);
+                                                   __status_int32_t * const status);
 
 void ManagerTCExecutor__PUS_prio_exec_tc(void * const __this,
                                          TCHandlerT * const tc_handler,
-                                         __status_int32_t * const ret,
+                                         __status_int32_t * const status,
                                          _Bool * const reebot_flag);
 void ManagerTCExecutor__PUS_prio_exec_tc__mutex_lock(void * const __this,
                                                      TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret,
+                                                     __status_int32_t * const status,
                                                      _Bool * const reebot_flag);
 void ManagerTCExecutor__PUS_prio_exec_tc__task_lock(void * const __this,
                                                     TCHandlerT * const tc_handler,
-                                                    __status_int32_t * const ret,
+                                                    __status_int32_t * const status,
                                                     _Bool * const reebot_flag);
 void ManagerTCExecutor__PUS_prio_exec_tc__event_lock(void * const __this,
                                                      TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret,
+                                                     __status_int32_t * const status,
                                                      _Bool * const reebot_flag);
 
 void ManagerTCExecutor__mng_tc_acceptation(void * const __this,
                                            const TCHandlerT * const tc_handler,
-                                           __status_int32_t * const ret);
+                                           __status_int32_t * const status);
 void ManagerTCExecutor__mng_tc_acceptation__mutex_lock(void * const __this,
                                                        const TCHandlerT * const tc_handler,
-                                                       __status_int32_t * const ret);
+                                                       __status_int32_t * const status);
 void ManagerTCExecutor__mng_tc_acceptation__task_lock(void * const __this,
                                                       const TCHandlerT * const tc_handler,
-                                                      __status_int32_t * const ret);
+                                                      __status_int32_t * const status);
 void ManagerTCExecutor__mng_tc_acceptation__event_lock(void * const __this,
                                                        const TCHandlerT * const tc_handler,
-                                                       __status_int32_t * const ret);
+                                                       __status_int32_t * const status);
 
 void ManagerTCExecutor__mng_tc_rejection(void * const __this,
                                          const TCHandlerT * const tc_handler,
-                                         __status_int32_t * const ret);
+                                         __status_int32_t * const status);
 void ManagerTCExecutor__mng_tc_rejection__mutex_lock(void * const __this,
                                                      const TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret);
+                                                     __status_int32_t * const status);
 void ManagerTCExecutor__mng_tc_rejection__task_lock(void * const __this,
                                                     const TCHandlerT * const tc_handler,
-                                                    __status_int32_t * const ret);
+                                                    __status_int32_t * const status);
 void ManagerTCExecutor__mng_tc_rejection__event_lock(void * const __this,
                                                      const TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret);
+                                                     __status_int32_t * const status);
 
 #endif

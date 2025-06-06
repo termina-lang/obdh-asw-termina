@@ -86,99 +86,105 @@ _Bool tc_handler_is_valid_next_appdata_field(const TCHandlerT * const tc_handler
 
 }
 
-MyResult tc_handler_get_u8_appdata_field(TCHandlerT * const tc_handler,
-                                         uint8_t * const data) {
+__status_int32_t tc_handler_get_u8_appdata_field(TCHandlerT * const tc_handler,
+                                                 uint8_t * const data) {
     
-    #line 93 "src/service_libraries/pus_tc_handler.fin"
-    MyResult res;
-    #line 93 "src/service_libraries/pus_tc_handler.fin"
-    res.__variant = MyResult__Ok;
-
     #line 95 "src/service_libraries/pus_tc_handler.fin"
+    __status_int32_t res;
+    #line 95 "src/service_libraries/pus_tc_handler.fin"
+    res.__variant = Success;
+
+    #line 97 "src/service_libraries/pus_tc_handler.fin"
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 1U)) {
         
-        #line 97 "src/service_libraries/pus_tc_handler.fin"
+        #line 99 "src/service_libraries/pus_tc_handler.fin"
         *data = tc_handler->tc_descriptor.tc_bytes[__termina_array__index(256U,
                                                                           tc_handler->app_data_index)];
 
-        #line 98 "src/service_libraries/pus_tc_handler.fin"
+        #line 100 "src/service_libraries/pus_tc_handler.fin"
         tc_handler->app_data_index = tc_handler->app_data_index + 1U;
 
     } else
     {
         
-        #line 102 "src/service_libraries/pus_tc_handler.fin"
-        res.__variant = MyResult__Error;
+        #line 104 "src/service_libraries/pus_tc_handler.fin"
+        res.__variant = Failure;
+        #line 104 "src/service_libraries/pus_tc_handler.fin"
+        res.Failure.__0 = TC_DATA_OUT_OF_RANGE_ERROR;
 
     }
 
-    #line 106 "src/service_libraries/pus_tc_handler.fin"
+    #line 108 "src/service_libraries/pus_tc_handler.fin"
     return res;
 
 }
 
-MyResult tc_handler_get_u16_appdata_field(TCHandlerT * const tc_handler,
-                                          uint16_t * const data) {
+__status_int32_t tc_handler_get_u16_appdata_field(TCHandlerT * const tc_handler,
+                                                  uint16_t * const data) {
     
-    #line 122 "src/service_libraries/pus_tc_handler.fin"
-    MyResult res;
-    #line 122 "src/service_libraries/pus_tc_handler.fin"
-    res.__variant = MyResult__Ok;
-
     #line 124 "src/service_libraries/pus_tc_handler.fin"
+    __status_int32_t res;
+    #line 124 "src/service_libraries/pus_tc_handler.fin"
+    res.__variant = Success;
+
+    #line 126 "src/service_libraries/pus_tc_handler.fin"
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 2U)) {
         
-        #line 126 "src/service_libraries/pus_tc_handler.fin"
+        #line 128 "src/service_libraries/pus_tc_handler.fin"
         *data = deserialize_uint16(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(256U,
                                                                                               2U,
                                                                                               tc_handler->app_data_index,
                                                                                               tc_handler->app_data_index + 2U)]);
 
-        #line 127 "src/service_libraries/pus_tc_handler.fin"
+        #line 129 "src/service_libraries/pus_tc_handler.fin"
         tc_handler->app_data_index = tc_handler->app_data_index + 2U;
 
     } else
     {
         
-        #line 131 "src/service_libraries/pus_tc_handler.fin"
-        res.__variant = MyResult__Error;
+        #line 133 "src/service_libraries/pus_tc_handler.fin"
+        res.__variant = Failure;
+        #line 133 "src/service_libraries/pus_tc_handler.fin"
+        res.Failure.__0 = TC_DATA_OUT_OF_RANGE_ERROR;
 
     }
 
-    #line 135 "src/service_libraries/pus_tc_handler.fin"
+    #line 137 "src/service_libraries/pus_tc_handler.fin"
     return res;
 
 }
 
-MyResult tc_handler_get_u32_appdata_field(TCHandlerT * const tc_handler,
-                                          uint32_t * const data) {
+__status_int32_t tc_handler_get_u32_appdata_field(TCHandlerT * const tc_handler,
+                                                  uint32_t * const data) {
     
-    #line 151 "src/service_libraries/pus_tc_handler.fin"
-    MyResult res;
-    #line 151 "src/service_libraries/pus_tc_handler.fin"
-    res.__variant = MyResult__Ok;
-
     #line 153 "src/service_libraries/pus_tc_handler.fin"
+    __status_int32_t res;
+    #line 153 "src/service_libraries/pus_tc_handler.fin"
+    res.__variant = Success;
+
+    #line 155 "src/service_libraries/pus_tc_handler.fin"
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 4U)) {
         
-        #line 155 "src/service_libraries/pus_tc_handler.fin"
+        #line 157 "src/service_libraries/pus_tc_handler.fin"
         *data = deserialize_uint32(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(256U,
                                                                                               4U,
                                                                                               tc_handler->app_data_index,
                                                                                               tc_handler->app_data_index + 4U)]);
 
-        #line 156 "src/service_libraries/pus_tc_handler.fin"
+        #line 158 "src/service_libraries/pus_tc_handler.fin"
         tc_handler->app_data_index = tc_handler->app_data_index + 4U;
 
     } else
     {
         
-        #line 160 "src/service_libraries/pus_tc_handler.fin"
-        res.__variant = MyResult__Error;
+        #line 162 "src/service_libraries/pus_tc_handler.fin"
+        res.__variant = Failure;
+        #line 162 "src/service_libraries/pus_tc_handler.fin"
+        res.Failure.__0 = TC_DATA_OUT_OF_RANGE_ERROR;
 
     }
 
-    #line 164 "src/service_libraries/pus_tc_handler.fin"
+    #line 166 "src/service_libraries/pus_tc_handler.fin"
     return res;
 
 }

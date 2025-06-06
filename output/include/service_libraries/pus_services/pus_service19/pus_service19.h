@@ -6,7 +6,6 @@
 #include "service_libraries/pus_services/pus_service19/pus_service19_help.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     void * __that;
@@ -30,7 +29,8 @@ typedef struct {
     __termina_allocator_t a_tm_handler_pool;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+        void (* send_tm)(void * const, __termina_box_t,
+                         __status_int32_t * const);
     } tm_channel;
     size_t pending_action_head[4U];
     size_t pending_action_number[4U];
@@ -44,11 +44,11 @@ typedef struct {
     PSExecTCReqStatus exec_tc_req_status;
 } PUSService19;
 
-MyResult PUSService19__delete_event_action(PUSService19 * const self);
+__status_int32_t PUSService19__delete_event_action(PUSService19 * const self);
 
-MyResult PUSService19__disable_event_action(PUSService19 * const self);
+__status_int32_t PUSService19__disable_event_action(PUSService19 * const self);
 
-MyResult PUSService19__enable_event_action(PUSService19 * const self);
+__status_int32_t PUSService19__enable_event_action(PUSService19 * const self);
 
 FoundID PUSService19__get_free_event_action_index(const PUSService19 * const self);
 
@@ -63,11 +63,6 @@ PSExecTCReqStatus PUSService19__exec19_2TC(PUSService19 * const self);
 PSExecTCReqStatus PUSService19__exec19_4TC(PUSService19 * const self);
 
 PSExecTCReqStatus PUSService19__exec19_5TC(PUSService19 * const self);
-
-PS19ExecTCReqStatusUpdate PUSService19__get_TC_params(const PUSService19 * const self,
-                                                      TCHandlerT * const tc_handler,
-                                                      uint8_t * const subtype,
-                                                      MyResult * const result);
 
 PSExecTCReqStatus PUSService19__manage_error_in_acceptance(const PUSService19 * const self);
 

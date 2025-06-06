@@ -6,7 +6,6 @@
 #include "service_libraries/pus_services/pus_service4/pus_service4_help.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     void * __that;
@@ -29,7 +28,8 @@ typedef struct {
     __termina_allocator_t a_tm_handler_pool;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+        void (* send_tm)(void * const, __termina_box_t,
+                         __status_int32_t * const);
     } tm_channel;
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
@@ -48,19 +48,19 @@ _Bool PUSService4__SDP_param_higher_than_limit(const PUSService4 * const self,
 _Bool PUSService4__SDP_param_lower_than_limit(const PUSService4 * const self,
                                               size_t pid_index);
 
-MyResult PUSService4__get_PID_defined_stats_index(PUSService4 * const self);
+__status_int32_t PUSService4__get_PID_defined_stats_index(PUSService4 * const self);
 
-MyResult PUSService4__get_free_index(const PUSService4 * const self,
-                                     size_t * const index);
+__status_int32_t PUSService4__get_free_index(const PUSService4 * const self,
+                                             size_t * const index);
 
-MyResult PUSService4__add_PID_stats(PUSService4 * const self);
+__status_int32_t PUSService4__add_PID_stats(PUSService4 * const self);
 
 void PUSService4__build_tm_4_2(const PUSService4 * const self,
                                TMHandlerT * const p_tm_handler,
                                uint16_t tm_seq_counter, size_t index,
-                               MyResult * const result);
+                               __status_int32_t * const status);
 
-MyResult PUSService4__delete_PID_stats(PUSService4 * const self);
+__status_int32_t PUSService4__delete_PID_stats(PUSService4 * const self);
 
 void PUSService4__delete_all_stats(PUSService4 * const self);
 
@@ -69,11 +69,6 @@ PSExecTCReqStatus PUSService4__exec4_1TC(PUSService4 * const self);
 PSExecTCReqStatus PUSService4__exec4_6TC(PUSService4 * const self);
 
 PSExecTCReqStatus PUSService4__exec4_7TC(PUSService4 * const self);
-
-PS4ExecTCReqStatusUpdate PUSService4__get_TC_params(const PUSService4 * const self,
-                                                    TCHandlerT * const tc_handler,
-                                                    uint8_t * const subtype,
-                                                    MyResult * const result);
 
 PSExecTCReqStatus PUSService4__manage_error_in_acceptance(const PUSService4 * const self);
 

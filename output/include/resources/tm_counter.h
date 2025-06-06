@@ -4,7 +4,6 @@
 #include <termina.h>
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     void * __that;

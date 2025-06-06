@@ -3,6 +3,7 @@
 
 #include <termina.h>
 
+#include "service_libraries/errors.h"
 #include "service_libraries/queue_u8.h"
 #include "service_libraries/serialize.h"
 

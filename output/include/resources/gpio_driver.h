@@ -6,7 +6,6 @@
 #include "service_libraries/errors.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     uint32_t Data;
@@ -17,7 +16,8 @@ typedef struct {
 typedef struct {
     void * __that;
     void (* init_gpio)(void * const);
-    void (* write_led)(void * const, uint8_t, uint8_t, MyResult * const);
+    void (* write_led)(void * const, uint8_t, uint8_t,
+                       __status_int32_t * const);
 } GPIODrvIface;
 
 typedef struct {
@@ -31,12 +31,15 @@ void GPIODriver__init_gpio__task_lock(void * const __this);
 void GPIODriver__init_gpio__event_lock(void * const __this);
 
 void GPIODriver__write_led(void * const __this, uint8_t led, uint8_t value,
-                           MyResult * const result);
+                           __status_int32_t * const status);
 void GPIODriver__write_led__mutex_lock(void * const __this, uint8_t led,
-                                       uint8_t value, MyResult * const result);
+                                       uint8_t value,
+                                       __status_int32_t * const status);
 void GPIODriver__write_led__task_lock(void * const __this, uint8_t led,
-                                      uint8_t value, MyResult * const result);
+                                      uint8_t value,
+                                      __status_int32_t * const status);
 void GPIODriver__write_led__event_lock(void * const __this, uint8_t led,
-                                       uint8_t value, MyResult * const result);
+                                       uint8_t value,
+                                       __status_int32_t * const status);
 
 #endif

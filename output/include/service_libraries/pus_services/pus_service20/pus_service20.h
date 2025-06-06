@@ -6,7 +6,6 @@
 #include "service_libraries/pus_services/pus_service20/pus_service20_help.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     void * __that;
@@ -27,7 +26,8 @@ typedef struct {
     __termina_allocator_t a_tm_handler_pool;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+        void (* send_tm)(void * const, __termina_box_t,
+                         __status_int32_t * const);
     } tm_channel;
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
@@ -38,16 +38,11 @@ typedef struct {
 void PUSService20__build_tm_20_2(const PUSService20 * const self,
                                  TMHandlerT * const p_tm_handler,
                                  uint16_t tm_seq_counter,
-                                 MyResult * const result);
+                                 __status_int32_t * const status);
 
 PSExecTCReqStatus PUSService20__exec20_1TC(PUSService20 * const self);
 
 PSExecTCReqStatus PUSService20__exec20_3TC(PUSService20 * const self);
-
-PS20ExecTCReqStatusUpdate PUSService20__get_TC_params(const PUSService20 * const self,
-                                                      TCHandlerT * const tc_handler,
-                                                      uint8_t * const subtype,
-                                                      MyResult * const result);
 
 PSExecTCReqStatus PUSService20__manage_error_in_acceptance(const PUSService20 * const self);
 

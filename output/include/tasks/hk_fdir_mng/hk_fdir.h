@@ -11,7 +11,6 @@
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
 
 #include "option.h"
-#include "result.h"
 
 extern const size_t num_actions_per_second;
 
@@ -25,7 +24,8 @@ typedef struct {
     } tm_counter;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+        void (* send_tm)(void * const, __termina_box_t,
+                         __status_int32_t * const);
     } tm_channel;
     struct {
         void * __that;
@@ -83,7 +83,7 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
 
 void HouseKeepingFDIR__manage_error_in_acceptance(const HouseKeepingFDIR * const self,
                                                   const TCHandlerT * const tc_handler,
-                                                  __status_int32_t * const ret);
+                                                  __status_int32_t * const status);
 
 __status_int32_t HouseKeepingFDIR__exec_tc(void * const __this,
                                            __termina_box_t tc_handler);

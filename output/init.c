@@ -76,7 +76,9 @@ void __termina_app__init_globals() {
     pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_9.a_tm_handler_pool.free = __termina_pool__free;
     #line 90 "app/app.fin"
-    pus_service_9.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_9.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 90 "app/app.fin"
+    pus_service_9.exec_tc_req_status.status.__variant = Success;
     pus_service_9.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_9.exec_tc_req_status_update.next_OBT.finetime = 0U;
     pus_service_9.exec_tc_req_status_update.next_OBT.seconds = 0U;
@@ -107,7 +109,9 @@ void __termina_app__init_globals() {
     pus_service_5.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_5.a_tm_handler_pool.free = __termina_pool__free;
     #line 100 "app/app.fin"
-    pus_service_5.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_5.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 100 "app/app.fin"
+    pus_service_5.exec_tc_req_status.status.__variant = Success;
     pus_service_5.exec_tc_req_status_update.EvID = 0U;
     pus_service_5.exec_tc_req_status_update.N = 0U;
     pus_service_5.exec_tc_req_status_update.flags_ack = 0U;
@@ -127,7 +131,9 @@ void __termina_app__init_globals() {
     pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_3.a_tm_handler_pool.free = __termina_pool__free;
     #line 118 "app/app.fin"
-    pus_service_3.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_3.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 118 "app/app.fin"
+    pus_service_3.exec_tc_req_status.status.__variant = Success;
     pus_service_3.exec_tc_req_status_update.index.found = 0;
     pus_service_3.exec_tc_req_status_update.index.index = 0U;
     pus_service_3.exec_tc_req_status_update.tc_data.N = 0U;
@@ -463,7 +469,9 @@ void __termina_app__init_globals() {
     #line 123 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.do_monitoring_req_status_update.new_status.__variant = CheckState__Unselected;
     #line 139 "app/app.fin"
-    pus_service_12.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_12.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 139 "app/app.fin"
+    pus_service_12.exec_tc_req_status.status.__variant = Success;
     pus_service_12.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_12.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_12.exec_tc_req_status_update.packet_id = 0U;
@@ -545,7 +553,9 @@ void __termina_app__init_globals() {
         pus_service_19.event_action_packets[__i0] = tc_handler_init();
     }
     #line 156 "app/app.fin"
-    pus_service_19.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_19.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 156 "app/app.fin"
+    pus_service_19.exec_tc_req_status.status.__variant = Success;
     for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
         #line 57 "src/service_libraries/pus_services/pus_service19/pus_service19_help.fin"
         pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_bytes[__i0] = 0U;
@@ -596,7 +606,9 @@ void __termina_app__init_globals() {
     pus_service_20.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_20.a_tm_handler_pool.free = __termina_pool__free;
     #line 174 "app/app.fin"
-    pus_service_20.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_20.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 174 "app/app.fin"
+    pus_service_20.exec_tc_req_status.status.__variant = Success;
     pus_service_20.exec_tc_req_status_update.N = 0U;
     pus_service_20.exec_tc_req_status_update.PID = 0U;
     pus_service_20.exec_tc_req_status_update.flags_ack = 0U;
@@ -620,7 +632,9 @@ void __termina_app__init_globals() {
     pus_service_17.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_17.a_tm_handler_pool.free = __termina_pool__free;
     #line 186 "app/app.fin"
-    pus_service_17.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_17.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 186 "app/app.fin"
+    pus_service_17.exec_tc_req_status.status.__variant = Success;
     pus_service_17.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_17.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_17.exec_tc_req_status_update.packet_id = 0U;
@@ -637,7 +651,9 @@ void __termina_app__init_globals() {
     pus_service_128.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_128.a_tm_handler_pool.free = __termina_pool__free;
     #line 195 "app/app.fin"
-    pus_service_128.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_128.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 195 "app/app.fin"
+    pus_service_128.exec_tc_req_status.status.__variant = Success;
     pus_service_128.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_128.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_128.exec_tc_req_status_update.packet_id = 0U;
@@ -655,7 +671,9 @@ void __termina_app__init_globals() {
     pus_service_2.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_2.a_tm_handler_pool.free = __termina_pool__free;
     #line 204 "app/app.fin"
-    pus_service_2.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_2.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 204 "app/app.fin"
+    pus_service_2.exec_tc_req_status.status.__variant = Success;
     pus_service_2.exec_tc_req_status_update.N = 0U;
     pus_service_2.exec_tc_req_status_update.dev_address = 0U;
     pus_service_2.exec_tc_req_status_update.flags_ack = 0U;
@@ -678,7 +696,9 @@ void __termina_app__init_globals() {
     pus_service_4.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_4.a_tm_handler_pool.free = __termina_pool__free;
     #line 214 "app/app.fin"
-    pus_service_4.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+    pus_service_4.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 214 "app/app.fin"
+    pus_service_4.exec_tc_req_status.status.__variant = Success;
     pus_service_4.exec_tc_req_status_update.N = 0U;
     pus_service_4.exec_tc_req_status_update.PID = 0U;
     pus_service_4.exec_tc_req_status_update.flags_ack = 0U;

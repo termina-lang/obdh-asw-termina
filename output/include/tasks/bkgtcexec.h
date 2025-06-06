@@ -12,7 +12,6 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     __termina_id_t __task_id;
@@ -24,7 +23,8 @@ typedef struct {
     } tm_counter;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+        void (* send_tm)(void * const, __termina_box_t,
+                         __status_int32_t * const);
     } tm_channel;
     struct {
         void * __that;
@@ -43,7 +43,7 @@ void __PUSBKGTCExecutor__termina_task(void * const arg);
 
 void PUSBKGTCExecutor__manage_error_in_acceptance(const PUSBKGTCExecutor * const self,
                                                   const TCHandlerT * const tc_handler,
-                                                  __status_int32_t * const ret);
+                                                  __status_int32_t * const status);
 
 __status_int32_t PUSBKGTCExecutor__exec_tc(void * const __this,
                                            __termina_box_t tc_handler);

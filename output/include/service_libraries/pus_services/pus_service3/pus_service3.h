@@ -6,7 +6,6 @@
 #include "service_libraries/pus_services/pus_service3/pus_service3_help.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     void * __that;
@@ -34,7 +33,8 @@ typedef struct {
     __termina_allocator_t a_tm_handler_pool;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+        void (* send_tm)(void * const, __termina_box_t,
+                         __status_int32_t * const);
     } tm_channel;
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
@@ -46,7 +46,7 @@ typedef struct {
 void PUSService3__build_tm_3_25(const PUSService3 * const self,
                                 TMHandlerT * const p_tm_handler,
                                 uint16_t tm_seq_counter, size_t index,
-                                MyResult * const result);
+                                __status_int32_t * const status);
 
 void PUSService3__do_hk(void * const __this,
                         __status_int32_t * const action_status);
@@ -64,11 +64,6 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self);
 PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self);
 
 PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self);
-
-PS3TCData PUSService3__get_TC_params(const PUSService3 * const self,
-                                     TCHandlerT * const tc_handler,
-                                     uint8_t * const subtype,
-                                     MyResult * const result);
 
 PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const PUSService3 * const self);
 

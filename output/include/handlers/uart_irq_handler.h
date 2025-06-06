@@ -6,7 +6,6 @@
 #include "resources/uart.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     __termina_id_t __handler_id;

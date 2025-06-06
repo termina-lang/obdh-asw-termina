@@ -4,82 +4,84 @@
 void PUSService3__build_tm_3_25(const PUSService3 * const self,
                                 TMHandlerT * const p_tm_handler,
                                 uint16_t tm_seq_counter, size_t index,
-                                MyResult * const result) {
+                                __status_int32_t * const status) {
     
-    #line 461 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 417 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     startup_tm(p_tm_handler);
 
-    #line 462 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 418 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     append_u16_appdata_field(p_tm_handler,
                              self->hk_config_table[__termina_array__index(8U,
                                                                           index)].SID,
-                             result);
+                             status);
 
-    #line 464 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 420 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     uint16_t PID = 0U;
 
-    #line 465 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 421 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     uint32_t u32_SDP_value = 0U;
 
-    #line 466 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 422 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     uint8_t u8_SDP_value = 0U;
 
-    #line 468 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 424 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     for (size_t j = 0U; j < 16U && j < (size_t)self->hk_config_table[__termina_array__index(8U,
                                                                                             index)].num_params; j = j + 1U) {
         
-        #line 470 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 426 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         PID = self->hk_config_table[__termina_array__index(8U,
                                                            index)].params_def[__termina_array__index(16U,
                                                                                                      j)];
 
-        #line 471 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 427 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
 
-        #line 474 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 430 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (item_type.__variant == DataPoolItemType__u8_t) {
             
-            #line 475 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 431 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
 
-            #line 476 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            append_u8_appdata_field(p_tm_handler, u8_SDP_value, result);
+            #line 432 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            append_u8_appdata_field(p_tm_handler, u8_SDP_value, status);
 
         } else
-        #line 478 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 434 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (item_type.__variant == DataPoolItemType__u32_t) {
             
-            #line 479 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 435 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
 
-            #line 480 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            append_u32_appdata_field(p_tm_handler, u32_SDP_value, result);
+            #line 436 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            append_u32_appdata_field(p_tm_handler, u32_SDP_value, status);
 
         } else
         {
             
-            #line 483 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            (*result).__variant = MyResult__Error;
+            #line 439 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            (*status).__variant = Failure;
+            #line 439 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            (*status).Failure.__0 = SDP_ITEM_TYPE_ERROR;
 
         }
 
     }
 
-    #line 489 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 445 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     MissionObt current_obt;
-    #line 489 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 445 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.finetime = 0U;
-    #line 489 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 445 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.seconds = 0U;
 
-    #line 490 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 446 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                         &current_obt);
 
-    #line 492 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 448 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     close_tm(p_tm_handler, 3U, 25U, tm_seq_counter, current_obt);
 
-    #line 495 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 451 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return;
 
 }
@@ -89,83 +91,73 @@ void PUSService3__do_hk(void * const __this,
     
     PUSService3 * self = (PUSService3 *)__this;
 
-    #line 749 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    MyResult result;
-    #line 749 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    result.__variant = MyResult__Ok;
+    #line 685 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    __status_int32_t do_hk_status;
+    #line 685 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    do_hk_status.__variant = Success;
 
-    #line 751 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 687 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     for (size_t i = 0U; i < 8U && (*action_status).__variant == Success; i = i + 1U) {
         
-        #line 753 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 689 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (self->hk_config_table[__termina_array__index(8U, i)].enabled == 1) {
             
-            #line 755 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 691 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->hk_config_table[__termina_array__index(8U,
                                                          i)].interval_control = self->hk_config_table[__termina_array__index(8U,
                                                                                                                              i)].interval_control + 1U;
 
-            #line 757 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 693 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (self->hk_config_table[__termina_array__index(8U,
                                                              i)].interval_control >= self->hk_config_table[__termina_array__index(8U,
                                                                                                                                   i)].interval) {
                 
-                #line 759 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 695 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->hk_config_table[__termina_array__index(8U,
                                                              i)].interval_control = 0U;
 
-                #line 761 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 697 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 __option_box_t tm_handler;
-                #line 761 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 697 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 tm_handler.__variant = None;
 
-                #line 762 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 698 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
                                               &tm_handler);
 
-                #line 766 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 702 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 if (tm_handler.__variant == Some) {
                     
-                    #line 764 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 700 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-                    #line 768 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 704 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     uint16_t tm_count = 0U;
 
-                    #line 769 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 705 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->tm_counter.get_next_tm_count(self->tm_counter.__that,
                                                        &tm_count);
 
-                    #line 771 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 707 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     PUSService3__build_tm_3_25(self,
                                                (TMHandlerT *)b_tm_handler.data,
-                                               tm_count, i, &result);
+                                               tm_count, i, &do_hk_status);
 
-                    #line 773 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    if (result.__variant == MyResult__Ok) {
+                    #line 709 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    if (do_hk_status.__variant == Success) {
                         
-                        #line 775 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 711 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->tm_channel.send_tm(self->tm_channel.__that,
-                                                 b_tm_handler, &result);
-
-                        #line 777 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        if (result.__variant == MyResult__Error) {
-                            
-                            #line 778 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            (*action_status).__variant = Failure;
-                            #line 778 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            (*action_status).Failure.__0 = TM_SEND_FAILURE;
-
-                        }
+                                                 b_tm_handler, &do_hk_status);
 
                     } else
                     {
                         
-                        #line 783 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 716 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->pus_service_5.build_and_tx_tm_5_2(self->pus_service_5.__that,
-                                                                action_status);
+                                                                &do_hk_status);
 
-                        #line 784 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 717 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
 
@@ -174,9 +166,9 @@ void PUSService3__do_hk(void * const __this,
                 } else
                 {
                     
-                    #line 790 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 723 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     (*action_status).__variant = Failure;
-                    #line 790 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 723 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     (*action_status).Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
                 }
@@ -187,7 +179,7 @@ void PUSService3__do_hk(void * const __this,
 
     }
 
-    #line 798 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 731 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return;
 
 }
@@ -260,230 +252,186 @@ IndexFound PUSService3__get_SIDindex(PUSService3 * const self) {
 
 PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
     
-    #line 324 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    MyResult result;
-    #line 324 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    result.__variant = MyResult__Ok;
-
-    #line 325 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 293 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     _Bool ack_enabled = 0;
 
-    #line 326 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 294 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PSExecTCReqStatus next_status;
-    #line 326 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    next_status.__variant = PSExecTCReqStatus__Exit;
+    #line 294 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.exec_tc_status.__variant = PSReqStatus__Exit;
+    #line 294 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.status.__variant = Success;
 
-    #line 328 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 296 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     MissionObt current_obt;
-    #line 328 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 296 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.finetime = 0U;
-    #line 328 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 296 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.seconds = 0U;
 
-    #line 330 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 298 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     __option_box_t tm_handler;
-    #line 330 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 298 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     tm_handler.__variant = None;
 
-    #line 331 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 299 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
 
-    #line 335 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 303 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
         
-        #line 333 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 301 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-        #line 337 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 305 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         uint16_t tm_count = 0U;
 
-        #line 338 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 306 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
 
-        #line 340 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 308 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (self->exec_tc_req_status_update.tc_data.N != 1U) {
             
-            #line 342 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 310 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                 &current_obt);
 
-            #line 343 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 311 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             build_tm_1_4_num_of_instr_not_valid((TMHandlerT *)b_tm_handler.data,
                                                 tm_count,
                                                 self->exec_tc_req_status_update.tc_data.packet_id,
                                                 self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
                                                 self->exec_tc_req_status_update.tc_data.N,
-                                                current_obt, &result);
+                                                current_obt,
+                                                &next_status.status);
 
-            #line 346 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (result.__variant == MyResult__Ok) {
+            #line 314 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            if (next_status.status.__variant == Success) {
                 
-                #line 348 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 316 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                         &result);
-
-                #line 350 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                if (result.__variant == MyResult__Error) {
-                    
-                    #line 351 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.__variant = PSExecTCReqStatus__Failure;
-                    #line 351 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                }
+                                         &next_status.status);
 
             } else
             {
                 
-                #line 355 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 320 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                              b_tm_handler);
-
-                #line 356 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.__variant = PSExecTCReqStatus__Error;
-                #line 356 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.Error.__0 = BUILD_TM_ERROR;
 
             }
 
         } else
         {
             
-            #line 361 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 326 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->exec_tc_req_status_update.index = PUSService3__get_SIDindex(self);
 
-            #line 363 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 328 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (self->exec_tc_req_status_update.index.found) {
                 
-                #line 365 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 330 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                     &current_obt);
 
-                #line 366 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 331 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count,
                              self->exec_tc_req_status_update.tc_data.flags_ack,
-                             current_obt, &result, &ack_enabled);
+                             current_obt, &next_status.status, &ack_enabled);
 
-                #line 368 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 333 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 if (ack_enabled) {
                     
-                    #line 370 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    if (result.__variant == MyResult__Ok) {
+                    #line 335 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    if (next_status.status.__variant == Success) {
                         
-                        #line 372 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 337 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->tm_channel.send_tm(self->tm_channel.__that,
-                                                 b_tm_handler, &result);
-
-                        #line 374 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        if (result.__variant == MyResult__Error) {
-                            
-                            #line 375 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.__variant = PSExecTCReqStatus__Failure;
-                            #line 375 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                        }
+                                                 b_tm_handler,
+                                                 &next_status.status);
 
                     } else
                     {
                         
-                        #line 379 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 341 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
-
-                        #line 380 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.__variant = PSExecTCReqStatus__Error;
-                        #line 380 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.Error.__0 = BUILD_TM_ERROR;
 
                     }
 
                 } else
                 {
                     
-                    #line 384 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 346 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
 
-                #line 387 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 349 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->hk_config_table[__termina_array__index(8U,
                                                              self->exec_tc_req_status_update.index.index)].interval = self->exec_tc_req_status_update.tc_data.collection_interval;
 
-                #line 388 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 350 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->hk_config_table[__termina_array__index(8U,
                                                              self->exec_tc_req_status_update.index.index)].interval_control = 0U;
 
-                #line 390 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 352 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 __option_box_t tm_handler2;
-                #line 390 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 352 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 tm_handler2.__variant = None;
 
-                #line 391 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 353 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
                                               &tm_handler2);
 
-                #line 395 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 357 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 if (tm_handler2.__variant == Some) {
                     
-                    #line 393 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 355 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     __termina_box_t b_tm_handler2 = tm_handler2.Some.__0;
 
-                    #line 397 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 359 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     uint16_t tm_count2 = 0U;
 
-                    #line 398 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 360 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->tm_counter.get_next_tm_count(self->tm_counter.__that,
                                                        &tm_count2);
 
-                    #line 400 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 362 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                         &current_obt);
 
-                    #line 401 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 363 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     build_tm_1_7((TMHandlerT *)b_tm_handler2.data, tm_count2,
                                  self->exec_tc_req_status_update.tc_data.flags_ack,
-                                 current_obt, &result, &ack_enabled);
+                                 current_obt, &next_status.status,
+                                 &ack_enabled);
 
-                    #line 403 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 365 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     if (ack_enabled) {
                         
-                        #line 405 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        if (result.__variant == MyResult__Ok) {
+                        #line 367 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        if (next_status.status.__variant == Success) {
                             
-                            #line 407 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                            #line 369 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                             self->tm_channel.send_tm(self->tm_channel.__that,
-                                                     b_tm_handler2, &result);
-
-                            #line 409 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            if (result.__variant == MyResult__Error) {
-                                
-                                #line 410 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                                next_status.__variant = PSExecTCReqStatus__Failure;
-                                #line 410 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                                next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                            }
+                                                     b_tm_handler2,
+                                                     &next_status.status);
 
                         } else
                         {
                             
-                            #line 414 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                            #line 373 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                             self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                          b_tm_handler2);
-
-                            #line 415 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.__variant = PSExecTCReqStatus__Error;
-                            #line 415 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.Error.__0 = BUILD_TM_ERROR;
 
                         }
 
                     } else
                     {
                         
-                        #line 419 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 378 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                      b_tm_handler2);
 
@@ -492,56 +440,41 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                 } else
                 {
                     
-                    #line 423 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.__variant = PSExecTCReqStatus__Failure;
-                    #line 423 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+                    #line 382 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    next_status.status.__variant = Failure;
+                    #line 382 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    next_status.status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
                 }
 
             } else
             {
                 
-                #line 429 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 388 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                     &current_obt);
 
-                #line 430 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 389 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 build_tm_1_4_SID_not_valid((TMHandlerT *)b_tm_handler.data,
                                            tm_count,
                                            self->exec_tc_req_status_update.tc_data.packet_id,
                                            self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
                                            self->exec_tc_req_status_update.tc_data.SID,
-                                           current_obt, &result);
+                                           current_obt, &next_status.status);
 
-                #line 432 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                if (result.__variant == MyResult__Ok) {
+                #line 391 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                if (next_status.status.__variant == Success) {
                     
-                    #line 434 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 393 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->tm_channel.send_tm(self->tm_channel.__that,
-                                             b_tm_handler, &result);
-
-                    #line 436 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    if (result.__variant == MyResult__Error) {
-                        
-                        #line 437 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.__variant = PSExecTCReqStatus__Failure;
-                        #line 437 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                    }
+                                             b_tm_handler, &next_status.status);
 
                 } else
                 {
                     
-                    #line 441 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 397 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
-
-                    #line 442 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.__variant = PSExecTCReqStatus__Error;
-                    #line 442 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.Error.__0 = BUILD_TM_ERROR;
 
                 }
 
@@ -552,14 +485,14 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
     } else
     {
         
-        #line 449 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.__variant = PSExecTCReqStatus__Failure;
-        #line 449 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+        #line 405 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.__variant = Failure;
+        #line 405 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
-    #line 454 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 410 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return next_status;
 
 }
@@ -567,229 +500,185 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
 PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
     
     #line 50 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    MyResult result;
-    #line 50 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    result.__variant = MyResult__Ok;
-
-    #line 51 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     _Bool ack_enabled = 0;
 
-    #line 52 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 51 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PSExecTCReqStatus next_status;
-    #line 52 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    next_status.__variant = PSExecTCReqStatus__Exit;
+    #line 51 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.exec_tc_status.__variant = PSReqStatus__Exit;
+    #line 51 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.status.__variant = Success;
 
-    #line 54 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 53 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     MissionObt current_obt;
-    #line 54 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 53 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.finetime = 0U;
-    #line 54 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 53 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.seconds = 0U;
 
-    #line 56 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 55 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     __option_box_t tm_handler;
-    #line 56 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 55 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     tm_handler.__variant = None;
 
-    #line 57 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 56 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
 
-    #line 61 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 60 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
         
-        #line 59 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 58 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-        #line 63 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 62 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         uint16_t tm_count = 0U;
 
-        #line 64 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 63 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
 
-        #line 66 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 65 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (self->exec_tc_req_status_update.tc_data.N != 1U) {
             
-            #line 68 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 67 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                 &current_obt);
 
-            #line 69 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 68 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             build_tm_1_4_num_of_instr_not_valid((TMHandlerT *)b_tm_handler.data,
                                                 tm_count,
                                                 self->exec_tc_req_status_update.tc_data.packet_id,
                                                 self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
                                                 self->exec_tc_req_status_update.tc_data.N,
-                                                current_obt, &result);
+                                                current_obt,
+                                                &next_status.status);
 
-            #line 72 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (result.__variant == MyResult__Ok) {
+            #line 71 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            if (next_status.status.__variant == Success) {
                 
-                #line 74 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 73 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                         &result);
-
-                #line 76 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                if (result.__variant == MyResult__Error) {
-                    
-                    #line 77 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.__variant = PSExecTCReqStatus__Failure;
-                    #line 77 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                }
+                                         &next_status.status);
 
             } else
             {
                 
-                #line 81 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 77 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                              b_tm_handler);
-
-                #line 82 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.__variant = PSExecTCReqStatus__Error;
-                #line 82 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.Error.__0 = BUILD_TM_ERROR;
 
             }
 
         } else
         {
             
-            #line 88 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 83 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->exec_tc_req_status_update.index = PUSService3__get_SIDindex(self);
 
-            #line 90 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 85 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (self->exec_tc_req_status_update.index.found) {
                 
-                #line 92 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 87 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                     &current_obt);
 
-                #line 93 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 88 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count,
                              self->exec_tc_req_status_update.tc_data.flags_ack,
-                             current_obt, &result, &ack_enabled);
+                             current_obt, &next_status.status, &ack_enabled);
 
-                #line 95 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 90 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 if (ack_enabled) {
                     
-                    #line 97 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    if (result.__variant == MyResult__Ok) {
+                    #line 92 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    if (next_status.status.__variant == Success) {
                         
-                        #line 99 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 94 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->tm_channel.send_tm(self->tm_channel.__that,
-                                                 b_tm_handler, &result);
-
-                        #line 101 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        if (result.__variant == MyResult__Error) {
-                            
-                            #line 102 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.__variant = PSExecTCReqStatus__Failure;
-                            #line 102 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                        }
+                                                 b_tm_handler,
+                                                 &next_status.status);
 
                     } else
                     {
                         
-                        #line 106 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 98 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
-
-                        #line 107 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.__variant = PSExecTCReqStatus__Error;
-                        #line 107 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.Error.__0 = BUILD_TM_ERROR;
 
                     }
 
                 } else
                 {
                     
-                    #line 111 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 103 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
 
-                #line 114 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 106 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->hk_config_table[__termina_array__index(8U,
                                                              self->exec_tc_req_status_update.index.index)].enabled = 1;
 
-                #line 115 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 107 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->hk_config_table[__termina_array__index(8U,
                                                              self->exec_tc_req_status_update.index.index)].interval_control = 0U;
 
-                #line 117 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 109 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 __option_box_t tm_handler2;
-                #line 117 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 109 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 tm_handler2.__variant = None;
 
-                #line 118 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 110 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
                                               &tm_handler2);
 
-                #line 122 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 114 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 if (tm_handler2.__variant == Some) {
                     
-                    #line 120 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 112 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     __termina_box_t b_tm_handler2 = tm_handler2.Some.__0;
 
-                    #line 124 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 116 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     uint16_t tm_count2 = 0U;
 
-                    #line 125 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 117 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->tm_counter.get_next_tm_count(self->tm_counter.__that,
                                                        &tm_count2);
 
-                    #line 126 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 118 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                         &current_obt);
 
-                    #line 127 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 119 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     build_tm_1_7((TMHandlerT *)b_tm_handler2.data, tm_count2,
                                  self->exec_tc_req_status_update.tc_data.flags_ack,
-                                 current_obt, &result, &ack_enabled);
+                                 current_obt, &next_status.status,
+                                 &ack_enabled);
 
-                    #line 129 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 121 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     if (ack_enabled) {
                         
-                        #line 131 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        if (result.__variant == MyResult__Ok) {
+                        #line 123 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        if (next_status.status.__variant == Success) {
                             
-                            #line 133 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                            #line 125 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                             self->tm_channel.send_tm(self->tm_channel.__that,
-                                                     b_tm_handler2, &result);
-
-                            #line 135 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            if (result.__variant == MyResult__Error) {
-                                
-                                #line 136 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                                next_status.__variant = PSExecTCReqStatus__Failure;
-                                #line 136 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                                next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                            }
+                                                     b_tm_handler2,
+                                                     &next_status.status);
 
                         } else
                         {
                             
-                            #line 140 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                            #line 129 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                             self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                          b_tm_handler2);
-
-                            #line 141 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.__variant = PSExecTCReqStatus__Error;
-                            #line 141 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.Error.__0 = BUILD_TM_ERROR;
 
                         }
 
                     } else
                     {
                         
-                        #line 145 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 133 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                      b_tm_handler2);
 
@@ -798,56 +687,41 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                 } else
                 {
                     
-                    #line 150 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.__variant = PSExecTCReqStatus__Failure;
-                    #line 150 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+                    #line 138 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    next_status.status.__variant = Failure;
+                    #line 138 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    next_status.status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
                 }
 
             } else
             {
                 
-                #line 156 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 144 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                     &current_obt);
 
-                #line 157 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 145 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 build_tm_1_4_SID_not_valid((TMHandlerT *)b_tm_handler.data,
                                            tm_count,
                                            self->exec_tc_req_status_update.tc_data.packet_id,
                                            self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
                                            self->exec_tc_req_status_update.tc_data.SID,
-                                           current_obt, &result);
+                                           current_obt, &next_status.status);
 
-                #line 160 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                if (result.__variant == MyResult__Ok) {
+                #line 148 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                if (next_status.status.__variant == Success) {
                     
-                    #line 162 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 150 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->tm_channel.send_tm(self->tm_channel.__that,
-                                             b_tm_handler, &result);
-
-                    #line 164 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    if (result.__variant == MyResult__Error) {
-                        
-                        #line 165 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.__variant = PSExecTCReqStatus__Failure;
-                        #line 165 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                    }
+                                             b_tm_handler, &next_status.status);
 
                 } else
                 {
                     
-                    #line 169 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 154 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
-
-                    #line 170 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.__variant = PSExecTCReqStatus__Error;
-                    #line 170 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.Error.__0 = BUILD_TM_ERROR;
 
                 }
 
@@ -858,244 +732,200 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
     } else
     {
         
-        #line 178 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.__variant = PSExecTCReqStatus__Failure;
-        #line 178 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+        #line 163 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.__variant = Failure;
+        #line 163 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
-    #line 183 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 168 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return next_status;
 
 }
 
 PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
     
-    #line 188 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    MyResult result;
-    #line 188 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    result.__variant = MyResult__Ok;
-
-    #line 189 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 173 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     _Bool ack_enabled = 0;
 
-    #line 190 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 174 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PSExecTCReqStatus next_status;
-    #line 190 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    next_status.__variant = PSExecTCReqStatus__Exit;
+    #line 174 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.exec_tc_status.__variant = PSReqStatus__Exit;
+    #line 174 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.status.__variant = Success;
 
-    #line 192 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 176 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     MissionObt current_obt;
-    #line 192 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 176 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.finetime = 0U;
-    #line 192 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 176 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.seconds = 0U;
 
-    #line 194 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 178 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     __option_box_t tm_handler;
-    #line 194 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 178 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     tm_handler.__variant = None;
 
-    #line 195 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 179 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
 
-    #line 199 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 183 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
         
-        #line 197 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 181 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-        #line 201 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 185 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         uint16_t tm_count = 0U;
 
-        #line 202 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 186 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
 
-        #line 204 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 188 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (self->exec_tc_req_status_update.tc_data.N != 1U) {
             
-            #line 206 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 190 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                 &current_obt);
 
-            #line 207 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 191 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             build_tm_1_4_num_of_instr_not_valid((TMHandlerT *)b_tm_handler.data,
                                                 tm_count,
                                                 self->exec_tc_req_status_update.tc_data.packet_id,
                                                 self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
                                                 self->exec_tc_req_status_update.tc_data.N,
-                                                current_obt, &result);
+                                                current_obt,
+                                                &next_status.status);
 
-            #line 210 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (result.__variant == MyResult__Ok) {
+            #line 194 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            if (next_status.status.__variant == Success) {
                 
-                #line 212 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 196 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                         &result);
-
-                #line 214 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                if (result.__variant == MyResult__Error) {
-                    
-                    #line 215 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.__variant = PSExecTCReqStatus__Failure;
-                    #line 215 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                }
+                                         &next_status.status);
 
             } else
             {
                 
-                #line 219 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 200 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                              b_tm_handler);
-
-                #line 220 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.__variant = PSExecTCReqStatus__Error;
-                #line 220 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.Error.__0 = BUILD_TM_ERROR;
 
             }
 
         } else
         {
             
-            #line 226 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 207 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->exec_tc_req_status_update.index = PUSService3__get_SIDindex(self);
 
-            #line 228 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 209 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (self->exec_tc_req_status_update.index.found) {
                 
-                #line 230 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 211 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                     &current_obt);
 
-                #line 231 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 212 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count,
                              self->exec_tc_req_status_update.tc_data.flags_ack,
-                             current_obt, &result, &ack_enabled);
+                             current_obt, &next_status.status, &ack_enabled);
 
-                #line 233 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 214 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 if (ack_enabled) {
                     
-                    #line 235 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    if (result.__variant == MyResult__Ok) {
+                    #line 216 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    if (next_status.status.__variant == Success) {
                         
-                        #line 237 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 218 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->tm_channel.send_tm(self->tm_channel.__that,
-                                                 b_tm_handler, &result);
-
-                        #line 239 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        if (result.__variant == MyResult__Error) {
-                            
-                            #line 240 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.__variant = PSExecTCReqStatus__Failure;
-                            #line 240 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                        }
+                                                 b_tm_handler,
+                                                 &next_status.status);
 
                     } else
                     {
                         
-                        #line 244 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 222 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
-
-                        #line 245 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.__variant = PSExecTCReqStatus__Error;
-                        #line 245 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.Error.__0 = BUILD_TM_ERROR;
 
                     }
 
                 } else
                 {
                     
-                    #line 249 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 226 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
 
-                #line 252 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 229 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->hk_config_table[__termina_array__index(8U,
                                                              self->exec_tc_req_status_update.index.index)].enabled = 0;
 
-                #line 253 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 230 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->hk_config_table[__termina_array__index(8U,
                                                              self->exec_tc_req_status_update.index.index)].interval_control = 0U;
 
-                #line 255 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 232 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 __option_box_t tm_handler2;
-                #line 255 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 232 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 tm_handler2.__variant = None;
 
-                #line 256 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 233 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
                                               &tm_handler2);
 
-                #line 260 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 237 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 if (tm_handler2.__variant == Some) {
                     
-                    #line 258 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 235 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     __termina_box_t b_tm_handler2 = tm_handler2.Some.__0;
 
-                    #line 262 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 239 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     uint16_t tm_count2 = 0U;
 
-                    #line 263 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 240 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->tm_counter.get_next_tm_count(self->tm_counter.__that,
                                                        &tm_count2);
 
-                    #line 264 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 241 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                         &current_obt);
 
-                    #line 265 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 242 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     build_tm_1_7((TMHandlerT *)b_tm_handler2.data, tm_count2,
                                  self->exec_tc_req_status_update.tc_data.flags_ack,
-                                 current_obt, &result, &ack_enabled);
+                                 current_obt, &next_status.status,
+                                 &ack_enabled);
 
-                    #line 267 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 244 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     if (ack_enabled) {
                         
-                        #line 269 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        if (result.__variant == MyResult__Ok) {
+                        #line 246 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        if (next_status.status.__variant == Success) {
                             
-                            #line 271 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                            #line 248 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                             self->tm_channel.send_tm(self->tm_channel.__that,
-                                                     b_tm_handler2, &result);
-
-                            #line 273 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            if (result.__variant == MyResult__Error) {
-                                
-                                #line 274 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                                next_status.__variant = PSExecTCReqStatus__Failure;
-                                #line 274 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                                next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                            }
+                                                     b_tm_handler2,
+                                                     &next_status.status);
 
                         } else
                         {
                             
-                            #line 278 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                            #line 251 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                             self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                          b_tm_handler2);
-
-                            #line 279 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.__variant = PSExecTCReqStatus__Error;
-                            #line 279 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            next_status.Error.__0 = BUILD_TM_ERROR;
 
                         }
 
                     } else
                     {
                         
-                        #line 283 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                        #line 255 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                         self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                      b_tm_handler2);
 
@@ -1104,56 +934,41 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                 } else
                 {
                     
-                    #line 287 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.__variant = PSExecTCReqStatus__Failure;
-                    #line 287 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+                    #line 259 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    next_status.status.__variant = Failure;
+                    #line 259 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    next_status.status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
                 }
 
             } else
             {
                 
-                #line 293 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 265 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                                     &current_obt);
 
-                #line 294 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 266 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 build_tm_1_4_SID_not_valid((TMHandlerT *)b_tm_handler.data,
                                            tm_count,
                                            self->exec_tc_req_status_update.tc_data.packet_id,
                                            self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
                                            self->exec_tc_req_status_update.tc_data.SID,
-                                           current_obt, &result);
+                                           current_obt, &next_status.status);
 
-                #line 297 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                if (result.__variant == MyResult__Ok) {
+                #line 269 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                if (next_status.status.__variant == Success) {
                     
-                    #line 299 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 271 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->tm_channel.send_tm(self->tm_channel.__that,
-                                             b_tm_handler, &result);
-
-                    #line 301 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    if (result.__variant == MyResult__Error) {
-                        
-                        #line 302 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.__variant = PSExecTCReqStatus__Failure;
-                        #line 302 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        next_status.Failure.__0 = TM_SEND_FAILURE;
-
-                    }
+                                             b_tm_handler, &next_status.status);
 
                 } else
                 {
                     
-                    #line 306 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                    #line 275 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                     self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
-
-                    #line 307 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.__variant = PSExecTCReqStatus__Error;
-                    #line 307 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    next_status.Error.__0 = BUILD_TM_ERROR;
 
                 }
 
@@ -1164,360 +979,249 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
     } else
     {
         
-        #line 314 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.__variant = PSExecTCReqStatus__Failure;
-        #line 314 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+        #line 283 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.__variant = Failure;
+        #line 283 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
-    #line 319 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 288 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return next_status;
-
-}
-
-PS3TCData PUSService3__get_TC_params(const PUSService3 * const self,
-                                     TCHandlerT * const tc_handler,
-                                     uint8_t * const subtype,
-                                     MyResult * const result) {
-    
-    #line 501 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    *subtype = tc_handler->df_header.subtype;
-
-    #line 503 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    PS3TCData tc_data;
-    #line 503 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.N = 0U;
-    #line 503 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.SID = 0U;
-    #line 503 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.collection_interval = 0U;
-    #line 503 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.flags_ack = 0U;
-    #line 503 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.packet_error_ctrl = 0U;
-    #line 503 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.packet_id = 0U;
-    #line 503 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.tc_num_bytes = 0U;
-
-    #line 513 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.packet_id = tc_handler->packet_header.packet_id;
-
-    #line 514 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
-
-    #line 515 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.flags_ack = tc_handler->df_header.flag_ver_ack;
-
-    #line 516 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
-
-    #line 517 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    *result = tc_handler_get_u8_appdata_field(tc_handler, &tc_data.N);
-
-    #line 518 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    *result = tc_handler_get_u16_appdata_field(tc_handler, &tc_data.SID);
-
-    #line 520 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    if (*subtype == 31U) {
-        
-        #line 522 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        *result = tc_handler_get_u8_appdata_field(tc_handler,
-                                                  &tc_data.collection_interval);
-
-    }
-
-    #line 527 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    return tc_data;
 
 }
 
 PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const PUSService3 * const self) {
     
-    #line 574 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 496 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PSExecTCReqStatus next_status;
-    #line 574 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    next_status.__variant = PSExecTCReqStatus__Exit;
+    #line 496 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.exec_tc_status.__variant = PSReqStatus__Exit;
+    #line 496 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.status.__variant = Success;
 
-    #line 575 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    MyResult result;
-    #line 575 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    result.__variant = MyResult__Ok;
-
-    #line 577 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 498 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     MissionObt current_obt;
-    #line 577 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 498 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.finetime = 0U;
-    #line 577 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 498 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.seconds = 0U;
 
-    #line 579 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 500 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     __option_box_t tm_handler;
-    #line 579 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 500 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     tm_handler.__variant = None;
 
-    #line 580 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 501 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
 
-    #line 584 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 505 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
         
-        #line 582 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 503 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-        #line 586 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 507 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         uint16_t tm_count = 0U;
 
-        #line 587 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 508 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
 
-        #line 589 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 510 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                             &current_obt);
 
-        #line 590 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 511 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
                                          tm_count,
                                          self->exec_tc_req_status_update.tc_data.packet_id,
                                          self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
-                                         current_obt, &result);
+                                         current_obt, &next_status.status);
 
-        #line 593 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        if (result.__variant == MyResult__Ok) {
+        #line 514 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        if (next_status.status.__variant == Success) {
             
-            #line 595 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 516 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &result);
-
-            #line 597 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (result.__variant == MyResult__Error) {
-                
-                #line 598 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.__variant = PSExecTCReqStatus__Failure;
-                #line 598 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.Failure.__0 = TM_SEND_FAILURE;
-
-            }
+                                     &next_status.status);
 
         } else
         {
             
-            #line 602 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 520 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                          b_tm_handler);
-
-            #line 603 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            next_status.__variant = PSExecTCReqStatus__Error;
-            #line 603 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            next_status.Error.__0 = BUILD_TM_ERROR;
 
         }
 
     } else
     {
         
-        #line 608 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.__variant = PSExecTCReqStatus__Failure;
-        #line 608 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+        #line 526 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.__variant = Failure;
+        #line 526 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
-    #line 612 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 530 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return next_status;
 
 }
 
 PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const PUSService3 * const self) {
     
-    #line 533 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 458 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PSExecTCReqStatus next_status;
-    #line 533 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    next_status.__variant = PSExecTCReqStatus__Exit;
+    #line 458 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.exec_tc_status.__variant = PSReqStatus__Exit;
+    #line 458 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.status.__variant = Success;
 
-    #line 534 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    MyResult result;
-    #line 534 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    result.__variant = MyResult__Ok;
-
-    #line 536 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 460 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     MissionObt current_obt;
-    #line 536 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 460 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.finetime = 0U;
-    #line 536 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 460 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.seconds = 0U;
 
-    #line 538 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 462 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     __option_box_t tm_handler;
-    #line 538 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 462 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     tm_handler.__variant = None;
 
-    #line 539 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 463 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
 
-    #line 543 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 467 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
         
-        #line 541 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 465 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-        #line 545 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 469 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         uint16_t tm_count = 0U;
 
-        #line 546 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 470 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
 
-        #line 548 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 472 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                             &current_obt);
 
-        #line 549 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 473 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         build_tm_1_4_short_pack_length((TMHandlerT *)b_tm_handler.data,
                                        tm_count,
                                        self->exec_tc_req_status_update.tc_data.packet_id,
                                        self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
                                        self->exec_tc_req_status_update.tc_data.tc_num_bytes,
-                                       current_obt, &result);
+                                       current_obt, &next_status.status);
 
-        #line 551 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        if (result.__variant == MyResult__Ok) {
+        #line 476 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        if (next_status.status.__variant == Success) {
             
-            #line 553 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 478 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &result);
-
-            #line 555 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (result.__variant == MyResult__Error) {
-                
-                #line 556 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.__variant = PSExecTCReqStatus__Failure;
-                #line 556 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.Failure.__0 = TM_SEND_FAILURE;
-
-            }
+                                     &next_status.status);
 
         } else
         {
             
-            #line 560 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 482 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                          b_tm_handler);
-
-            #line 561 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            next_status.__variant = PSExecTCReqStatus__Error;
-            #line 561 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            next_status.Error.__0 = BUILD_TM_ERROR;
 
         }
 
     } else
     {
         
-        #line 565 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.__variant = PSExecTCReqStatus__Failure;
-        #line 565 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+        #line 487 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.__variant = Failure;
+        #line 487 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
-    #line 569 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 491 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return next_status;
 
 }
 
 PSExecTCReqStatus PUSService3__manage_tm_limit_app_data_reached(const PUSService3 * const self) {
     
-    #line 617 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 535 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PSExecTCReqStatus next_status;
-    #line 617 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    next_status.__variant = PSExecTCReqStatus__Exit;
+    #line 535 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.exec_tc_status.__variant = PSReqStatus__Exit;
+    #line 535 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    next_status.status.__variant = Success;
 
-    #line 618 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    MyResult result;
-    #line 618 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    result.__variant = MyResult__Ok;
-
-    #line 620 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 537 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     MissionObt current_obt;
-    #line 620 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 537 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.finetime = 0U;
-    #line 620 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 537 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     current_obt.seconds = 0U;
 
-    #line 622 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 539 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     __option_box_t tm_handler;
-    #line 622 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 539 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     tm_handler.__variant = None;
 
-    #line 623 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 540 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
 
-    #line 627 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 544 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
         
-        #line 625 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 542 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-        #line 629 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 546 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         uint16_t tm_count = 0U;
 
-        #line 630 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 547 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
 
-        #line 632 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 549 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         self->pus_service_9.get_current_obt(self->pus_service_9.__that,
                                             &current_obt);
 
-        #line 633 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 550 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
                                              tm_count,
                                              self->exec_tc_req_status_update.tc_data.packet_id,
                                              self->exec_tc_req_status_update.tc_data.packet_error_ctrl,
-                                             current_obt, &result);
+                                             current_obt, &next_status.status);
 
-        #line 636 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        if (result.__variant == MyResult__Ok) {
+        #line 553 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        if (next_status.status.__variant == Success) {
             
-            #line 638 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 555 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &result);
-
-            #line 640 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (result.__variant == MyResult__Error) {
-                
-                #line 641 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.__variant = PSExecTCReqStatus__Failure;
-                #line 641 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                next_status.Failure.__0 = TM_SEND_FAILURE;
-
-            }
+                                     &next_status.status);
 
         } else
         {
             
-            #line 645 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 559 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
                                          b_tm_handler);
-
-            #line 646 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            next_status.__variant = PSExecTCReqStatus__Error;
-            #line 646 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            next_status.Error.__0 = BUILD_TM_ERROR;
 
         }
 
     } else
     {
         
-        #line 651 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.__variant = PSExecTCReqStatus__Failure;
-        #line 651 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        next_status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+        #line 565 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.__variant = Failure;
+        #line 565 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        next_status.status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
-    #line 655 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 569 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return next_status;
 
 }
@@ -1527,126 +1231,99 @@ void PUSService3__exec_tc(void * const __this, TCHandlerT * const tc_handler,
     
     PUSService3 * self = (PUSService3 *)__this;
 
-    #line 661 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    uint8_t subtype = 0U;
+    #line 575 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    uint8_t subtype = tc_handler->df_header.subtype;
 
-    #line 663 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit == 0; i = i + 1U) {
+    #line 577 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    for (size_t i = 0U; i < 3U && self->exec_tc_req_status.exec_tc_status.__variant == PSReqStatus__Exit == 0; i = i + 1U) {
         
-        #line 667 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Init) {
+        #line 581 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        if (self->exec_tc_req_status.exec_tc_status.__variant == PSReqStatus__Init) {
             
-            #line 669 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            MyResult result;
-            #line 669 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            result.__variant = MyResult__Ok;
+            #line 583 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            self->exec_tc_req_status_update.tc_data.packet_id = tc_handler->packet_header.packet_id;
 
-            #line 670 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->exec_tc_req_status_update.tc_data = PUSService3__get_TC_params(self,
-                                                                                 tc_handler,
-                                                                                 &subtype,
-                                                                                 &result);
+            #line 584 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            self->exec_tc_req_status_update.tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
 
-            #line 672 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (result.__variant == MyResult__Error) {
+            #line 585 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            self->exec_tc_req_status_update.tc_data.flags_ack = tc_handler->df_header.flag_ver_ack;
+
+            #line 586 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            self->exec_tc_req_status_update.tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
+
+            #line 587 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            self->exec_tc_req_status.status = tc_handler_get_u8_appdata_field(tc_handler,
+                                                                              &self->exec_tc_req_status_update.tc_data.N);
+
+            #line 588 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            self->exec_tc_req_status.status = tc_handler_get_u16_appdata_field(tc_handler,
+                                                                               &self->exec_tc_req_status_update.tc_data.SID);
+
+            #line 590 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            if (subtype == 31U) {
                 
-                #line 673 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
-                #line 673 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status.Error.__0 = TC_DATA_OUT_OF_RANGE_ERROR;
+                #line 592 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                self->exec_tc_req_status.status = tc_handler_get_u8_appdata_field(tc_handler,
+                                                                                  &self->exec_tc_req_status_update.tc_data.collection_interval);
+
+            }
+
+            #line 596 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            if (self->exec_tc_req_status.status.__variant == Success) {
+                
+                #line 598 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                self->exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__ExecTC;
 
             } else
             {
                 
-                #line 675 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status.__variant = PSExecTCReqStatus__ExecTC;
+                #line 602 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                self->exec_tc_req_status.status.__variant = Failure;
+                #line 602 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                self->exec_tc_req_status.status.Failure.__0 = ACCEPTANCE_ERROR;
+
+                #line 603 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                self->exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Exit;
 
             }
 
         } else
-        #line 679 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__ExecTC) {
+        #line 608 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        if (self->exec_tc_req_status.exec_tc_status.__variant == PSReqStatus__ExecTC) {
             
-            #line 681 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 610 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (subtype == 5U) {
                 
-                #line 683 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 612 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->exec_tc_req_status = PUSService3__exec3_5TC(self);
 
             } else
-            #line 685 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 614 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (subtype == 6U) {
                 
-                #line 687 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 616 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->exec_tc_req_status = PUSService3__exec3_6TC(self);
 
             } else
-            #line 689 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            #line 618 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (subtype == 31U) {
                 
-                #line 691 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                #line 620 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
                 self->exec_tc_req_status = PUSService3__exec3_31TC(self);
 
             } else
             {
                 
-                #line 695 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Error;
-                #line 695 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status.Error.__0 = ACCEPTANCE_ERROR;
+                #line 624 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                self->exec_tc_req_status.status.__variant = Failure;
+                #line 624 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                self->exec_tc_req_status.status.Failure.__0 = ACCEPTANCE_ERROR;
+
+                #line 625 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+                self->exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Exit;
 
             }
-
-        } else
-        #line 700 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Error) {
-            
-            #line 665 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            int32_t error_code = self->exec_tc_req_status.Error.__0;
-
-            #line 702 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
-
-            #line 704 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (error_code == ACCEPTANCE_ERROR) {
-                
-                #line 707 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status = PUSService3__manage_error_in_acceptance(self);
-
-            } else
-            #line 709 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (error_code == BUILD_TM_ERROR) {
-                
-                #line 712 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status = PUSService3__manage_tm_limit_app_data_reached(self);
-
-            } else
-            #line 714 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
-                
-                #line 716 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status = PUSService3__manage_short_pack_length_error(self);
-
-            } else
-            {
-                
-
-            }
-
-        } else
-        #line 724 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Failure) {
-            
-            #line 665 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            int32_t failure_code = self->exec_tc_req_status.Failure.__0;
-
-            #line 726 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            (*action_status).__variant = Failure;
-            #line 726 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            (*action_status).Failure.__0 = failure_code;
-
-            #line 727 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
 
         } else
         {
@@ -1656,15 +1333,61 @@ void PUSService3__exec_tc(void * const __this, TCHandlerT * const tc_handler,
 
     }
 
-    #line 736 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__Exit) {
+    #line 638 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    if (self->exec_tc_req_status.status.__variant == Success) {
         
-        #line 738 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
+        #line 640 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        (*action_status).__variant = Success;
+
+    } else
+    {
+        
+        #line 636 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        int32_t error_code = self->exec_tc_req_status.status.Failure.__0;
+
+        #line 645 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        if (error_code == ACCEPTANCE_ERROR) {
+            
+            #line 648 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            self->exec_tc_req_status = PUSService3__manage_error_in_acceptance(self);
+
+        } else
+        #line 650 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        if (error_code == BUILD_TM_ERROR) {
+            
+            #line 653 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            self->exec_tc_req_status = PUSService3__manage_tm_limit_app_data_reached(self);
+
+        } else
+        #line 655 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+            
+            #line 657 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            self->exec_tc_req_status = PUSService3__manage_short_pack_length_error(self);
+
+        } else
+        #line 659 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        if (error_code == SDP_ITEM_TYPE_ERROR) {
+            
+
+        } else
+        {
+            
+            #line 665 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            (*action_status).__variant = Failure;
+            #line 665 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+            (*action_status).Failure.__0 = error_code;
+
+        }
 
     }
 
-    #line 741 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 672 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    self->exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
+    #line 673 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    self->exec_tc_req_status.status.__variant = Success;
+
+    #line 677 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return;
 
 }
@@ -1711,27 +1434,27 @@ void PUSService3__update_params(void * const __this) {
     
     PUSService3 * self = (PUSService3 *)__this;
 
-    #line 803 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 736 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     for (size_t i = 0U; i < 5U; i = i + 1U) {
         
-        #line 805 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 738 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         uint32_t random_noise = (uint32_t)(rand_r(&self->random_seed) % 11U) - 5U;
 
-        #line 806 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 739 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         uint32_t data = 0U;
 
-        #line 808 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 741 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         data = atomic_load(&self->system_data_pool_u32[i]);
 
-        #line 809 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 742 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         data = data + random_noise;
 
-        #line 811 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+        #line 744 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         atomic_store(&self->system_data_pool_u32[i], data);
 
     }
 
-    #line 814 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    #line 747 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return;
 
 }

@@ -6,7 +6,6 @@
 #include "service_libraries/pus_services/pus_service12/pus_service12_help.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     void * __that;
@@ -30,7 +29,8 @@ typedef struct {
     __termina_allocator_t a_tm_handler_pool;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+        void (* send_tm)(void * const, __termina_box_t,
+                         __status_int32_t * const);
     } tm_channel;
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
@@ -55,7 +55,7 @@ _Bool PUSService12__PID_is_below_lower_limit(const PUSService12 * const self,
 void PUSService12__build_tm_12_12(const PUSService12 * const self,
                                   TMHandlerT * const p_tm_handler,
                                   uint16_t tm_seq_counter,
-                                  MyResult * const result);
+                                  __status_int32_t * const status);
 
 void PUSService12__add_monitoring_transition(PUSService12 * const self);
 
@@ -124,16 +124,11 @@ PSExecTCReqStatus PUSService12__exec12_6TC(PUSService12 * const self);
 
 MonitorDefinition PUSService12__get_PMON_limit_check_definition(const PUSService12 * const self,
                                                                 TCHandlerT * const tc_handler,
-                                                                MyResult * const result);
+                                                                __status_int32_t * const status);
 
 MonitorDefinition PUSService12__get_PMON_value_check_definition(const PUSService12 * const self,
                                                                 TCHandlerT * const tc_handler,
-                                                                MyResult * const result);
-
-PS12ExecTCReqStatusUpdate PUSService12__get_TC_params(const PUSService12 * const self,
-                                                      TCHandlerT * const tc_handler,
-                                                      uint8_t * const subtype,
-                                                      MyResult * const result);
+                                                                __status_int32_t * const status);
 
 PSExecTCReqStatus PUSService12__manage_error_in_acceptance(const PUSService12 * const self);
 
