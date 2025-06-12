@@ -1,10 +1,16 @@
 
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
 
-void PUSService5__build_and_tx_tm_5_2(void * const __this,
+void PUSService5__build_and_tx_tm_5_2(const __termina_event_t * const __ev,
+                                      void * const __this,
                                       __status_int32_t * const status) {
     
+    #line 341 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     PUSService5 * self = (PUSService5 *)__this;
+
+    #line 341 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
 
     #line 343 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     __option_box_t tm_handler;
@@ -12,7 +18,8 @@ void PUSService5__build_and_tx_tm_5_2(void * const __this,
     tm_handler.__variant = None;
 
     #line 344 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 348 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     if (tm_handler.__variant == Some) {
@@ -34,7 +41,7 @@ void PUSService5__build_and_tx_tm_5_2(void * const __this,
             uint16_t tm_count = 0U;
 
             #line 356 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+            self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
                                                &tm_count);
 
             #line 357 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -45,7 +52,8 @@ void PUSService5__build_and_tx_tm_5_2(void * const __this,
             current_obt.seconds = 0U;
 
             #line 358 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+            self->pus_service_9.get_current_obt(__ev,
+                                                self->pus_service_9.__that,
                                                 &current_obt);
 
             #line 359 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -53,14 +61,14 @@ void PUSService5__build_and_tx_tm_5_2(void * const __this,
                      current_obt);
 
             #line 360 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, status);
 
         } else
         {
             
             #line 365 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -76,46 +84,15 @@ void PUSService5__build_and_tx_tm_5_2(void * const __this,
     }
 
     #line 373 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+
+    #line 373 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     return;
 
 }
 
-void PUSService5__build_and_tx_tm_5_2__mutex_lock(void * const __this,
-                                                  __status_int32_t * const status) {
-    
-    PUSService5 * self = (PUSService5 *)__this;
-
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    PUSService5__build_and_tx_tm_5_2(self, status);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void PUSService5__build_and_tx_tm_5_2__task_lock(void * const __this,
-                                                 __status_int32_t * const status) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    PUSService5__build_and_tx_tm_5_2(__this, status);
-    __termina_task__unlock(lock);
-
-}
-
-void PUSService5__build_and_tx_tm_5_2__event_lock(void * const __this,
-                                                  __status_int32_t * const status) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    PUSService5__build_and_tx_tm_5_2(__this, status);
-    __termina_event__unlock(lock);
-
-}
-
-void PUSService5__build_tm_5_x_param_check_value_fail(const PUSService5 * const self,
+void PUSService5__build_tm_5_x_param_check_value_fail(const __termina_event_t * const __ev,
+                                                      const PUSService5 * const self,
                                                       TMHandlerT * const p_tm_handler,
                                                       uint16_t tm_seq_counter,
                                                       ParamFaultValueInfo fault_info,
@@ -152,7 +129,7 @@ void PUSService5__build_tm_5_x_param_check_value_fail(const PUSService5 * const 
     current_obt.seconds = 0U;
 
     #line 334 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+    self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                         &current_obt);
 
     #line 335 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -163,7 +140,8 @@ void PUSService5__build_tm_5_x_param_check_value_fail(const PUSService5 * const 
 
 }
 
-void PUSService5__build_tm_5_x_param_out_of_limit(const PUSService5 * const self,
+void PUSService5__build_tm_5_x_param_out_of_limit(const __termina_event_t * const __ev,
+                                                  const PUSService5 * const self,
                                                   TMHandlerT * const p_tm_handler,
                                                   uint16_t tm_seq_counter,
                                                   ParamOutOfLimitInfo fault_info,
@@ -196,7 +174,7 @@ void PUSService5__build_tm_5_x_param_out_of_limit(const PUSService5 * const self
     current_obt.seconds = 0U;
 
     #line 317 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+    self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                         &current_obt);
 
     #line 318 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -207,11 +185,17 @@ void PUSService5__build_tm_5_x_param_out_of_limit(const PUSService5 * const self
 
 }
 
-void PUSService5__build_and_tx_tm_5_x(void * const __this,
+void PUSService5__build_and_tx_tm_5_x(const __termina_event_t * const __ev,
+                                      void * const __this,
                                       __status_int32_t * const status,
                                       uint16_t evID, FaultInfo fault_info) {
     
+    #line 377 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     PUSService5 * self = (PUSService5 *)__this;
+
+    #line 377 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
 
     #line 379 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     __option_box_t tm_handler;
@@ -219,7 +203,8 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
     tm_handler.__variant = None;
 
     #line 380 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 384 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     if (tm_handler.__variant == Some) {
@@ -231,7 +216,8 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
         uint16_t tm_count = 0U;
 
         #line 387 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 390 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
         if (fault_info.__variant == FaultInfo__ParamOutOfLimit) {
@@ -240,7 +226,7 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
             ParamOutOfLimitInfo fault_value_info = fault_info.ParamOutOfLimit.__0;
 
             #line 391 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            PUSService5__build_tm_5_x_param_out_of_limit(self,
+            PUSService5__build_tm_5_x_param_out_of_limit(__ev, self,
                                                          (TMHandlerT *)b_tm_handler.data,
                                                          tm_count,
                                                          fault_value_info, evID,
@@ -254,7 +240,7 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
             ParamFaultValueInfo fault_value_info = fault_info.ParamFaultValue.__0;
 
             #line 394 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            PUSService5__build_tm_5_x_param_check_value_fail(self,
+            PUSService5__build_tm_5_x_param_check_value_fail(__ev, self,
                                                              (TMHandlerT *)b_tm_handler.data,
                                                              tm_count,
                                                              fault_value_info,
@@ -274,14 +260,14 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
         if ((*status).__variant == Success) {
             
             #line 403 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, status);
 
         } else
         {
             
             #line 407 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -297,52 +283,15 @@ void PUSService5__build_and_tx_tm_5_x(void * const __this,
     }
 
     #line 417 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+
+    #line 417 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     return;
 
 }
 
-void PUSService5__build_and_tx_tm_5_x__mutex_lock(void * const __this,
-                                                  __status_int32_t * const status,
-                                                  uint16_t evID,
-                                                  FaultInfo fault_info) {
-    
-    PUSService5 * self = (PUSService5 *)__this;
-
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    PUSService5__build_and_tx_tm_5_x(self, status, evID, fault_info);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void PUSService5__build_and_tx_tm_5_x__task_lock(void * const __this,
-                                                 __status_int32_t * const status,
-                                                 uint16_t evID,
-                                                 FaultInfo fault_info) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    PUSService5__build_and_tx_tm_5_x(__this, status, evID, fault_info);
-    __termina_task__unlock(lock);
-
-}
-
-void PUSService5__build_and_tx_tm_5_x__event_lock(void * const __this,
-                                                  __status_int32_t * const status,
-                                                  uint16_t evID,
-                                                  FaultInfo fault_info) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    PUSService5__build_and_tx_tm_5_x(__this, status, evID, fault_info);
-    __termina_event__unlock(lock);
-
-}
-
-PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
+PSExecTCReqStatus PUSService5__exec5_5TC(const __termina_event_t * const __ev,
+                                         PUSService5 * const self) {
     
     #line 59 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     _Bool ack_enabled = 0;
@@ -367,7 +316,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
     tm_handler.__variant = None;
 
     #line 65 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 69 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     if (tm_handler.__variant == Some) {
@@ -379,7 +329,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
         uint16_t tm_count = 0U;
 
         #line 72 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 74 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
         size_t index = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
@@ -391,7 +342,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
         if (self->exec_tc_req_status_update.N != 1U) {
             
             #line 80 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+            self->pus_service_9.get_current_obt(__ev,
+                                                self->pus_service_9.__that,
                                                 &current_obt);
 
             #line 81 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -407,14 +359,15 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
             if (next_status.status.__variant == Success) {
                 
                 #line 86 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                         &next_status.status);
+                self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                         b_tm_handler, &next_status.status);
 
             } else
             {
                 
                 #line 90 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.free(__ev,
+                                             self->a_tm_handler_pool.__that,
                                              b_tm_handler);
 
             }
@@ -429,7 +382,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
             if (is_valid_EvID) {
                 
                 #line 100 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 101 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -444,7 +398,7 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
                     if (next_status.status.__variant == Success) {
                         
                         #line 107 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                        self->tm_channel.send_tm(self->tm_channel.__that,
+                        self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                                  b_tm_handler,
                                                  &next_status.status);
 
@@ -452,7 +406,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
                     {
                         
                         #line 111 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
 
                     }
@@ -461,7 +416,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
                 {
                     
                     #line 115 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -477,7 +433,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
                 tm_handler2.__variant = None;
 
                 #line 121 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.alloc(__ev,
+                                              self->a_tm_handler_pool.__that,
                                               &tm_handler2);
 
                 #line 125 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -490,11 +447,13 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
                     uint16_t tm_count2 = 0U;
 
                     #line 128 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                    self->tm_counter.get_next_tm_count(__ev,
+                                                       self->tm_counter.__that,
                                                        &tm_count2);
 
                     #line 129 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                    self->pus_service_9.get_current_obt(__ev,
+                                                        self->pus_service_9.__that,
                                                         &current_obt);
 
                     #line 130 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -510,7 +469,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
                         if (next_status.status.__variant == Success) {
                             
                             #line 136 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                            self->tm_channel.send_tm(self->tm_channel.__that,
+                            self->tm_channel.send_tm(__ev,
+                                                     self->tm_channel.__that,
                                                      b_tm_handler2,
                                                      &next_status.status);
 
@@ -518,7 +478,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
                         {
                             
                             #line 140 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                            self->a_tm_handler_pool.free(__ev,
+                                                         self->a_tm_handler_pool.__that,
                                                          b_tm_handler2);
 
                         }
@@ -527,7 +488,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
                     {
                         
                         #line 145 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler2);
 
                     }
@@ -546,7 +508,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
             {
                 
                 #line 156 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 157 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -561,14 +524,15 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
                 if (next_status.status.__variant == Success) {
                     
                     #line 162 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->tm_channel.send_tm(self->tm_channel.__that,
+                    self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                              b_tm_handler, &next_status.status);
 
                 } else
                 {
                     
                     #line 166 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -592,7 +556,8 @@ PSExecTCReqStatus PUSService5__exec5_5TC(PUSService5 * const self) {
 
 }
 
-PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
+PSExecTCReqStatus PUSService5__exec5_6TC(const __termina_event_t * const __ev,
+                                         PUSService5 * const self) {
     
     #line 185 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     _Bool ack_enabled = 0;
@@ -617,7 +582,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
     tm_handler.__variant = None;
 
     #line 191 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 195 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     if (tm_handler.__variant == Some) {
@@ -629,7 +595,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
         uint16_t tm_count = 0U;
 
         #line 198 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 200 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
         size_t index = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
@@ -641,7 +608,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
         if (self->exec_tc_req_status_update.N != 1U) {
             
             #line 206 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+            self->pus_service_9.get_current_obt(__ev,
+                                                self->pus_service_9.__that,
                                                 &current_obt);
 
             #line 207 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -657,14 +625,15 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
             if (next_status.status.__variant == Success) {
                 
                 #line 212 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                         &next_status.status);
+                self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                         b_tm_handler, &next_status.status);
 
             } else
             {
                 
                 #line 216 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.free(__ev,
+                                             self->a_tm_handler_pool.__that,
                                              b_tm_handler);
 
             }
@@ -679,7 +648,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
             if (is_valid_EvID) {
                 
                 #line 227 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 228 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -694,7 +664,7 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
                     if (next_status.status.__variant == Success) {
                         
                         #line 234 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                        self->tm_channel.send_tm(self->tm_channel.__that,
+                        self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                                  b_tm_handler,
                                                  &next_status.status);
 
@@ -702,7 +672,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
                     {
                         
                         #line 238 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
 
                     }
@@ -711,7 +682,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
                 {
                     
                     #line 242 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -727,7 +699,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
                 tm_handler2.__variant = None;
 
                 #line 248 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.alloc(__ev,
+                                              self->a_tm_handler_pool.__that,
                                               &tm_handler2);
 
                 #line 252 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -740,11 +713,13 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
                     uint16_t tm_count2 = 0U;
 
                     #line 255 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                    self->tm_counter.get_next_tm_count(__ev,
+                                                       self->tm_counter.__that,
                                                        &tm_count2);
 
                     #line 256 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                    self->pus_service_9.get_current_obt(__ev,
+                                                        self->pus_service_9.__that,
                                                         &current_obt);
 
                     #line 257 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -760,7 +735,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
                         if (next_status.status.__variant == Success) {
                             
                             #line 263 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                            self->tm_channel.send_tm(self->tm_channel.__that,
+                            self->tm_channel.send_tm(__ev,
+                                                     self->tm_channel.__that,
                                                      b_tm_handler2,
                                                      &next_status.status);
 
@@ -768,7 +744,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
                         {
                             
                             #line 267 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                            self->a_tm_handler_pool.free(__ev,
+                                                         self->a_tm_handler_pool.__that,
                                                          b_tm_handler2);
 
                         }
@@ -777,7 +754,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
                     {
                         
                         #line 271 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler2);
 
                     }
@@ -796,7 +774,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
             {
                 
                 #line 281 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 282 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -811,14 +790,15 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
                 if (next_status.status.__variant == Success) {
                     
                     #line 287 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->tm_channel.send_tm(self->tm_channel.__that,
+                    self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                              b_tm_handler, &next_status.status);
 
                 } else
                 {
                     
                     #line 291 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -842,7 +822,8 @@ PSExecTCReqStatus PUSService5__exec5_6TC(PUSService5 * const self) {
 
 }
 
-PSExecTCReqStatus PUSService5__manage_error_in_acceptance(const PUSService5 * const self) {
+PSExecTCReqStatus PUSService5__manage_error_in_acceptance(const __termina_event_t * const __ev,
+                                                          const PUSService5 * const self) {
     
     #line 461 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     PSExecTCReqStatus next_status;
@@ -864,7 +845,8 @@ PSExecTCReqStatus PUSService5__manage_error_in_acceptance(const PUSService5 * co
     tm_handler.__variant = None;
 
     #line 466 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 470 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     if (tm_handler.__variant == Some) {
@@ -876,10 +858,11 @@ PSExecTCReqStatus PUSService5__manage_error_in_acceptance(const PUSService5 * co
         uint16_t tm_count = 0U;
 
         #line 473 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 475 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
         #line 476 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -893,14 +876,14 @@ PSExecTCReqStatus PUSService5__manage_error_in_acceptance(const PUSService5 * co
         if (next_status.status.__variant == Success) {
             
             #line 481 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &next_status.status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, &next_status.status);
 
         } else
         {
             
             #line 485 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -920,7 +903,8 @@ PSExecTCReqStatus PUSService5__manage_error_in_acceptance(const PUSService5 * co
 
 }
 
-PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 * const self) {
+PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const __termina_event_t * const __ev,
+                                                              const PUSService5 * const self) {
     
     #line 423 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     PSExecTCReqStatus next_status;
@@ -942,7 +926,8 @@ PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 
     tm_handler.__variant = None;
 
     #line 428 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 432 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     if (tm_handler.__variant == Some) {
@@ -954,10 +939,11 @@ PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 
         uint16_t tm_count = 0U;
 
         #line 435 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 437 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
         #line 438 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -972,14 +958,14 @@ PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 
         if (next_status.status.__variant == Success) {
             
             #line 443 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &next_status.status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, &next_status.status);
 
         } else
         {
             
             #line 447 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -999,7 +985,8 @@ PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const PUSService5 
 
 }
 
-PSExecTCReqStatus PUSService5__manage_tm_limit_app_data_reached(const PUSService5 * const self) {
+PSExecTCReqStatus PUSService5__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
+                                                                const PUSService5 * const self) {
     
     #line 500 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     PSExecTCReqStatus next_status;
@@ -1021,7 +1008,8 @@ PSExecTCReqStatus PUSService5__manage_tm_limit_app_data_reached(const PUSService
     tm_handler.__variant = None;
 
     #line 505 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 509 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     if (tm_handler.__variant == Some) {
@@ -1033,10 +1021,11 @@ PSExecTCReqStatus PUSService5__manage_tm_limit_app_data_reached(const PUSService
         uint16_t tm_count = 0U;
 
         #line 512 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 514 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
         #line 515 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -1050,14 +1039,14 @@ PSExecTCReqStatus PUSService5__manage_tm_limit_app_data_reached(const PUSService
         if (next_status.status.__variant == Success) {
             
             #line 520 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &next_status.status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, &next_status.status);
 
         } else
         {
             
             #line 524 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -1077,10 +1066,16 @@ PSExecTCReqStatus PUSService5__manage_tm_limit_app_data_reached(const PUSService
 
 }
 
-void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
+void PUSService5__exec_tc(const __termina_event_t * const __ev,
+                          void * const __this, TCHandlerT * const tc_handler,
                           __status_int32_t * const action_status) {
     
+    #line 536 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     PUSService5 * self = (PUSService5 *)__this;
+
+    #line 536 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
 
     #line 538 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
@@ -1138,14 +1133,14 @@ void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
             if (subtype == 5U) {
                 
                 #line 569 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->exec_tc_req_status = PUSService5__exec5_5TC(self);
+                self->exec_tc_req_status = PUSService5__exec5_5TC(__ev, self);
 
             } else
             #line 571 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
             if (subtype == 6U) {
                 
                 #line 573 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-                self->exec_tc_req_status = PUSService5__exec5_6TC(self);
+                self->exec_tc_req_status = PUSService5__exec5_6TC(__ev, self);
 
             } else
             {
@@ -1184,21 +1179,24 @@ void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
         if (error_code == ACCEPTANCE_ERROR) {
             
             #line 599 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->exec_tc_req_status = PUSService5__manage_error_in_acceptance(self);
+            self->exec_tc_req_status = PUSService5__manage_error_in_acceptance(__ev,
+                                                                               self);
 
         } else
         #line 601 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
         if (error_code == BUILD_TM_ERROR) {
             
             #line 604 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->exec_tc_req_status = PUSService5__manage_tm_limit_app_data_reached(self);
+            self->exec_tc_req_status = PUSService5__manage_tm_limit_app_data_reached(__ev,
+                                                                                     self);
 
         } else
         #line 606 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
         if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
             
             #line 608 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-            self->exec_tc_req_status = PUSService5__manage_short_pack_length_error(self);
+            self->exec_tc_req_status = PUSService5__manage_short_pack_length_error(__ev,
+                                                                                   self);
 
         } else
         #line 610 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -1223,49 +1221,15 @@ void PUSService5__exec_tc(void * const __this, TCHandlerT * const tc_handler,
     self->exec_tc_req_status.status.__variant = Success;
 
     #line 628 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+
+    #line 628 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     return;
 
 }
 
-void PUSService5__exec_tc__mutex_lock(void * const __this,
-                                      TCHandlerT * const tc_handler,
-                                      __status_int32_t * const action_status) {
-    
-    PUSService5 * self = (PUSService5 *)__this;
-
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    PUSService5__exec_tc(self, tc_handler, action_status);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void PUSService5__exec_tc__task_lock(void * const __this,
-                                     TCHandlerT * const tc_handler,
-                                     __status_int32_t * const action_status) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    PUSService5__exec_tc(__this, tc_handler, action_status);
-    __termina_task__unlock(lock);
-
-}
-
-void PUSService5__exec_tc__event_lock(void * const __this,
-                                      TCHandlerT * const tc_handler,
-                                      __status_int32_t * const action_status) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    PUSService5__exec_tc(__this, tc_handler, action_status);
-    __termina_event__unlock(lock);
-
-}
-
-_Bool PUSService5__is_Ev_ID_enabled(const PUSService5 * const self,
+_Bool PUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev,
+                                    const PUSService5 * const self,
                                     uint16_t Ev_ID) {
     
     #line 35 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
@@ -1296,53 +1260,24 @@ _Bool PUSService5__is_Ev_ID_enabled(const PUSService5 * const self,
 
 }
 
-void PUSService5__is_Ev_ID_enabled_ext(void * const __this, uint16_t Ev_ID,
+void PUSService5__is_Ev_ID_enabled_ext(const __termina_event_t * const __ev,
+                                       void * const __this, uint16_t Ev_ID,
                                        _Bool * const p_enabled) {
     
+    #line 49 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     PUSService5 * self = (PUSService5 *)__this;
 
+    #line 49 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
+
     #line 51 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
-    *p_enabled = PUSService5__is_Ev_ID_enabled(self, Ev_ID);
+    *p_enabled = PUSService5__is_Ev_ID_enabled(__ev, self, Ev_ID);
+
+    #line 53 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
     #line 53 "src/service_libraries/pus_services/pus_service5/pus_service5.fin"
     return;
-
-}
-
-void PUSService5__is_Ev_ID_enabled_ext__mutex_lock(void * const __this,
-                                                   uint16_t Ev_ID,
-                                                   _Bool * const p_enabled) {
-    
-    PUSService5 * self = (PUSService5 *)__this;
-
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    PUSService5__is_Ev_ID_enabled_ext(self, Ev_ID, p_enabled);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void PUSService5__is_Ev_ID_enabled_ext__task_lock(void * const __this,
-                                                  uint16_t Ev_ID,
-                                                  _Bool * const p_enabled) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    PUSService5__is_Ev_ID_enabled_ext(__this, Ev_ID, p_enabled);
-    __termina_task__unlock(lock);
-
-}
-
-void PUSService5__is_Ev_ID_enabled_ext__event_lock(void * const __this,
-                                                   uint16_t Ev_ID,
-                                                   _Bool * const p_enabled) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    PUSService5__is_Ev_ID_enabled_ext(__this, Ev_ID, p_enabled);
-    __termina_event__unlock(lock);
 
 }

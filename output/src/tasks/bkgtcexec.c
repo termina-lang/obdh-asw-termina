@@ -1,7 +1,8 @@
 
 #include "tasks/bkgtcexec.h"
 
-void PUSBKGTCExecutor__manage_error_in_acceptance(const PUSBKGTCExecutor * const self,
+void PUSBKGTCExecutor__manage_error_in_acceptance(const __termina_event_t * const __ev,
+                                                  const PUSBKGTCExecutor * const self,
                                                   const TCHandlerT * const tc_handler,
                                                   __status_int32_t * const status) {
     
@@ -18,7 +19,8 @@ void PUSBKGTCExecutor__manage_error_in_acceptance(const PUSBKGTCExecutor * const
     tm_handler.__variant = None;
 
     #line 59 "src/tasks/bkgtcexec.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 63 "src/tasks/bkgtcexec.fin"
     if (tm_handler.__variant == Some) {
@@ -30,10 +32,11 @@ void PUSBKGTCExecutor__manage_error_in_acceptance(const PUSBKGTCExecutor * const
         uint16_t tm_count = 0U;
 
         #line 66 "src/tasks/bkgtcexec.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 68 "src/tasks/bkgtcexec.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
         #line 69 "src/tasks/bkgtcexec.fin"
@@ -47,14 +50,14 @@ void PUSBKGTCExecutor__manage_error_in_acceptance(const PUSBKGTCExecutor * const
         if ((*status).__variant == Success) {
             
             #line 74 "src/tasks/bkgtcexec.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, status);
 
         } else
         {
             
             #line 77 "src/tasks/bkgtcexec.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -74,9 +77,11 @@ void PUSBKGTCExecutor__manage_error_in_acceptance(const PUSBKGTCExecutor * const
 
 }
 
-__status_int32_t PUSBKGTCExecutor__exec_tc(void * const __this,
+__status_int32_t PUSBKGTCExecutor__exec_tc(const __termina_event_t * const __ev,
+                                           void * const __this,
                                            __termina_box_t tc_handler) {
     
+    #line 102 "src/tasks/bkgtcexec.fin"
     PUSBKGTCExecutor * self = (PUSBKGTCExecutor *)__this;
 
     #line 104 "src/tasks/bkgtcexec.fin"
@@ -91,21 +96,22 @@ __status_int32_t PUSBKGTCExecutor__exec_tc(void * const __this,
     if (tc_type == 20U) {
         
         #line 110 "src/tasks/bkgtcexec.fin"
-        self->pus_service_20.exec_tc(self->pus_service_20.__that,
+        self->pus_service_20.exec_tc(__ev, self->pus_service_20.__that,
                                      (TCHandlerT *)tc_handler.data, &res);
 
     } else
     {
         
         #line 114 "src/tasks/bkgtcexec.fin"
-        PUSBKGTCExecutor__manage_error_in_acceptance(self,
+        PUSBKGTCExecutor__manage_error_in_acceptance(__ev, self,
                                                      (TCHandlerT *)tc_handler.data,
                                                      &res);
 
     }
 
     #line 118 "src/tasks/bkgtcexec.fin"
-    self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that, tc_handler);
+    self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
+                                 tc_handler);
 
     #line 120 "src/tasks/bkgtcexec.fin"
     return res;
@@ -118,7 +124,7 @@ void __PUSBKGTCExecutor__termina_task(void * arg) {
 
     int32_t status = 0L;
 
-    __termina_id_t next_msg = 0U;
+    __termina_event_t event;
 
     __status_int32_t result;
     result.__variant = Success;
@@ -127,14 +133,13 @@ void __PUSBKGTCExecutor__termina_task(void * arg) {
 
     for (;;) {
         
-        __termina_msg_queue__recv(self->__task_msg_queue_id, &next_msg,
-                                  &status);
+        __termina_msg_queue__recv(self->__task_msg_queue_id, &event, &status);
 
         if (status != 0L) {
             break;
         }
 
-        switch (next_msg) {
+        switch (event.port_id) {
             
             case __PUSBKGTCExecutor__bkg_message_queue_input:
 
@@ -146,7 +151,8 @@ void __PUSBKGTCExecutor__termina_task(void * arg) {
                                                            status);
                 }
 
-                result = PUSBKGTCExecutor__exec_tc(self, exec_tc__msg_data);
+                result = PUSBKGTCExecutor__exec_tc(&event, self,
+                                                   exec_tc__msg_data);
 
                 if (result.__variant != Success) {
                     

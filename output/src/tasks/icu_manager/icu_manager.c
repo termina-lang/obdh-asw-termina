@@ -1,9 +1,11 @@
 
 #include "tasks/icu_manager/icu_manager.h"
 
-__status_int32_t ICUManager__process_action_tc(void * const __this,
+__status_int32_t ICUManager__process_action_tc(const __termina_event_t * const __ev,
+                                               void * const __this,
                                                __termina_box_t tc_handler) {
     
+    #line 124 "src/tasks/icu_manager/icu_manager.fin"
     ICUManager * self = (ICUManager *)__this;
 
     #line 126 "src/tasks/icu_manager/icu_manager.fin"
@@ -21,7 +23,7 @@ __status_int32_t ICUManager__process_action_tc(void * const __this,
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
         
         #line 135 "src/tasks/icu_manager/icu_manager.fin"
-        __termina_out_port__send(self->hkfdir_message_queue_output,
+        __termina_out_port__send(__ev, self->hkfdir_message_queue_output,
                                  (void *)&tc_handler);
 
     } else
@@ -29,7 +31,7 @@ __status_int32_t ICUManager__process_action_tc(void * const __this,
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlBKGTC) {
         
         #line 139 "src/tasks/icu_manager/icu_manager.fin"
-        __termina_out_port__send(self->bkg_message_queue_output,
+        __termina_out_port__send(__ev, self->bkg_message_queue_output,
                                  (void *)&tc_handler);
 
     } else
@@ -37,12 +39,12 @@ __status_int32_t ICUManager__process_action_tc(void * const __this,
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
         
         #line 144 "src/tasks/icu_manager/icu_manager.fin"
-        self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
+        self->tc_executor.PUS_prio_exec_tc(__ev, self->tc_executor.__that,
                                            (TCHandlerT *)tc_handler.data, &ret,
                                            &reebot_flag);
 
         #line 145 "src/tasks/icu_manager/icu_manager.fin"
-        self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
+        self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
                                      tc_handler);
 
         #line 147 "src/tasks/icu_manager/icu_manager.fin"
@@ -59,7 +61,7 @@ __status_int32_t ICUManager__process_action_tc(void * const __this,
     {
         
         #line 154 "src/tasks/icu_manager/icu_manager.fin"
-        self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
+        self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
                                      tc_handler);
 
     }
@@ -69,9 +71,11 @@ __status_int32_t ICUManager__process_action_tc(void * const __this,
 
 }
 
-__status_int32_t ICUManager__process_tc(void * const __this,
+__status_int32_t ICUManager__process_tc(const __termina_event_t * const __ev,
+                                        void * const __this,
                                         __termina_box_t tc_handler) {
     
+    #line 52 "src/tasks/icu_manager/icu_manager.fin"
     ICUManager * self = (ICUManager *)__this;
 
     #line 54 "src/tasks/icu_manager/icu_manager.fin"
@@ -89,7 +93,7 @@ __status_int32_t ICUManager__process_tc(void * const __this,
     if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Accepted) {
         
         #line 63 "src/tasks/icu_manager/icu_manager.fin"
-        self->tc_executor.mng_tc_acceptation(self->tc_executor.__that,
+        self->tc_executor.mng_tc_acceptation(__ev, self->tc_executor.__that,
                                              (TCHandlerT *)tc_handler.data,
                                              &ret);
 
@@ -97,7 +101,7 @@ __status_int32_t ICUManager__process_tc(void * const __this,
         if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
             
             #line 69 "src/tasks/icu_manager/icu_manager.fin"
-            __termina_out_port__send(self->hkfdir_message_queue_output,
+            __termina_out_port__send(__ev, self->hkfdir_message_queue_output,
                                      (void *)&tc_handler);
 
         } else
@@ -105,7 +109,7 @@ __status_int32_t ICUManager__process_tc(void * const __this,
         if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlBKGTC) {
             
             #line 73 "src/tasks/icu_manager/icu_manager.fin"
-            __termina_out_port__send(self->bkg_message_queue_output,
+            __termina_out_port__send(__ev, self->bkg_message_queue_output,
                                      (void *)&tc_handler);
 
         } else
@@ -113,12 +117,12 @@ __status_int32_t ICUManager__process_tc(void * const __this,
         if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
             
             #line 78 "src/tasks/icu_manager/icu_manager.fin"
-            self->tc_executor.PUS_prio_exec_tc(self->tc_executor.__that,
+            self->tc_executor.PUS_prio_exec_tc(__ev, self->tc_executor.__that,
                                                (TCHandlerT *)tc_handler.data,
                                                &ret, &reebot_flag);
 
             #line 80 "src/tasks/icu_manager/icu_manager.fin"
-            self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
+            self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
                                          tc_handler);
 
             #line 82 "src/tasks/icu_manager/icu_manager.fin"
@@ -135,7 +139,7 @@ __status_int32_t ICUManager__process_tc(void * const __this,
         {
             
             #line 90 "src/tasks/icu_manager/icu_manager.fin"
-            self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
+            self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
                                          tc_handler);
 
         }
@@ -145,18 +149,18 @@ __status_int32_t ICUManager__process_tc(void * const __this,
     if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Rejected) {
         
         #line 97 "src/tasks/icu_manager/icu_manager.fin"
-        self->tc_executor.mng_tc_rejection(self->tc_executor.__that,
+        self->tc_executor.mng_tc_rejection(__ev, self->tc_executor.__that,
                                            (TCHandlerT *)tc_handler.data, &ret);
 
         #line 98 "src/tasks/icu_manager/icu_manager.fin"
-        self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
+        self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
                                      tc_handler);
 
     } else
     {
         
         #line 102 "src/tasks/icu_manager/icu_manager.fin"
-        self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that,
+        self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
                                      tc_handler);
 
     }
@@ -172,7 +176,7 @@ void __ICUManager__termina_task(void * arg) {
 
     int32_t status = 0L;
 
-    __termina_id_t next_msg = 0U;
+    __termina_event_t event;
 
     __status_int32_t result;
     result.__variant = Success;
@@ -182,14 +186,13 @@ void __ICUManager__termina_task(void * arg) {
 
     for (;;) {
         
-        __termina_msg_queue__recv(self->__task_msg_queue_id, &next_msg,
-                                  &status);
+        __termina_msg_queue__recv(self->__task_msg_queue_id, &event, &status);
 
         if (status != 0L) {
             break;
         }
 
-        switch (next_msg) {
+        switch (event.port_id) {
             
             case __ICUManager__tc_message_queue_input:
 
@@ -202,7 +205,8 @@ void __ICUManager__termina_task(void * arg) {
                                                            status);
                 }
 
-                result = ICUManager__process_tc(self, process_tc__msg_data);
+                result = ICUManager__process_tc(&event, self,
+                                                process_tc__msg_data);
 
                 if (result.__variant != Success) {
                     
@@ -229,7 +233,7 @@ void __ICUManager__termina_task(void * arg) {
                                                            status);
                 }
 
-                result = ICUManager__process_action_tc(self,
+                result = ICUManager__process_action_tc(&event, self,
                                                        process_action_tc__msg_data);
 
                 if (result.__variant != Success) {

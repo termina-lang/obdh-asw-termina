@@ -1,7 +1,8 @@
 
 #include "service_libraries/pus_services/pus_service3/pus_service3.h"
 
-void PUSService3__build_tm_3_25(const PUSService3 * const self,
+void PUSService3__build_tm_3_25(const __termina_event_t * const __ev,
+                                const PUSService3 * const self,
                                 TMHandlerT * const p_tm_handler,
                                 uint16_t tm_seq_counter, size_t index,
                                 __status_int32_t * const status) {
@@ -75,7 +76,7 @@ void PUSService3__build_tm_3_25(const PUSService3 * const self,
     current_obt.seconds = 0U;
 
     #line 446 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+    self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                         &current_obt);
 
     #line 448 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -86,10 +87,16 @@ void PUSService3__build_tm_3_25(const PUSService3 * const self,
 
 }
 
-void PUSService3__do_hk(void * const __this,
+void PUSService3__do_hk(const __termina_event_t * const __ev,
+                        void * const __this,
                         __status_int32_t * const action_status) {
     
+    #line 683 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PUSService3 * self = (PUSService3 *)__this;
+
+    #line 683 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
 
     #line 685 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     __status_int32_t do_hk_status;
@@ -122,7 +129,8 @@ void PUSService3__do_hk(void * const __this,
                 tm_handler.__variant = None;
 
                 #line 698 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.alloc(__ev,
+                                              self->a_tm_handler_pool.__that,
                                               &tm_handler);
 
                 #line 702 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -135,11 +143,12 @@ void PUSService3__do_hk(void * const __this,
                     uint16_t tm_count = 0U;
 
                     #line 705 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                    self->tm_counter.get_next_tm_count(__ev,
+                                                       self->tm_counter.__that,
                                                        &tm_count);
 
                     #line 707 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    PUSService3__build_tm_3_25(self,
+                    PUSService3__build_tm_3_25(__ev, self,
                                                (TMHandlerT *)b_tm_handler.data,
                                                tm_count, i, &do_hk_status);
 
@@ -147,18 +156,20 @@ void PUSService3__do_hk(void * const __this,
                     if (do_hk_status.__variant == Success) {
                         
                         #line 711 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->tm_channel.send_tm(self->tm_channel.__that,
+                        self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                                  b_tm_handler, &do_hk_status);
 
                     } else
                     {
                         
                         #line 716 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->pus_service_5.build_and_tx_tm_5_2(self->pus_service_5.__that,
+                        self->pus_service_5.build_and_tx_tm_5_2(__ev,
+                                                                self->pus_service_5.__that,
                                                                 &do_hk_status);
 
                         #line 717 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
 
                     }
@@ -180,46 +191,15 @@ void PUSService3__do_hk(void * const __this,
     }
 
     #line 731 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+
+    #line 731 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return;
 
 }
 
-void PUSService3__do_hk__mutex_lock(void * const __this,
-                                    __status_int32_t * const action_status) {
-    
-    PUSService3 * self = (PUSService3 *)__this;
-
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    PUSService3__do_hk(self, action_status);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void PUSService3__do_hk__task_lock(void * const __this,
-                                   __status_int32_t * const action_status) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    PUSService3__do_hk(__this, action_status);
-    __termina_task__unlock(lock);
-
-}
-
-void PUSService3__do_hk__event_lock(void * const __this,
-                                    __status_int32_t * const action_status) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    PUSService3__do_hk(__this, action_status);
-    __termina_event__unlock(lock);
-
-}
-
-IndexFound PUSService3__get_SIDindex(PUSService3 * const self) {
+IndexFound PUSService3__get_SIDindex(const __termina_event_t * const __ev,
+                                     PUSService3 * const self) {
     
     #line 35 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     IndexFound index_found;
@@ -250,7 +230,8 @@ IndexFound PUSService3__get_SIDindex(PUSService3 * const self) {
 
 }
 
-PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
+PSExecTCReqStatus PUSService3__exec3_31TC(const __termina_event_t * const __ev,
+                                          PUSService3 * const self) {
     
     #line 293 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     _Bool ack_enabled = 0;
@@ -275,7 +256,8 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
     tm_handler.__variant = None;
 
     #line 299 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 303 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
@@ -287,13 +269,15 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
         uint16_t tm_count = 0U;
 
         #line 306 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 308 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (self->exec_tc_req_status_update.tc_data.N != 1U) {
             
             #line 310 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+            self->pus_service_9.get_current_obt(__ev,
+                                                self->pus_service_9.__that,
                                                 &current_obt);
 
             #line 311 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -309,14 +293,15 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
             if (next_status.status.__variant == Success) {
                 
                 #line 316 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                         &next_status.status);
+                self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                         b_tm_handler, &next_status.status);
 
             } else
             {
                 
                 #line 320 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.free(__ev,
+                                             self->a_tm_handler_pool.__that,
                                              b_tm_handler);
 
             }
@@ -325,13 +310,15 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
         {
             
             #line 326 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->exec_tc_req_status_update.index = PUSService3__get_SIDindex(self);
+            self->exec_tc_req_status_update.index = PUSService3__get_SIDindex(__ev,
+                                                                              self);
 
             #line 328 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (self->exec_tc_req_status_update.index.found) {
                 
                 #line 330 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 331 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -346,7 +333,7 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                     if (next_status.status.__variant == Success) {
                         
                         #line 337 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->tm_channel.send_tm(self->tm_channel.__that,
+                        self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                                  b_tm_handler,
                                                  &next_status.status);
 
@@ -354,7 +341,8 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                     {
                         
                         #line 341 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
 
                     }
@@ -363,7 +351,8 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                 {
                     
                     #line 346 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -382,7 +371,8 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                 tm_handler2.__variant = None;
 
                 #line 353 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.alloc(__ev,
+                                              self->a_tm_handler_pool.__that,
                                               &tm_handler2);
 
                 #line 357 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -395,11 +385,13 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                     uint16_t tm_count2 = 0U;
 
                     #line 360 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                    self->tm_counter.get_next_tm_count(__ev,
+                                                       self->tm_counter.__that,
                                                        &tm_count2);
 
                     #line 362 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                    self->pus_service_9.get_current_obt(__ev,
+                                                        self->pus_service_9.__that,
                                                         &current_obt);
 
                     #line 363 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -415,7 +407,8 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                         if (next_status.status.__variant == Success) {
                             
                             #line 369 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            self->tm_channel.send_tm(self->tm_channel.__that,
+                            self->tm_channel.send_tm(__ev,
+                                                     self->tm_channel.__that,
                                                      b_tm_handler2,
                                                      &next_status.status);
 
@@ -423,7 +416,8 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                         {
                             
                             #line 373 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                            self->a_tm_handler_pool.free(__ev,
+                                                         self->a_tm_handler_pool.__that,
                                                          b_tm_handler2);
 
                         }
@@ -432,7 +426,8 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                     {
                         
                         #line 378 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler2);
 
                     }
@@ -451,7 +446,8 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
             {
                 
                 #line 388 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 389 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -466,14 +462,15 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
                 if (next_status.status.__variant == Success) {
                     
                     #line 393 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->tm_channel.send_tm(self->tm_channel.__that,
+                    self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                              b_tm_handler, &next_status.status);
 
                 } else
                 {
                     
                     #line 397 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -497,7 +494,8 @@ PSExecTCReqStatus PUSService3__exec3_31TC(PUSService3 * const self) {
 
 }
 
-PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
+PSExecTCReqStatus PUSService3__exec3_5TC(const __termina_event_t * const __ev,
+                                         PUSService3 * const self) {
     
     #line 50 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     _Bool ack_enabled = 0;
@@ -522,7 +520,8 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
     tm_handler.__variant = None;
 
     #line 56 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 60 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
@@ -534,13 +533,15 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
         uint16_t tm_count = 0U;
 
         #line 63 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 65 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (self->exec_tc_req_status_update.tc_data.N != 1U) {
             
             #line 67 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+            self->pus_service_9.get_current_obt(__ev,
+                                                self->pus_service_9.__that,
                                                 &current_obt);
 
             #line 68 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -556,14 +557,15 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
             if (next_status.status.__variant == Success) {
                 
                 #line 73 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                         &next_status.status);
+                self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                         b_tm_handler, &next_status.status);
 
             } else
             {
                 
                 #line 77 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.free(__ev,
+                                             self->a_tm_handler_pool.__that,
                                              b_tm_handler);
 
             }
@@ -572,13 +574,15 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
         {
             
             #line 83 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->exec_tc_req_status_update.index = PUSService3__get_SIDindex(self);
+            self->exec_tc_req_status_update.index = PUSService3__get_SIDindex(__ev,
+                                                                              self);
 
             #line 85 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (self->exec_tc_req_status_update.index.found) {
                 
                 #line 87 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 88 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -593,7 +597,7 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                     if (next_status.status.__variant == Success) {
                         
                         #line 94 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->tm_channel.send_tm(self->tm_channel.__that,
+                        self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                                  b_tm_handler,
                                                  &next_status.status);
 
@@ -601,7 +605,8 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                     {
                         
                         #line 98 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
 
                     }
@@ -610,7 +615,8 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                 {
                     
                     #line 103 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -629,7 +635,8 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                 tm_handler2.__variant = None;
 
                 #line 110 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.alloc(__ev,
+                                              self->a_tm_handler_pool.__that,
                                               &tm_handler2);
 
                 #line 114 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -642,11 +649,13 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                     uint16_t tm_count2 = 0U;
 
                     #line 117 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                    self->tm_counter.get_next_tm_count(__ev,
+                                                       self->tm_counter.__that,
                                                        &tm_count2);
 
                     #line 118 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                    self->pus_service_9.get_current_obt(__ev,
+                                                        self->pus_service_9.__that,
                                                         &current_obt);
 
                     #line 119 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -662,7 +671,8 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                         if (next_status.status.__variant == Success) {
                             
                             #line 125 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            self->tm_channel.send_tm(self->tm_channel.__that,
+                            self->tm_channel.send_tm(__ev,
+                                                     self->tm_channel.__that,
                                                      b_tm_handler2,
                                                      &next_status.status);
 
@@ -670,7 +680,8 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                         {
                             
                             #line 129 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                            self->a_tm_handler_pool.free(__ev,
+                                                         self->a_tm_handler_pool.__that,
                                                          b_tm_handler2);
 
                         }
@@ -679,7 +690,8 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                     {
                         
                         #line 133 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler2);
 
                     }
@@ -698,7 +710,8 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
             {
                 
                 #line 144 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 145 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -713,14 +726,15 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
                 if (next_status.status.__variant == Success) {
                     
                     #line 150 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->tm_channel.send_tm(self->tm_channel.__that,
+                    self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                              b_tm_handler, &next_status.status);
 
                 } else
                 {
                     
                     #line 154 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -744,7 +758,8 @@ PSExecTCReqStatus PUSService3__exec3_5TC(PUSService3 * const self) {
 
 }
 
-PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
+PSExecTCReqStatus PUSService3__exec3_6TC(const __termina_event_t * const __ev,
+                                         PUSService3 * const self) {
     
     #line 173 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     _Bool ack_enabled = 0;
@@ -769,7 +784,8 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
     tm_handler.__variant = None;
 
     #line 179 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 183 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
@@ -781,13 +797,15 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
         uint16_t tm_count = 0U;
 
         #line 186 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 188 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (self->exec_tc_req_status_update.tc_data.N != 1U) {
             
             #line 190 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+            self->pus_service_9.get_current_obt(__ev,
+                                                self->pus_service_9.__that,
                                                 &current_obt);
 
             #line 191 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -803,14 +821,15 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
             if (next_status.status.__variant == Success) {
                 
                 #line 196 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                         &next_status.status);
+                self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                         b_tm_handler, &next_status.status);
 
             } else
             {
                 
                 #line 200 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.free(__ev,
+                                             self->a_tm_handler_pool.__that,
                                              b_tm_handler);
 
             }
@@ -819,13 +838,15 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
         {
             
             #line 207 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->exec_tc_req_status_update.index = PUSService3__get_SIDindex(self);
+            self->exec_tc_req_status_update.index = PUSService3__get_SIDindex(__ev,
+                                                                              self);
 
             #line 209 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (self->exec_tc_req_status_update.index.found) {
                 
                 #line 211 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 212 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -840,7 +861,7 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                     if (next_status.status.__variant == Success) {
                         
                         #line 218 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->tm_channel.send_tm(self->tm_channel.__that,
+                        self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                                  b_tm_handler,
                                                  &next_status.status);
 
@@ -848,7 +869,8 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                     {
                         
                         #line 222 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler);
 
                     }
@@ -857,7 +879,8 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                 {
                     
                     #line 226 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -876,7 +899,8 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                 tm_handler2.__variant = None;
 
                 #line 233 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that,
+                self->a_tm_handler_pool.alloc(__ev,
+                                              self->a_tm_handler_pool.__that,
                                               &tm_handler2);
 
                 #line 237 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -889,11 +913,13 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                     uint16_t tm_count2 = 0U;
 
                     #line 240 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->tm_counter.get_next_tm_count(self->tm_counter.__that,
+                    self->tm_counter.get_next_tm_count(__ev,
+                                                       self->tm_counter.__that,
                                                        &tm_count2);
 
                     #line 241 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                    self->pus_service_9.get_current_obt(__ev,
+                                                        self->pus_service_9.__that,
                                                         &current_obt);
 
                     #line 242 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -909,7 +935,8 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                         if (next_status.status.__variant == Success) {
                             
                             #line 248 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            self->tm_channel.send_tm(self->tm_channel.__that,
+                            self->tm_channel.send_tm(__ev,
+                                                     self->tm_channel.__that,
                                                      b_tm_handler2,
                                                      &next_status.status);
 
@@ -917,7 +944,8 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                         {
                             
                             #line 251 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                            self->a_tm_handler_pool.free(__ev,
+                                                         self->a_tm_handler_pool.__that,
                                                          b_tm_handler2);
 
                         }
@@ -926,7 +954,8 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                     {
                         
                         #line 255 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                        self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                        self->a_tm_handler_pool.free(__ev,
+                                                     self->a_tm_handler_pool.__that,
                                                      b_tm_handler2);
 
                     }
@@ -945,7 +974,8 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
             {
                 
                 #line 265 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+                self->pus_service_9.get_current_obt(__ev,
+                                                    self->pus_service_9.__that,
                                                     &current_obt);
 
                 #line 266 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -960,14 +990,15 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
                 if (next_status.status.__variant == Success) {
                     
                     #line 271 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->tm_channel.send_tm(self->tm_channel.__that,
+                    self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                              b_tm_handler, &next_status.status);
 
                 } else
                 {
                     
                     #line 275 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                    self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+                    self->a_tm_handler_pool.free(__ev,
+                                                 self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
 
                 }
@@ -991,7 +1022,8 @@ PSExecTCReqStatus PUSService3__exec3_6TC(PUSService3 * const self) {
 
 }
 
-PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const PUSService3 * const self) {
+PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const __termina_event_t * const __ev,
+                                                          const PUSService3 * const self) {
     
     #line 496 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PSExecTCReqStatus next_status;
@@ -1013,7 +1045,8 @@ PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const PUSService3 * co
     tm_handler.__variant = None;
 
     #line 501 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 505 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
@@ -1025,10 +1058,11 @@ PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const PUSService3 * co
         uint16_t tm_count = 0U;
 
         #line 508 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 510 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
         #line 511 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -1042,14 +1076,14 @@ PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const PUSService3 * co
         if (next_status.status.__variant == Success) {
             
             #line 516 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &next_status.status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, &next_status.status);
 
         } else
         {
             
             #line 520 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -1069,7 +1103,8 @@ PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const PUSService3 * co
 
 }
 
-PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const PUSService3 * const self) {
+PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const __termina_event_t * const __ev,
+                                                              const PUSService3 * const self) {
     
     #line 458 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PSExecTCReqStatus next_status;
@@ -1091,7 +1126,8 @@ PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const PUSService3 
     tm_handler.__variant = None;
 
     #line 463 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 467 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
@@ -1103,10 +1139,11 @@ PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const PUSService3 
         uint16_t tm_count = 0U;
 
         #line 470 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 472 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
         #line 473 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -1121,14 +1158,14 @@ PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const PUSService3 
         if (next_status.status.__variant == Success) {
             
             #line 478 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &next_status.status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, &next_status.status);
 
         } else
         {
             
             #line 482 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -1148,7 +1185,8 @@ PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const PUSService3 
 
 }
 
-PSExecTCReqStatus PUSService3__manage_tm_limit_app_data_reached(const PUSService3 * const self) {
+PSExecTCReqStatus PUSService3__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
+                                                                const PUSService3 * const self) {
     
     #line 535 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PSExecTCReqStatus next_status;
@@ -1170,7 +1208,8 @@ PSExecTCReqStatus PUSService3__manage_tm_limit_app_data_reached(const PUSService
     tm_handler.__variant = None;
 
     #line 540 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 544 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     if (tm_handler.__variant == Some) {
@@ -1182,10 +1221,11 @@ PSExecTCReqStatus PUSService3__manage_tm_limit_app_data_reached(const PUSService
         uint16_t tm_count = 0U;
 
         #line 547 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 549 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
         #line 550 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -1199,14 +1239,14 @@ PSExecTCReqStatus PUSService3__manage_tm_limit_app_data_reached(const PUSService
         if (next_status.status.__variant == Success) {
             
             #line 555 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &next_status.status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, &next_status.status);
 
         } else
         {
             
             #line 559 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -1226,10 +1266,16 @@ PSExecTCReqStatus PUSService3__manage_tm_limit_app_data_reached(const PUSService
 
 }
 
-void PUSService3__exec_tc(void * const __this, TCHandlerT * const tc_handler,
+void PUSService3__exec_tc(const __termina_event_t * const __ev,
+                          void * const __this, TCHandlerT * const tc_handler,
                           __status_int32_t * const action_status) {
     
+    #line 573 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PUSService3 * self = (PUSService3 *)__this;
+
+    #line 573 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
 
     #line 575 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
@@ -1296,21 +1342,21 @@ void PUSService3__exec_tc(void * const __this, TCHandlerT * const tc_handler,
             if (subtype == 5U) {
                 
                 #line 612 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status = PUSService3__exec3_5TC(self);
+                self->exec_tc_req_status = PUSService3__exec3_5TC(__ev, self);
 
             } else
             #line 614 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (subtype == 6U) {
                 
                 #line 616 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status = PUSService3__exec3_6TC(self);
+                self->exec_tc_req_status = PUSService3__exec3_6TC(__ev, self);
 
             } else
             #line 618 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
             if (subtype == 31U) {
                 
                 #line 620 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-                self->exec_tc_req_status = PUSService3__exec3_31TC(self);
+                self->exec_tc_req_status = PUSService3__exec3_31TC(__ev, self);
 
             } else
             {
@@ -1349,21 +1395,24 @@ void PUSService3__exec_tc(void * const __this, TCHandlerT * const tc_handler,
         if (error_code == ACCEPTANCE_ERROR) {
             
             #line 648 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->exec_tc_req_status = PUSService3__manage_error_in_acceptance(self);
+            self->exec_tc_req_status = PUSService3__manage_error_in_acceptance(__ev,
+                                                                               self);
 
         } else
         #line 650 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (error_code == BUILD_TM_ERROR) {
             
             #line 653 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->exec_tc_req_status = PUSService3__manage_tm_limit_app_data_reached(self);
+            self->exec_tc_req_status = PUSService3__manage_tm_limit_app_data_reached(__ev,
+                                                                                     self);
 
         } else
         #line 655 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
         if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
             
             #line 657 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
-            self->exec_tc_req_status = PUSService3__manage_short_pack_length_error(self);
+            self->exec_tc_req_status = PUSService3__manage_short_pack_length_error(__ev,
+                                                                                   self);
 
         } else
         #line 659 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
@@ -1388,51 +1437,22 @@ void PUSService3__exec_tc(void * const __this, TCHandlerT * const tc_handler,
     self->exec_tc_req_status.status.__variant = Success;
 
     #line 677 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+
+    #line 677 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return;
 
 }
 
-void PUSService3__exec_tc__mutex_lock(void * const __this,
-                                      TCHandlerT * const tc_handler,
-                                      __status_int32_t * const action_status) {
+void PUSService3__update_params(const __termina_event_t * const __ev,
+                                void * const __this) {
     
+    #line 734 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     PUSService3 * self = (PUSService3 *)__this;
 
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    PUSService3__exec_tc(self, tc_handler, action_status);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void PUSService3__exec_tc__task_lock(void * const __this,
-                                     TCHandlerT * const tc_handler,
-                                     __status_int32_t * const action_status) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    PUSService3__exec_tc(__this, tc_handler, action_status);
-    __termina_task__unlock(lock);
-
-}
-
-void PUSService3__exec_tc__event_lock(void * const __this,
-                                      TCHandlerT * const tc_handler,
-                                      __status_int32_t * const action_status) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    PUSService3__exec_tc(__this, tc_handler, action_status);
-    __termina_event__unlock(lock);
-
-}
-
-void PUSService3__update_params(void * const __this) {
-    
-    PUSService3 * self = (PUSService3 *)__this;
+    #line 734 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
 
     #line 736 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     for (size_t i = 0U; i < 5U; i = i + 1U) {
@@ -1455,38 +1475,9 @@ void PUSService3__update_params(void * const __this) {
     }
 
     #line 747 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+
+    #line 747 "src/service_libraries/pus_services/pus_service3/pus_service3.fin"
     return;
-
-}
-
-void PUSService3__update_params__mutex_lock(void * const __this) {
-    
-    PUSService3 * self = (PUSService3 *)__this;
-
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    PUSService3__update_params(self);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void PUSService3__update_params__task_lock(void * const __this) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    PUSService3__update_params(__this);
-    __termina_task__unlock(lock);
-
-}
-
-void PUSService3__update_params__event_lock(void * const __this) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    PUSService3__update_params(__this);
-    __termina_event__unlock(lock);
 
 }

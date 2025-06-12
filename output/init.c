@@ -28,12 +28,15 @@ void __termina_app__init_globals() {
     
     hk_fdir_timer.period.tv_sec = 1U;
     hk_fdir_timer.period.tv_usec = 0U;
+    tm_pool.__lock_type.type = __termina_resource_lock_type__none;
+    tc_pool.__lock_type.type = __termina_resource_lock_type__none;
     for (size_t __i0 = 0U; __i0 < 12U; __i0 = __i0 + 1U) {
         atomic_store(&u32_system_data_pool[__i0], 0U);
     }
     for (size_t __i0 = 0U; __i0 < 18U; __i0 = __i0 + 1U) {
         atomic_store(&u8_system_data_pool[__i0], 0U);
     }
+    uart_drv.__lock_type.type = __termina_resource_lock_type__none;
     uart_drv.aux_index = 0U;
     #line 66 "app/app.fin"
     uart_drv.raw_rx_tc_length[0U] = 0U;
@@ -64,14 +67,18 @@ void __termina_app__init_globals() {
     }
     uart_drv.uart_tx_queue.head_index = 0U;
     uart_drv.uart_tx_queue.num_elements = 0U;
+    gpio_drv.__lock_type.type = __termina_resource_lock_type__none;
     gpio_drv.registers = (volatile GPIO_registers *)2147485952U;
+    telemetry_channel.__lock_type.type = __termina_resource_lock_type__none;
     telemetry_channel.a_tm_handler_pool.__that = &tm_pool;
     telemetry_channel.a_tm_handler_pool.alloc = __termina_pool__alloc;
     telemetry_channel.a_tm_handler_pool.free = __termina_pool__free;
     telemetry_channel.uart.__that = &uart_drv;
     #line 76 "app/app.fin"
     telemetry_channel.uart.send = UARTDriver__send;
+    telemetry_counter.__lock_type.type = __termina_resource_lock_type__none;
     telemetry_counter.tm_count = 0U;
+    pus_service_9.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_9.a_tm_handler_pool.__that = &tm_pool;
     pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_9.a_tm_handler_pool.free = __termina_pool__free;
@@ -97,6 +104,7 @@ void __termina_app__init_globals() {
     pus_service_9.tm_counter.__that = &telemetry_counter;
     #line 87 "app/app.fin"
     pus_service_9.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_5.__lock_type.type = __termina_resource_lock_type__none;
     #line 99 "app/app.fin"
     pus_service_5.Ev_ID_enable_config[0U] = 0x7U;
     #line 99 "app/app.fin"
@@ -127,6 +135,7 @@ void __termina_app__init_globals() {
     pus_service_5.tm_counter.__that = &telemetry_counter;
     #line 98 "app/app.fin"
     pus_service_5.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_3.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_3.a_tm_handler_pool.__that = &tm_pool;
     pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_3.a_tm_handler_pool.free = __termina_pool__free;
@@ -454,6 +463,7 @@ void __termina_app__init_globals() {
     pus_service_3.tm_counter.__that = &telemetry_counter;
     #line 109 "app/app.fin"
     pus_service_3.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_12.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_12.a_tm_handler_pool.__that = &tm_pool;
     pus_service_12.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_12.a_tm_handler_pool.free = __termina_pool__free;
@@ -541,6 +551,7 @@ void __termina_app__init_globals() {
     pus_service_12.tm_counter.__that = &telemetry_counter;
     #line 136 "app/app.fin"
     pus_service_12.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_19.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_19.a_tm_handler_pool.__that = &tm_pool;
     pus_service_19.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_19.a_tm_handler_pool.free = __termina_pool__free;
@@ -602,6 +613,7 @@ void __termina_app__init_globals() {
     pus_service_19.tm_counter.__that = &telemetry_counter;
     #line 155 "app/app.fin"
     pus_service_19.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_20.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_20.a_tm_handler_pool.__that = &tm_pool;
     pus_service_20.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_20.a_tm_handler_pool.free = __termina_pool__free;
@@ -628,6 +640,7 @@ void __termina_app__init_globals() {
     pus_service_20.tm_counter.__that = &telemetry_counter;
     #line 173 "app/app.fin"
     pus_service_20.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_17.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_17.a_tm_handler_pool.__that = &tm_pool;
     pus_service_17.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_17.a_tm_handler_pool.free = __termina_pool__free;
@@ -647,6 +660,7 @@ void __termina_app__init_globals() {
     pus_service_17.tm_counter.__that = &telemetry_counter;
     #line 185 "app/app.fin"
     pus_service_17.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_128.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_128.a_tm_handler_pool.__that = &tm_pool;
     pus_service_128.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_128.a_tm_handler_pool.free = __termina_pool__free;
@@ -667,6 +681,7 @@ void __termina_app__init_globals() {
     pus_service_128.tm_counter.__that = &telemetry_counter;
     #line 194 "app/app.fin"
     pus_service_128.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_2.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_2.a_tm_handler_pool.__that = &tm_pool;
     pus_service_2.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_2.a_tm_handler_pool.free = __termina_pool__free;
@@ -692,6 +707,7 @@ void __termina_app__init_globals() {
     pus_service_2.tm_counter.__that = &telemetry_counter;
     #line 203 "app/app.fin"
     pus_service_2.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_4.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_4.a_tm_handler_pool.__that = &tm_pool;
     pus_service_4.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_4.a_tm_handler_pool.free = __termina_pool__free;
@@ -739,6 +755,7 @@ void __termina_app__init_globals() {
     pus_service_4.tm_counter.__that = &telemetry_counter;
     #line 213 "app/app.fin"
     pus_service_4.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    mng_tc_executor.__lock_type.type = __termina_resource_lock_type__none;
     mng_tc_executor.a_tm_handler_pool.__that = &tm_pool;
     mng_tc_executor.a_tm_handler_pool.alloc = __termina_pool__alloc;
     mng_tc_executor.a_tm_handler_pool.free = __termina_pool__free;

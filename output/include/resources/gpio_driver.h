@@ -21,25 +21,15 @@ typedef struct {
 } GPIODrvIface;
 
 typedef struct {
-    __termina_id_t __mutex_id;
+    __termina_resource_lock_type_t __lock_type;
     volatile GPIO_registers * registers;
 } GPIODriver;
 
-void GPIODriver__init_gpio(void * const __this);
-void GPIODriver__init_gpio__mutex_lock(void * const __this);
-void GPIODriver__init_gpio__task_lock(void * const __this);
-void GPIODriver__init_gpio__event_lock(void * const __this);
+void GPIODriver__init_gpio(const __termina_event_t * const __ev,
+                           void * const __this);
 
-void GPIODriver__write_led(void * const __this, uint8_t led, uint8_t value,
+void GPIODriver__write_led(const __termina_event_t * const __ev,
+                           void * const __this, uint8_t led, uint8_t value,
                            __status_int32_t * const status);
-void GPIODriver__write_led__mutex_lock(void * const __this, uint8_t led,
-                                       uint8_t value,
-                                       __status_int32_t * const status);
-void GPIODriver__write_led__task_lock(void * const __this, uint8_t led,
-                                      uint8_t value,
-                                      __status_int32_t * const status);
-void GPIODriver__write_led__event_lock(void * const __this, uint8_t led,
-                                       uint8_t value,
-                                       __status_int32_t * const status);
 
 #endif

@@ -3,7 +3,8 @@
 
 const size_t num_actions_per_second = 2U;
 
-__status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
+__status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev,
+                                           HouseKeepingFDIR * const self) {
     
     #line 64 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     __status_int32_t result;
@@ -17,8 +18,8 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
     for (size_t i = 0U; i < 8U; i = i + 1U) {
         
         #line 70 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_12.is_PMON_enabled(self->pus_service_12.__that, i,
-                                             &is_monitor_enabled);
+        self->pus_service_12.is_PMON_enabled(__ev, self->pus_service_12.__that,
+                                             i, &is_monitor_enabled);
 
         #line 72 "src/tasks/hk_fdir_mng/hk_fdir.fin"
         if (is_monitor_enabled) {
@@ -35,7 +36,8 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
             _Bool event_triggered = 0;
 
             #line 78 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->pus_service_12.do_monitoring(self->pus_service_12.__that,
+            self->pus_service_12.do_monitoring(__ev,
+                                               self->pus_service_12.__that,
                                                (uint16_t)i, &evID, &fault_info,
                                                &event_triggered);
 
@@ -46,7 +48,8 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
                 _Bool is_Ev_ID_enabled = 0;
 
                 #line 83 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-                self->pus_service_5.is_Ev_ID_enabled_ext(self->pus_service_5.__that,
+                self->pus_service_5.is_Ev_ID_enabled_ext(__ev,
+                                                         self->pus_service_5.__that,
                                                          evID,
                                                          &is_Ev_ID_enabled);
 
@@ -54,12 +57,14 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
                 if (is_Ev_ID_enabled) {
                     
                     #line 87 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-                    self->pus_service_5.build_and_tx_tm_5_x(self->pus_service_5.__that,
+                    self->pus_service_5.build_and_tx_tm_5_x(__ev,
+                                                            self->pus_service_5.__that,
                                                             &result, evID,
                                                             fault_info);
 
                     #line 88 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-                    self->pus_service_19.manage_event_action(self->pus_service_19.__that,
+                    self->pus_service_19.manage_event_action(__ev,
+                                                             self->pus_service_19.__that,
                                                              evID);
 
                 }
@@ -75,9 +80,11 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
 
 }
 
-__status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
+__status_int32_t HouseKeepingFDIR__do_hk_fdir(const __termina_event_t * const __ev,
+                                              void * const __this,
                                               TimeVal _current_time) {
     
+    #line 108 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
 
     #line 110 "src/tasks/hk_fdir_mng/hk_fdir.fin"
@@ -86,16 +93,16 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
     result.__variant = Success;
 
     #line 112 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->pus_service_3.update_params(self->pus_service_3.__that);
+    self->pus_service_3.update_params(__ev, self->pus_service_3.__that);
 
     #line 113 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->pus_service_4.update_all_stats(self->pus_service_4.__that);
+    self->pus_service_4.update_all_stats(__ev, self->pus_service_4.__that);
 
     #line 114 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->pus_service_3.do_hk(self->pus_service_3.__that, &result);
+    self->pus_service_3.do_hk(__ev, self->pus_service_3.__that, &result);
 
     #line 115 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    result = HouseKeepingFDIR__do_fdir(self);
+    result = HouseKeepingFDIR__do_fdir(__ev, self);
 
     #line 117 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     size_t pending_actions[4U];
@@ -106,7 +113,8 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
     }
 
     #line 118 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->pus_service_19.get_pending_action_number(self->pus_service_19.__that,
+    self->pus_service_19.get_pending_action_number(__ev,
+                                                   self->pus_service_19.__that,
                                                    pending_actions);
 
     #line 120 "src/tasks/hk_fdir_mng/hk_fdir.fin"
@@ -154,7 +162,7 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
         tc_handler.__variant = None;
 
         #line 145 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->a_tc_handler_pool.alloc(self->a_tc_handler_pool.__that,
+        self->a_tc_handler_pool.alloc(__ev, self->a_tc_handler_pool.__that,
                                       &tc_handler);
 
         #line 149 "src/tasks/hk_fdir_mng/hk_fdir.fin"
@@ -164,11 +172,12 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
             __termina_box_t b_tc_handler = tc_handler.Some.__0;
 
             #line 151 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->pus_service_19.extract_action(self->pus_service_19.__that, n,
+            self->pus_service_19.extract_action(__ev,
+                                                self->pus_service_19.__that, n,
                                                 (TCHandlerT *)b_tc_handler.data);
 
             #line 152 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            __termina_out_port__send(self->action_tc_message_queue_output,
+            __termina_out_port__send(__ev, self->action_tc_message_queue_output,
                                      (void *)&b_tc_handler);
 
         } else
@@ -188,7 +197,8 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
 
 }
 
-void HouseKeepingFDIR__manage_error_in_acceptance(const HouseKeepingFDIR * const self,
+void HouseKeepingFDIR__manage_error_in_acceptance(const __termina_event_t * const __ev,
+                                                  const HouseKeepingFDIR * const self,
                                                   const TCHandlerT * const tc_handler,
                                                   __status_int32_t * const status) {
     
@@ -205,7 +215,8 @@ void HouseKeepingFDIR__manage_error_in_acceptance(const HouseKeepingFDIR * const
     tm_handler.__variant = None;
 
     #line 176 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
     #line 180 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     if (tm_handler.__variant == Some) {
@@ -217,10 +228,11 @@ void HouseKeepingFDIR__manage_error_in_acceptance(const HouseKeepingFDIR * const
         uint16_t tm_count = 0U;
 
         #line 183 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
         #line 185 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
         #line 186 "src/tasks/hk_fdir_mng/hk_fdir.fin"
@@ -234,14 +246,14 @@ void HouseKeepingFDIR__manage_error_in_acceptance(const HouseKeepingFDIR * const
         if ((*status).__variant == Success) {
             
             #line 191 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     status);
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, status);
 
         } else
         {
             
             #line 194 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -261,9 +273,11 @@ void HouseKeepingFDIR__manage_error_in_acceptance(const HouseKeepingFDIR * const
 
 }
 
-__status_int32_t HouseKeepingFDIR__exec_tc(void * const __this,
+__status_int32_t HouseKeepingFDIR__exec_tc(const __termina_event_t * const __ev,
+                                           void * const __this,
                                            __termina_box_t tc_handler) {
     
+    #line 213 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
 
     #line 215 "src/tasks/hk_fdir_mng/hk_fdir.fin"
@@ -278,7 +292,7 @@ __status_int32_t HouseKeepingFDIR__exec_tc(void * const __this,
     if (tc_type == 3U) {
         
         #line 221 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_3.exec_tc(self->pus_service_3.__that,
+        self->pus_service_3.exec_tc(__ev, self->pus_service_3.__that,
                                     (TCHandlerT *)tc_handler.data, &res);
 
     } else
@@ -286,7 +300,7 @@ __status_int32_t HouseKeepingFDIR__exec_tc(void * const __this,
     if (tc_type == 5U) {
         
         #line 225 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_5.exec_tc(self->pus_service_5.__that,
+        self->pus_service_5.exec_tc(__ev, self->pus_service_5.__that,
                                     (TCHandlerT *)tc_handler.data, &res);
 
     } else
@@ -294,7 +308,7 @@ __status_int32_t HouseKeepingFDIR__exec_tc(void * const __this,
     if (tc_type == 12U) {
         
         #line 229 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_12.exec_tc(self->pus_service_12.__that,
+        self->pus_service_12.exec_tc(__ev, self->pus_service_12.__that,
                                      (TCHandlerT *)tc_handler.data, &res);
 
     } else
@@ -302,7 +316,7 @@ __status_int32_t HouseKeepingFDIR__exec_tc(void * const __this,
     if (tc_type == 19U) {
         
         #line 233 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_19.exec_tc(self->pus_service_19.__that,
+        self->pus_service_19.exec_tc(__ev, self->pus_service_19.__that,
                                      (TCHandlerT *)tc_handler.data, &res);
 
     } else
@@ -310,21 +324,22 @@ __status_int32_t HouseKeepingFDIR__exec_tc(void * const __this,
     if (tc_type == 4U) {
         
         #line 238 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_4.exec_tc(self->pus_service_4.__that,
+        self->pus_service_4.exec_tc(__ev, self->pus_service_4.__that,
                                     (TCHandlerT *)tc_handler.data, &res);
 
     } else
     {
         
         #line 242 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        HouseKeepingFDIR__manage_error_in_acceptance(self,
+        HouseKeepingFDIR__manage_error_in_acceptance(__ev, self,
                                                      (TCHandlerT *)tc_handler.data,
                                                      &res);
 
     }
 
     #line 246 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that, tc_handler);
+    self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
+                                 tc_handler);
 
     #line 248 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     return res;
@@ -337,7 +352,7 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
 
     int32_t status = 0L;
 
-    __termina_id_t next_msg = 0U;
+    __termina_event_t event;
 
     __status_int32_t result;
     result.__variant = Success;
@@ -347,14 +362,13 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
 
     for (;;) {
         
-        __termina_msg_queue__recv(self->__task_msg_queue_id, &next_msg,
-                                  &status);
+        __termina_msg_queue__recv(self->__task_msg_queue_id, &event, &status);
 
         if (status != 0L) {
             break;
         }
 
-        switch (next_msg) {
+        switch (event.port_id) {
             
             case __HouseKeepingFDIR__hk_fdir_timer_ev:
 
@@ -367,7 +381,7 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
                                                            status);
                 }
 
-                result = HouseKeepingFDIR__do_hk_fdir(self,
+                result = HouseKeepingFDIR__do_hk_fdir(&event, self,
                                                       do_hk_fdir__msg_data);
 
                 if (result.__variant != Success) {
@@ -394,7 +408,8 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
                                                            status);
                 }
 
-                result = HouseKeepingFDIR__exec_tc(self, exec_tc__msg_data);
+                result = HouseKeepingFDIR__exec_tc(&event, self,
+                                                   exec_tc__msg_data);
 
                 if (result.__variant != Success) {
                     
