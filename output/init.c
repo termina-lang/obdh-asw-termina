@@ -5,6 +5,7 @@
 #include "handlers/init.h"
 #include "handlers/uart_irq_handler.h"
 #include "resources/system_data_pool.h"
+#include "resources/uart.h"
 #include "service_libraries/errors.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1_help.h"
 #include "service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.h"

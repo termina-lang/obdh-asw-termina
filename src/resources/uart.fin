@@ -7,7 +7,8 @@ import service_libraries.errors;
  * @brief UART driver implementation using memory-mapped register access.
  */
 
- 
+const hw_fifo_size : usize = 1;
+
 enum RXStatus {
     SyncBytesRx,
     SyncLengthRx, 
@@ -116,6 +117,12 @@ resource class UARTDriver provides
     method enable_TI(&priv self) {
         let riscv_uart_ti : u32 = 0x00000008 : u32;
         self->registers.control = self->registers.control | riscv_uart_ti;
+        return;
+    }
+
+    method disable_TI(&priv self) {
+        let riscv_uart_ti : u32 = 0xFFFFFFF7 : u32;
+        self->registers.control = self->registers.control & riscv_uart_ti;
         return;
     }
 
@@ -236,8 +243,7 @@ resource class UARTDriver provides
             var sent_bytes : usize = 0;
             var extracted_elem : Option<u8> = None;
 
-            for i : usize in 0 : usize .. queue_max_noe while 
-                    (sent_bytes < num_elements && self->tf_is_full() == false) {
+            for i : usize in 0 : usize .. hw_fifo_size {
 
                 dequeue(&mut(self->uart_tx_queue), &mut extracted_elem);
 
@@ -260,6 +266,7 @@ resource class UARTDriver provides
             } else {
 
                 self->rem_bytes = false;
+                
             }
             
 
@@ -297,9 +304,10 @@ resource class UARTDriver provides
 
             if self->tf_is_empty() {
 
-                for i : usize in 0 .. nbytes while (self->tf_is_full() == false) {
+                for i : usize in 0 .. hw_fifo_size {
 
                     self->registers.data = output_bytes[i] as u32;
+            
                     sent_bytes = sent_bytes + 1;
                     
                 }
@@ -322,6 +330,7 @@ resource class UARTDriver provides
                         *status = enqueue(&mut(self->uart_tx_queue), output_bytes[i + sent_bytes]);
 
                     }
+
 
                 } else {
                     

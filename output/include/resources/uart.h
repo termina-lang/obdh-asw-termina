@@ -9,6 +9,8 @@
 
 #include "option.h"
 
+extern const size_t hw_fifo_size;
+
 typedef enum {
     RXStatus__SyncBytesRx,
     RXStatus__SyncLengthRx,
@@ -68,6 +70,9 @@ void UARTDriver__disable_RF(const __termina_event_t * const __ev,
 void UARTDriver__disable_TF(const __termina_event_t * const __ev,
                             UARTDriver * const self);
 
+void UARTDriver__disable_TI(const __termina_event_t * const __ev,
+                            UARTDriver * const self);
+
 void UARTDriver__enable_RI(const __termina_event_t * const __ev,
                            UARTDriver * const self);
 
@@ -93,9 +98,6 @@ void UARTDriver__initialize(const __termina_event_t * const __ev,
 void UARTDriver__receive(const __termina_event_t * const __ev,
                          void * const __this, __option_uint8_t * const byte);
 
-_Bool UARTDriver__tf_is_full(const __termina_event_t * const __ev,
-                             const UARTDriver * const self);
-
 void UARTDriver__release_tx(const __termina_event_t * const __ev,
                             void * const __this);
 
@@ -105,5 +107,8 @@ _Bool UARTDriver__tf_is_empty(const __termina_event_t * const __ev,
 void UARTDriver__send(const __termina_event_t * const __ev, void * const __this,
                       const size_t nbytes, const uint8_t output_bytes[nbytes],
                       __status_int32_t * const status);
+
+_Bool UARTDriver__tf_is_full(const __termina_event_t * const __ev,
+                             const UARTDriver * const self);
 
 #endif

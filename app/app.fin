@@ -246,7 +246,7 @@ handler init : Init = {
 
 
 handler uart_hdlr : UARTIrqHandler = {
-    irq_entry <- irq_3,
+    irq_entry <- irq_2,
     uart <-> uart_drv,
     uart_registers @ 0x80000100,
     rx_frame -> rx_task_message_queue

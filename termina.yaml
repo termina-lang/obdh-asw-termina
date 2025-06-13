@@ -10,5 +10,5 @@ enable-system-port: true
 builder: make
 platform-flags:
   rtems5-leon3-qemu:
-    enable-irq-3: true
+    enable-irq-2: true
         

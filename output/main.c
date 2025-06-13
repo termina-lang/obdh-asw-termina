@@ -101,7 +101,7 @@ static void __termina_app__init_emitters(int32_t * const status) {
         connection.handler.handler_id = __uart_hdlr__handler_id;
         connection.handler.handler_action = UARTIrqHandler__irq_handler;
 
-        __termina_interrupt__init(3, __irq_3__emitter_id, &connection, status);
+        __termina_interrupt__init(2, __irq_2__emitter_id, &connection, status);
 
     }
 

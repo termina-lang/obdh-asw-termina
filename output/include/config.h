@@ -12,7 +12,7 @@
 #define __TCRXBottomHalfTask__rx_frame 0
 
 #define __hk_fdir_timer__emitter_id 0
-#define __irq_3__emitter_id 1
+#define __irq_2__emitter_id 1
 #define __system_init__emitter_id 2
 
 #define __pus_service_9__mutex_id 0

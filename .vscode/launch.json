@@ -14,8 +14,8 @@
           "externalConsole": false,
           "MIMode": "gdb",
           "miDebuggerPath": "/opt/rcc/bin/sparc-gaisler-rtems5-gdb",
-          "miDebuggerServerAddress": "localhost:1234",
-          //"miDebuggerServerAddress": "localhost:2222",
+          //"miDebuggerServerAddress": "localhost:1234",
+          "miDebuggerServerAddress": "localhost:2222",
           "useExtendedRemote": true
         }
       ]
