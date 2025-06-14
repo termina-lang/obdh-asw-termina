@@ -94,11 +94,6 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(const __termina_event_t * const __
                                               void * const __this,
                                               TimeVal _current_time);
 
-void HouseKeepingFDIR__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                  const HouseKeepingFDIR * const self,
-                                                  const TCHandlerT * const tc_handler,
-                                                  __status_int32_t * const status);
-
 __status_int32_t HouseKeepingFDIR__exec_tc(const __termina_event_t * const __ev,
                                            void * const __this,
                                            __termina_box_t tc_handler);

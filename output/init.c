@@ -19,6 +19,7 @@
 #include "service_libraries/pus_services/pus_service4/pus_service4_help.h"
 #include "service_libraries/pus_services/pus_service5/pus_service5_help.h"
 #include "service_libraries/pus_services/pus_service9/pus_service9_help.h"
+#include "service_libraries/pus_tc_handler.h"
 #include "service_libraries/pus_tm_handler.h"
 #include "service_libraries/queue_u8.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
@@ -84,9 +85,7 @@ void __termina_app__init_globals() {
     pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_9.a_tm_handler_pool.free = __termina_pool__free;
     #line 90 "app/app.fin"
-    pus_service_9.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 90 "app/app.fin"
-    pus_service_9.exec_tc_req_status.status.__variant = Success;
+    pus_service_9.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_9.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_9.exec_tc_req_status_update.next_OBT.finetime = 0U;
     pus_service_9.exec_tc_req_status_update.next_OBT.seconds = 0U;
@@ -118,9 +117,7 @@ void __termina_app__init_globals() {
     pus_service_5.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_5.a_tm_handler_pool.free = __termina_pool__free;
     #line 100 "app/app.fin"
-    pus_service_5.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 100 "app/app.fin"
-    pus_service_5.exec_tc_req_status.status.__variant = Success;
+    pus_service_5.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_5.exec_tc_req_status_update.EvID = 0U;
     pus_service_5.exec_tc_req_status_update.N = 0U;
     pus_service_5.exec_tc_req_status_update.flags_ack = 0U;
@@ -141,9 +138,7 @@ void __termina_app__init_globals() {
     pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_3.a_tm_handler_pool.free = __termina_pool__free;
     #line 118 "app/app.fin"
-    pus_service_3.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 118 "app/app.fin"
-    pus_service_3.exec_tc_req_status.status.__variant = Success;
+    pus_service_3.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_3.exec_tc_req_status_update.index.found = 0;
     pus_service_3.exec_tc_req_status_update.index.index = 0U;
     pus_service_3.exec_tc_req_status_update.tc_data.N = 0U;
@@ -480,9 +475,7 @@ void __termina_app__init_globals() {
     #line 123 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.do_monitoring_req_status_update.new_status.__variant = CheckState__Unselected;
     #line 139 "app/app.fin"
-    pus_service_12.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 139 "app/app.fin"
-    pus_service_12.exec_tc_req_status.status.__variant = Success;
+    pus_service_12.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_12.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_12.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_12.exec_tc_req_status_update.packet_id = 0U;
@@ -561,18 +554,29 @@ void __termina_app__init_globals() {
         pus_service_19.event_action_config[__i0].event_ID = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 16U; __i0 = __i0 + 1U) {
-        #line 159 "app/app.fin"
-        pus_service_19.event_action_packets[__i0] = tc_handler_init();
+        pus_service_19.event_action_packets[__i0].app_data_index = 0U;
+        pus_service_19.event_action_packets[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.event_action_packets[__i0].df_header.sourceID = 0U;
+        pus_service_19.event_action_packets[__i0].df_header.subtype = 0U;
+        pus_service_19.event_action_packets[__i0].df_header.type = 0U;
+        pus_service_19.event_action_packets[__i0].packet_error_ctrl = 0U;
+        pus_service_19.event_action_packets[__i0].packet_header.packet_id = 0U;
+        pus_service_19.event_action_packets[__i0].packet_header.packet_length = 0U;
+        pus_service_19.event_action_packets[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.event_action_packets[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.event_action_packets[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     #line 156 "app/app.fin"
-    pus_service_19.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 156 "app/app.fin"
-    pus_service_19.exec_tc_req_status.status.__variant = Success;
+    pus_service_19.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
-        #line 57 "src/service_libraries/pus_services/pus_service19/pus_service19_help.fin"
+        #line 59 "src/service_libraries/pus_services/pus_service19/pus_service19_help.fin"
         pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_bytes[__i0] = 0U;
     }
     pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_num_bytes = 0U;
+    pus_service_19.exec_tc_req_status_update.ev_action_ID.enabled = 0;
     pus_service_19.exec_tc_req_status_update.ev_action_ID.ev_action_index = 0U;
     pus_service_19.exec_tc_req_status_update.ev_action_ID.found = 0;
     pus_service_19.exec_tc_req_status_update.tc_data.EvID = 0U;
@@ -590,20 +594,68 @@ void __termina_app__init_globals() {
         pus_service_19.pending_action_number[__i0] = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        #line 160 "app/app.fin"
-        pus_service_19.pending_action_queue_1I[__i0] = tc_handler_init();
+        pus_service_19.pending_action_queue_1I[__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.pending_action_queue_1I[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.pending_action_queue_1I[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        #line 161 "app/app.fin"
-        pus_service_19.pending_action_queue_2LS[__i0] = tc_handler_init();
+        pus_service_19.pending_action_queue_2LS[__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.pending_action_queue_2LS[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.pending_action_queue_2LS[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        #line 162 "app/app.fin"
-        pus_service_19.pending_action_queue_3MS[__i0] = tc_handler_init();
+        pus_service_19.pending_action_queue_3MS[__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.pending_action_queue_3MS[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.pending_action_queue_3MS[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        #line 163 "app/app.fin"
-        pus_service_19.pending_action_queue_4HS[__i0] = tc_handler_init();
+        pus_service_19.pending_action_queue_4HS[__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.pending_action_queue_4HS[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.pending_action_queue_4HS[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     pus_service_19.pus_service_9.__that = &pus_service_9;
     #line 155 "app/app.fin"
@@ -619,9 +671,7 @@ void __termina_app__init_globals() {
     pus_service_20.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_20.a_tm_handler_pool.free = __termina_pool__free;
     #line 174 "app/app.fin"
-    pus_service_20.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 174 "app/app.fin"
-    pus_service_20.exec_tc_req_status.status.__variant = Success;
+    pus_service_20.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_20.exec_tc_req_status_update.N = 0U;
     pus_service_20.exec_tc_req_status_update.PID = 0U;
     pus_service_20.exec_tc_req_status_update.flags_ack = 0U;
@@ -646,9 +696,7 @@ void __termina_app__init_globals() {
     pus_service_17.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_17.a_tm_handler_pool.free = __termina_pool__free;
     #line 186 "app/app.fin"
-    pus_service_17.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 186 "app/app.fin"
-    pus_service_17.exec_tc_req_status.status.__variant = Success;
+    pus_service_17.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_17.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_17.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_17.exec_tc_req_status_update.packet_id = 0U;
@@ -666,9 +714,7 @@ void __termina_app__init_globals() {
     pus_service_128.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_128.a_tm_handler_pool.free = __termina_pool__free;
     #line 195 "app/app.fin"
-    pus_service_128.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 195 "app/app.fin"
-    pus_service_128.exec_tc_req_status.status.__variant = Success;
+    pus_service_128.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_128.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_128.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_128.exec_tc_req_status_update.packet_id = 0U;
@@ -687,9 +733,7 @@ void __termina_app__init_globals() {
     pus_service_2.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_2.a_tm_handler_pool.free = __termina_pool__free;
     #line 204 "app/app.fin"
-    pus_service_2.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 204 "app/app.fin"
-    pus_service_2.exec_tc_req_status.status.__variant = Success;
+    pus_service_2.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_2.exec_tc_req_status_update.N = 0U;
     pus_service_2.exec_tc_req_status_update.dev_address = 0U;
     pus_service_2.exec_tc_req_status_update.flags_ack = 0U;
@@ -713,9 +757,7 @@ void __termina_app__init_globals() {
     pus_service_4.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_4.a_tm_handler_pool.free = __termina_pool__free;
     #line 214 "app/app.fin"
-    pus_service_4.exec_tc_req_status.exec_tc_status.__variant = PSReqStatus__Init;
-    #line 214 "app/app.fin"
-    pus_service_4.exec_tc_req_status.status.__variant = Success;
+    pus_service_4.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_4.exec_tc_req_status_update.N = 0U;
     pus_service_4.exec_tc_req_status_update.PID = 0U;
     pus_service_4.exec_tc_req_status_update.flags_ack = 0U;

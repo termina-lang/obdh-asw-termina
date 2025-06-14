@@ -189,3 +189,71 @@ uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID) {
     return (uint8_t)(Ev_ID & offset_mask);
 
 }
+
+void build_tm_5_x_param_out_of_limit(TMHandlerT * const p_tm_handler,
+                                     uint16_t tm_seq_counter,
+                                     ParamOutOfLimitInfo fault_info,
+                                     uint16_t ev_ID, MissionObt current_obt,
+                                     __status_int32_t * const status) {
+    
+    #line 151 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    startup_tm(p_tm_handler);
+
+    #line 152 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    append_u16_appdata_field(p_tm_handler, ev_ID, status);
+
+    #line 153 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    append_u16_appdata_field(p_tm_handler, fault_info.PID, status);
+
+    #line 154 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_value, status);
+
+    #line 155 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_limit, status);
+
+    #line 156 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    uint8_t subtype = (uint8_t)get_Ev_ID_enable_config_index(ev_ID);
+
+    #line 157 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    close_tm(p_tm_handler, 5U, subtype, tm_seq_counter, current_obt);
+
+    #line 159 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    return;
+
+}
+
+void build_tm_5_x_param_check_value_fail(TMHandlerT * const p_tm_handler,
+                                         uint16_t tm_seq_counter,
+                                         ParamFaultValueInfo fault_info,
+                                         uint16_t ev_ID, MissionObt current_obt,
+                                         __status_int32_t * const status) {
+    
+    #line 165 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    startup_tm(p_tm_handler);
+
+    #line 166 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    append_u16_appdata_field(p_tm_handler, ev_ID, status);
+
+    #line 167 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    append_u16_appdata_field(p_tm_handler, fault_info.PID, status);
+
+    #line 168 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_value, status);
+
+    #line 169 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_mask, status);
+
+    #line 170 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value,
+                             status);
+
+    #line 171 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    uint8_t subtype = (uint8_t)get_Ev_ID_enable_config_index(ev_ID);
+
+    #line 172 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    close_tm(p_tm_handler, 5U, subtype, tm_seq_counter, current_obt);
+
+    #line 174 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
+    return;
+
+}

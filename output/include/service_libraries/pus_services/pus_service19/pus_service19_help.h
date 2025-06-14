@@ -29,6 +29,7 @@ typedef struct {
 typedef struct {
     _Bool found;
     size_t ev_action_index;
+    _Bool enabled;
 } FoundID;
 
 typedef struct {

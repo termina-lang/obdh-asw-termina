@@ -44,41 +44,16 @@ void PUSService5__build_and_tx_tm_5_2(const __termina_event_t * const __ev,
                                       void * const __this,
                                       __status_int32_t * const status);
 
-void PUSService5__build_tm_5_x_param_check_value_fail(const __termina_event_t * const __ev,
-                                                      const PUSService5 * const self,
-                                                      TMHandlerT * const p_tm_handler,
-                                                      uint16_t tm_seq_counter,
-                                                      ParamFaultValueInfo fault_info,
-                                                      uint16_t ev_ID,
-                                                      __status_int32_t * const status);
-
-void PUSService5__build_tm_5_x_param_out_of_limit(const __termina_event_t * const __ev,
-                                                  const PUSService5 * const self,
-                                                  TMHandlerT * const p_tm_handler,
-                                                  uint16_t tm_seq_counter,
-                                                  ParamOutOfLimitInfo fault_info,
-                                                  uint16_t ev_ID,
-                                                  __status_int32_t * const status);
-
 void PUSService5__build_and_tx_tm_5_x(const __termina_event_t * const __ev,
                                       void * const __this,
                                       __status_int32_t * const status,
                                       uint16_t evID, FaultInfo fault_info);
 
-PSExecTCReqStatus PUSService5__exec5_5TC(const __termina_event_t * const __ev,
-                                         PUSService5 * const self);
+__status_int32_t PUSService5__exec5_5TC(const __termina_event_t * const __ev,
+                                        PUSService5 * const self);
 
-PSExecTCReqStatus PUSService5__exec5_6TC(const __termina_event_t * const __ev,
-                                         PUSService5 * const self);
-
-PSExecTCReqStatus PUSService5__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                          const PUSService5 * const self);
-
-PSExecTCReqStatus PUSService5__manage_short_pack_length_error(const __termina_event_t * const __ev,
-                                                              const PUSService5 * const self);
-
-PSExecTCReqStatus PUSService5__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
-                                                                const PUSService5 * const self);
+__status_int32_t PUSService5__exec5_6TC(const __termina_event_t * const __ev,
+                                        PUSService5 * const self);
 
 void PUSService5__exec_tc(const __termina_event_t * const __ev,
                           void * const __this, TCHandlerT * const tc_handler,

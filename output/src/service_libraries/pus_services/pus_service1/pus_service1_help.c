@@ -186,15 +186,25 @@ void build_tm_1_X_no_failure_data(TMHandlerT * const p_tm_handler,
     append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
 
     #line 243 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+    if ((*status).__variant == Success) {
+        
+        #line 244 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
 
-    #line 244 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u8_appdata_field(p_tm_handler, failure_code, status);
+    }
 
-    #line 245 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 246 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 247 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u8_appdata_field(p_tm_handler, failure_code, status);
+
+    }
+
+    #line 250 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
 
-    #line 247 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 252 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     return;
 
 }
@@ -208,28 +218,43 @@ void build_tm_1_X_u8_failure_data(TMHandlerT * const p_tm_handler,
                                   MissionObt current_obt,
                                   __status_int32_t * const status) {
     
-    #line 258 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 263 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
 
-    #line 260 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 265 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     startup_tm(p_tm_handler);
 
-    #line 261 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 266 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
 
-    #line 262 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+    #line 267 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 268 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
 
-    #line 263 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u8_appdata_field(p_tm_handler, failure_code, status);
+    }
 
-    #line 264 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u8_appdata_field(p_tm_handler, failure_data, status);
+    #line 270 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 271 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u8_appdata_field(p_tm_handler, failure_code, status);
 
-    #line 265 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    }
+
+    #line 273 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 274 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u8_appdata_field(p_tm_handler, failure_data, status);
+
+    }
+
+    #line 277 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
 
-    #line 267 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 279 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     return;
 
 }
@@ -243,28 +268,43 @@ void build_tm_1_X_u16_failure_data(TMHandlerT * const p_tm_handler,
                                    MissionObt current_obt,
                                    __status_int32_t * const status) {
     
-    #line 278 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 290 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
 
-    #line 280 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 292 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     startup_tm(p_tm_handler);
 
-    #line 281 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 293 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
 
-    #line 282 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+    #line 294 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 295 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
 
-    #line 283 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u8_appdata_field(p_tm_handler, failure_code, status);
+    }
 
-    #line 284 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u16_appdata_field(p_tm_handler, failure_data, status);
+    #line 297 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 298 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u8_appdata_field(p_tm_handler, failure_code, status);
 
-    #line 285 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    }
+
+    #line 300 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 301 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u16_appdata_field(p_tm_handler, failure_data, status);
+
+    }
+
+    #line 304 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
 
-    #line 287 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 306 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     return;
 
 }
@@ -278,28 +318,43 @@ void build_tm_1_X_u32_failure_data(TMHandlerT * const p_tm_handler,
                                    MissionObt current_obt,
                                    __status_int32_t * const status) {
     
-    #line 298 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 317 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
 
-    #line 300 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 319 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     startup_tm(p_tm_handler);
 
-    #line 301 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 320 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
 
-    #line 302 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+    #line 321 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 322 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
 
-    #line 303 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u8_appdata_field(p_tm_handler, failure_code, status);
+    }
 
-    #line 304 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
-    append_u32_appdata_field(p_tm_handler, failure_data, status);
+    #line 324 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 325 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u8_appdata_field(p_tm_handler, failure_code, status);
 
-    #line 305 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    }
+
+    #line 327 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 328 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+        append_u32_appdata_field(p_tm_handler, failure_data, status);
+
+    }
+
+    #line 331 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
 
-    #line 307 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 333 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     return;
 
 }
@@ -315,31 +370,31 @@ void build_tm_1_X_u8_u32_failure_data(TMHandlerT * const p_tm_handler,
                                       MissionObt current_obt,
                                       __status_int32_t * const status) {
     
-    #line 320 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 346 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
 
-    #line 322 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 348 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     startup_tm(p_tm_handler);
 
-    #line 323 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 349 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
 
-    #line 324 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 350 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
 
-    #line 325 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 351 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     append_u8_appdata_field(p_tm_handler, failure_code, status);
 
-    #line 326 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 352 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     append_u8_appdata_field(p_tm_handler, failure_data1, status);
 
-    #line 327 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 353 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     append_u32_appdata_field(p_tm_handler, failure_data2, status);
 
-    #line 328 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 354 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
 
-    #line 330 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
+    #line 356 "src/service_libraries/pus_services/pus_service1/pus_service1_help.fin"
     return;
 
 }

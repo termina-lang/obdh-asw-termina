@@ -60,29 +60,19 @@ FoundID PUSService19__get_free_event_action_index(const __termina_event_t * cons
 
 FoundID PUSService19__is_ev_action_defined(const __termina_event_t * const __ev,
                                            const PUSService19 * const self,
-                                           _Bool * const enabled,
                                            uint16_t evID);
 
-PSExecTCReqStatus PUSService19__exec19_1TC(const __termina_event_t * const __ev,
-                                           PUSService19 * const self);
+__status_int32_t PUSService19__exec19_1TC(const __termina_event_t * const __ev,
+                                          PUSService19 * const self);
 
-PSExecTCReqStatus PUSService19__exec19_2TC(const __termina_event_t * const __ev,
-                                           PUSService19 * const self);
+__status_int32_t PUSService19__exec19_2TC(const __termina_event_t * const __ev,
+                                          PUSService19 * const self);
 
-PSExecTCReqStatus PUSService19__exec19_4TC(const __termina_event_t * const __ev,
-                                           PUSService19 * const self);
+__status_int32_t PUSService19__exec19_4TC(const __termina_event_t * const __ev,
+                                          PUSService19 * const self);
 
-PSExecTCReqStatus PUSService19__exec19_5TC(const __termina_event_t * const __ev,
-                                           PUSService19 * const self);
-
-PSExecTCReqStatus PUSService19__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                           const PUSService19 * const self);
-
-PSExecTCReqStatus PUSService19__manage_short_pack_length_error(const __termina_event_t * const __ev,
-                                                               const PUSService19 * const self);
-
-PSExecTCReqStatus PUSService19__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
-                                                                 const PUSService19 * const self);
+__status_int32_t PUSService19__exec19_5TC(const __termina_event_t * const __ev,
+                                          PUSService19 * const self);
 
 void PUSService19__exec_tc(const __termina_event_t * const __ev,
                            void * const __this, TCHandlerT * const tc_handler,
@@ -91,11 +81,6 @@ void PUSService19__exec_tc(const __termina_event_t * const __ev,
 void PUSService19__extract_action(const __termina_event_t * const __ev,
                                   void * const __this, size_t index,
                                   TCHandlerT * const action_packet);
-
-_Bool PUSService19__get_event_action_config(const __termina_event_t * const __ev,
-                                            const PUSService19 * const self,
-                                            uint16_t evID, size_t * const index,
-                                            _Bool * const enabled);
 
 void PUSService19__get_pending_action_number(const __termina_event_t * const __ev,
                                              void * const __this,

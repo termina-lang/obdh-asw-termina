@@ -43,17 +43,8 @@ MissionObt PUSService9__inner_get_current_obt(const __termina_event_t * const __
 void PUSService9__set_obt(const __termina_event_t * const __ev,
                           PUSService9 * const self);
 
-PSExecTCReqStatus PUSService9__exec9_129TC(const __termina_event_t * const __ev,
-                                           PUSService9 * const self);
-
-PSExecTCReqStatus PUSService9__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                          const PUSService9 * const self);
-
-PSExecTCReqStatus PUSService9__manage_short_pack_length_error(const __termina_event_t * const __ev,
-                                                              const PUSService9 * const self);
-
-PSExecTCReqStatus PUSService9__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
-                                                                const PUSService9 * const self);
+__status_int32_t PUSService9__exec9_129TC(const __termina_event_t * const __ev,
+                                          PUSService9 * const self);
 
 void PUSService9__exec_tc(const __termina_event_t * const __ev,
                           void * const __this, TCHandlerT * const tc_handler,

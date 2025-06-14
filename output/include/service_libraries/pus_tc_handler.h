@@ -16,8 +16,6 @@ typedef struct {
     size_t app_data_index;
 } TCHandlerT;
 
-TCHandlerT tc_handler_init();
-
 void tc_handler_build_from_descriptor(TCHandlerT * const tc_handler,
                                       const TCDescriptorT * const telecommand);
 

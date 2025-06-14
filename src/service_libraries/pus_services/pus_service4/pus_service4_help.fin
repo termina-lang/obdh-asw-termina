@@ -45,3 +45,31 @@ constexpr ps4_init_tc_req_status_update : PS4ExecTCReqStatusUpdate = {
     PID = 0,
     valid_index = 0
 };
+
+struct IndexStatus {
+    index : usize;
+    status : Status<i32>;
+};
+
+
+function build_tm_4_2(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, index: usize, N : u8, stats_config_table : &StatsConfig, param_stats : &[StatsDef; max_num_of_stats], current_obt: MissionObt, status : &mut Status<i32>) {
+
+    startup_tm(p_tm_handler);
+    
+    append_u32_appdata_field(p_tm_handler, stats_config_table->start_time[index].seconds, status);
+    append_u32_appdata_field(p_tm_handler, current_obt.seconds, status);
+    append_u8_appdata_field(p_tm_handler, N, status);
+    append_u16_appdata_field(p_tm_handler, stats_config_table->PID[index], status);
+    append_u32_appdata_field(p_tm_handler, param_stats[index].samples, status);
+    append_u32_appdata_field(p_tm_handler, param_stats[index].max, status);
+    append_u32_appdata_field(p_tm_handler, param_stats[index].max_obt.seconds, status);
+    append_u32_appdata_field(p_tm_handler, param_stats[index].min, status);
+    append_u32_appdata_field(p_tm_handler, param_stats[index].min_obt.seconds, status);
+    append_u32_appdata_field(p_tm_handler, param_stats[index].mean_value, status);
+
+    if(*status is Success) {
+        close_tm(p_tm_handler, 4, 2, tm_seq_counter, current_obt);
+    }
+
+    return;
+}

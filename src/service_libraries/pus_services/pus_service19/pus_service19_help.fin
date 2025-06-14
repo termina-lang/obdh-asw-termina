@@ -32,6 +32,7 @@ struct PS19TCData {
 struct FoundID {
     found : bool;
     ev_action_index : usize;
+    enabled : bool;
 };
 
 struct PS19ExecTCReqStatusUpdate {
@@ -51,7 +52,8 @@ constexpr ps19_init_tc_req_status_update : PS19ExecTCReqStatusUpdate = {
     },
     ev_action_ID = {
         found = false,
-        ev_action_index = 0
+        ev_action_index = 0,
+        enabled = false
     },
     action_tc_packet = {
         tc_bytes = [0 ; max_tc_size],

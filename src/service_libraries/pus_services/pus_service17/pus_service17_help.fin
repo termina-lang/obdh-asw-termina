@@ -29,3 +29,12 @@ constexpr ps17_init_tc_req_status_update : PS17ExecTCReqStatusUpdate = {
     packet_error_ctrl = 0,
     flags_ack = 0
 };
+
+
+function build_tm_17_2(p_tm_handler : &mut TMHandlerT,
+                tm_seq_counter : u16, current_obt : MissionObt){
+
+    startup_tm(p_tm_handler);
+    close_tm(p_tm_handler, 17, 2, tm_seq_counter, current_obt);
+    return;
+}

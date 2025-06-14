@@ -35,27 +35,11 @@ typedef struct {
     PSExecTCReqStatus exec_tc_req_status;
 } PUSService17;
 
-void PUSService17__build_tm_17_2(const __termina_event_t * const __ev,
-                                 const PUSService17 * const self,
-                                 TMHandlerT * const p_tm_handler,
-                                 uint16_t tm_seq_counter);
-
-PSExecTCReqStatus PUSService17__exec17_1TC(const __termina_event_t * const __ev,
-                                           PUSService17 * const self);
-
-PSExecTCReqStatus PUSService17__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                           const PUSService17 * const self);
-
-PSExecTCReqStatus PUSService17__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
-                                                                 const PUSService17 * const self);
+__status_int32_t PUSService17__exec17_1TC(const __termina_event_t * const __ev,
+                                          PUSService17 * const self);
 
 void PUSService17__exec_tc(const __termina_event_t * const __ev,
                            void * const __this, TCHandlerT * const tc_handler,
                            __status_int32_t * const action_status);
-
-PS17ExecTCReqStatusUpdate PUSService17__get_TC_params(const __termina_event_t * const __ev,
-                                                      const PUSService17 * const self,
-                                                      TCHandlerT * const tc_handler,
-                                                      uint8_t * const subtype);
 
 #endif

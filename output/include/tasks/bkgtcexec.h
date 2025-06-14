@@ -43,11 +43,6 @@ typedef struct {
 
 void __PUSBKGTCExecutor__termina_task(void * const arg);
 
-void PUSBKGTCExecutor__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                  const PUSBKGTCExecutor * const self,
-                                                  const TCHandlerT * const tc_handler,
-                                                  __status_int32_t * const status);
-
 __status_int32_t PUSBKGTCExecutor__exec_tc(const __termina_event_t * const __ev,
                                            void * const __this,
                                            __termina_box_t tc_handler);

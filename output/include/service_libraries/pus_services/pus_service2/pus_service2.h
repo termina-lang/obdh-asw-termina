@@ -46,17 +46,8 @@ __status_int32_t PUSService2__dev_drv_on_off(const __termina_event_t * const __e
 _Bool PUSService2__device_drv_is_on_off_address_valid(const __termina_event_t * const __ev,
                                                       const PUSService2 * const self);
 
-PSExecTCReqStatus PUSService2__exec2_1TC(const __termina_event_t * const __ev,
-                                         PUSService2 * const self);
-
-PSExecTCReqStatus PUSService2__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                          const PUSService2 * const self);
-
-PSExecTCReqStatus PUSService2__manage_short_pack_length_error(const __termina_event_t * const __ev,
-                                                              const PUSService2 * const self);
-
-PSExecTCReqStatus PUSService2__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
-                                                                const PUSService2 * const self);
+__status_int32_t PUSService2__exec2_1TC(const __termina_event_t * const __ev,
+                                        PUSService2 * const self);
 
 void PUSService2__exec_tc(const __termina_event_t * const __ev,
                           void * const __this, TCHandlerT * const tc_handler,

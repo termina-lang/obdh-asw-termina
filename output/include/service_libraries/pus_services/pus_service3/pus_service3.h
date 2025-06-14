@@ -46,36 +46,21 @@ typedef struct {
     HKConfiguration hk_config_table[8U];
 } PUSService3;
 
-void PUSService3__build_tm_3_25(const __termina_event_t * const __ev,
-                                const PUSService3 * const self,
-                                TMHandlerT * const p_tm_handler,
-                                uint16_t tm_seq_counter, size_t index,
-                                __status_int32_t * const status);
-
 void PUSService3__do_hk(const __termina_event_t * const __ev,
                         void * const __this,
                         __status_int32_t * const action_status);
 
 IndexFound PUSService3__get_SIDindex(const __termina_event_t * const __ev,
-                                     PUSService3 * const self);
+                                     const PUSService3 * const self);
 
-PSExecTCReqStatus PUSService3__exec3_31TC(const __termina_event_t * const __ev,
-                                          PUSService3 * const self);
-
-PSExecTCReqStatus PUSService3__exec3_5TC(const __termina_event_t * const __ev,
+__status_int32_t PUSService3__exec3_31TC(const __termina_event_t * const __ev,
                                          PUSService3 * const self);
 
-PSExecTCReqStatus PUSService3__exec3_6TC(const __termina_event_t * const __ev,
-                                         PUSService3 * const self);
+__status_int32_t PUSService3__exec3_5TC(const __termina_event_t * const __ev,
+                                        PUSService3 * const self);
 
-PSExecTCReqStatus PUSService3__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                          const PUSService3 * const self);
-
-PSExecTCReqStatus PUSService3__manage_short_pack_length_error(const __termina_event_t * const __ev,
-                                                              const PUSService3 * const self);
-
-PSExecTCReqStatus PUSService3__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
-                                                                const PUSService3 * const self);
+__status_int32_t PUSService3__exec3_6TC(const __termina_event_t * const __ev,
+                                        PUSService3 * const self);
 
 void PUSService3__exec_tc(const __termina_event_t * const __ev,
                           void * const __this, TCHandlerT * const tc_handler,

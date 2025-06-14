@@ -57,12 +57,6 @@ _Bool PUSService12__PID_is_below_lower_limit(const __termina_event_t * const __e
                                              const PUSService12 * const self,
                                              const ParamLimitCheckDefinition * const limit_check_def);
 
-void PUSService12__build_tm_12_12(const __termina_event_t * const __ev,
-                                  const PUSService12 * const self,
-                                  TMHandlerT * const p_tm_handler,
-                                  uint16_t tm_seq_counter,
-                                  __status_int32_t * const status);
-
 void PUSService12__add_monitoring_transition(const __termina_event_t * const __ev,
                                              PUSService12 * const self);
 
@@ -121,39 +115,20 @@ void PUSService12__do_monitoring(const __termina_event_t * const __ev,
                                  FaultInfo * const fault_info,
                                  _Bool * const event_triggered);
 
-PSExecTCReqStatus PUSService12__exec12_1TC(const __termina_event_t * const __ev,
-                                           PUSService12 * const self);
+__status_int32_t PUSService12__exec12_1TC(const __termina_event_t * const __ev,
+                                          PUSService12 * const self);
 
 void PUSService12__set_unchecked(const __termina_event_t * const __ev,
                                  PUSService12 * const self);
 
-PSExecTCReqStatus PUSService12__exec12_2TC(const __termina_event_t * const __ev,
-                                           PUSService12 * const self);
+__status_int32_t PUSService12__exec12_2TC(const __termina_event_t * const __ev,
+                                          PUSService12 * const self);
 
-PSExecTCReqStatus PUSService12__exec12_5TC(const __termina_event_t * const __ev,
-                                           PUSService12 * const self);
+__status_int32_t PUSService12__exec12_5TC(const __termina_event_t * const __ev,
+                                          PUSService12 * const self);
 
-PSExecTCReqStatus PUSService12__exec12_6TC(const __termina_event_t * const __ev,
-                                           PUSService12 * const self);
-
-MonitorDefinition PUSService12__get_PMON_limit_check_definition(const __termina_event_t * const __ev,
-                                                                const PUSService12 * const self,
-                                                                TCHandlerT * const tc_handler,
-                                                                __status_int32_t * const status);
-
-MonitorDefinition PUSService12__get_PMON_value_check_definition(const __termina_event_t * const __ev,
-                                                                const PUSService12 * const self,
-                                                                TCHandlerT * const tc_handler,
-                                                                __status_int32_t * const status);
-
-PSExecTCReqStatus PUSService12__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                           const PUSService12 * const self);
-
-PSExecTCReqStatus PUSService12__manage_short_pack_length_error(const __termina_event_t * const __ev,
-                                                               const PUSService12 * const self);
-
-PSExecTCReqStatus PUSService12__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
-                                                                 const PUSService12 * const self);
+__status_int32_t PUSService12__exec12_6TC(const __termina_event_t * const __ev,
+                                          PUSService12 * const self);
 
 void PUSService12__exec_tc(const __termina_event_t * const __ev,
                            void * const __this, TCHandlerT * const tc_handler,

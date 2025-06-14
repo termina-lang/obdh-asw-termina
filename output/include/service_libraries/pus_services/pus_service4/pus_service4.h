@@ -56,18 +56,11 @@ _Bool PUSService4__SDP_param_lower_than_limit(const __termina_event_t * const __
 __status_int32_t PUSService4__get_PID_defined_stats_index(const __termina_event_t * const __ev,
                                                           PUSService4 * const self);
 
-__status_int32_t PUSService4__get_free_index(const __termina_event_t * const __ev,
-                                             const PUSService4 * const self,
-                                             size_t * const index);
+IndexStatus PUSService4__get_free_index(const __termina_event_t * const __ev,
+                                        const PUSService4 * const self);
 
 __status_int32_t PUSService4__add_PID_stats(const __termina_event_t * const __ev,
                                             PUSService4 * const self);
-
-void PUSService4__build_tm_4_2(const __termina_event_t * const __ev,
-                               const PUSService4 * const self,
-                               TMHandlerT * const p_tm_handler,
-                               uint16_t tm_seq_counter, size_t index,
-                               __status_int32_t * const status);
 
 __status_int32_t PUSService4__delete_PID_stats(const __termina_event_t * const __ev,
                                                PUSService4 * const self);
@@ -75,23 +68,14 @@ __status_int32_t PUSService4__delete_PID_stats(const __termina_event_t * const _
 void PUSService4__delete_all_stats(const __termina_event_t * const __ev,
                                    PUSService4 * const self);
 
-PSExecTCReqStatus PUSService4__exec4_1TC(const __termina_event_t * const __ev,
-                                         PUSService4 * const self);
+__status_int32_t PUSService4__exec4_1TC(const __termina_event_t * const __ev,
+                                        PUSService4 * const self);
 
-PSExecTCReqStatus PUSService4__exec4_6TC(const __termina_event_t * const __ev,
-                                         PUSService4 * const self);
+__status_int32_t PUSService4__exec4_6TC(const __termina_event_t * const __ev,
+                                        PUSService4 * const self);
 
-PSExecTCReqStatus PUSService4__exec4_7TC(const __termina_event_t * const __ev,
-                                         PUSService4 * const self);
-
-PSExecTCReqStatus PUSService4__manage_error_in_acceptance(const __termina_event_t * const __ev,
-                                                          const PUSService4 * const self);
-
-PSExecTCReqStatus PUSService4__manage_short_pack_length_error(const __termina_event_t * const __ev,
-                                                              const PUSService4 * const self);
-
-PSExecTCReqStatus PUSService4__manage_tm_limit_app_data_reached(const __termina_event_t * const __ev,
-                                                                const PUSService4 * const self);
+__status_int32_t PUSService4__exec4_7TC(const __termina_event_t * const __ev,
+                                        PUSService4 * const self);
 
 void PUSService4__exec_tc(const __termina_event_t * const __ev,
                           void * const __this, TCHandlerT * const tc_handler,

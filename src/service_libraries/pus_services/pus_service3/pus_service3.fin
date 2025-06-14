@@ -30,7 +30,7 @@ resource class PUSService3 provides PUSS3Iface {
 
     random_seed : u32;
 
-    method get_SIDindex (&priv self) -> IndexFound {
+    viewer get_SIDindex (&self) -> IndexFound {
 
         var index_found: IndexFound = {found = false, index = 0};
 
@@ -45,10 +45,10 @@ resource class PUSService3 provides PUSS3Iface {
         return index_found;
     }
 
-    method exec3_5TC(&priv self)-> PSExecTCReqStatus {
+    method exec3_5TC(&priv self)-> Status<i32> {
 
         var ack_enabled : bool = false;
-        var next_status : PSExecTCReqStatus = {exec_tc_status = PSReqStatus::Exit, status = Success};
+        var status : Status<i32> = Success;
 
         var current_obt: MissionObt = {seconds = 0, finetime = 0};
 
@@ -66,11 +66,11 @@ resource class PUSService3 provides PUSS3Iface {
 
                     self->pus_service_9.get_current_obt(&mut current_obt);
                     build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 self->exec_tc_req_status_update.tc_data.N, current_obt, &mut next_status.status);
+                                 self->exec_tc_req_status_update.tc_data.N, current_obt, &mut status);
                     
-                    if (next_status.status is Success){
+                    if (status is Success){
 
-                        self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
+                        self->tm_channel.send_tm(b_tm_handler, &mut status);
 
                     } 
                     else {
@@ -85,13 +85,13 @@ resource class PUSService3 provides PUSS3Iface {
                     if (self->exec_tc_req_status_update.index.found){
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
-                        build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut next_status.status, &mut ack_enabled);
+                        build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
 
                         if (ack_enabled) {
 
-                            if (next_status.status is Success){
+                            if (status is Success){
 
-                                self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
+                                self->tm_channel.send_tm(b_tm_handler, &mut status);
 
                             }
                             else {
@@ -116,13 +116,13 @@ resource class PUSService3 provides PUSS3Iface {
                                 var tm_count2 : u16 = 0 : u16;
                                 self->tm_counter.get_next_tm_count(&mut tm_count2);
                                 self->pus_service_9.get_current_obt(&mut current_obt);
-                                build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut next_status.status, &mut ack_enabled);
+                                build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
 
                                 if (ack_enabled) {
 
-                                    if (next_status.status is Success){
+                                    if (status is Success){
 
-                                        self->tm_channel.send_tm(b_tm_handler2, &mut next_status.status);
+                                        self->tm_channel.send_tm(b_tm_handler2, &mut status);
 
                                     }
                                     else {
@@ -135,7 +135,7 @@ resource class PUSService3 provides PUSS3Iface {
                         
                             }
                             case None => {
-                                next_status.status = Failure(TM_POOL_ALLOC_FAILURE);
+                                status = Failure(TM_POOL_ALLOC_FAILURE);
                             }
                         }
 
@@ -143,11 +143,11 @@ resource class PUSService3 provides PUSS3Iface {
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
                         build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                     self->exec_tc_req_status_update.tc_data.SID, current_obt, &mut next_status.status);
+                                     self->exec_tc_req_status_update.tc_data.SID, current_obt, &mut status);
 
-                        if (next_status.status is Success){
+                        if (status is Success){
 
-                            self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
+                            self->tm_channel.send_tm(b_tm_handler, &mut status);
 
                         } 
                         else {
@@ -160,18 +160,18 @@ resource class PUSService3 provides PUSS3Iface {
             }
             case None => {
 
-                next_status.status = Failure(TM_POOL_ALLOC_FAILURE);
+                status = Failure(TM_POOL_ALLOC_FAILURE);
 
             }
         }
  
-        return next_status;
+        return status;
     }
 
-    method exec3_6TC(&priv self) -> PSExecTCReqStatus {
+    method exec3_6TC(&priv self) -> Status<i32> {
 
         var ack_enabled : bool = false;
-        var next_status : PSExecTCReqStatus = {exec_tc_status = PSReqStatus::Exit, status = Success};
+        var status : Status<i32> = Success;
 
         var current_obt: MissionObt = {seconds = 0, finetime = 0};
 
@@ -189,11 +189,11 @@ resource class PUSService3 provides PUSS3Iface {
 
                     self->pus_service_9.get_current_obt(&mut current_obt);
                     build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 self->exec_tc_req_status_update.tc_data.N, current_obt, &mut next_status.status);
+                                 self->exec_tc_req_status_update.tc_data.N, current_obt, &mut status);
 
-                    if (next_status.status is Success){
+                    if (status is Success){
 
-                        self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
+                        self->tm_channel.send_tm(b_tm_handler, &mut status);
 
                     } 
                     else {
@@ -209,13 +209,13 @@ resource class PUSService3 provides PUSS3Iface {
                     if (self->exec_tc_req_status_update.index.found){
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
-                        build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut next_status.status, &mut ack_enabled);
+                        build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
                         
                         if (ack_enabled) {
 
-                            if (next_status.status is Success){
+                            if (status is Success){
 
-                                self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
+                                self->tm_channel.send_tm(b_tm_handler, &mut status);
 
                             }
                             else {
@@ -239,13 +239,13 @@ resource class PUSService3 provides PUSS3Iface {
                                 var tm_count2 : u16 = 0 : u16;
                                 self->tm_counter.get_next_tm_count(&mut tm_count2);
                                 self->pus_service_9.get_current_obt(&mut current_obt);
-                                build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut next_status.status, &mut ack_enabled);
+                                build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
                                 
                                 if (ack_enabled) {
 
-                                    if (next_status.status is Success){
+                                    if (status is Success){
 
-                                        self->tm_channel.send_tm(b_tm_handler2, &mut next_status.status);
+                                        self->tm_channel.send_tm(b_tm_handler2, &mut status);
                                     }
                                     else {
                                         self->a_tm_handler_pool.free(b_tm_handler2);
@@ -256,7 +256,7 @@ resource class PUSService3 provides PUSS3Iface {
                                 }
                             }
                             case None => {
-                                next_status.status = Failure(TM_POOL_ALLOC_FAILURE);
+                                status = Failure(TM_POOL_ALLOC_FAILURE);
                             }
                         }
 
@@ -264,11 +264,11 @@ resource class PUSService3 provides PUSS3Iface {
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
                         build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                     self->exec_tc_req_status_update.tc_data.SID, current_obt, &mut next_status.status);
+                                     self->exec_tc_req_status_update.tc_data.SID, current_obt, &mut status);
 
-                        if (next_status.status is Success){
+                        if (status is Success){
 
-                            self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
+                            self->tm_channel.send_tm(b_tm_handler, &mut status);
 
                         } 
                         else {
@@ -280,18 +280,18 @@ resource class PUSService3 provides PUSS3Iface {
             }
             case None => {
 
-                next_status.status = Failure(TM_POOL_ALLOC_FAILURE);
+                status = Failure(TM_POOL_ALLOC_FAILURE);
 
             }
         }
 
-        return next_status;
+        return status;
     }
 
-    method exec3_31TC(&priv self) -> PSExecTCReqStatus {
+    method exec3_31TC(&priv self) -> Status<i32> {
 
         var ack_enabled : bool = false;
-        var next_status : PSExecTCReqStatus = {exec_tc_status = PSReqStatus::Exit, status = Success};
+        var status : Status<i32> = Success;
 
         var current_obt: MissionObt = {seconds = 0, finetime = 0};
 
@@ -309,11 +309,11 @@ resource class PUSService3 provides PUSS3Iface {
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
                         build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                         self->exec_tc_req_status_update.tc_data.N, current_obt, &mut next_status.status);
+                                         self->exec_tc_req_status_update.tc_data.N, current_obt, &mut status);
 
-                        if (next_status.status is Success){
+                        if (status is Success){
 
-                            self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
+                            self->tm_channel.send_tm(b_tm_handler, &mut status);
 
                         } 
                         else {
@@ -328,13 +328,13 @@ resource class PUSService3 provides PUSS3Iface {
                         if (self->exec_tc_req_status_update.index.found){
 
                             self->pus_service_9.get_current_obt(&mut current_obt);
-                            build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut next_status.status, &mut ack_enabled);
+                            build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
 
                             if (ack_enabled) {
 
-                                if (next_status.status is Success){
+                                if (status is Success){
 
-                                    self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
+                                    self->tm_channel.send_tm(b_tm_handler, &mut status);
 
                                 }
                                 else {
@@ -360,13 +360,13 @@ resource class PUSService3 provides PUSS3Iface {
                                     self->tm_counter.get_next_tm_count(&mut tm_count2);
 
                                     self->pus_service_9.get_current_obt(&mut current_obt);
-                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut next_status.status, &mut ack_enabled);
+                                    build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
                                     
                                     if (ack_enabled) {
 
-                                        if (next_status.status is Success){
+                                        if (status is Success){
 
-                                            self->tm_channel.send_tm(b_tm_handler2, &mut next_status.status);
+                                            self->tm_channel.send_tm(b_tm_handler2, &mut status);
 
                                         }
                                         else {
@@ -379,7 +379,7 @@ resource class PUSService3 provides PUSS3Iface {
                                     }
                                 }
                                 case None => {
-                                    next_status.status = Failure(TM_POOL_ALLOC_FAILURE);
+                                    status = Failure(TM_POOL_ALLOC_FAILURE);
                                 }
                             }
 
@@ -387,10 +387,10 @@ resource class PUSService3 provides PUSS3Iface {
 
                             self->pus_service_9.get_current_obt(&mut current_obt);
                             build_tm_1_4_SID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                                 self->exec_tc_req_status_update.tc_data.SID, current_obt, &mut next_status.status);
-                            if (next_status.status is Success){
+                                                 self->exec_tc_req_status_update.tc_data.SID, current_obt, &mut status);
+                            if (status is Success){
 
-                                self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
+                                self->tm_channel.send_tm(b_tm_handler, &mut status);
 
                             } 
                             else {
@@ -402,181 +402,24 @@ resource class PUSService3 provides PUSS3Iface {
                 }
                 case None => {
 
-                    next_status.status = Failure(TM_POOL_ALLOC_FAILURE);
+                    status = Failure(TM_POOL_ALLOC_FAILURE);
 
                 }
             }
 
-        return next_status;
+        return status;
     }
 
-
-
-    viewer build_tm_3_25(&self, p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, index: usize, status : &mut Status<i32>) {
-
-        startup_tm(p_tm_handler);
-        append_u16_appdata_field(p_tm_handler, self->hk_config_table[index].SID, status);
-
-        var PID : u16 = 0;
-        var u32_SDP_value : u32 = 0;
-        var u8_SDP_value : u8 = 0;
-
-        for j : usize in 0 .. max_params_per_SID while (j < (self->hk_config_table[index].num_params as usize)) {
-
-            PID = self->hk_config_table[index].params_def[j];
-            var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
-
-            match item_type {
-                case u8_t => {
-                    self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
-                    append_u8_appdata_field(p_tm_handler, u8_SDP_value, status);
-                }
-                case u32_t => {
-                    self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
-                    append_u32_appdata_field(p_tm_handler, u32_SDP_value, status);
-                }
-                case NoValidPID => {
-                    *status = Failure(SDP_ITEM_TYPE_ERROR);
-                }
-            }
-    
-        }
-
-        var current_obt: MissionObt = {seconds = 0, finetime = 0};
-        self->pus_service_9.get_current_obt(&mut current_obt);
-
-        close_tm(p_tm_handler, 3, 25, tm_seq_counter, current_obt);
-
-
-	    return;
-    }
-
-
-
-    viewer manage_short_pack_length_error(&self) -> PSExecTCReqStatus {
-
-        var next_status : PSExecTCReqStatus = {exec_tc_status = PSReqStatus::Exit, status = Success};
-
-        var current_obt: MissionObt = {seconds = 0, finetime = 0};
-        
-        var tm_handler : Option<box TMHandlerT> = None;
-        self->a_tm_handler_pool.alloc(&mut tm_handler);
-
-        match tm_handler {
-
-            case Some(b_tm_handler) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
-
-                self->pus_service_9.get_current_obt(&mut current_obt);
-                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                             (self->exec_tc_req_status_update.tc_data.tc_num_bytes), current_obt, &mut next_status.status);
-
-                if (next_status.status is Success){
-
-                    self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
-
-                } 
-                else {
-                    self->a_tm_handler_pool.free(b_tm_handler);
-
-                }
-            }
-            case None => {
-                next_status.status = Failure(TM_POOL_ALLOC_FAILURE);
-            }
-        }
-
-        return next_status;
-    }
-
-    viewer manage_error_in_acceptance(&self) -> PSExecTCReqStatus {
-
-        var next_status : PSExecTCReqStatus = {exec_tc_status = PSReqStatus::Exit, status = Success};
-
-        var current_obt : MissionObt = {seconds = 0, finetime = 0};
-
-        var tm_handler : Option<box TMHandlerT> = None;
-        self->a_tm_handler_pool.alloc(&mut tm_handler);
-
-        match tm_handler {
-
-            case Some(b_tm_handler) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
-
-                self->pus_service_9.get_current_obt(&mut current_obt);
-                build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 current_obt, &mut next_status.status);
-                
-                if (next_status.status is Success){
-
-                    self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
-
-                } 
-                else {
-                    self->a_tm_handler_pool.free(b_tm_handler);
-                        
-                }
-                
-            }
-            case None => {
-                next_status.status = Failure(TM_POOL_ALLOC_FAILURE);
-            }
-        }
-
-        return next_status;
-    }
-
-    viewer manage_tm_limit_app_data_reached(&self) -> PSExecTCReqStatus {
-
-        var next_status : PSExecTCReqStatus = {exec_tc_status = PSReqStatus::Exit, status = Success};
-
-        var current_obt : MissionObt = {seconds = 0, finetime = 0};
-
-        var tm_handler : Option<box TMHandlerT> = None;
-        self->a_tm_handler_pool.alloc(&mut tm_handler);
-
-        match tm_handler {
-
-            case Some(b_tm_handler) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
-
-                self->pus_service_9.get_current_obt(&mut current_obt);
-                build_tm_1_8_tm_exceed_limit_appdata(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 current_obt, &mut next_status.status);
-                
-                if (next_status.status is Success){
-
-                    self->tm_channel.send_tm(b_tm_handler, &mut next_status.status);
-
-                } 
-                else {
-                    self->a_tm_handler_pool.free(b_tm_handler);
-                       
-                }
-                
-            }
-            case None => {
-                next_status.status = Failure(TM_POOL_ALLOC_FAILURE);
-            }
-        }
-
-        return next_status;
-    }
 
 
     procedure exec_tc(&mut self, tc_handler : &mut TCHandlerT, action_status: &mut Status<i32>){
 
+        var status : Status<i32> = Success;
         var subtype : u8 = tc_handler->df_header.subtype;
 
-        for i : usize in 0 .. 3 while (self->exec_tc_req_status.exec_tc_status is PSReqStatus::Exit == false) {
+        for i : usize in 0 .. 3 while (self->exec_tc_req_status is PSExecTCReqStatus::Exit == false) {
 
-            match self->exec_tc_req_status.exec_tc_status {
+            match self->exec_tc_req_status {
 
                 case Init => {
 
@@ -584,45 +427,50 @@ resource class PUSService3 provides PUSS3Iface {
                     self->exec_tc_req_status_update.tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
                     self->exec_tc_req_status_update.tc_data.flags_ack = tc_handler->df_header.flag_ver_ack;
                     self->exec_tc_req_status_update.tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
-                    self->exec_tc_req_status.status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.N));
-                    self->exec_tc_req_status.status = tc_handler_get_u16_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.SID));
+                    status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.N));
+                    if (status is Success){
+                        status = tc_handler_get_u16_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.SID));
+                    }
+                    
 
-                    if (subtype == 31) {
+                    if (subtype == 31 && (status is Success)) {
 
-                        self->exec_tc_req_status.status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.collection_interval));
+                        status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.collection_interval));
 
                     }
 
-                    if (self->exec_tc_req_status.status is Success) {
+                    if (status is Success) {
 
-                        self->exec_tc_req_status.exec_tc_status = PSReqStatus::ExecTC;
+                        self->exec_tc_req_status = PSExecTCReqStatus::ExecTC;
                         
                     } else {
 
-                        self->exec_tc_req_status.status = Failure(ACCEPTANCE_ERROR);
-                        self->exec_tc_req_status.exec_tc_status = PSReqStatus::Exit;
+                        status = Failure(ACCEPTANCE_ERROR);
+                        self->exec_tc_req_status = PSExecTCReqStatus::Exit;
                         
                     }
 
                 }
                 case ExecTC => {
 
+                    self->exec_tc_req_status = PSExecTCReqStatus::Exit;
+
                     if (subtype == 5) {
 
-                        self->exec_tc_req_status = self->exec3_5TC();
+                        status = self->exec3_5TC();
 
                     } else if (subtype == 6) {
 
-                        self->exec_tc_req_status = self->exec3_6TC();
+                        status = self->exec3_6TC();
 
                     } else if (subtype == 31) {
 
-                        self->exec_tc_req_status = self->exec3_31TC();
+                        status = self->exec3_31TC();
 
                     } else {
 
-                        self->exec_tc_req_status.status = Failure(ACCEPTANCE_ERROR);
-                        self->exec_tc_req_status.exec_tc_status = PSReqStatus::Exit;
+                        status = Failure(ACCEPTANCE_ERROR);
+                
                     }
 
                 }
@@ -633,7 +481,7 @@ resource class PUSService3 provides PUSS3Iface {
         }
 
 
-        match self->exec_tc_req_status.status {
+        match status {
                         
             case Success => {
 
@@ -642,23 +490,61 @@ resource class PUSService3 provides PUSS3Iface {
             }
             case Failure(error_code) => {
 
-                if (error_code == ACCEPTANCE_ERROR) {
+                if (error_code == ACCEPTANCE_ERROR || error_code == BUILD_TM_ERROR || error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
 
-                    //Generar TM[1,4] error en la aceptación
-                    self->exec_tc_req_status = self->manage_error_in_acceptance();
-                        
-                } else if (error_code == BUILD_TM_ERROR) {
+                    *action_status = Success;
 
-                    //Generar TM[1,8] error en la generación de TM
-                    self->exec_tc_req_status = self->manage_tm_limit_app_data_reached();
-                    
-                } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+                    var tm_handler : Option<box TMHandlerT> = None;
+                    self->a_tm_handler_pool.alloc(&mut tm_handler);
 
-                    self->exec_tc_req_status = self->manage_short_pack_length_error();
+                    match tm_handler {
 
-                } else if (error_code == SDP_ITEM_TYPE_ERROR) {
+                        case Some(b_tm_handler) => {
 
-                    //TO DO: Manage Invalid PID
+                            var tm_count : u16 = 0 : u16;
+                            var current_obt : MissionObt = {seconds = 0, finetime = 0};
+                            
+                            self->tm_counter.get_next_tm_count(&mut tm_count);
+                            self->pus_service_9.get_current_obt(&mut current_obt);
+
+                            if (error_code == ACCEPTANCE_ERROR) {
+
+                                build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
+                                 current_obt, &mut status);
+
+                            } else if (error_code == BUILD_TM_ERROR) {
+
+                                build_tm_1_8_tm_exceed_limit_appdata(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
+                                            current_obt, &mut status);
+
+                            } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+
+                                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
+                                    (self->exec_tc_req_status_update.tc_data.tc_num_bytes), current_obt, &mut status);
+
+                            } else {
+                              
+
+                            }
+
+                            
+                            
+                            if (status is Success){
+
+                                self->tm_channel.send_tm(b_tm_handler, &mut status);
+
+                            } 
+                            else {
+                                self->a_tm_handler_pool.free(b_tm_handler);
+                                
+                            }
+                            
+                        }
+                        case None => {
+                            status = Failure(TM_POOL_ALLOC_FAILURE);
+                        }
+                    }
+
                     
                 } else {
                     
@@ -668,10 +554,7 @@ resource class PUSService3 provides PUSS3Iface {
             }  
         }
 
-        self->exec_tc_req_status = {
-                    exec_tc_status = PSReqStatus::Init,
-                    status = Success
-                };
+        self->exec_tc_req_status = PSExecTCReqStatus::Init;
         
 
         return;
@@ -704,7 +587,41 @@ resource class PUSService3 provides PUSS3Iface {
                         var tm_count : u16 = 0 : u16;
                         self->tm_counter.get_next_tm_count(&mut tm_count);
 
-                        self->build_tm_3_25(&mut b_tm_handler, tm_count, i, &mut do_hk_status);
+                        
+                        startup_tm(&mut b_tm_handler);
+                        append_u16_appdata_field(&mut b_tm_handler, self->hk_config_table[i].SID, &mut do_hk_status);
+
+                        var PID : u16 = 0;
+                        var u32_SDP_value : u32 = 0;
+                        var u8_SDP_value : u8 = 0;
+
+                        for j : usize in 0 .. max_params_per_SID while (j < (self->hk_config_table[i].num_params as usize)) {
+
+                            PID = self->hk_config_table[i].params_def[j];
+                            var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
+
+                            match item_type {
+                                case u8_t => {
+                                    self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
+                                    append_u8_appdata_field(&mut b_tm_handler, u8_SDP_value, &mut do_hk_status);
+                                }
+                                case u32_t => {
+                                    self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
+                                    append_u32_appdata_field(&mut b_tm_handler, u32_SDP_value, &mut do_hk_status);
+                                }
+                                case NoValidPID => {
+                                    do_hk_status = Failure(SDP_ITEM_TYPE_ERROR);
+                                }
+                            }
+                    
+                        }
+
+                        var current_obt: MissionObt = {seconds = 0, finetime = 0};
+                        self->pus_service_9.get_current_obt(&mut current_obt);
+
+                        close_tm(&mut b_tm_handler, 3, 25, tm_count, current_obt);
+
+
                         //Enviar telemetría a través del TM_CHANNEL
                         if (do_hk_status is Success) {
 

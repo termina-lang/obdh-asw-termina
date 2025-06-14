@@ -235,3 +235,101 @@ _Bool is_valid_check_limit_def(const MonitorDefinition * const param_limit_check
     return res;
 
 }
+
+void build_tm_12_12(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
+                    MissionObt current_obt, uint8_t counter,
+                    const ParamMonitoringTransition param_mon_transitions_table[1U],
+                    __status_int32_t * const status) {
+    
+    #line 346 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    startup_tm(p_tm_handler);
+
+    #line 347 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    append_u8_appdata_field(p_tm_handler, counter, status);
+
+    #line 349 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    for (size_t i = 0U; i < 1U && i < (size_t)counter; i = i + 1U) {
+        
+        #line 351 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        uint8_t aux_prev_status = 0U;
+
+        #line 352 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        uint8_t aux_new_status = 0U;
+
+        #line 354 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        append_u16_appdata_field(p_tm_handler,
+                                 param_mon_transitions_table[__termina_array__index(1U,
+                                                                                    i)].PMONID,
+                                 status);
+
+        #line 355 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        append_u16_appdata_field(p_tm_handler,
+                                 param_mon_transitions_table[__termina_array__index(1U,
+                                                                                    i)].PID,
+                                 status);
+
+        #line 356 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        uint8_t type_id = get_type_index(param_mon_transitions_table[__termina_array__index(1U,
+                                                                                            i)].type);
+
+        #line 357 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        append_u8_appdata_field(p_tm_handler, type_id, status);
+
+        #line 360 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        if (param_mon_transitions_table[__termina_array__index(1U,
+                                                               i)].type.__variant == MonitorCheckType__ExpectedValue) {
+            
+            #line 361 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+            append_u32_appdata_field(p_tm_handler,
+                                     param_mon_transitions_table[__termina_array__index(1U,
+                                                                                        i)].mask_value,
+                                     status);
+
+        }
+
+        #line 364 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        aux_prev_status = get_check_status_index(param_mon_transitions_table[__termina_array__index(1U,
+                                                                                                    i)].prev_status);
+
+        #line 365 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        aux_new_status = get_check_status_index(param_mon_transitions_table[__termina_array__index(1U,
+                                                                                                   i)].new_status);
+
+        #line 367 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        append_u32_appdata_field(p_tm_handler,
+                                 param_mon_transitions_table[__termina_array__index(1U,
+                                                                                    i)].new_value,
+                                 status);
+
+        #line 368 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        append_u32_appdata_field(p_tm_handler,
+                                 param_mon_transitions_table[__termina_array__index(1U,
+                                                                                    i)].limit_value,
+                                 status);
+
+        #line 369 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        append_u8_appdata_field(p_tm_handler, aux_prev_status, status);
+
+        #line 370 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        append_u8_appdata_field(p_tm_handler, aux_new_status, status);
+
+        #line 371 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        append_u32_appdata_field(p_tm_handler,
+                                 param_mon_transitions_table[__termina_array__index(1U,
+                                                                                    i)].trans_obt.seconds,
+                                 status);
+
+    }
+
+    #line 373 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    if ((*status).__variant == Success) {
+        
+        #line 374 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+        close_tm(p_tm_handler, 12U, 12U, tm_seq_counter, current_obt);
+
+    }
+
+    #line 378 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    return;
+
+}

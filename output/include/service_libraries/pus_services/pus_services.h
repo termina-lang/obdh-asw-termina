@@ -14,18 +14,13 @@
 #include "option.h"
 
 typedef enum {
-    PSReqStatus__Init,
-    PSReqStatus__ExecTC,
-    PSReqStatus__Exit
-} __enum_PSReqStatus_t;
+    PSExecTCReqStatus__Init,
+    PSExecTCReqStatus__ExecTC,
+    PSExecTCReqStatus__Exit
+} __enum_PSExecTCReqStatus_t;
 
 typedef struct {
-    __enum_PSReqStatus_t __variant;
-} PSReqStatus;
-
-typedef struct {
-    PSReqStatus exec_tc_status;
-    __status_int32_t status;
+    __enum_PSExecTCReqStatus_t __variant;
 } PSExecTCReqStatus;
 
 typedef struct {
