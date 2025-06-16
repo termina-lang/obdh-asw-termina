@@ -3,7 +3,8 @@
 
 const size_t num_actions_per_second = 2U;
 
-__status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
+__status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev,
+                                           HouseKeepingFDIR * const self) {
     
     #line 64 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     __status_int32_t result;
@@ -17,8 +18,8 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
     for (size_t i = 0U; i < 8U; i = i + 1U) {
         
         #line 70 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_12.is_PMON_enabled(self->pus_service_12.__that, i,
-                                             &is_monitor_enabled);
+        self->pus_service_12.is_PMON_enabled(__ev, self->pus_service_12.__that,
+                                             i, &is_monitor_enabled);
 
         #line 72 "src/tasks/hk_fdir_mng/hk_fdir.fin"
         if (is_monitor_enabled) {
@@ -35,7 +36,8 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
             _Bool event_triggered = 0;
 
             #line 78 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->pus_service_12.do_monitoring(self->pus_service_12.__that,
+            self->pus_service_12.do_monitoring(__ev,
+                                               self->pus_service_12.__that,
                                                (uint16_t)i, &evID, &fault_info,
                                                &event_triggered);
 
@@ -46,7 +48,8 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
                 _Bool is_Ev_ID_enabled = 0;
 
                 #line 83 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-                self->pus_service_5.is_Ev_ID_enabled_ext(self->pus_service_5.__that,
+                self->pus_service_5.is_Ev_ID_enabled_ext(__ev,
+                                                         self->pus_service_5.__that,
                                                          evID,
                                                          &is_Ev_ID_enabled);
 
@@ -54,12 +57,14 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
                 if (is_Ev_ID_enabled) {
                     
                     #line 87 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-                    self->pus_service_5.build_and_tx_tm_5_x(self->pus_service_5.__that,
+                    self->pus_service_5.build_and_tx_tm_5_x(__ev,
+                                                            self->pus_service_5.__that,
                                                             &result, evID,
                                                             fault_info);
 
                     #line 88 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-                    self->pus_service_19.manage_event_action(self->pus_service_19.__that,
+                    self->pus_service_19.manage_event_action(__ev,
+                                                             self->pus_service_19.__that,
                                                              evID);
 
                 }
@@ -75,9 +80,11 @@ __status_int32_t HouseKeepingFDIR__do_fdir(HouseKeepingFDIR * const self) {
 
 }
 
-__status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
+__status_int32_t HouseKeepingFDIR__do_hk_fdir(const __termina_event_t * const __ev,
+                                              void * const __this,
                                               TimeVal _current_time) {
     
+    #line 108 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
 
     #line 110 "src/tasks/hk_fdir_mng/hk_fdir.fin"
@@ -86,16 +93,16 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
     result.__variant = Success;
 
     #line 112 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->pus_service_3.update_params(self->pus_service_3.__that);
+    self->pus_service_3.update_params(__ev, self->pus_service_3.__that);
 
     #line 113 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->pus_service_4.update_all_stats(self->pus_service_4.__that);
+    self->pus_service_4.update_all_stats(__ev, self->pus_service_4.__that);
 
     #line 114 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->pus_service_3.do_hk(self->pus_service_3.__that, &result);
+    self->pus_service_3.do_hk(__ev, self->pus_service_3.__that, &result);
 
     #line 115 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    result = HouseKeepingFDIR__do_fdir(self);
+    result = HouseKeepingFDIR__do_fdir(__ev, self);
 
     #line 117 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     size_t pending_actions[4U];
@@ -106,7 +113,8 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
     }
 
     #line 118 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->pus_service_19.get_pending_action_number(self->pus_service_19.__that,
+    self->pus_service_19.get_pending_action_number(__ev,
+                                                   self->pus_service_19.__that,
                                                    pending_actions);
 
     #line 120 "src/tasks/hk_fdir_mng/hk_fdir.fin"
@@ -154,7 +162,7 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
         tc_handler.__variant = None;
 
         #line 145 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->a_tc_handler_pool.alloc(self->a_tc_handler_pool.__that,
+        self->a_tc_handler_pool.alloc(__ev, self->a_tc_handler_pool.__that,
                                       &tc_handler);
 
         #line 149 "src/tasks/hk_fdir_mng/hk_fdir.fin"
@@ -164,11 +172,12 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
             __termina_box_t b_tc_handler = tc_handler.Some.__0;
 
             #line 151 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->pus_service_19.extract_action(self->pus_service_19.__that, n,
+            self->pus_service_19.extract_action(__ev,
+                                                self->pus_service_19.__that, n,
                                                 (TCHandlerT *)b_tc_handler.data);
 
             #line 152 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            __termina_out_port__send(self->action_tc_message_queue_output,
+            __termina_out_port__send(__ev, self->action_tc_message_queue_output,
                                      (void *)&b_tc_handler);
 
         } else
@@ -188,150 +197,143 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(void * const __this,
 
 }
 
-void HouseKeepingFDIR__manage_error_in_acceptance(const HouseKeepingFDIR * const self,
-                                                  const TCHandlerT * const tc_handler,
-                                                  __status_int32_t * const ret) {
+__status_int32_t HouseKeepingFDIR__exec_tc(const __termina_event_t * const __ev,
+                                           void * const __this,
+                                           __termina_box_t tc_handler) {
     
     #line 173 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    MyResult result;
-    #line 173 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    result.__variant = MyResult__Ok;
+    HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
 
     #line 175 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    MissionObt current_obt;
+    __status_int32_t res;
     #line 175 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    current_obt.finetime = 0U;
-    #line 175 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    current_obt.seconds = 0U;
+    res.__variant = Success;
 
     #line 177 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    __option_box_t tm_handler;
-    #line 177 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    tm_handler.__variant = None;
+    uint8_t tc_type = (*(TCHandlerT *)tc_handler.data).df_header.type;
 
-    #line 178 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
-
-    #line 182 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (tm_handler.__variant == Some) {
+    #line 179 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (tc_type == 3U) {
         
-        #line 180 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+        #line 181 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        self->pus_service_3.exec_tc(__ev, self->pus_service_3.__that,
+                                    (TCHandlerT *)tc_handler.data, &res);
 
-        #line 184 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        uint16_t tm_count = 0U;
-
+    } else
+    #line 183 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (tc_type == 5U) {
+        
         #line 185 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        self->pus_service_5.exec_tc(__ev, self->pus_service_5.__that,
+                                    (TCHandlerT *)tc_handler.data, &res);
 
-        #line 187 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
-                                            &current_obt);
+    } else
+    #line 187 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (tc_type == 12U) {
+        
+        #line 189 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        self->pus_service_12.exec_tc(__ev, self->pus_service_12.__that,
+                                     (TCHandlerT *)tc_handler.data, &res);
 
-        #line 188 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
-                                         tm_count,
-                                         tc_handler->packet_header.packet_id,
-                                         tc_handler->packet_error_ctrl,
-                                         current_obt, &result);
+    } else
+    #line 191 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (tc_type == 19U) {
+        
+        #line 193 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        self->pus_service_19.exec_tc(__ev, self->pus_service_19.__that,
+                                     (TCHandlerT *)tc_handler.data, &res);
 
-        #line 191 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        if (result.__variant == MyResult__Ok) {
+    } else
+    #line 196 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (tc_type == 4U) {
+        
+        #line 198 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        self->pus_service_4.exec_tc(__ev, self->pus_service_4.__that,
+                                    (TCHandlerT *)tc_handler.data, &res);
+
+    } else
+    {
+        
+        #line 202 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        MissionObt current_obt;
+        #line 202 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        current_obt.finetime = 0U;
+        #line 202 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        current_obt.seconds = 0U;
+
+        #line 203 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        __status_int32_t status;
+        #line 203 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        status.__variant = Success;
+
+        #line 205 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        __option_box_t tm_handler;
+        #line 205 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        tm_handler.__variant = None;
+
+        #line 206 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                      &tm_handler);
+
+        #line 210 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        if (tm_handler.__variant == Some) {
             
-            #line 193 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &result);
+            #line 208 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+            #line 212 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            uint16_t tm_count = 0U;
+
+            #line 213 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                               &tm_count);
+
+            #line 215 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            self->pus_service_9.get_current_obt(__ev,
+                                                self->pus_service_9.__that,
+                                                &current_obt);
+
+            #line 216 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                             tm_count,
+                                             (*(TCHandlerT *)tc_handler.data).packet_header.packet_id,
+                                             (*(TCHandlerT *)tc_handler.data).packet_error_ctrl,
+                                             current_obt, &status);
+
+            #line 219 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            if (status.__variant == Success) {
+                
+                #line 221 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+                self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                         b_tm_handler, &status);
+
+            } else
+            {
+                
+                #line 224 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+                self->a_tm_handler_pool.free(__ev,
+                                             self->a_tm_handler_pool.__that,
+                                             b_tm_handler);
+
+            }
 
         } else
         {
             
-            #line 196 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
-                                         b_tm_handler);
+            #line 230 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            status.__variant = Failure;
+            #line 230 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
         }
 
-    } else
-    {
-        
-        #line 202 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        (*ret).__variant = Failure;
-        #line 202 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        (*ret).Failure.__0 = TM_POOL_ALLOC_FAILURE;
-
     }
 
-    #line 207 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    return;
+    #line 237 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
+                                 tc_handler);
 
-}
-
-__status_int32_t HouseKeepingFDIR__exec_tc(void * const __this,
-                                           __termina_box_t tc_handler) {
-    
-    HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
-
-    #line 217 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    __status_int32_t res;
-    #line 217 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    res.__variant = Success;
-
-    #line 219 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    uint8_t tc_type = (*(TCHandlerT *)tc_handler.data).df_header.type;
-
-    #line 221 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (tc_type == 3U) {
-        
-        #line 223 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_3.exec_tc(self->pus_service_3.__that,
-                                    (TCHandlerT *)tc_handler.data, &res);
-
-    } else
-    #line 225 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (tc_type == 5U) {
-        
-        #line 227 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_5.exec_tc(self->pus_service_5.__that,
-                                    (TCHandlerT *)tc_handler.data, &res);
-
-    } else
-    #line 229 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (tc_type == 12U) {
-        
-        #line 231 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_12.exec_tc(self->pus_service_12.__that,
-                                     (TCHandlerT *)tc_handler.data, &res);
-
-    } else
-    #line 233 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (tc_type == 19U) {
-        
-        #line 235 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_19.exec_tc(self->pus_service_19.__that,
-                                     (TCHandlerT *)tc_handler.data, &res);
-
-    } else
-    #line 238 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (tc_type == 4U) {
-        
-        #line 240 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->pus_service_4.exec_tc(self->pus_service_4.__that,
-                                    (TCHandlerT *)tc_handler.data, &res);
-
-    } else
-    {
-        
-        #line 244 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        HouseKeepingFDIR__manage_error_in_acceptance(self,
-                                                     (TCHandlerT *)tc_handler.data,
-                                                     &res);
-
-    }
-
-    #line 248 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->a_tc_handler_pool.free(self->a_tc_handler_pool.__that, tc_handler);
-
-    #line 250 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 239 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     return res;
 
 }
@@ -342,7 +344,7 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
 
     int32_t status = 0L;
 
-    __termina_id_t next_msg = 0U;
+    __termina_event_t event;
 
     __status_int32_t result;
     result.__variant = Success;
@@ -352,14 +354,13 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
 
     for (;;) {
         
-        __termina_msg_queue__recv(self->__task_msg_queue_id, &next_msg,
-                                  &status);
+        __termina_msg_queue__recv(self->__task_msg_queue_id, &event, &status);
 
         if (status != 0L) {
             break;
         }
 
-        switch (next_msg) {
+        switch (event.port_id) {
             
             case __HouseKeepingFDIR__hk_fdir_timer_ev:
 
@@ -372,7 +373,7 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
                                                            status);
                 }
 
-                result = HouseKeepingFDIR__do_hk_fdir(self,
+                result = HouseKeepingFDIR__do_hk_fdir(&event, self,
                                                       do_hk_fdir__msg_data);
 
                 if (result.__variant != Success) {
@@ -399,7 +400,8 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
                                                            status);
                 }
 
-                result = HouseKeepingFDIR__exec_tc(self, exec_tc__msg_data);
+                result = HouseKeepingFDIR__exec_tc(&event, self,
+                                                   exec_tc__msg_data);
 
                 if (result.__variant != Success) {
                     

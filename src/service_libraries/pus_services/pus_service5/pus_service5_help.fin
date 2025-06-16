@@ -143,3 +143,33 @@ function get_Ev_ID_enable_config_offset(Ev_ID : u16) -> u8 {
 
     return (Ev_ID & offset_mask) as u8;
 } 
+
+
+
+function build_tm_5_x_param_out_of_limit(p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamOutOfLimitInfo, ev_ID : u16, current_obt : MissionObt, status : &mut Status<i32>){
+
+    startup_tm(p_tm_handler);
+    append_u16_appdata_field(p_tm_handler, ev_ID, status);
+    append_u16_appdata_field(p_tm_handler, fault_info.PID, status);
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_value, status);
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_limit, status);
+    var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
+    close_tm(p_tm_handler, 5, subtype, tm_seq_counter, current_obt);
+
+    return;
+}
+
+
+function build_tm_5_x_param_check_value_fail(p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamFaultValueInfo, ev_ID : u16, current_obt : MissionObt, status: &mut Status<i32>){
+
+    startup_tm(p_tm_handler);
+    append_u16_appdata_field(p_tm_handler, ev_ID, status);
+    append_u16_appdata_field(p_tm_handler, fault_info.PID, status);
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_value, status);
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_mask, status);
+    append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value, status);
+    var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
+    close_tm(p_tm_handler, 5, subtype, tm_seq_counter, current_obt);
+
+    return;
+}

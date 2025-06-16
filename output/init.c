@@ -5,6 +5,7 @@
 #include "handlers/init.h"
 #include "handlers/uart_irq_handler.h"
 #include "resources/system_data_pool.h"
+#include "resources/uart.h"
 #include "service_libraries/errors.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1_help.h"
 #include "service_libraries/pus_services/pus_service1/pus_service_1_build_tm_1_x.h"
@@ -18,6 +19,7 @@
 #include "service_libraries/pus_services/pus_service4/pus_service4_help.h"
 #include "service_libraries/pus_services/pus_service5/pus_service5_help.h"
 #include "service_libraries/pus_services/pus_service9/pus_service9_help.h"
+#include "service_libraries/pus_tc_handler.h"
 #include "service_libraries/pus_tm_handler.h"
 #include "service_libraries/queue_u8.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
@@ -28,12 +30,15 @@ void __termina_app__init_globals() {
     
     hk_fdir_timer.period.tv_sec = 1U;
     hk_fdir_timer.period.tv_usec = 0U;
+    tm_pool.__lock_type.type = __termina_resource_lock_type__none;
+    tc_pool.__lock_type.type = __termina_resource_lock_type__none;
     for (size_t __i0 = 0U; __i0 < 12U; __i0 = __i0 + 1U) {
         atomic_store(&u32_system_data_pool[__i0], 0U);
     }
     for (size_t __i0 = 0U; __i0 < 18U; __i0 = __i0 + 1U) {
         atomic_store(&u8_system_data_pool[__i0], 0U);
     }
+    uart_drv.__lock_type.type = __termina_resource_lock_type__none;
     uart_drv.aux_index = 0U;
     #line 66 "app/app.fin"
     uart_drv.raw_rx_tc_length[0U] = 0U;
@@ -64,14 +69,18 @@ void __termina_app__init_globals() {
     }
     uart_drv.uart_tx_queue.head_index = 0U;
     uart_drv.uart_tx_queue.num_elements = 0U;
+    gpio_drv.__lock_type.type = __termina_resource_lock_type__none;
     gpio_drv.registers = (volatile GPIO_registers *)2147485952U;
+    telemetry_channel.__lock_type.type = __termina_resource_lock_type__none;
     telemetry_channel.a_tm_handler_pool.__that = &tm_pool;
     telemetry_channel.a_tm_handler_pool.alloc = __termina_pool__alloc;
     telemetry_channel.a_tm_handler_pool.free = __termina_pool__free;
     telemetry_channel.uart.__that = &uart_drv;
     #line 76 "app/app.fin"
     telemetry_channel.uart.send = UARTDriver__send;
+    telemetry_counter.__lock_type.type = __termina_resource_lock_type__none;
     telemetry_counter.tm_count = 0U;
+    pus_service_9.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_9.a_tm_handler_pool.__that = &tm_pool;
     pus_service_9.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_9.a_tm_handler_pool.free = __termina_pool__free;
@@ -95,6 +104,7 @@ void __termina_app__init_globals() {
     pus_service_9.tm_counter.__that = &telemetry_counter;
     #line 87 "app/app.fin"
     pus_service_9.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_5.__lock_type.type = __termina_resource_lock_type__none;
     #line 99 "app/app.fin"
     pus_service_5.Ev_ID_enable_config[0U] = 0x7U;
     #line 99 "app/app.fin"
@@ -123,6 +133,7 @@ void __termina_app__init_globals() {
     pus_service_5.tm_counter.__that = &telemetry_counter;
     #line 98 "app/app.fin"
     pus_service_5.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_3.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_3.a_tm_handler_pool.__that = &tm_pool;
     pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_3.a_tm_handler_pool.free = __termina_pool__free;
@@ -448,6 +459,7 @@ void __termina_app__init_globals() {
     pus_service_3.tm_counter.__that = &telemetry_counter;
     #line 109 "app/app.fin"
     pus_service_3.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_12.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_12.a_tm_handler_pool.__that = &tm_pool;
     pus_service_12.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_12.a_tm_handler_pool.free = __termina_pool__free;
@@ -533,6 +545,7 @@ void __termina_app__init_globals() {
     pus_service_12.tm_counter.__that = &telemetry_counter;
     #line 136 "app/app.fin"
     pus_service_12.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_19.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_19.a_tm_handler_pool.__that = &tm_pool;
     pus_service_19.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_19.a_tm_handler_pool.free = __termina_pool__free;
@@ -541,16 +554,29 @@ void __termina_app__init_globals() {
         pus_service_19.event_action_config[__i0].event_ID = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 16U; __i0 = __i0 + 1U) {
-        #line 159 "app/app.fin"
-        pus_service_19.event_action_packets[__i0] = tc_handler_init();
+        pus_service_19.event_action_packets[__i0].app_data_index = 0U;
+        pus_service_19.event_action_packets[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.event_action_packets[__i0].df_header.sourceID = 0U;
+        pus_service_19.event_action_packets[__i0].df_header.subtype = 0U;
+        pus_service_19.event_action_packets[__i0].df_header.type = 0U;
+        pus_service_19.event_action_packets[__i0].packet_error_ctrl = 0U;
+        pus_service_19.event_action_packets[__i0].packet_header.packet_id = 0U;
+        pus_service_19.event_action_packets[__i0].packet_header.packet_length = 0U;
+        pus_service_19.event_action_packets[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.event_action_packets[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.event_action_packets[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     #line 156 "app/app.fin"
     pus_service_19.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
-        #line 57 "src/service_libraries/pus_services/pus_service19/pus_service19_help.fin"
+        #line 59 "src/service_libraries/pus_services/pus_service19/pus_service19_help.fin"
         pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_bytes[__i0] = 0U;
     }
     pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_num_bytes = 0U;
+    pus_service_19.exec_tc_req_status_update.ev_action_ID.enabled = 0;
     pus_service_19.exec_tc_req_status_update.ev_action_ID.ev_action_index = 0U;
     pus_service_19.exec_tc_req_status_update.ev_action_ID.found = 0;
     pus_service_19.exec_tc_req_status_update.tc_data.EvID = 0U;
@@ -568,20 +594,68 @@ void __termina_app__init_globals() {
         pus_service_19.pending_action_number[__i0] = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        #line 160 "app/app.fin"
-        pus_service_19.pending_action_queue_1I[__i0] = tc_handler_init();
+        pus_service_19.pending_action_queue_1I[__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_1I[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.pending_action_queue_1I[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.pending_action_queue_1I[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        #line 161 "app/app.fin"
-        pus_service_19.pending_action_queue_2LS[__i0] = tc_handler_init();
+        pus_service_19.pending_action_queue_2LS[__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_2LS[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.pending_action_queue_2LS[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.pending_action_queue_2LS[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        #line 162 "app/app.fin"
-        pus_service_19.pending_action_queue_3MS[__i0] = tc_handler_init();
+        pus_service_19.pending_action_queue_3MS[__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_3MS[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.pending_action_queue_3MS[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.pending_action_queue_3MS[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        #line 163 "app/app.fin"
-        pus_service_19.pending_action_queue_4HS[__i0] = tc_handler_init();
+        pus_service_19.pending_action_queue_4HS[__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_4HS[__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
+            #line 26 "src/service_libraries/pus_tc_handler.fin"
+            pus_service_19.pending_action_queue_4HS[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+        }
+        pus_service_19.pending_action_queue_4HS[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
     pus_service_19.pus_service_9.__that = &pus_service_9;
     #line 155 "app/app.fin"
@@ -592,6 +666,7 @@ void __termina_app__init_globals() {
     pus_service_19.tm_counter.__that = &telemetry_counter;
     #line 155 "app/app.fin"
     pus_service_19.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_20.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_20.a_tm_handler_pool.__that = &tm_pool;
     pus_service_20.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_20.a_tm_handler_pool.free = __termina_pool__free;
@@ -616,6 +691,7 @@ void __termina_app__init_globals() {
     pus_service_20.tm_counter.__that = &telemetry_counter;
     #line 173 "app/app.fin"
     pus_service_20.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_17.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_17.a_tm_handler_pool.__that = &tm_pool;
     pus_service_17.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_17.a_tm_handler_pool.free = __termina_pool__free;
@@ -633,6 +709,7 @@ void __termina_app__init_globals() {
     pus_service_17.tm_counter.__that = &telemetry_counter;
     #line 185 "app/app.fin"
     pus_service_17.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_128.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_128.a_tm_handler_pool.__that = &tm_pool;
     pus_service_128.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_128.a_tm_handler_pool.free = __termina_pool__free;
@@ -651,6 +728,7 @@ void __termina_app__init_globals() {
     pus_service_128.tm_counter.__that = &telemetry_counter;
     #line 194 "app/app.fin"
     pus_service_128.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_2.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_2.a_tm_handler_pool.__that = &tm_pool;
     pus_service_2.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_2.a_tm_handler_pool.free = __termina_pool__free;
@@ -674,6 +752,7 @@ void __termina_app__init_globals() {
     pus_service_2.tm_counter.__that = &telemetry_counter;
     #line 203 "app/app.fin"
     pus_service_2.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_4.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_4.a_tm_handler_pool.__that = &tm_pool;
     pus_service_4.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_4.a_tm_handler_pool.free = __termina_pool__free;
@@ -719,6 +798,7 @@ void __termina_app__init_globals() {
     pus_service_4.tm_counter.__that = &telemetry_counter;
     #line 213 "app/app.fin"
     pus_service_4.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    mng_tc_executor.__lock_type.type = __termina_resource_lock_type__none;
     mng_tc_executor.a_tm_handler_pool.__that = &tm_pool;
     mng_tc_executor.a_tm_handler_pool.alloc = __termina_pool__alloc;
     mng_tc_executor.a_tm_handler_pool.free = __termina_pool__free;

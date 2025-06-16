@@ -10,7 +10,6 @@
 #include "service_libraries/pus_services/pus_services.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef enum {
     MonitorCheckType__ExpectedValue,
@@ -210,5 +209,10 @@ _Bool are_status_equal(CheckState status1, CheckState status2);
 MonitorCheckType get_check_type(uint8_t aux);
 
 _Bool is_valid_check_limit_def(const MonitorDefinition * const param_limit_check_definition);
+
+void build_tm_12_12(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
+                    MissionObt current_obt, uint8_t counter,
+                    const ParamMonitoringTransition param_mon_transitions_table[1U],
+                    __status_int32_t * const status);
 
 #endif

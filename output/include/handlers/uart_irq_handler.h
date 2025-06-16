@@ -6,7 +6,6 @@
 #include "resources/uart.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     __termina_id_t __handler_id;
@@ -14,12 +13,14 @@ typedef struct {
     volatile UARTRegs * uart_registers;
     struct {
         void * __that;
-        void (* enqueue_rx)(void * const, __option_size_t * const);
-        void (* release_tx)(void * const);
+        void (* enqueue_rx)(const __termina_event_t * const, void * const,
+                            __option_size_t * const);
+        void (* release_tx)(const __termina_event_t * const, void * const);
     } uart;
 } UARTIrqHandler;
 
-__status_int32_t UARTIrqHandler__irq_handler(void * const __this,
+__status_int32_t UARTIrqHandler__irq_handler(const __termina_event_t * const __ev,
+                                             void * const __this,
                                              uint32_t _vector);
 
 #endif

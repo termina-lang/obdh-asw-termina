@@ -7,8 +7,10 @@ const uint32_t Unit = 204U;
 
 const uint32_t Dec = 20U;
 
-__status_int32_t Init__init(void * const __this, TimeVal _boot_time) {
+__status_int32_t Init__init(const __termina_event_t * const __ev,
+                            void * const __this, TimeVal _boot_time) {
     
+    #line 42 "src/handlers/init.fin"
     Init * self = (Init *)__this;
 
     #line 44 "src/handlers/init.fin"
@@ -17,10 +19,10 @@ __status_int32_t Init__init(void * const __this, TimeVal _boot_time) {
     ret.__variant = Success;
 
     #line 47 "src/handlers/init.fin"
-    self->uart.initialize(self->uart.__that);
+    self->uart.initialize(__ev, self->uart.__that);
 
     #line 50 "src/handlers/init.fin"
-    self->gpio_driver.init_gpio(self->gpio_driver.__that);
+    self->gpio_driver.init_gpio(__ev, self->gpio_driver.__that);
 
     #line 53 "src/handlers/init.fin"
     for (size_t i = 5U; i < 12U; i = i + 1U) {

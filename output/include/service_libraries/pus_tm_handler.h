@@ -8,7 +8,6 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     TMDescriptorT tm_descriptor;
@@ -24,13 +23,13 @@ extern const uint16_t destinationID;
 extern const size_t tm_app_data_offset;
 
 void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
-                             MyResult * const result);
+                             __status_int32_t * const status);
 
 void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
-                              MyResult * const result);
+                              __status_int32_t * const status);
 
 void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
-                              MyResult * const result);
+                              __status_int32_t * const status);
 
 void tm_handler_build_packet_header(TMHandlerT * const tm_handler,
                                     uint16_t tm_seq_counter);

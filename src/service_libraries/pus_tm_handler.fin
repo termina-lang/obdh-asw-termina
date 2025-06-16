@@ -52,17 +52,17 @@ const tm_app_data_offset : usize = 19;
  * @param data The 8-bit value to append
  * @param result Output status: MyResult::Ok on success, MyResult::Error on failure
  */
-function append_u8_appdata_field (tm_handler : &mut TMHandlerT, data : u8, result : &mut MyResult) {
+function append_u8_appdata_field (tm_handler : &mut TMHandlerT, data : u8, status : &mut Status<i32>) {
 
     if (tm_handler->app_data_index < max_send_size){
 
         tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index] = data;
         tm_handler->app_data_index = tm_handler->app_data_index + 1;
-        *result = MyResult::Ok;
+        *status = Success;
 
     } else {
 
-        *result = MyResult::Error;
+        *status = Failure(BUILD_TM_ERROR);
 
     }
 
@@ -78,17 +78,17 @@ function append_u8_appdata_field (tm_handler : &mut TMHandlerT, data : u8, resul
  * @param data The 16-bit value to append
  * @param result Output status: MyResult::Ok on success, MyResult::Error on failure
  */
-function append_u16_appdata_field (tm_handler : &mut TMHandlerT, data : u16, result : &mut MyResult) {
+function append_u16_appdata_field (tm_handler : &mut TMHandlerT, data : u16, status : &mut Status<i32>) {
 
     if (tm_handler->app_data_index + 1 < max_send_size){
 
         serialize_uint16(data, &mut tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index .. tm_handler->app_data_index + 2]);
         tm_handler->app_data_index = tm_handler->app_data_index + 2;
-        *result = MyResult::Ok;
+        *status = Success;
 
     } else {
 
-        *result = MyResult::Error;
+        *status = Failure(BUILD_TM_ERROR);
     }
 
     return;
@@ -103,17 +103,17 @@ function append_u16_appdata_field (tm_handler : &mut TMHandlerT, data : u16, res
  * @param data The 32-bit value to append
  * @param result Output status: MyResult::Ok on success, MyResult::Error on failure
  */
-function append_u32_appdata_field (tm_handler : &mut TMHandlerT, data : u32, result : &mut MyResult) {
+function append_u32_appdata_field (tm_handler : &mut TMHandlerT, data : u32, status : &mut Status<i32>) {
 
     if (tm_handler->app_data_index + 3 < max_send_size){
 
         serialize_uint32(data, &mut tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index .. tm_handler->app_data_index + 4]);
         tm_handler->app_data_index = tm_handler->app_data_index + 4;
-        *result = MyResult::Ok;
+        *status = Success;
 
     } else {
 
-        *result = MyResult::Error;
+        *status = Failure(BUILD_TM_ERROR);
 
     }
 

@@ -19,14 +19,16 @@ typedef struct {
     __termina_id_t rx_frame;
     struct {
         void * __that;
-        void (* receive)(void * const, __option_uint8_t * const);
+        void (* receive)(const __termina_event_t * const, void * const,
+                         __option_uint8_t * const);
     } uart;
     TCDescriptorT telecommand;
 } TCRXBottomHalfTask;
 
 void __TCRXBottomHalfTask__termina_task(void * const arg);
 
-__status_int32_t TCRXBottomHalfTask__get_tc(void * const __this,
+__status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev,
+                                            void * const __this,
                                             size_t frame_size);
 
 #endif

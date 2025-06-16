@@ -6,18 +6,20 @@
 #include "tasks/icu_manager/mng_tc_executor.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     __termina_id_t __task_id;
     __termina_id_t __task_msg_queue_id;
     struct {
         void * __that;
-        void (* PUS_prio_exec_tc)(void * const, TCHandlerT * const,
-                                  __status_int32_t * const, _Bool * const);
-        void (* mng_tc_acceptation)(void * const, const TCHandlerT * const,
+        void (* PUS_prio_exec_tc)(const __termina_event_t * const, void * const,
+                                  TCHandlerT * const, __status_int32_t * const,
+                                  _Bool * const);
+        void (* mng_tc_acceptation)(const __termina_event_t * const,
+                                    void * const, const TCHandlerT * const,
                                     __status_int32_t * const);
-        void (* mng_tc_rejection)(void * const, const TCHandlerT * const,
+        void (* mng_tc_rejection)(const __termina_event_t * const, void * const,
+                                  const TCHandlerT * const,
                                   __status_int32_t * const);
     } tc_executor;
     __termina_out_port_t bkg_message_queue_output;
@@ -29,10 +31,12 @@ typedef struct {
 
 void __ICUManager__termina_task(void * const arg);
 
-__status_int32_t ICUManager__process_action_tc(void * const __this,
+__status_int32_t ICUManager__process_action_tc(const __termina_event_t * const __ev,
+                                               void * const __this,
                                                __termina_box_t tc_handler);
 
-__status_int32_t ICUManager__process_tc(void * const __this,
+__status_int32_t ICUManager__process_tc(const __termina_event_t * const __ev,
+                                        void * const __this,
                                         __termina_box_t tc_handler);
 
 #endif

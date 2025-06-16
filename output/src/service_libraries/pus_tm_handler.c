@@ -8,7 +8,7 @@ const uint16_t destinationID = 0x78U;
 const size_t tm_app_data_offset = 19U;
 
 void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
-                             MyResult * const result) {
+                             __status_int32_t * const status) {
     
     #line 57 "src/service_libraries/pus_tm_handler.fin"
     if (tm_handler->app_data_index < 256U) {
@@ -21,13 +21,15 @@ void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
         tm_handler->app_data_index = tm_handler->app_data_index + 1U;
 
         #line 61 "src/service_libraries/pus_tm_handler.fin"
-        (*result).__variant = MyResult__Ok;
+        (*status).__variant = Success;
 
     } else
     {
         
         #line 65 "src/service_libraries/pus_tm_handler.fin"
-        (*result).__variant = MyResult__Error;
+        (*status).__variant = Failure;
+        #line 65 "src/service_libraries/pus_tm_handler.fin"
+        (*status).Failure.__0 = BUILD_TM_ERROR;
 
     }
 
@@ -37,7 +39,7 @@ void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
 }
 
 void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
-                              MyResult * const result) {
+                              __status_int32_t * const status) {
     
     #line 83 "src/service_libraries/pus_tm_handler.fin"
     if ((size_t)(tm_handler->app_data_index + 1U) < 256U) {
@@ -53,13 +55,15 @@ void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
         tm_handler->app_data_index = tm_handler->app_data_index + 2U;
 
         #line 87 "src/service_libraries/pus_tm_handler.fin"
-        (*result).__variant = MyResult__Ok;
+        (*status).__variant = Success;
 
     } else
     {
         
         #line 91 "src/service_libraries/pus_tm_handler.fin"
-        (*result).__variant = MyResult__Error;
+        (*status).__variant = Failure;
+        #line 91 "src/service_libraries/pus_tm_handler.fin"
+        (*status).Failure.__0 = BUILD_TM_ERROR;
 
     }
 
@@ -69,7 +73,7 @@ void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
 }
 
 void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
-                              MyResult * const result) {
+                              __status_int32_t * const status) {
     
     #line 108 "src/service_libraries/pus_tm_handler.fin"
     if ((size_t)(tm_handler->app_data_index + 3U) < 256U) {
@@ -85,13 +89,15 @@ void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
         tm_handler->app_data_index = tm_handler->app_data_index + 4U;
 
         #line 112 "src/service_libraries/pus_tm_handler.fin"
-        (*result).__variant = MyResult__Ok;
+        (*status).__variant = Success;
 
     } else
     {
         
         #line 116 "src/service_libraries/pus_tm_handler.fin"
-        (*result).__variant = MyResult__Error;
+        (*status).__variant = Failure;
+        #line 116 "src/service_libraries/pus_tm_handler.fin"
+        (*status).Failure.__0 = BUILD_TM_ERROR;
 
     }
 

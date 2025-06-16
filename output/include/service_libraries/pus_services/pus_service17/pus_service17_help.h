@@ -8,12 +8,14 @@
 #include "service_libraries/pus_services/pus_services.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     uint16_t packet_id;
     uint16_t packet_error_ctrl;
     uint8_t flags_ack;
 } PS17ExecTCReqStatusUpdate;
+
+void build_tm_17_2(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
+                   MissionObt current_obt);
 
 #endif

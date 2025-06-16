@@ -1,9 +1,11 @@
 
 #include "handlers/uart_irq_handler.h"
 
-__status_int32_t UARTIrqHandler__irq_handler(void * const __this,
+__status_int32_t UARTIrqHandler__irq_handler(const __termina_event_t * const __ev,
+                                             void * const __this,
                                              uint32_t _vector) {
     
+    #line 16 "src/handlers/uart_irq_handler.fin"
     UARTIrqHandler * self = (UARTIrqHandler *)__this;
 
     #line 18 "src/handlers/uart_irq_handler.fin"
@@ -18,7 +20,7 @@ __status_int32_t UARTIrqHandler__irq_handler(void * const __this,
     if ((uint32_t)(uart_status & 0x4U) != 0U) {
         
         #line 23 "src/handlers/uart_irq_handler.fin"
-        self->uart.release_tx(self->uart.__that);
+        self->uart.release_tx(__ev, self->uart.__that);
 
     }
 
@@ -31,7 +33,7 @@ __status_int32_t UARTIrqHandler__irq_handler(void * const __this,
         tc_completed.__variant = None;
 
         #line 30 "src/handlers/uart_irq_handler.fin"
-        self->uart.enqueue_rx(self->uart.__that, &tc_completed);
+        self->uart.enqueue_rx(__ev, self->uart.__that, &tc_completed);
 
         #line 33 "src/handlers/uart_irq_handler.fin"
         if (tc_completed.__variant == Some) {
@@ -40,7 +42,7 @@ __status_int32_t UARTIrqHandler__irq_handler(void * const __this,
             size_t size = tc_completed.Some.__0;
 
             #line 34 "src/handlers/uart_irq_handler.fin"
-            __termina_out_port__send(self->rx_frame, (void *)&size);
+            __termina_out_port__send(__ev, self->rx_frame, (void *)&size);
 
         } else
         {

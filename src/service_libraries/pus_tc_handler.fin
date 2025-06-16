@@ -22,12 +22,10 @@ struct TCHandlerT {
  *
  * @return A new TCHandlerT instance with all fields set to zero or empty
  */
-function tc_handler_init () -> TCHandlerT {
-
-    var tc_handler : TCHandlerT = {tc_descriptor = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0}, packet_header = {packet_id = 0, packet_seq_ctrl = 0, packet_length = 0}, df_header = {flag_ver_ack = 0, type = 0, subtype = 0, sourceID = 0}, packet_error_ctrl = 0, app_data_index = 0};
-
-    return tc_handler;
-}
+constexpr tc_handler_init : TCHandlerT  = {
+    tc_descriptor = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0}, packet_header = {packet_id = 0, packet_seq_ctrl = 0, packet_length = 0},
+     df_header = {flag_ver_ack = 0, type = 0, subtype = 0, sourceID = 0}, packet_error_ctrl = 0, app_data_index = 0
+};
 
 /**
  * @brief Fills a TC handler with data from a telecommand descriptor
@@ -86,24 +84,24 @@ function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandlerT, field
  * @param tc_handler Pointer to the TC handler
  * @param data Output parameter to store the extracted byte
  *
- * @return MyResult::Ok if successful, MyResult::Error otherwise
+ * @return Status::Ok if successful, Status::Error otherwise
  */
-function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u8) -> MyResult {
+function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u8) -> Status<i32> {
 
-	var res : MyResult = MyResult::Ok;
+    var status : Status<i32> = Success;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 1)){
 
-        *data = tc_handler->tc_descriptor.tc_bytes[tc_handler->app_data_index];
-        tc_handler->app_data_index = tc_handler->app_data_index + 1;
+    *data = tc_handler->tc_descriptor.tc_bytes[tc_handler->app_data_index];
+    tc_handler->app_data_index = tc_handler->app_data_index + 1;
 
     } else {
 
-        res = MyResult::Error;
+        status = Failure(TC_DATA_OUT_OF_RANGE_ERROR);
 
     }
 
-    return res;
+    return status;
 
 }
 
@@ -115,11 +113,11 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &
  * @param tc_handler Pointer to the TC handler
  * @param data Output parameter to store the extracted 16-bit word
  *
- * @return MyResult::Ok if successful, MyResult::Error otherwise
+ * @return Status::Ok if successful, Status::Error otherwise
  */
-function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> MyResult {
+function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> Status<i32> {
 
-	var res : MyResult = MyResult::Ok;
+	var status : Status<i32> = Success;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 2)){
 
@@ -128,11 +126,11 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
     } else {
 
-        res = MyResult::Error;
+        status = Failure(TC_DATA_OUT_OF_RANGE_ERROR);
 
     }
     
-    return res;
+    return status;
 
 }
 
@@ -144,11 +142,11 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
  * @param tc_handler Pointer to the TC handler
  * @param data Output parameter to store the extracted 32-bit word
  *
- * @return MyResult::Ok if successful, MyResult::Error otherwise
+ * @return Status::Ok if successful, Status::Error otherwise
  */
-function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u32) -> MyResult {
+function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u32) -> Status<i32> {
 
-	var res : MyResult = MyResult::Ok;
+    var status : Status<i32> = Success;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 4)){
 
@@ -157,10 +155,10 @@ function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : 
 
     } else {
 
-        res = MyResult::Error;
+        status = Failure(TC_DATA_OUT_OF_RANGE_ERROR);
 
     }
 
-    return res;
+    return status;
 
 }

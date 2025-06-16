@@ -8,7 +8,6 @@
 #include "resources/uart.h"
 
 #include "option.h"
-#include "result.h"
 
 extern const uint32_t Zero;
 
@@ -22,14 +21,15 @@ typedef struct {
     _Atomic uint32_t * system_data_pool_u32;
     struct {
         void * __that;
-        void (* init_gpio)(void * const);
+        void (* init_gpio)(const __termina_event_t * const, void * const);
     } gpio_driver;
     struct {
         void * __that;
-        void (* initialize)(void * const);
+        void (* initialize)(const __termina_event_t * const, void * const);
     } uart;
 } Init;
 
-__status_int32_t Init__init(void * const __this, TimeVal _boot_time);
+__status_int32_t Init__init(const __termina_event_t * const __ev,
+                            void * const __this, TimeVal _boot_time);
 
 #endif

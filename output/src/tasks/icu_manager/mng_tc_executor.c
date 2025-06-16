@@ -1,243 +1,214 @@
 
 #include "tasks/icu_manager/mng_tc_executor.h"
 
-void ManagerTCExecutor__manage_error_in_acceptance(const ManagerTCExecutor * const self,
-                                                   const TCHandlerT * const tc_handler,
-                                                   __status_int32_t * const ret) {
+void ManagerTCExecutor__PUS_prio_exec_tc(const __termina_event_t * const __ev,
+                                         void * const __this,
+                                         TCHandlerT * const tc_handler,
+                                         __status_int32_t * const status,
+                                         _Bool * const reebot_flag) {
     
-    #line 68 "src/tasks/icu_manager/mng_tc_executor.fin"
-    MyResult result;
-    #line 68 "src/tasks/icu_manager/mng_tc_executor.fin"
-    result.__variant = MyResult__Ok;
+    #line 69 "src/tasks/icu_manager/mng_tc_executor.fin"
+    ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
 
-    #line 70 "src/tasks/icu_manager/mng_tc_executor.fin"
-    MissionObt current_obt;
-    #line 70 "src/tasks/icu_manager/mng_tc_executor.fin"
-    current_obt.finetime = 0U;
-    #line 70 "src/tasks/icu_manager/mng_tc_executor.fin"
-    current_obt.seconds = 0U;
+    #line 69 "src/tasks/icu_manager/mng_tc_executor.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
 
-    #line 72 "src/tasks/icu_manager/mng_tc_executor.fin"
-    __option_box_t tm_handler;
-    #line 72 "src/tasks/icu_manager/mng_tc_executor.fin"
-    tm_handler.__variant = None;
+    #line 71 "src/tasks/icu_manager/mng_tc_executor.fin"
+    uint8_t tc_type = tc_handler->df_header.type;
 
     #line 73 "src/tasks/icu_manager/mng_tc_executor.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
-
-    #line 77 "src/tasks/icu_manager/mng_tc_executor.fin"
-    if (tm_handler.__variant == Some) {
+    if (tc_type == 17U) {
         
         #line 75 "src/tasks/icu_manager/mng_tc_executor.fin"
-        __termina_box_t b_tm_handler = tm_handler.Some.__0;
+        self->pus_service_17.exec_tc(__ev, self->pus_service_17.__that,
+                                     tc_handler, status);
 
+    } else
+    #line 77 "src/tasks/icu_manager/mng_tc_executor.fin"
+    if (tc_type == 2U) {
+        
         #line 79 "src/tasks/icu_manager/mng_tc_executor.fin"
-        uint16_t tm_count = 0U;
+        self->pus_service_2.exec_tc(__ev, self->pus_service_2.__that,
+                                    tc_handler, status);
 
-        #line 80 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
-
-        #line 82 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
-                                            &current_obt);
-
+    } else
+    #line 81 "src/tasks/icu_manager/mng_tc_executor.fin"
+    if (tc_type == 9U) {
+        
         #line 83 "src/tasks/icu_manager/mng_tc_executor.fin"
-        build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
-                                         tm_count,
-                                         tc_handler->packet_header.packet_id,
-                                         tc_handler->packet_error_ctrl,
-                                         current_obt, &result);
+        self->pus_service_9.exec_tc(__ev, self->pus_service_9.__that,
+                                    tc_handler, status);
 
-        #line 86 "src/tasks/icu_manager/mng_tc_executor.fin"
-        if (result.__variant == MyResult__Ok) {
+    } else
+    #line 85 "src/tasks/icu_manager/mng_tc_executor.fin"
+    if (tc_type == 128U) {
+        
+        #line 87 "src/tasks/icu_manager/mng_tc_executor.fin"
+        self->pus_service_128.exec_tc(__ev, self->pus_service_128.__that,
+                                      tc_handler, status, reebot_flag);
+
+    } else
+    {
+        
+        #line 91 "src/tasks/icu_manager/mng_tc_executor.fin"
+        MissionObt current_obt;
+        #line 91 "src/tasks/icu_manager/mng_tc_executor.fin"
+        current_obt.finetime = 0U;
+        #line 91 "src/tasks/icu_manager/mng_tc_executor.fin"
+        current_obt.seconds = 0U;
+
+        #line 93 "src/tasks/icu_manager/mng_tc_executor.fin"
+        __option_box_t tm_handler;
+        #line 93 "src/tasks/icu_manager/mng_tc_executor.fin"
+        tm_handler.__variant = None;
+
+        #line 94 "src/tasks/icu_manager/mng_tc_executor.fin"
+        self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                      &tm_handler);
+
+        #line 98 "src/tasks/icu_manager/mng_tc_executor.fin"
+        if (tm_handler.__variant == Some) {
             
-            #line 88 "src/tasks/icu_manager/mng_tc_executor.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &result);
+            #line 96 "src/tasks/icu_manager/mng_tc_executor.fin"
+            __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+            #line 100 "src/tasks/icu_manager/mng_tc_executor.fin"
+            uint16_t tm_count = 0U;
+
+            #line 101 "src/tasks/icu_manager/mng_tc_executor.fin"
+            self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                               &tm_count);
+
+            #line 103 "src/tasks/icu_manager/mng_tc_executor.fin"
+            self->pus_service_9.get_current_obt(__ev,
+                                                self->pus_service_9.__that,
+                                                &current_obt);
+
+            #line 104 "src/tasks/icu_manager/mng_tc_executor.fin"
+            build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                             tm_count,
+                                             tc_handler->packet_header.packet_id,
+                                             tc_handler->packet_error_ctrl,
+                                             current_obt, status);
+
+            #line 107 "src/tasks/icu_manager/mng_tc_executor.fin"
+            if ((*status).__variant == Success) {
+                
+                #line 109 "src/tasks/icu_manager/mng_tc_executor.fin"
+                self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                         b_tm_handler, status);
+
+            } else
+            {
+                
+                #line 112 "src/tasks/icu_manager/mng_tc_executor.fin"
+                self->a_tm_handler_pool.free(__ev,
+                                             self->a_tm_handler_pool.__that,
+                                             b_tm_handler);
+
+            }
 
         } else
         {
             
-            #line 91 "src/tasks/icu_manager/mng_tc_executor.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
-                                         b_tm_handler);
+            #line 118 "src/tasks/icu_manager/mng_tc_executor.fin"
+            (*status).__variant = Failure;
+            #line 118 "src/tasks/icu_manager/mng_tc_executor.fin"
+            (*status).Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
         }
 
-    } else
-    {
-        
-        #line 97 "src/tasks/icu_manager/mng_tc_executor.fin"
-        (*ret).__variant = Failure;
-        #line 97 "src/tasks/icu_manager/mng_tc_executor.fin"
-        (*ret).Failure.__0 = TM_POOL_ALLOC_FAILURE;
-
     }
 
-    #line 102 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 124 "src/tasks/icu_manager/mng_tc_executor.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+
+    #line 124 "src/tasks/icu_manager/mng_tc_executor.fin"
     return;
 
 }
 
-void ManagerTCExecutor__PUS_prio_exec_tc(void * const __this,
-                                         TCHandlerT * const tc_handler,
-                                         __status_int32_t * const ret,
-                                         _Bool * const reebot_flag) {
-    
-    ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
-
-    #line 117 "src/tasks/icu_manager/mng_tc_executor.fin"
-    uint8_t tc_type = tc_handler->df_header.type;
-
-    #line 119 "src/tasks/icu_manager/mng_tc_executor.fin"
-    if (tc_type == 17U) {
-        
-        #line 121 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->pus_service_17.exec_tc(self->pus_service_17.__that, tc_handler,
-                                     ret);
-
-    } else
-    #line 123 "src/tasks/icu_manager/mng_tc_executor.fin"
-    if (tc_type == 2U) {
-        
-        #line 125 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->pus_service_2.exec_tc(self->pus_service_2.__that, tc_handler,
-                                    ret);
-
-    } else
-    #line 127 "src/tasks/icu_manager/mng_tc_executor.fin"
-    if (tc_type == 9U) {
-        
-        #line 129 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->pus_service_9.exec_tc(self->pus_service_9.__that, tc_handler,
-                                    ret);
-
-    } else
-    #line 131 "src/tasks/icu_manager/mng_tc_executor.fin"
-    if (tc_type == 128U) {
-        
-        #line 133 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->pus_service_128.exec_tc(self->pus_service_128.__that, tc_handler,
-                                      ret, reebot_flag);
-
-    } else
-    {
-        
-        #line 137 "src/tasks/icu_manager/mng_tc_executor.fin"
-        ManagerTCExecutor__manage_error_in_acceptance(self, &*tc_handler, ret);
-
-    }
-
-    #line 140 "src/tasks/icu_manager/mng_tc_executor.fin"
-    return;
-
-}
-
-void ManagerTCExecutor__PUS_prio_exec_tc__mutex_lock(void * const __this,
-                                                     TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret,
-                                                     _Bool * const reebot_flag) {
-    
-    ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
-
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    ManagerTCExecutor__PUS_prio_exec_tc(self, tc_handler, ret, reebot_flag);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void ManagerTCExecutor__PUS_prio_exec_tc__task_lock(void * const __this,
-                                                    TCHandlerT * const tc_handler,
-                                                    __status_int32_t * const ret,
-                                                    _Bool * const reebot_flag) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    ManagerTCExecutor__PUS_prio_exec_tc(__this, tc_handler, ret, reebot_flag);
-    __termina_task__unlock(lock);
-
-}
-
-void ManagerTCExecutor__PUS_prio_exec_tc__event_lock(void * const __this,
-                                                     TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret,
-                                                     _Bool * const reebot_flag) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    ManagerTCExecutor__PUS_prio_exec_tc(__this, tc_handler, ret, reebot_flag);
-    __termina_event__unlock(lock);
-
-}
-
-void ManagerTCExecutor__mng_tc_acceptation(void * const __this,
+void ManagerTCExecutor__mng_tc_acceptation(const __termina_event_t * const __ev,
+                                           void * const __this,
                                            const TCHandlerT * const tc_handler,
-                                           __status_int32_t * const ret) {
+                                           __status_int32_t * const status) {
     
+    #line 137 "src/tasks/icu_manager/mng_tc_executor.fin"
     ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
 
-    #line 155 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 137 "src/tasks/icu_manager/mng_tc_executor.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
+
+    #line 139 "src/tasks/icu_manager/mng_tc_executor.fin"
     __option_box_t tm_handler;
-    #line 155 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 139 "src/tasks/icu_manager/mng_tc_executor.fin"
     tm_handler.__variant = None;
 
-    #line 156 "src/tasks/icu_manager/mng_tc_executor.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    #line 140 "src/tasks/icu_manager/mng_tc_executor.fin"
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
-    #line 160 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 144 "src/tasks/icu_manager/mng_tc_executor.fin"
     if (tm_handler.__variant == Some) {
         
-        #line 158 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 142 "src/tasks/icu_manager/mng_tc_executor.fin"
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-        #line 162 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 146 "src/tasks/icu_manager/mng_tc_executor.fin"
         uint16_t tm_count = 0U;
 
-        #line 163 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        #line 147 "src/tasks/icu_manager/mng_tc_executor.fin"
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
-        #line 165 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 149 "src/tasks/icu_manager/mng_tc_executor.fin"
         MissionObt current_obt;
-        #line 165 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 149 "src/tasks/icu_manager/mng_tc_executor.fin"
         current_obt.finetime = 0U;
-        #line 165 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 149 "src/tasks/icu_manager/mng_tc_executor.fin"
         current_obt.seconds = 0U;
 
-        #line 169 "src/tasks/icu_manager/mng_tc_executor.fin"
-        MyResult result;
-        #line 169 "src/tasks/icu_manager/mng_tc_executor.fin"
-        result.__variant = MyResult__Ok;
-
-        #line 170 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 154 "src/tasks/icu_manager/mng_tc_executor.fin"
         _Bool ack_enabled = 0;
 
-        #line 172 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        #line 156 "src/tasks/icu_manager/mng_tc_executor.fin"
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
-        #line 173 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 157 "src/tasks/icu_manager/mng_tc_executor.fin"
         build_tm_1_1((TMHandlerT *)b_tm_handler.data, tm_count,
                      tc_handler->packet_header.packet_id,
                      tc_handler->packet_error_ctrl,
-                     tc_handler->df_header.flag_ver_ack, current_obt, &result,
+                     tc_handler->df_header.flag_ver_ack, current_obt, status,
                      &ack_enabled);
 
-        #line 176 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 160 "src/tasks/icu_manager/mng_tc_executor.fin"
         if (ack_enabled) {
             
-            #line 178 "src/tasks/icu_manager/mng_tc_executor.fin"
-            self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                     &result);
+            #line 162 "src/tasks/icu_manager/mng_tc_executor.fin"
+            if ((*status).__variant == Success) {
+                
+                #line 165 "src/tasks/icu_manager/mng_tc_executor.fin"
+                self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                         b_tm_handler, status);
+
+            } else
+            {
+                
+                #line 169 "src/tasks/icu_manager/mng_tc_executor.fin"
+                self->a_tm_handler_pool.free(__ev,
+                                             self->a_tm_handler_pool.__that,
+                                             b_tm_handler);
+
+            }
 
         } else
         {
             
-            #line 181 "src/tasks/icu_manager/mng_tc_executor.fin"
-            self->a_tm_handler_pool.free(self->a_tm_handler_pool.__that,
+            #line 174 "src/tasks/icu_manager/mng_tc_executor.fin"
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
                                          b_tm_handler);
 
         }
@@ -245,158 +216,103 @@ void ManagerTCExecutor__mng_tc_acceptation(void * const __this,
     } else
     {
         
-        #line 187 "src/tasks/icu_manager/mng_tc_executor.fin"
-        (*ret).__variant = Failure;
-        #line 187 "src/tasks/icu_manager/mng_tc_executor.fin"
-        (*ret).Failure.__0 = TM_POOL_ALLOC_FAILURE;
+        #line 180 "src/tasks/icu_manager/mng_tc_executor.fin"
+        (*status).__variant = Failure;
+        #line 180 "src/tasks/icu_manager/mng_tc_executor.fin"
+        (*status).Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
-    #line 191 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 184 "src/tasks/icu_manager/mng_tc_executor.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+
+    #line 184 "src/tasks/icu_manager/mng_tc_executor.fin"
     return;
 
 }
 
-void ManagerTCExecutor__mng_tc_acceptation__mutex_lock(void * const __this,
-                                                       const TCHandlerT * const tc_handler,
-                                                       __status_int32_t * const ret) {
-    
-    ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
-
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    ManagerTCExecutor__mng_tc_acceptation(self, tc_handler, ret);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void ManagerTCExecutor__mng_tc_acceptation__task_lock(void * const __this,
-                                                      const TCHandlerT * const tc_handler,
-                                                      __status_int32_t * const ret) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    ManagerTCExecutor__mng_tc_acceptation(__this, tc_handler, ret);
-    __termina_task__unlock(lock);
-
-}
-
-void ManagerTCExecutor__mng_tc_acceptation__event_lock(void * const __this,
-                                                       const TCHandlerT * const tc_handler,
-                                                       __status_int32_t * const ret) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    ManagerTCExecutor__mng_tc_acceptation(__this, tc_handler, ret);
-    __termina_event__unlock(lock);
-
-}
-
-void ManagerTCExecutor__mng_tc_rejection(void * const __this,
+void ManagerTCExecutor__mng_tc_rejection(const __termina_event_t * const __ev,
+                                         void * const __this,
                                          const TCHandlerT * const tc_handler,
-                                         __status_int32_t * const ret) {
+                                         __status_int32_t * const status) {
     
+    #line 197 "src/tasks/icu_manager/mng_tc_executor.fin"
     ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
 
-    #line 206 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 197 "src/tasks/icu_manager/mng_tc_executor.fin"
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
+                                                       &self->__lock_type);
+
+    #line 199 "src/tasks/icu_manager/mng_tc_executor.fin"
     __option_box_t tm_handler;
-    #line 206 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 199 "src/tasks/icu_manager/mng_tc_executor.fin"
     tm_handler.__variant = None;
 
-    #line 207 "src/tasks/icu_manager/mng_tc_executor.fin"
-    self->a_tm_handler_pool.alloc(self->a_tm_handler_pool.__that, &tm_handler);
+    #line 200 "src/tasks/icu_manager/mng_tc_executor.fin"
+    self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
+                                  &tm_handler);
 
-    #line 208 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 201 "src/tasks/icu_manager/mng_tc_executor.fin"
     TCStatus tc_status = try_tc_acceptation(&tc_handler->tc_descriptor);
 
-    #line 212 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 205 "src/tasks/icu_manager/mng_tc_executor.fin"
     if (tm_handler.__variant == Some) {
         
-        #line 210 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 203 "src/tasks/icu_manager/mng_tc_executor.fin"
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-        #line 214 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 207 "src/tasks/icu_manager/mng_tc_executor.fin"
         uint16_t tm_count = 0U;
 
-        #line 215 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->tm_counter.get_next_tm_count(self->tm_counter.__that, &tm_count);
+        #line 208 "src/tasks/icu_manager/mng_tc_executor.fin"
+        self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
+                                           &tm_count);
 
-        #line 217 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 210 "src/tasks/icu_manager/mng_tc_executor.fin"
         MissionObt current_obt;
-        #line 217 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 210 "src/tasks/icu_manager/mng_tc_executor.fin"
         current_obt.finetime = 0U;
-        #line 217 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 210 "src/tasks/icu_manager/mng_tc_executor.fin"
         current_obt.seconds = 0U;
 
-        #line 221 "src/tasks/icu_manager/mng_tc_executor.fin"
-        MyResult result;
-        #line 221 "src/tasks/icu_manager/mng_tc_executor.fin"
-        result.__variant = MyResult__Ok;
-
-        #line 222 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->pus_service_9.get_current_obt(self->pus_service_9.__that,
+        #line 215 "src/tasks/icu_manager/mng_tc_executor.fin"
+        self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
-        #line 223 "src/tasks/icu_manager/mng_tc_executor.fin"
+        #line 216 "src/tasks/icu_manager/mng_tc_executor.fin"
         build_tm_1_2(&tc_status, (TMHandlerT *)b_tm_handler.data, tm_count,
-                     tc_handler, current_obt, &result);
+                     tc_handler, current_obt, status);
 
-        #line 224 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->tm_channel.send_tm(self->tm_channel.__that, b_tm_handler,
-                                 &result);
+        #line 218 "src/tasks/icu_manager/mng_tc_executor.fin"
+        if ((*status).__variant == Success) {
+            
+            #line 220 "src/tasks/icu_manager/mng_tc_executor.fin"
+            self->tm_channel.send_tm(__ev, self->tm_channel.__that,
+                                     b_tm_handler, status);
+
+        } else
+        {
+            
+            #line 223 "src/tasks/icu_manager/mng_tc_executor.fin"
+            self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that,
+                                         b_tm_handler);
+
+        }
 
     } else
     {
         
-        #line 228 "src/tasks/icu_manager/mng_tc_executor.fin"
-        (*ret).__variant = Failure;
-        #line 228 "src/tasks/icu_manager/mng_tc_executor.fin"
-        (*ret).Failure.__0 = TM_POOL_ALLOC_FAILURE;
+        #line 229 "src/tasks/icu_manager/mng_tc_executor.fin"
+        (*status).__variant = Failure;
+        #line 229 "src/tasks/icu_manager/mng_tc_executor.fin"
+        (*status).Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
-    #line 231 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 232 "src/tasks/icu_manager/mng_tc_executor.fin"
+    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+
+    #line 232 "src/tasks/icu_manager/mng_tc_executor.fin"
     return;
-
-}
-
-void ManagerTCExecutor__mng_tc_rejection__mutex_lock(void * const __this,
-                                                     const TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret) {
-    
-    ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
-
-    int32_t __status = 0L;
-
-    __termina_mutex__lock(self->__mutex_id, &__status);
-    ManagerTCExecutor__mng_tc_rejection(self, tc_handler, ret);
-    __termina_mutex__unlock(self->__mutex_id, &__status);
-
-}
-
-void ManagerTCExecutor__mng_tc_rejection__task_lock(void * const __this,
-                                                    const TCHandlerT * const tc_handler,
-                                                    __status_int32_t * const ret) {
-    
-    __termina_task_lock_t lock;
-
-    lock = __termina_task__lock();
-    ManagerTCExecutor__mng_tc_rejection(__this, tc_handler, ret);
-    __termina_task__unlock(lock);
-
-}
-
-void ManagerTCExecutor__mng_tc_rejection__event_lock(void * const __this,
-                                                     const TCHandlerT * const tc_handler,
-                                                     __status_int32_t * const ret) {
-    
-    __termina_event_lock_t lock;
-
-    lock = __termina_event__lock();
-    ManagerTCExecutor__mng_tc_rejection(__this, tc_handler, ret);
-    __termina_event__unlock(lock);
 
 }

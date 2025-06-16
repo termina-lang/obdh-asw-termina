@@ -8,7 +8,6 @@
 #include "service_libraries/pus_services/pus_services.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     uint16_t packet_id;

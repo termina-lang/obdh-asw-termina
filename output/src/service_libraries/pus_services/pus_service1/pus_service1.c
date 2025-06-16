@@ -45,42 +45,42 @@ TCExecutionCtrl handle_tc(const TCDescriptorT * const tc_descriptor) {
 TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
     
     #line 68 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-    TCStatus status;
+    TCStatus tc_status;
     #line 68 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-    status.acceptation_status.__variant = TCAcceptationStatus__Undefined;
+    tc_status.acceptation_status.__variant = TCAcceptationStatus__Undefined;
     #line 70 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-    status.error_code.__variant = TCErrorType__Undefined;
+    tc_status.error_code.__variant = TCErrorType__Undefined;
     #line 69 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-    status.execution_status.__variant = TCExecutionCtrl__Undefined;
+    tc_status.execution_status.__variant = TCExecutionCtrl__Undefined;
 
     #line 72 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
     if (0 == is_crc_valid(tc_descriptor)) {
         
         #line 74 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-        status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+        tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
         #line 75 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-        status.error_code.__variant = TCErrorType__CRCError;
+        tc_status.error_code.__variant = TCErrorType__CRCError;
 
     } else
     #line 77 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
     if (0 == is_apid_valid(tc_descriptor)) {
         
         #line 79 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-        status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+        tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
         #line 80 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-        status.error_code.__variant = TCErrorType__APIDError;
+        tc_status.error_code.__variant = TCErrorType__APIDError;
 
     } else
     #line 82 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
     if (0 == is_sourceID_valid(tc_descriptor)) {
         
         #line 84 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-        status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+        tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
         #line 85 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-        status.error_code.__variant = TCErrorType__SourceIDError;
+        tc_status.error_code.__variant = TCErrorType__SourceIDError;
 
     } else
     {
@@ -98,19 +98,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (129U == subtype) {
                 
                 #line 96 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 97 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
 
             } else
             {
                 
                 #line 100 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 101 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -122,19 +122,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (1U == subtype) {
                 
                 #line 108 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 109 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
 
             } else
             {
                 
                 #line 112 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 113 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -146,19 +146,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (1U == subtype || 6U == subtype || 7U == subtype) {
                 
                 #line 119 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 120 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
             } else
             {
                 
                 #line 124 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 125 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -170,19 +170,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (1U == subtype) {
                 
                 #line 131 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 132 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
 
             } else
             {
                 
                 #line 135 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 136 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -194,19 +194,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (5U == subtype || 6U == subtype || 31U == subtype) {
                 
                 #line 143 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 144 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
             } else
             {
                 
                 #line 149 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 150 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -218,19 +218,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (1U == subtype || 3U == subtype) {
                 
                 #line 157 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 158 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlBKGTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlBKGTC;
 
             } else
             {
                 
                 #line 163 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 164 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -242,19 +242,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (5U == subtype || 6U == subtype) {
                 
                 #line 171 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 172 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
             } else
             {
                 
                 #line 177 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 178 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -266,19 +266,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (1U == subtype || 5U == subtype || 6U == subtype) {
                 
                 #line 185 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 186 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
             } else
             {
                 
                 #line 191 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 192 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -290,19 +290,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (1U == subtype || 2U == subtype || 4U == subtype || 5U == subtype) {
                 
                 #line 199 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 200 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlHK_FDIRTC;
 
             } else
             {
                 
                 #line 205 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 206 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -314,19 +314,19 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             if (1U == subtype) {
                 
                 #line 212 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
 
                 #line 213 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.execution_status.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
 
             } else
             {
                 
                 #line 217 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
                 #line 218 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-                status.error_code.__variant = TCErrorType__SubTypeError;
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
 
             }
 
@@ -334,16 +334,16 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
         {
             
             #line 222 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-            status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+            tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
             #line 223 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-            status.error_code.__variant = TCErrorType__TypeError;
+            tc_status.error_code.__variant = TCErrorType__TypeError;
 
         }
 
     }
 
     #line 229 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
-    return status;
+    return tc_status;
 
 }

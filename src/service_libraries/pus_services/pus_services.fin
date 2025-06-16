@@ -11,10 +11,9 @@ import resources.system_data_pool;
 enum PSExecTCReqStatus {
     Init,
     ExecTC,
-    Error(i32),
-    Failure(i32),
     Exit
 };
+
 
 
 struct MissionObt {

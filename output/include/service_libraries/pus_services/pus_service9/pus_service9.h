@@ -6,7 +6,6 @@
 #include "service_libraries/pus_services/pus_service9/pus_service9_help.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     void * __that;
@@ -16,18 +15,21 @@ typedef struct {
 } PUSS9Iface;
 
 typedef struct {
-    __termina_id_t __mutex_id;
+    __termina_resource_lock_type_t __lock_type;
     struct {
-        void (* clock_get_uptime)(TimeVal * const);
+        void (* clock_get_uptime)(const __termina_event_t * const,
+                                  TimeVal * const);
     } system_port;
     struct {
         void * __that;
-        void (* get_next_tm_count)(void * const, uint16_t * const);
+        void (* get_next_tm_count)(const __termina_event_t * const,
+                                   void * const, uint16_t * const);
     } tm_counter;
     __termina_allocator_t a_tm_handler_pool;
     struct {
         void * __that;
-        void (* send_tm)(void * const, __termina_box_t, MyResult * const);
+        void (* send_tm)(const __termina_event_t * const, void * const,
+                         __termina_box_t, __status_int32_t * const);
     } tm_channel;
     PS9ExecTCReqStatusUpdate exec_tc_req_status_update;
     PSExecTCReqStatus exec_tc_req_status;
@@ -35,42 +37,21 @@ typedef struct {
     MissionObt ref_obt;
 } PUSService9;
 
-MissionObt PUSService9__inner_get_current_obt(const PUSService9 * const self);
+MissionObt PUSService9__inner_get_current_obt(const __termina_event_t * const __ev,
+                                              const PUSService9 * const self);
 
-void PUSService9__set_obt(PUSService9 * const self);
+void PUSService9__set_obt(const __termina_event_t * const __ev,
+                          PUSService9 * const self);
 
-PSExecTCReqStatus PUSService9__exec9_129TC(PUSService9 * const self);
+__status_int32_t PUSService9__exec9_129TC(const __termina_event_t * const __ev,
+                                          PUSService9 * const self);
 
-PS9ExecTCReqStatusUpdate PUSService9__get_TC_params(const PUSService9 * const self,
-                                                    TCHandlerT * const tc_handler,
-                                                    uint8_t * const subtype,
-                                                    MyResult * const result);
-
-PSExecTCReqStatus PUSService9__manage_error_in_acceptance(const PUSService9 * const self);
-
-PSExecTCReqStatus PUSService9__manage_short_pack_length_error(const PUSService9 * const self);
-
-PSExecTCReqStatus PUSService9__manage_tm_limit_app_data_reached(const PUSService9 * const self);
-
-void PUSService9__exec_tc(void * const __this, TCHandlerT * const tc_handler,
+void PUSService9__exec_tc(const __termina_event_t * const __ev,
+                          void * const __this, TCHandlerT * const tc_handler,
                           __status_int32_t * const action_status);
-void PUSService9__exec_tc__mutex_lock(void * const __this,
-                                      TCHandlerT * const tc_handler,
-                                      __status_int32_t * const action_status);
-void PUSService9__exec_tc__task_lock(void * const __this,
-                                     TCHandlerT * const tc_handler,
-                                     __status_int32_t * const action_status);
-void PUSService9__exec_tc__event_lock(void * const __this,
-                                      TCHandlerT * const tc_handler,
-                                      __status_int32_t * const action_status);
 
-void PUSService9__get_current_obt(void * const __this,
+void PUSService9__get_current_obt(const __termina_event_t * const __ev,
+                                  void * const __this,
                                   MissionObt * const current_obt);
-void PUSService9__get_current_obt__mutex_lock(void * const __this,
-                                              MissionObt * const current_obt);
-void PUSService9__get_current_obt__task_lock(void * const __this,
-                                             MissionObt * const current_obt);
-void PUSService9__get_current_obt__event_lock(void * const __this,
-                                              MissionObt * const current_obt);
 
 #endif

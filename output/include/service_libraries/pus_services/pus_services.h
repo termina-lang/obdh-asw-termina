@@ -12,30 +12,15 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef enum {
     PSExecTCReqStatus__Init,
     PSExecTCReqStatus__ExecTC,
-    PSExecTCReqStatus__Error,
-    PSExecTCReqStatus__Failure,
     PSExecTCReqStatus__Exit
 } __enum_PSExecTCReqStatus_t;
 
 typedef struct {
-    int32_t __0;
-} __enum_PSExecTCReqStatus__Error_params_t;
-
-typedef struct {
-    int32_t __0;
-} __enum_PSExecTCReqStatus__Failure_params_t;
-
-typedef struct {
     __enum_PSExecTCReqStatus_t __variant;
-    union {
-        __enum_PSExecTCReqStatus__Error_params_t Error;
-        __enum_PSExecTCReqStatus__Failure_params_t Failure;
-    };
 } PSExecTCReqStatus;
 
 typedef struct {
