@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MintermFilter SYSTEM "../../../DTDs/filters.dtd">
+
+<MintermFilter formatFile="../../../TM_Formats/Level2/st03/asw_pus_v2_tm_3_25_sid0_format.xml">
+	<BoolVar id="0" name="SID0" constantType="decimal">
+		<FieldRef name="SID" />
+		<Op type="equal" />
+		<Constant value="0" />
+	</BoolVar>
+
+	<Minterm id="0">
+		<BoolVarRef idRef="0" />
+	</Minterm>
+</MintermFilter>

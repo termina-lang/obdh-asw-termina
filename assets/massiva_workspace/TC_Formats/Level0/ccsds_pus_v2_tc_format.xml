@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tm_tc_format SYSTEM "../../DTDs/tm_tc_format.dtd">
+
+<tm_tc_format protocol="CCSDS" type="TC">
+	<VSField fid="0" pfid="0" name="CCSDSPacket" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<constSize bytes="7" bits="0" />		<!-- const size in bits = 56 -->
+		<variableSize fidRef="12" unit="bytes"/><!-- vble size = PacketLength + 7 bytes -->
+		<maxSize bytes="248" bits="0" />		<!-- max size in bits = 248 * 8 -->
+		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
+	</VSField>
+
+	<CSField fid="1" pfid="0" name="PacketHeader" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="6" bits="0" />				<!-- size in bits = 48 -->
+		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
+	</CSField>
+
+	<CSField fid="2" pfid="1" name="PacketID" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="2" bits="0" />				<!-- size in bits = 16 -->
+		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
+	</CSField>
+
+	<CSField fid="3" pfid="2" name="VersionNumber" type="flag" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="0" bits="3" />				<!-- size in bits = 3 -->
+		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
+	</CSField>
+
+	<CSField fid="4" pfid="2" name="Type" type="flag" byteOrder="na" firstBit="MSB">
+		<size bytes="0" bits="1" />				<!-- size in bits = 1 -->
+		<globalOffset bytes="0" bits="3" />		<!-- offset in bits = 3 -->
+	</CSField>
+
+	<CSField fid="5" pfid="2" name="DFHFlag" type="flag" byteOrder="na" firstBit="MSB">
+		<size bytes="0" bits="1" />				<!-- size in bits = 1 -->
+		<globalOffset bytes="0" bits="4" />		<!-- offset in bits = 4 -->
+	</CSField>
+
+	<CSField fid="6" pfid="2" name="APID" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="0" bits="11" />			<!-- size in bits = 11 -->
+		<globalOffset bytes="0" bits="5" />		<!-- offset in bits = 5 -->
+	</CSField>
+
+	<CSField fid="7" pfid="6" name="PID" type="enumerated" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="0" bits="7" />				<!-- size in bits = 7 -->
+		<globalOffset bytes="0" bits="5" />		<!-- offset in bits = 5 -->
+	</CSField>
+
+	<CSField fid="8" pfid="6" name="PCAT" type="enumerated" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="0" bits="4" />				<!-- size in bits = 4 -->
+		<globalOffset bytes="0" bits="12" />	<!-- offset in bits = 12 -->
+	</CSField>
+
+	<CSField fid="9" pfid="1" name="PacketSequenceControl" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="2" bits="0" />				<!-- size in bits = 16 -->
+		<globalOffset bytes="2" bits="0" />		<!-- offset in bits = 16 -->
+	</CSField>
+
+	<CSField fid="10" pfid="9" name="SequenceFlag" type="flag" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="0" bits="2" />				<!-- size in bits = 2 -->
+		<globalOffset bytes="2" bits="0" />		<!-- offset in bits = 16 -->
+	</CSField>
+
+	<CSField fid="11" pfid="9" name="SequenceCount" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="0" bits="14" />			<!-- size in bits = 14 -->
+		<globalOffset bytes="2" bits="2" />		<!-- offset in bits = 18 -->
+	</CSField>
+
+	<CSField fid="12" pfid="1" name="PacketLength" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="2" bits="0" />				<!-- size in bits = 16 -->
+		<globalOffset bytes="4" bits="0" />		<!-- offset in bits = 32 -->
+	</CSField>
+
+	<VSField fid="13" pfid="0" name="PacketDataField" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<constSize bytes="1" bits="0" />		<!-- const size in bits = 8 -->
+		<variableSize fidRef="12" unit="bytes"/><!-- vble size = PacketLength + 1 bytes -->
+		<maxSize bytes="250" bits="0" />		<!-- max size in bits = 250 * 8 -->
+		<globalOffset bytes="6" bits="0" />		<!-- offset in bits = 48 -->
+	</VSField>
+
+	<CSField fid="14" pfid="13" name="SecondaryHeader" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="5" bits="0" />				<!-- size in bits = 32 -->
+		<globalOffset bytes="6" bits="0" />		<!-- offset in bits = 48 -->
+	</CSField>
+
+	<VSField fid="15" pfid="13" name="ApplicationData" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<constSize bytes="-6" bits="0" />		<!-- const size in bits = -40 -->
+		<variableSize fidRef="12" unit="bytes"/><!-- vble size = PacketLength + 1 - 5 [SecondaryHeader] - 2 [CRC] bytes -->
+		<maxSize bytes="243" bits="0" />		<!-- max size in bits = 236 * 8 -->
+		<globalOffset bytes="11" bits="0" />	<!-- offset in bits = 80 -->
+	</VSField>
+
+	<!-- Floating Data Integrity Check field -->
+	<FDICField fid="16" pfid="13" name="CRC" checkType="crc16" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="2" bits="0" /> 		<!-- size in bits = 16 -->
+		<floatingOffset fidRef="15" /> 		<!-- Located after "ApplicationData" -->
+		<sortedFieldsToCheck>				<!-- It checks several fields: -->
+			<fieldToCheck fidRef="1" />			<!-- "PacketHeader" -->	
+			<fieldToCheck fidRef="14" />		<!-- "SecondaryHeader" -->	
+			<fieldToCheck fidRef="15" />		<!-- "ApplicationData" -->	
+		</sortedFieldsToCheck> 
+	</FDICField>
+</tm_tc_format>

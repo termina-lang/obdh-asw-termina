@@ -1,0 +1,125 @@
+<!ELEMENT tm_tc_format ((CSField | CSFormulaField | VSField | FDICField | VRFieldSize | AField | AIField)*)>
+<!ATTLIST tm_tc_format
+	protocol CDATA #REQUIRED
+	type (TM | TC) #REQUIRED>
+
+<!ELEMENT CSField (size, globalOffset)>
+<!ATTLIST CSField
+	fid NMTOKEN #REQUIRED
+	pfid NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	description CDATA #IMPLIED
+	type (structured | uint | flag | enumerated | bit_vector | byte_vector | float | deduced) #REQUIRED
+	byteOrder (big_endian | little_endian | na) #REQUIRED
+	firstBit (MSB | LSB) #REQUIRED>
+
+<!ELEMENT size EMPTY>
+<!ATTLIST size
+	bytes CDATA #REQUIRED
+	bits CDATA #REQUIRED>
+
+<!ELEMENT globalOffset EMPTY>
+<!ATTLIST globalOffset
+	bytes CDATA #REQUIRED
+	bits CDATA #REQUIRED>
+
+<!ELEMENT CSFormulaField (size, globalOffset, formula)>
+<!ATTLIST CSFormulaField
+	fid NMTOKEN #REQUIRED
+	pfid NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	description CDATA #IMPLIED
+	type (structured | uint | flag | enumerated | bit_vector | byte_vector | float | deduced) #REQUIRED
+	byteOrder (big_endian | little_endian | na) #REQUIRED
+	firstBit (MSB | LSB) #REQUIRED>
+
+<!ELEMENT formula EMPTY>
+<!ATTLIST formula
+	slope CDATA #REQUIRED
+	intercept CDATA #REQUIRED>
+
+<!ELEMENT VSField (constSize, variableSize, maxSize, globalOffset)>
+<!ATTLIST VSField
+	fid NMTOKEN #REQUIRED
+	pfid NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	description CDATA #IMPLIED
+	type (structured | uint | flag | enumerated | bit_vector | byte_vector | float | deduced) #REQUIRED
+	byteOrder (big_endian | little_endian | na) #REQUIRED
+	firstBit (MSB | LSB) #REQUIRED>
+
+<!ELEMENT constSize EMPTY>
+<!ATTLIST constSize
+	bytes CDATA #REQUIRED
+	bits CDATA #REQUIRED>
+
+<!ELEMENT variableSize EMPTY>
+<!ATTLIST variableSize
+	fidRef NMTOKEN #REQUIRED
+	unit (bytes | bits | halfword | string10 | string17 | string69) #REQUIRED
+	power (2 | 2_with_0) #IMPLIED>
+	
+<!ELEMENT maxSize EMPTY>
+<!ATTLIST maxSize
+	bytes CDATA #REQUIRED
+	bits CDATA #REQUIRED>
+
+<!ELEMENT VRFieldSize EMPTY>
+<!ATTLIST VRFieldSize
+	fid NMTOKEN #REQUIRED
+	pfid NMTOKEN #REQUIRED
+	name CDATA #REQUIRED>
+
+<!ELEMENT FDICField (size, floatingOffset, sortedFieldsToCheck)>
+<!ATTLIST FDICField
+	fid NMTOKEN #REQUIRED
+	pfid NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	description CDATA #IMPLIED
+	checkType (crc16 | checksum16) #REQUIRED
+	byteOrder (big_endian | little_endian | na) #REQUIRED
+	firstBit (MSB | LSB) #REQUIRED>
+
+<!ELEMENT floatingOffset EMPTY>
+<!ATTLIST floatingOffset
+	fidRef NMTOKEN #REQUIRED>
+
+<!ELEMENT sortedFieldsToCheck (fieldToCheck+)>
+<!ELEMENT fieldToCheck EMPTY>
+<!ATTLIST fieldToCheck
+	fidRef NMTOKEN #REQUIRED>
+
+<!ELEMENT AField (arrayDimension, size, globalOffset)>
+<!ATTLIST AField
+	fid NMTOKEN #REQUIRED
+	pfid NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	description CDATA #IMPLIED
+	type (structured | uint | flag | enumerated | bit_vector | byte_vector | float | deduced) #REQUIRED
+	byteOrder (big_endian | little_endian | na) #REQUIRED
+	firstBit (MSB | LSB) #REQUIRED>
+
+<!ELEMENT arrayDimension EMPTY>
+<!ATTLIST arrayDimension
+	fidRef NMTOKEN #REQUIRED
+	maxItems CDATA #REQUIRED>
+
+<!ELEMENT AIField (arrayRef, size, localOffset)>
+<!ATTLIST AIField
+	fid NMTOKEN #REQUIRED
+	pfid NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	description CDATA #IMPLIED
+	type (structured | uint | flag | enumerated | bit_vector | byte_vector | float | deduced) #REQUIRED
+	byteOrder (big_endian | little_endian | na) #REQUIRED
+	firstBit (MSB | LSB) #REQUIRED>
+
+<!ELEMENT arrayRef EMPTY>
+<!ATTLIST arrayRef
+	fidRef NMTOKEN #REQUIRED>
+	
+<!ELEMENT localOffset EMPTY>
+<!ATTLIST localOffset
+	bytes CDATA #REQUIRED
+	bits CDATA #REQUIRED>
+	

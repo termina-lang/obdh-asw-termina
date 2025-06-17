@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE MintermFilter SYSTEM "../DTDs/filters.dtd">
+
+<ProtocolPackets>
+	<!--ProtocolPacket name="9.129" ifRef="0" levelRef="2">
+		<export file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_9_129_to_epd_pus_tc_ack.xml"/>
+		<format file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_9_129_format.xml" />
+	</ProtocolPacket-->
+	<!--ProtocolPacket name="3.129" ifRef="0" levelRef="2">
+		<export file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_3_129_to_epd_pus_tc_ack.xml"/>
+		<format file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_3_129_format.xml" />
+	</ProtocolPacket-->
+	<!--ProtocolPacket name="3.5" ifRef="0" levelRef="2">
+		<export file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_3_5_to_epd_pus_tc_ack.xml"/>
+
+		<format file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_3_5_3_6_format.xml" />
+	</ProtocolPacket-->
+	<!--ProtocolPacket name="3.6" ifRef="0" levelRef="2">
+		<export file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_3_6_to_epd_pus_tc_ack.xml"/>
+		<format file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_3_5_3_6_format.xml" />
+	</ProtocolPacket-->
+	<!--ProtocolPacket name="128.4" ifRef="0" levelRef="2">
+		<export file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_128_4_to_epd_pus_tc_ack.xml"/>
+		<format file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_128_4_format.xml" />
+	</ProtocolPacket-->
+	<!--ProtocolPacket name="128.5" ifRef="0" levelRef="2">
+		<export file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_128_5_to_epd_pus_tc_ack.xml"/>
+		<format file="GSS_Interfaces/SpW/Level2/Tx/epd_pus_tc_128_5_format.xml" />
+	</ProtocolPacket-->
+	<ProtocolPacket name="17.1" ifRef="0" levelRef="2">
+		<export file="TC_Formats/Lv2_To_Lv1/st17/asw_pus_v2_tc_17_1_to_asw_pus_v2_tc_ack.xml"/>
+		<format file="NULL" />
+	</ProtocolPacket>
+</ProtocolPackets>

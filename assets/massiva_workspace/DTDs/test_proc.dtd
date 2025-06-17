@@ -1,0 +1,157 @@
+<!ELEMENT test_proc (step+)>
+<!ATTLIST test_proc
+	name CDATA #REQUIRED>
+
+<!ELEMENT step (inputs, outputs?, specialPackets?, concurrent_steps?)>
+<!ATTLIST step
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	prev_step_idref CDATA #REQUIRED
+	output_idref_from_prev_step CDATA #REQUIRED
+	mode (continuous | manual | concurrent) #REQUIRED
+	replays CDATA #IMPLIED>
+<!ELEMENT specialPackets (enable | disable | enable_print | disable_print)*>
+<!ELEMENT enable EMPTY>
+<!ATTLIST enable
+	id CDATA #REQUIRED>
+<!ELEMENT disable EMPTY>
+<!ATTLIST disable
+	id CDATA #REQUIRED>
+<!ELEMENT enable_print EMPTY>
+<!ATTLIST enable_print
+	id CDATA #REQUIRED>
+<!ELEMENT disable_print EMPTY>
+<!ATTLIST disable_print
+	id CDATA #REQUIRED>
+<!ELEMENT concurrent_steps (nextStep, concurrent_step*)>
+<!ELEMENT nextStep EMPTY>
+<!ATTLIST nextStep
+	id CDATA #REQUIRED
+	isConcurrent (yes | no) #REQUIRED>
+<!ELEMENT concurrent_step EMPTY>
+<!ATTLIST concurrent_step
+	id CDATA #REQUIRED>
+
+<!-- inputs -->
+<!ELEMENT inputs ((input_level_3 | input_level_2 | input_level_1 | input_level_0)*)>
+
+<!ELEMENT input_level_3 (level3, app_to_level3, level2, level3_to_level2, level1, level2_to_level1, level0, level1_to_level0)>
+<!ATTLIST input_level_3
+	name CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	delay_value CDATA #REQUIRED	
+	delay_unit (miliseconds | seconds) #REQUIRED>
+<!ELEMENT input_level_2 (level2, app_to_level2, level1, level2_to_level1, level0, level1_to_level0)>
+<!ATTLIST input_level_2
+	name CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	delay_value CDATA #REQUIRED
+	delay_unit (miliseconds | seconds) #REQUIRED>
+<!ELEMENT input_level_1 (level1, app_to_level1, level0, level1_to_level0)>
+<!ATTLIST input_level_1
+	name CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	delay_value CDATA #REQUIRED
+	delay_unit (miliseconds | seconds) #REQUIRED>
+<!ELEMENT input_level_0 (level0, app_to_level0)>
+<!ATTLIST input_level_0
+	name CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	delay_value CDATA #REQUIRED
+	delay_unit (miliseconds | seconds) #REQUIRED>
+
+<!ELEMENT app_to_level3 EMPTY>
+<!ATTLIST app_to_level3 
+	export CDATA #REQUIRED>
+<!ELEMENT app_to_level2 EMPTY>
+<!ATTLIST app_to_level2 
+	export CDATA #REQUIRED>
+<!ELEMENT app_to_level1 EMPTY>
+<!ATTLIST app_to_level1 
+	export CDATA #REQUIRED>
+<!ELEMENT app_to_level0 EMPTY>
+<!ATTLIST app_to_level0 
+	export CDATA #REQUIRED>
+
+<!ELEMENT level3_to_level2 EMPTY>
+<!ATTLIST level3_to_level2
+	export CDATA #REQUIRED>
+<!ELEMENT level2_to_level1 EMPTY>
+<!ATTLIST level2_to_level1
+	export CDATA #REQUIRED>
+<!ELEMENT level1_to_level0 EMPTY>
+<!ATTLIST level1_to_level0
+	export CDATA #REQUIRED>
+
+<!-- outputs -->
+<!ELEMENT outputs ((output_level_3 | output_level_2 | output_level_1 | output_level_0)*)>
+<!ATTLIST outputs 
+	checkmode (all | allunsorted | any) #REQUIRED
+	valid_time_interval_value CDATA #REQUIRED
+	valid_time_interval_unit (miliseconds | seconds) #REQUIRED>
+
+<!ELEMENT output_level_3 (level3, level3_filter, level3_from_level2, level2, level2_filter, level1, level2_from_level1, level1_filter, level0, level1_from_level0, level0_filter)>
+<!ATTLIST output_level_3
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	optional CDATA #IMPLIED>
+<!ELEMENT output_level_2 (level2, level2_filter, level1, level2_from_level1, level1_filter, level0, level1_from_level0, level0_filter)>
+<!ATTLIST output_level_2
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	optional CDATA #IMPLIED>
+<!ELEMENT output_level_1 (level1, level1_filter, level0, level1_from_level0, level0_filter)>
+<!ATTLIST output_level_1
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	optional CDATA #IMPLIED>
+<!ELEMENT output_level_0 (level0, level0_filter)>
+<!ATTLIST output_level_0
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	optional CDATA #IMPLIED>
+
+<!ELEMENT level3_filter EMPTY>
+<!ATTLIST level3_filter
+	apply_def_filter (yes | no) #REQUIRED
+	extra_filter CDATA #REQUIRED>
+<!ELEMENT level2_filter EMPTY>
+<!ATTLIST level2_filter
+	apply_def_filter (yes | no) #REQUIRED
+	extra_filter CDATA #REQUIRED>
+<!ELEMENT level1_filter EMPTY>
+<!ATTLIST level1_filter
+	apply_def_filter (yes | no) #REQUIRED
+	extra_filter CDATA #REQUIRED>
+<!ELEMENT level0_filter EMPTY>
+<!ATTLIST level0_filter
+	apply_def_filter (yes | no) #REQUIRED
+	extra_filter CDATA #REQUIRED>
+
+<!ELEMENT level3_from_level2 EMPTY>
+<!ATTLIST level3_from_level2
+	import CDATA #REQUIRED>
+<!ELEMENT level2_from_level1 EMPTY>
+<!ATTLIST level2_from_level1
+	import CDATA #REQUIRED>
+<!ELEMENT level1_from_level0 EMPTY>
+<!ATTLIST level1_from_level0
+	import CDATA #REQUIRED>
+
+<!-- inputs and outputs -->
+<!ELEMENT level3 EMPTY>
+<!ATTLIST level3
+	format CDATA #REQUIRED>
+<!ELEMENT level2 EMPTY>
+<!ATTLIST level2
+	format CDATA #REQUIRED>
+<!ELEMENT level1 EMPTY>
+<!ATTLIST level1
+	format CDATA #REQUIRED>
+<!ELEMENT level0 EMPTY>
+<!ATTLIST level0
+	format CDATA #REQUIRED>

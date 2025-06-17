@@ -1,0 +1,44 @@
+<!ELEMENT portConfig (uartPort | spwPort | spwTCPort | dummyPort)*>
+<!ATTLIST portConfig
+	name CDATA #REQUIRED>
+
+<!ELEMENT uartPort (uartProtocol)>
+<!ATTLIST uartPort
+	number CDATA #REQUIRED
+	baudRate (38400 | 115200) #REQUIRED
+	parity (NO | ODD | EVEN | MARK | SPACE) #REQUIRED
+	dataBits (5 | 6 | 7 | 8) #REQUIRED
+	stopBits (1 | 2) #REQUIRED
+	inputQueueSize CDATA #REQUIRED
+	outputQueueSize CDATA #REQUIRED>
+<!ELEMENT uartProtocol (constSize, sizeFieldOffset, sizeFieldTrim)>
+<!ATTLIST uartProtocol
+	unit (bytes | bits) #REQUIRED
+	power (no | 2 | 2_with_0) #REQUIRED>
+<!ELEMENT constSize EMPTY>
+<!ATTLIST constSize
+	bytes CDATA #REQUIRED
+	bits CDATA #REQUIRED>
+<!ELEMENT sizeFieldOffset EMPTY>
+<!ATTLIST sizeFieldOffset
+	bytes CDATA #REQUIRED
+	bits CDATA #REQUIRED>
+<!ELEMENT sizeFieldTrim EMPTY>
+<!ATTLIST sizeFieldTrim
+	bytes CDATA #REQUIRED
+	bits CDATA #REQUIRED>
+
+<!ELEMENT spwPort (readingPort+)>
+<!ATTLIST spwPort
+	type (usb | mk2 | pci) #REQUIRED
+	link CDATA #REQUIRED
+	writingPort CDATA #REQUIRED>
+<!ELEMENT readingPort EMPTY>
+<!ATTLIST readingPort
+	port CDATA #REQUIRED>
+
+<!ELEMENT spwTCPort EMPTY>
+<!ATTLIST spwTCPort
+	spwPortRef CDATA #REQUIRED>
+	
+<!ELEMENT dummyPort EMPTY>

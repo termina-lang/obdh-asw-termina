@@ -1,0 +1,17 @@
+<!ELEMENT Import (dataSource+, virtualSize?)>
+<!ATTLIST Import
+	from CDATA #REQUIRED
+	to CDATA #REQUIRED>
+
+<!ELEMENT dataSource EMPTY>
+<!ATTLIST dataSource
+	FieldRef CDATA #REQUIRED
+	leftTrim CDATA #REQUIRED
+	rightTrim CDATA #REQUIRED>
+
+<!ELEMENT virtualSize EMPTY>
+<!ATTLIST virtualSize
+	FieldRef CDATA #REQUIRED
+	to CDATA #REQUIRED
+	addSize CDATA #IMPLIED
+	unit (bits | bytes) #IMPLIED>

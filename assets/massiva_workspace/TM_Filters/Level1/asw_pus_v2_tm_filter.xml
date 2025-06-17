@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MintermFilter SYSTEM "../../DTDs/filters.dtd" >
+
+<MintermFilter formatFile="pus.xml">
+	<BoolVar id="0" name="PUSVersionIs2" constantType="decimal">
+		<FieldRef name="PUSVersion"/>
+		<Op type="equal"/>
+		<Constant value="2"/>
+	</BoolVar>
+	
+	<Minterm id="0">
+		<BoolVarRef idRef="0"/>
+	</Minterm>
+</MintermFilter>

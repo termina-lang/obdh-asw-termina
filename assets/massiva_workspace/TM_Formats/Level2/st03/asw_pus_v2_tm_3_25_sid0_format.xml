@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tm_tc_format SYSTEM "../../../../DTDs/tm_tc_format.dtd">
+
+<tm_tc_format protocol="EPD_3.25 SID0" type="TC">
+	<CSField fid="0" pfid="0" name="SourceData" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="22" bits="0" />			<!-- size in bits = 9*8 -->
+		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
+	</CSField>
+
+	<CSField fid="1" pfid="0" name="SID" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="2" bits="0" />				<!-- size in bits = 8 -->
+		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
+	</CSField>
+
+	<CSFormulaField fid="2" pfid="0" name="Current_3_3V" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="4" bits="0" />				<!-- size in bits = 16 -->
+		<globalOffset bytes="2" bits="0" />		<!-- offset in bits = 16 -->
+		<formula slope="20.0/4096" intercept="-10" />
+	</CSFormulaField>
+	
+	<CSFormulaField fid="3" pfid="0" name="Current_5V" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="4" bits="0" />				<!-- size in bits = 16 -->
+		<globalOffset bytes="6" bits="0" />		<!-- offset in bits = 32 -->
+		<formula slope="20.0/4096" intercept="-10" />
+	</CSFormulaField>
+	
+	<CSFormulaField fid="4" pfid="0" name="Volt_3_3V" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="4" bits="0" />				<!-- size in bits = 16 -->
+		<globalOffset bytes="10" bits="0" />		<!-- offset in bits = 48 -->
+		<formula slope="20.0/4096" intercept="-10" />
+	</CSFormulaField>
+
+	<CSFormulaField fid="5" pfid="0" name="Volt_5V" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="4" bits="0" />				<!-- size in bits = 16 -->
+		<globalOffset bytes="14" bits="0" />		<!-- offset in bits = 48 -->
+		<formula slope="20.0/4096" intercept="-10" />
+	</CSFormulaField>
+
+	<CSFormulaField fid="6" pfid="0" name="Temp" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="4" bits="0" />				<!-- size in bits = 16 -->
+		<globalOffset bytes="18" bits="0" />		<!-- offset in bits = 48 -->
+		<formula slope="40.0/4096" intercept="-10" />
+	</CSFormulaField>
+	
+</tm_tc_format>

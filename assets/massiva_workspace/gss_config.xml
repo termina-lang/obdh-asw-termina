@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE gss_config SYSTEM "DTDs/gss_config.dtd">
+
+<gss_config>
+<gss_options>
+	<gss_info test_campaign="demo" version="3.1.6.6" date="2025/04/02" version_control_url="URL"/>
+	<gss_info_print mainLog="enabled" portLogs="enabled" rawLog="enabled" />
+	<phy_header_print mainLog="disabled" portLogs="disabled" rawLog="disabled" gssTabs="disabled" />
+	<discardErrorFlags txErrors="disabled" notExpectedPackets="disabled" filtersKo="disabled" validTimesKo="enabled" />
+</gss_options>
+	
+<Protocols>
+	<Protocol id="0" name="CCSDS" typeLevel="1">
+		<type name="ServiceType" offset="7" />
+		<subtype name="ServiceSubtype" offset="8" />
+	</Protocol>
+</Protocols>
+
+<Interfaces>
+	<MainInterface id="0" name="UART" ifType="uart" ifConfig="GSS_Interfaces/uart/uart_beef_port3.xml" ioType="in_out" protocolID="0">
+		<LevelInOut id="0" name="CCSDS">
+			<TMformat				file="TM_Formats/Level0/ccsds_pus_v2_tm_format.xml" />
+			<TCformat				file="TC_Formats/Level0/ccsds_pus_v2_tc_format.xml" />
+			<inputFilter			file="TM_Filters/Level0/asw_ccsds_pus_v2_tm_filter.xml" />
+		</LevelInOut>
+		
+		<LevelInOut id="1" name="ASW_PUS">
+			<TMformat 				file="TM_Formats/Level1/asw_pus_v2_tm_format.xml" />
+			<TCformat 				file="TC_Formats/Level1/asw_pus_v2_tc_format.xml" />
+			<inputFilter 			file="TM_Filters/Level1/asw_pus_v2_tm_filter.xml" />
+			<export_to_prev_Level 	file="TC_Formats/Lv1_To_Lv0/asw_pus_v2_tc_to_ccsds_pus_v2_tc.xml" />
+			<import_from_prev_Level	file="TM_Formats/Lv1_From_Lv0/asw_pus_v2_tm_from_ccsds_pus_v2_tm.xml" />
+		</LevelInOut>
+	</MainInterface>
+</Interfaces>
+
+<SpecialPackets>
+	<SpecialPacket status="enabled" name="3.25 SID0" id="0" ifRef="0" levels="3" levelRef="1">
+		<inputFilter			file="TM_Filters/Level1/st03/asw_pus_v2_tm_3_25_filter.xml" />
+		<UpperLevels>
+			<UpperLevel level="2">
+				<TMformat			file="TM_Formats/Level2/st03/asw_pus_v2_tm_3_25_sid0_format.xml" />
+				<inputFilter		file="TM_Filters/Level2/st03/asw_pus_v2_tm_3_25_sid0_filter.xml" />
+				<import_from_prev_Level	file="TM_Formats/Lv2_From_Lv1/asw_pus_v2_tm_X_X_from_asw_pus_v2_tm.xml" />
+			</UpperLevel>
+		</UpperLevels>
+		<printingData printStatus="disabled">
+			<structuredData levelRef="2" firstField="1" />			
+		</printingData>
+		<period					min_value="9900" min_unit="miliseconds" max_value="10100" max_unit="miliseconds"/>
+	</SpecialPacket>
+</SpecialPackets>
+
+<Tests ProtocolPacketsFile="GSS_Interfaces/ProtocolPackets.xml" >
+
+	<TestCase name="tp_0010_asw_pus_tc_17_1_are_you_alive" 							
+		procedure="FT_PROCS/st17/tp_0010_asw_pus_tc_17_1_are_you_alive.xml"/>
+
+	<TestCase name="tp_0011_asw_pus_tc_17_3_ob_connection_test"
+		procedure="FT_PROCS/st17/tp_0011_asw_pus_tc_17_3_ob_connection_test.xml"/>
+
+	<TestCase name="tp_0020_asw_pus_tc_3_31_set_hk_period_sid0_to_0x05" 
+		procedure="FT_PROCS/st03/tp_0020_asw_pus_tc_3_31_set_hk_period_sid0_to_0x05.xml"/>
+		
+	<TestCase name="tp_0030_asw_pus_tc_20_3_set_pid10_to_99" 							
+		procedure="FT_PROCS/st20/tp_0030_asw_pus_tc_20_3_set_pid10_to_99.xml"/>
+		
+	<TestCase name="tp_0040_asw_pus_tc_20_1_get_pid10_equal_99" 						
+		procedure="FT_PROCS/st20/tp_0040_asw_pus_tc_20_1_get_pid10_equal_99.xml"/>
+
+</Tests>
+</gss_config>

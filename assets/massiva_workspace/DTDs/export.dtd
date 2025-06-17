@@ -1,0 +1,75 @@
+<!ELEMENT Export (Sizes?, settings, activateDICs?)>
+<!ATTLIST Export
+	from CDATA #REQUIRED
+	to CDATA #REQUIRED>
+	
+<!ELEMENT Sizes ((sizeFromFileLength | sizeFromFileLine | sizeInBits)+)>
+
+<!ELEMENT sizeFromFileLength EMPTY>
+<!ATTLIST sizeFromFileLength
+	id CDATA #REQUIRED
+	fromFile CDATA #REQUIRED
+	addSize CDATA #IMPLIED
+	unit (bits | bytes) #IMPLIED>
+
+<!ELEMENT sizeFromFileLine EMPTY>
+<!ATTLIST sizeFromFileLine
+	id CDATA #REQUIRED
+	fromFile CDATA #REQUIRED
+	line CDATA #REQUIRED
+	addSize CDATA #IMPLIED
+	unit (bits | bytes) #IMPLIED>
+
+<!ELEMENT sizeInBits EMPTY>
+<!ATTLIST sizeInBits
+	id CDATA #REQUIRED
+	from CDATA #REQUIRED
+	addSize CDATA #IMPLIED
+	unit (bits | bytes) #IMPLIED>
+
+<!ELEMENT settings ((settingFromConst | settingFromSize | settingFromFile | settingFromField | settingAIFromConst | settingAIFromFile)*)>
+
+<!ELEMENT settingFromConst EMPTY>
+<!ATTLIST settingFromConst
+	value CDATA #REQUIRED
+	toFieldRef CDATA #REQUIRED>
+	
+<!ELEMENT settingFromSize EMPTY>
+<!ATTLIST settingFromSize
+	sizeRef CDATA #REQUIRED
+	toFieldRef CDATA #REQUIRED>
+	
+<!ELEMENT settingFromFile EMPTY>
+<!ATTLIST settingFromFile
+	file CDATA #REQUIRED
+	toFieldRef CDATA #REQUIRED
+	offset CDATA #IMPLIED
+	size CDATA #IMPLIED
+	line CDATA #IMPLIED>
+	
+<!ELEMENT settingFromField EMPTY>
+<!ATTLIST settingFromField
+	fieldRef CDATA #REQUIRED
+	toFieldRef CDATA #REQUIRED>
+
+<!ELEMENT settingAIFromConst EMPTY>
+<!ATTLIST settingAIFromConst
+	value CDATA #REQUIRED
+	toFieldRef CDATA #REQUIRED
+	toArrayIndex CDATA #REQUIRED>
+	
+<!ELEMENT settingAIFromFile EMPTY>
+<!ATTLIST settingAIFromFile
+	file CDATA #REQUIRED
+	toFieldRef CDATA #REQUIRED
+	toArrayIndex CDATA #REQUIRED
+	offset CDATA #IMPLIED
+	size CDATA #IMPLIED
+	line CDATA #IMPLIED>
+	
+<!ELEMENT activateDICs (DIC+)>
+
+<!ELEMENT DIC EMPTY>
+<!ATTLIST DIC
+	id CDATA #REQUIRED
+	DICRef CDATA #REQUIRED>

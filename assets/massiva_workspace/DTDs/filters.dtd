@@ -1,0 +1,81 @@
+<!ELEMENT MaxtermFilter ((BoolVar | BoolVarFromArrayItem | BoolVarFromGroupedArrayItem | BoolVarFDIC)+, Maxterm+)>
+<!ATTLIST MaxtermFilter
+	formatFile CDATA #REQUIRED>
+
+<!ELEMENT MintermFilter ((BoolVar | BoolVarFromArrayItem | BoolVarFromGroupedArrayItem | BoolVarFDIC)+, Minterm+)>
+<!ATTLIST MintermFilter
+	formatFile CDATA #REQUIRED>
+
+<!ELEMENT BoolVar (FieldRef, Op, (Constant | Select | SelectLine))>
+<!ATTLIST BoolVar
+	id NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	constantType (decimal | hex | binary | char | string) #REQUIRED>
+
+<!ELEMENT FieldRef EMPTY>
+<!ATTLIST FieldRef
+	name CDATA #REQUIRED>
+
+<!ELEMENT Op EMPTY>
+<!ATTLIST Op
+	type (equal | different | bigger_than | smaller_than | bigger_or_equal | smaller_or_equal ) #REQUIRED>
+
+<!ELEMENT Constant EMPTY>
+<!ATTLIST Constant
+	value CDATA #REQUIRED
+	mask CDATA #IMPLIED>
+
+<!ELEMENT Select EMPTY>
+<!ATTLIST Select
+	fromFile CDATA #REQUIRED
+	type (data | size | crc) #REQUIRED
+	offset CDATA #IMPLIED
+	size CDATA #IMPLIED
+	mask CDATA #IMPLIED>
+
+<!ELEMENT SelectLine EMPTY>
+<!ATTLIST SelectLine
+	fromFile CDATA #REQUIRED
+	line CDATA #REQUIRED
+	leftTrim CDATA #IMPLIED
+	rightTrim CDATA #IMPLIED
+	mask CDATA #IMPLIED>
+
+<!ELEMENT BoolVarFDIC (FieldRef, Op)>
+<!ATTLIST BoolVarFDIC
+	id NMTOKEN #REQUIRED
+	name CDATA #REQUIRED>
+
+<!ELEMENT Maxterm (BoolVarRef+)>
+<!ATTLIST Maxterm
+	id NMTOKEN #REQUIRED>
+
+<!ELEMENT Minterm (BoolVarRef+)>
+<!ATTLIST Minterm
+	id NMTOKEN #REQUIRED>
+
+<!ELEMENT BoolVarRef EMPTY>
+<!ATTLIST BoolVarRef
+	idRef NMTOKEN #REQUIRED>
+
+<!ELEMENT BoolVarFromArrayItem (AIFieldRef, Op, (Constant | Select | SelectLine))>
+<!ATTLIST BoolVarFromArrayItem
+	id NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	constantType (decimal | hex | binary | char | string) #REQUIRED>
+
+<!ELEMENT AIFieldRef EMPTY>
+<!ATTLIST AIFieldRef
+	name CDATA #REQUIRED
+	index CDATA #REQUIRED>
+
+<!ELEMENT BoolVarFromGroupedArrayItem (AIFieldRefs, Op, (Constant | Select | SelectLine))>
+<!ATTLIST BoolVarFromGroupedArrayItem
+	id NMTOKEN #REQUIRED
+	name CDATA #REQUIRED
+	constantType (decimal | hex | binary | char | string) #REQUIRED
+	group CDATA #REQUIRED>
+
+<!ELEMENT AIFieldRefs EMPTY>
+<!ATTLIST AIFieldRefs
+	name CDATA #REQUIRED>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Export SYSTEM "../../DTDs/export.dtd">
+<Export from="NULL" to="epd_pus_3_6.xml">
+	<settings>
+		<settingFromConst value="0" toFieldRef="SID"/>				
+	</settings>
+</Export>

@@ -1,0 +1,8 @@
+<!ELEMENT Charts (Chart+)>
+
+<!ELEMENT Chart EMPTY>
+<!ATTLIST Chart
+	id #REQUIRED
+	name #REQUIRED
+	y_units (volts | amps) #REQUIRED
+	y_max CDATA #REQUIRED>

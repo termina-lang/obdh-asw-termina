@@ -1,0 +1,241 @@
+<!ELEMENT gss_config (gss_options, Protocols, Interfaces, SpecialPackets?, PeriodicTCs?, GlobalVars?, Monitors?, Tests)>
+
+<!ELEMENT gss_options (gss_info, gss_info_print, phy_header_print, discardErrorFlags)>
+<!ELEMENT Protocols (Protocol+)>
+<!ELEMENT Interfaces (MainInterface, (Interface+))>
+<!ELEMENT SpecialPackets (SpecialPacket+)>
+<!ELEMENT PeriodicTCs ((PeriodicTC_level_2 | PeriodicTC_level_1 | PeriodicTC_level_0)*)>
+<!ELEMENT GlobalVars (GlobalVar+)>
+<!ELEMENT Monitors ((plot | alarmMsg | modify | alarmVal)*)>
+<!ATTLIST Monitors
+	ChartsFile CDATA #IMPLIED>
+<!ELEMENT Tests (TestCase+)>
+<!ATTLIST Tests
+	ProtocolPacketsFile CDATA #IMPLIED>
+
+<!ELEMENT gss_info EMPTY>
+<!ATTLIST gss_info
+	test_campaign CDATA #REQUIRED
+	version CDATA #REQUIRED
+	date CDATA #REQUIRED
+	version_control_url CDATA #IMPLIED>
+
+<!ELEMENT gss_info_print EMPTY>
+<!ATTLIST gss_info_print
+	mainLog (enabled | disabled) #REQUIRED
+	portLogs (enabled | disabled) #REQUIRED
+	rawLog (enabled | disabled) #REQUIRED>
+
+<!ELEMENT phy_header_print EMPTY>
+<!ATTLIST phy_header_print
+	mainLog (enabled | disabled) #REQUIRED
+	portLogs (enabled | disabled) #REQUIRED
+	rawLog (enabled | disabled) #REQUIRED
+	gssTabs (enabled | disabled) #REQUIRED>
+
+<!ELEMENT discardErrorFlags EMPTY>
+<!ATTLIST discardErrorFlags
+	txErrors (enabled | disabled) #REQUIRED
+	notExpectedPackets (enabled | disabled) #REQUIRED
+	filtersKo (enabled | disabled) #REQUIRED
+	validTimesKo (enabled | disabled) #REQUIRED>
+	
+<!ELEMENT Protocol EMPTY>
+<!ATTLIST Protocol
+	id CDATA #REQUIRED
+	name CDATA #REQUIRED
+	typeLevel CDATA #REQUIRED
+	typeOffset CDATA #REQUIRED
+	subtypeOffset CDATA #IMPLIED>
+
+<!ELEMENT MainInterface ((LevelInOut | LevelIn | LevelOut)+)>
+<!ATTLIST MainInterface
+	id CDATA #REQUIRED
+	name CDATA #REQUIRED
+	ifType (SpW | uart | dummy) #REQUIRED
+	ifConfig CDATA #REQUIRED
+	ioType (in_out) #REQUIRED
+	protocolID CDATA #IMPLIED>
+
+<!ELEMENT Interface ((LevelInOut | LevelIn | LevelOut)+)>
+<!ATTLIST Interface
+	id CDATA #REQUIRED
+	name CDATA #REQUIRED
+	ifType (SpW | SpW_TC | SpW_Error | uart | dummy) #REQUIRED
+	ifConfig CDATA #REQUIRED
+	ioType (in | out | in_out) #REQUIRED
+	protocolID CDATA #IMPLIED>
+
+<!ELEMENT LevelInOut (TMformat, TCformat, inputFilter, export_to_prev_Level?, import_from_prev_Level?)>
+<!ATTLIST LevelInOut
+	id CDATA #REQUIRED
+	name CDATA #REQUIRED>
+<!ELEMENT LevelIn (TCformat, export_to_prev_Level?)>
+<!ATTLIST LevelIn
+	id CDATA #REQUIRED
+	name CDATA #REQUIRED>
+<!ELEMENT LevelOut (TMformat, inputFilter, import_from_prev_Level?)>
+<!ATTLIST LevelOut
+	id CDATA #REQUIRED
+	name CDATA #REQUIRED>
+
+<!ELEMENT TMformat EMPTY>
+<!ATTLIST TMformat
+	file CDATA #REQUIRED>
+<!ELEMENT TCformat EMPTY>
+<!ATTLIST TCformat
+	file CDATA #REQUIRED>
+<!ELEMENT inputFilter EMPTY>
+<!ATTLIST inputFilter 
+	file CDATA #REQUIRED>
+<!ELEMENT export_to_prev_Level EMPTY>
+<!ATTLIST export_to_prev_Level 
+	file CDATA #REQUIRED>
+<!ELEMENT import_from_prev_Level EMPTY>
+<!ATTLIST import_from_prev_Level 
+	file CDATA #REQUIRED>
+
+<!ELEMENT SpecialPacket (inputFilter, UpperLevels?, printingData, (period | intervalRange)?)>
+<!ATTLIST SpecialPacket
+	status (enabled | disabled) #REQUIRED
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	levels CDATA #REQUIRED
+	levelRef CDATA #REQUIRED>
+<!ELEMENT UpperLevels (UpperLevel+)>
+<!ELEMENT UpperLevel (TMformat, inputFilter, import_from_prev_Level)>
+<!ATTLIST UpperLevel
+	level (1 | 2 | 3) #REQUIRED>
+<!ELEMENT printingData (structuredData?)>
+<!ATTLIST printingData
+	printStatus (enabled | disabled) #REQUIRED>
+<!ELEMENT structuredData EMPTY>
+<!ATTLIST structuredData
+	levelRef CDATA #REQUIRED
+	firstField CDATA #REQUIRED>
+<!ELEMENT period EMPTY>
+<!ATTLIST period
+	min_value CDATA #REQUIRED
+	min_unit (miliseconds | seconds) #REQUIRED
+	max_value CDATA #REQUIRED
+	max_unit (miliseconds | seconds) #REQUIRED>
+<!ELEMENT intervalRange EMPTY>
+<!ATTLIST intervalRange
+	min CDATA #REQUIRED
+	max CDATA #REQUIRED
+	interval_value CDATA #REQUIRED
+	interval_unit (miliseconds | seconds) #REQUIRED>
+
+<!ELEMENT PeriodicTC_level_2 (level2, app_to_level2, level1, level2_to_level1, level0, level1_to_level0)>
+<!ATTLIST PeriodicTC_level_2
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	period_value CDATA #REQUIRED
+	period_unit (miliseconds | seconds) #REQUIRED>
+<!ELEMENT PeriodicTC_level_1 (level1, app_to_level1, level0, level1_to_level0)>
+<!ATTLIST PeriodicTC_level_1
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	period_value CDATA #REQUIRED
+	period_unit (miliseconds | seconds) #REQUIRED>
+<!ELEMENT PeriodicTC_level_0 (level0, app_to_level0)>
+<!ATTLIST PeriodicTC_level_0
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	ifRef CDATA #REQUIRED
+	period_value CDATA #REQUIRED
+	period_unit (miliseconds | seconds) #REQUIRED>
+
+<!ELEMENT level2 EMPTY>
+<!ATTLIST level2
+	format CDATA #REQUIRED>
+<!ELEMENT level1 EMPTY>
+<!ATTLIST level1
+	format CDATA #REQUIRED>
+<!ELEMENT level0 EMPTY>
+<!ATTLIST level0
+	format CDATA #REQUIRED>
+
+<!ELEMENT app_to_level2 EMPTY>
+<!ATTLIST app_to_level2 
+	export CDATA #REQUIRED>
+<!ELEMENT app_to_level1 EMPTY>
+<!ATTLIST app_to_level1 
+	export CDATA #REQUIRED>
+<!ELEMENT app_to_level0 EMPTY>
+<!ATTLIST app_to_level0 
+	export CDATA #REQUIRED>
+
+<!ELEMENT level2_to_level1 EMPTY>
+<!ATTLIST level2_to_level1
+	export CDATA #REQUIRED>
+<!ELEMENT level1_to_level0 EMPTY>
+<!ATTLIST level1_to_level0
+	export CDATA #REQUIRED>
+
+<!ELEMENT GlobalVar (referenceField | referencePeriodicTC | referenceSpecialPacket)>
+<!ATTLIST GlobalVar
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	type (uint | formula) #REQUIRED
+	initial_value CDATA #REQUIRED>
+<!ELEMENT referenceField EMPTY>
+<!ATTLIST referenceField
+	type (tm | tc) #REQUIRED
+	ifRef CDATA #REQUIRED
+	level CDATA #REQUIRED
+	fieldRef CDATA #REQUIRED
+	offset CDATA #REQUIRED
+	size CDATA #REQUIRED>
+<!ELEMENT referencePeriodicTC EMPTY>
+<!ATTLIST referencePeriodicTC
+	idRef CDATA #REQUIRED
+	level CDATA #REQUIRED
+	fieldRef CDATA #REQUIRED
+	offset CDATA #REQUIRED
+	size CDATA #REQUIRED>
+<!ELEMENT referenceSpecialPacket EMPTY>
+<!ATTLIST referenceSpecialPacket
+	idRef CDATA #REQUIRED
+	level CDATA #REQUIRED
+	fieldRef CDATA #REQUIRED
+	offset CDATA #REQUIRED
+	size CDATA #REQUIRED>
+
+<!ELEMENT plot (GVFiltered | GVPeriodic)+>
+<!ATTLIST plot
+	name CDATA #REQUIRED>
+<!ELEMENT alarmMsg (GVFiltered | GVPeriodic)+>
+<!ATTLIST alarmMsg
+	name CDATA #REQUIRED
+	type (alarm1 | alarm2 | alarm3) #REQUIRED
+	text CDATA #REQUIRED>
+<!ELEMENT modify (GVFiltered | GVPeriodic)+>
+<!ATTLIST modify
+	name CDATA #REQUIRED
+	type (increment | increment1wrap) #REQUIRED
+	value CDATA #REQUIRED>
+<!ELEMENT alarmVal (GVFiltered | GVPeriodic)+>
+<!ATTLIST alarmVal
+	name CDATA #REQUIRED
+	type (alarm1) #REQUIRED>
+
+<!ELEMENT GVFiltered EMPTY>
+<!ATTLIST GVFiltered
+	GlobalVarRef CDATA #REQUIRED
+	filter CDATA #REQUIRED>
+<!ELEMENT GVPeriodic EMPTY>
+<!ATTLIST GVPeriodic
+	GlobalVarRef CDATA #REQUIRED
+	period_value CDATA #REQUIRED
+	period_unit (miliseconds | seconds) #REQUIRED>
+
+<!ELEMENT TestCase EMPTY>
+<!ATTLIST TestCase
+	name CDATA #REQUIRED
+	procedure CDATA #REQUIRED
+	req CDATA #IMPLIED
+	reqAction CDATA #IMPLIED>

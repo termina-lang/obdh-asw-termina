@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE test_proc SYSTEM "../DTDs/test_proc.dtd">
+
+<test_proc name="tp_0050_pus_tc_12_5_add_pmonid0_pid10_low_limit_value_01_rid_0x4000_high_limit_value_10_rid_0x4001">
+	<step name="12_5_add_pmonid0_pid10_to_0x01_0x4000_10_0x4001" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
+		<inputs>			
+			<input_level_2 name="tc_12_5" ifRef="0" delay_value="120" delay_unit="miliseconds">
+				<level2 format="GSS_Interfaces/uart/TC_Formats/Level2/epd_pus_tc_12_5_format.xml"/>
+				<app_to_level2 export="STEPS_XML/INPUTS/tc_12_05/tc_12_5_set_pmonid_0_to_pid10_to_0x01_0x4000_0x0A_0x4001.xml"/>
+				<level1 format="DEFAULT"/>
+				<level2_to_level1 export="GSS_Interfaces/uart/TC_Formats/Lv2_To_Lv1/epd_pus_tc_12_5_to_epd_pus_tc_ack.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_to_level0 export="DEFAULT"/>
+			</input_level_2>		
+		</inputs>
+		<outputs checkmode="all" valid_time_interval_value="500" valid_time_interval_unit="miliseconds">
+			<output_level_1 name="tm_1_1" id="0" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="GSS_Interfaces/uart/TM_Filters/Level1/epd_pus_tm_1_1_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+			<output_level_1 name="tm_1_7" id="1" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="GSS_Interfaces/uart/TM_Filters/Level1/epd_pus_tm_1_7_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+		</outputs>			
+	</step>
+	<step name="12_1_enable_pmon_id_0" 	id="1" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
+		<inputs>			
+			<input_level_2 name="tc_12_1" ifRef="0" delay_value="120" delay_unit="miliseconds">
+				<level2 format="GSS_Interfaces/uart/TC_Formats/Level2/epd_pus_tc_12_1_format.xml"/>
+				<app_to_level2 export="STEPS_XML/INPUTS/tc_12_01/tc_12_1_enable_pmonid_0.xml"/>
+				<level1 format="DEFAULT"/>
+				<level2_to_level1 export="GSS_Interfaces/uart/TC_Formats/Lv2_To_Lv1/epd_pus_tc_12_1_to_epd_pus_tc_ack.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_to_level0 export="DEFAULT"/>
+			</input_level_2>		
+		</inputs>
+		<outputs checkmode="all" valid_time_interval_value="500" valid_time_interval_unit="miliseconds">
+			<output_level_1 name="tm_1_1" id="0" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="GSS_Interfaces/uart/TM_Filters/Level1/epd_pus_tm_1_1_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+			<output_level_1 name="tm_1_7" id="1" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="GSS_Interfaces/uart/TM_Filters/Level1/epd_pus_tm_1_7_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+		</outputs>			
+	</step>
+	<step name="20_3_set_pid10_to_99" id="2" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
+		<inputs>
+			<input_level_2 name="tc_20_3" ifRef="0" delay_value="120" delay_unit="miliseconds">
+				<level2 format="GSS_Interfaces/uart/TC_Formats/Level2/epd_pus_tc_20_3_format.xml"/>
+				<app_to_level2 export="STEPS_XML/INPUTS/tc_20_3/tc_20_3_set_pid10_to_99.xml"/>
+				<level1 format="DEFAULT"/>
+				<level2_to_level1 export="GSS_Interfaces/uart/TC_Formats/Lv2_To_Lv1/epd_pus_tc_20_3_to_epd_pus_tc_ack.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_to_level0 export="DEFAULT"/>
+			</input_level_2>
+		</inputs>
+		<outputs checkmode="all" valid_time_interval_value="10000" valid_time_interval_unit="miliseconds">
+			<output_level_1 name="tm_1_1" id="0" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="GSS_Interfaces/uart/TM_Filters/Level1/epd_pus_tm_1_1_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+			<output_level_1 name="tm_1_7" id="1" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="GSS_Interfaces/uart/TM_Filters/Level1/epd_pus_tm_1_7_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+			<output_level_2 name="tm_5_4_ev_id_equal_0x4001" id="2" ifRef="0">
+				<level2 format="GSS_Interfaces/uart/TM_Formats/Level2/epd_pus_tm_5_4_format.xml"/>
+				<level2_filter apply_def_filter="no" extra_filter="GSS_Interfaces/uart/TM_Filters/Level2/epd_pus_tm_5_4_ev_id_equal_0x4001_filter.xml"/>
+				<level1 format="DEFAULT"/>
+ 				<level2_from_level1 import="GSS_Interfaces/uart/TM_Formats/Lv2_From_Lv1/epd_pus_tm_5_4_from_epd_pus_tm.xml"/>
+				<level1_filter apply_def_filter="yes" extra_filter="GSS_Interfaces/uart/TM_Filters/Level1/epd_pus_tm_5_4_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_2>
+
+
+		</outputs>			
+	</step>
+</test_proc>

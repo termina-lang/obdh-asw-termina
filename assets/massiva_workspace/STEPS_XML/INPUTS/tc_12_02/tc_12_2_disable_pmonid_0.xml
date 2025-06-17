@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Export SYSTEM "../../../DTDs/export.dtd">
+<Export from="NULL" to="epd_pus_12_2.xml">
+	<settings>
+		<settingFromConst value="0x00" toFieldRef="PMON_ID"/>	
+	</settings>
+</Export>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Import SYSTEM "../../DTDs/import.dtd">
+
+<Import from="../Level0/cssds_pus_v2_tm_format.xml" to="../Level1/asw_pus_v2_tm_format.xml">
+	<dataSource FieldRef="SecondaryHeader" leftTrim="0" rightTrim="0" />
+	<dataSource FieldRef="SourceData" leftTrim="0" rightTrim="0" />
+
+	<virtualSize FieldRef="PacketLength" to="SourceDataLength" addSize="-12" unit="bytes"/>
+	<!-- substracted 3 bytes of EPD PUS TM SecondaryHeader-->
+</Import>

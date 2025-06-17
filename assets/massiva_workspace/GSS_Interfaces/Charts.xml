@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE MintermFilter SYSTEM "../DTDs/Charts.dtd">
+
+<Charts>
+	<Chart id="0" name="Voltage0" y_units="volts" y_max="30" />
+</Charts>
