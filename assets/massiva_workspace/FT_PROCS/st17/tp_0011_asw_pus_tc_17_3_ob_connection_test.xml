@@ -17,6 +17,7 @@
 			<output_level_2 name="tm_1_2" id="0" ifRef="0">
 				<level2 format="TM_Formats/Level2/st01/asw_pus_v2_tm_1_2_error_6_format.xml"/>
 				<level2_filter apply_def_filter="no" extra_filter="TM_Filters/Level2/st01/asw_pus_tm_1_2_error_6_subtype_3_filter.xml"/>
+ 				<level2_from_level1 import="TM_Formats/Lv2_From_Lv1/st01/asw_pus_tm_1_2_from_asw_pus_v2_tm.xml"/>
 				<level1 format="DEFAULT"/>
 				<level1_filter apply_def_filter="yes" extra_filter="TM_Filters/Level1/st01/asw_pus_v2_tm_1_2_filter.xml"/>
 				<level0 format="DEFAULT"/>
