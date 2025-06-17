@@ -14,11 +14,7 @@ struct GPIO_registers {
     Direction : u32;
 };
 
-// Uncommented LED mask constants for GPIO pins 16 to 19, representing LEDs
-// const GPIO_LED0_MASK : u32 = (1 << 16);
-// const GPIO_LED1_MASK : u32 = (1 << 17);
-// const GPIO_LED2_MASK : u32 = (1 << 18);
-// const GPIO_LED3_MASK : u32 = (1 << 19);
+
 
 /**
  * @brief Interface defining the GPIO driver functionality.
@@ -39,7 +35,7 @@ interface GPIODrvIface {
  */
 resource class GPIODriver provides GPIODrvIface {
 
-    /// Pointer to the GPIO registers mapped in memory (e.g., 0xfc083000)
+    /// Memory-mapped access to GPIO registers (e.g., 0xfc083000)
     registers: loc GPIO_registers;
 
     /**
@@ -62,7 +58,7 @@ resource class GPIODriver provides GPIODrvIface {
      * 
      * @param led Index of the LED to control (valid range: 0 to 3)
      * @param value Value to set the LED (0 = off, non-zero = on)
-     * @param result Output parameter indicating success (Ok) or failure (Error) if led index is invalid
+     * @param status Output parameter indicating Success or Failure (Error) if led index is invalid
      */
     procedure write_led (&mut self, led : u8, value : u8, status : &mut Status<i32>) {
 

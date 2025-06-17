@@ -131,6 +131,7 @@ function build_tm_1_2 (tc_status : &TCStatus, p_tm_handler : &mut TMHandlerT,
 
 			error_code = 6;
 			append_u8_appdata_field(p_tm_handler, error_code, status);
+			append_u8_appdata_field(p_tm_handler, tc_handler->df_header.subtype, status);
 		}
 		case Undefined => {
 
