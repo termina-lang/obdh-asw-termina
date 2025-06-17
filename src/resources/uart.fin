@@ -9,11 +9,19 @@ import service_libraries.errors;
 
 const hw_fifo_size : usize = 1;
 
+
+/**
+ * @enum RXStatus
+ * @brief State machine for the reception process.
+ *
+ * Enumerates the different states the receiver goes through to 
+ * identify, validate, and extract a complete transfer command.
+ */
 enum RXStatus {
-    SyncBytesRx,
-    SyncLengthRx, 
-    TCBytesRx,
-    FinishedTCRx
+    SyncBytesRx,     /**< Receiving sync word. */
+    SyncLengthRx,    /**< Receiving TC length (2 bytes). */
+    TCBytesRx,       /**< Receiving TC payload. */
+    FinishedTCRx     /**< Reception of TC completed. */
 };
 
 
@@ -35,6 +43,11 @@ struct UARTRegs {
     scaler : u32;
 };
 
+
+/**
+ * @interface CharDevSend
+ * @brief Interface for sending data through a character device.
+ */
 interface CharDevSend {
     procedure send(&mut self,
                    nbytes : const usize,
@@ -42,21 +55,43 @@ interface CharDevSend {
                    status : &mut Status<i32>);
 };
 
+
+/**
+ * @interface CharDevRecv
+ * @brief Interface for receiving data from a character device.
+ */
 interface CharDevRecv {
     procedure receive(&mut self,
                       byte : &mut Option<u8>);
 };
 
+
+/**
+ * @interface CharDevInit
+ * @brief Interface for initializing a character device.
+ */
 interface CharDevInit {
     procedure initialize(&mut self);
 };
 
+
+/**
+ * @interface CharDevRelayIrq
+ * @brief Interface for handling UART-related IRQ operations.
+ */
 interface CharDevRelayIrq {
     procedure release_tx(&mut self);
     procedure enqueue_rx(&mut self, tc_completed : &mut Option<usize>);
 };
 
 
+/**
+ * @class UARTDriver
+ * @brief UART driver implementing character device interfaces.
+ *
+ * This class handles UART transmission and reception using internal
+ * state machines, software queues, and hardware memory-mapped registers.
+ */
 resource class UARTDriver provides 
         CharDevSend, CharDevInit, CharDevRecv, CharDevRelayIrq {
     
@@ -80,64 +115,113 @@ resource class UARTDriver provides
     // RX queue
     uart_rx_queue : QueueU8;
 
+
+
+    /**
+     * @brief Checks if transmit FIFO is full.
+     * @return True if full, false otherwise.
+     */
     viewer tf_is_full(&self) -> bool {
         let riscv_uart_tf : u32 = 0x00000200 : u32;
         return ((self->registers.status & riscv_uart_tf) != 0 : u32);
     }
 
+
+    /**
+     * @brief Checks if transmit FIFO is empty.
+     * @return True if empty, false otherwise.
+     */
     viewer tf_is_empty(&self) -> bool {
         let riscv_uart_te : u32 = 0x00000004 : u32;
         return ((self->registers.status & riscv_uart_te) != 0 : u32);
     }
 
+
+    /**
+     * @brief Checks if receive FIFO has data available.
+     * @return True if data is ready, false otherwise.
+     */
     viewer rf_data_ready(&self) -> bool {
         let riscv_uart_rf : u32 = 0x00000001 : u32;
         return ((self->registers.status & riscv_uart_rf) != 0 : u32);
     }
 
 
+    /**
+     * @brief Enables UART transmission.
+     */
     method enable_TX(&priv self) {
         let riscv_uart_txe : u32 = 0x00000002 : u32;
         self->registers.control = self->registers.control | riscv_uart_txe;
         return;
     }
 
+
+    /**
+     * @brief Enables UART reception.
+     */
     method enable_RX(&priv self) {
         let riscv_uart_rxe : u32 = 0x00000001 : u32;
         self->registers.control = self->registers.control | riscv_uart_rxe;
         return;
     }
 
+
+    /**
+     * @brief Enables reception interrupts.
+     */
     method enable_RI(&priv self) {
         let riscv_uart_ri : u32 = 0x00000004 : u32;
         self->registers.control = self->registers.control | riscv_uart_ri;
         return;
     }
 
+
+    /**
+     * @brief Enables transmission interrupts.
+     */
     method enable_TI(&priv self) {
         let riscv_uart_ti : u32 = 0x00000008 : u32;
         self->registers.control = self->registers.control | riscv_uart_ti;
         return;
     }
 
+
+    /**
+     * @brief Disables transmission interrupts.
+     */
     method disable_TI(&priv self) {
         let riscv_uart_ti : u32 = 0xFFFFFFF7 : u32;
         self->registers.control = self->registers.control & riscv_uart_ti;
         return;
     }
 
+
+    /**
+     * @brief Disables transmission FIFO.
+     */
     method disable_TF(&priv self) {
         let riscv_uart_tf : u32 = 0xFFFFFCFF : u32;
         self->registers.control = self->registers.control & riscv_uart_tf;
         return;
     }
 
+
+    /**
+     * @brief Disables reception FIFO.
+     */
     method disable_RF(&priv self) {
         let riscv_uart_rf : u32 = 0xFFFFFBFF : u32;
         self->registers.control = self->registers.control & riscv_uart_rf;
         return;
     }
 
+
+    /**
+     * @brief Attempts to dequeue a byte from the RX queue.
+     * 
+     * @param[out] byte Optionally holds the byte if dequeued.
+     */
     procedure receive(&mut self, 
                       byte : &mut Option<u8>) {
 
@@ -147,6 +231,15 @@ resource class UARTDriver provides
 
     }
     
+
+    /**
+     * @brief Reads UART data and manages RX state machine.
+     *
+     * Parses incoming bytes using the defined RX state machine.
+     * If a complete TC is received, updates `tc_completed` accordingly.
+     *
+     * @param[out] tc_completed Number of bytes in completed TC, if any.
+     */
     procedure enqueue_rx(&mut self, tc_completed : &mut Option<usize>) {
 
         var status : Status<i32> = Success;
@@ -232,6 +325,11 @@ resource class UARTDriver provides
     }
 
 
+    /**
+     * @brief Writes a number of bytes equal to the HW FIFO size to UART if pending, from the TX queue.
+     *
+     * This is called from the interrupt handler.
+     */
     procedure release_tx(&mut self) {
 
         if self->rem_bytes {
@@ -275,6 +373,17 @@ resource class UARTDriver provides
         return;
     }
 
+
+
+    /**
+     * @brief Sends a buffer through UART.
+     *
+     * If possible, sends immediately a number of bytes equal to the HW FIFO size; otherwise enqueues.
+     *
+     * @param[in] nbytes Number of bytes to send.
+     * @param[in] output_bytes Bytes to be transmitted.
+     * @param[out] status Success or failure (e.g. buffer full).
+     */
     procedure send(&mut self, nbytes : const usize,
                    output_bytes : & [u8; nbytes], 
                    status : &mut Status<i32>) {
@@ -347,6 +456,12 @@ resource class UARTDriver provides
     }
 
 
+
+    /**
+     * @brief Initializes the UART module.
+     *
+     * Enables TX, RX, and interrupts.
+     */
     procedure initialize(&mut self) {
 
         self->enable_RX();

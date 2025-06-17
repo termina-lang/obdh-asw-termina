@@ -47,7 +47,7 @@ resource class TMChannel provides TMChannelIface {
      * to ensure it is empty before releasing the telemetry handler back to the pool.
      *
      * @param[in] tm_handler  Boxed telemetry handler containing the TM packet to send.
-     * @param[out] result     Result object to indicate success or failure.
+     * @param[out] status     Staus variable to indicate Success or Failure (error_code).
      */
      procedure send_tm(&mut self, tm_handler : box TMHandlerT, status : &mut Status<i32>) {
 
