@@ -7,9 +7,12 @@ const uint16_t destinationID = 0x78U;
 
 const size_t tm_app_data_offset = 19U;
 
-void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
-                             __status_int32_t * const status) {
+__status_int32_t append_u8_appdata_field(TMHandlerT * const tm_handler,
+                                         uint8_t data) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     if (tm_handler->app_data_index < 256U) {
         
         tm_handler->tm_descriptor.tm_bytes[__termina_array__index(256U,
@@ -17,22 +20,25 @@ void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
 
         tm_handler->app_data_index = tm_handler->app_data_index + 1U;
 
-        (*status).__variant = Success;
+        status.__variant = Success;
 
     } else {
         
-        (*status).__variant = Failure;
-        (*status).Failure.__0 = BUILD_TM_ERROR;
+        status.__variant = Failure;
+        status.Failure.__0 = BUILD_TM_ERROR;
 
     }
 
-    return;
+    return status;
 
 }
 
-void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
-                              __status_int32_t * const status) {
+__status_int32_t append_u16_appdata_field(TMHandlerT * const tm_handler,
+                                          uint16_t data) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     if ((size_t)(tm_handler->app_data_index + 1U) < 256U) {
         
         serialize_uint16(data,
@@ -43,22 +49,25 @@ void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
 
         tm_handler->app_data_index = tm_handler->app_data_index + 2U;
 
-        (*status).__variant = Success;
+        status.__variant = Success;
 
     } else {
         
-        (*status).__variant = Failure;
-        (*status).Failure.__0 = BUILD_TM_ERROR;
+        status.__variant = Failure;
+        status.Failure.__0 = BUILD_TM_ERROR;
 
     }
 
-    return;
+    return status;
 
 }
 
-void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
-                              __status_int32_t * const status) {
+__status_int32_t append_u32_appdata_field(TMHandlerT * const tm_handler,
+                                          uint32_t data) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     if ((size_t)(tm_handler->app_data_index + 3U) < 256U) {
         
         serialize_uint32(data,
@@ -69,16 +78,16 @@ void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
 
         tm_handler->app_data_index = tm_handler->app_data_index + 4U;
 
-        (*status).__variant = Success;
+        status.__variant = Success;
 
     } else {
         
-        (*status).__variant = Failure;
-        (*status).Failure.__0 = BUILD_TM_ERROR;
+        status.__variant = Failure;
+        status.Failure.__0 = BUILD_TM_ERROR;
 
     }
 
-    return;
+    return status;
 
 }
 

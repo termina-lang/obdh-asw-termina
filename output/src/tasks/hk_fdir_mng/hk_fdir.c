@@ -207,11 +207,11 @@ __status_int32_t HouseKeepingFDIR__exec_tc(const __termina_event_t * const __ev,
                                                 self->pus_service_9.__that,
                                                 &current_obt);
 
-            build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
-                                             tm_count,
-                                             (*(TCHandlerT *)tc_handler.data).packet_header.packet_id,
-                                             (*(TCHandlerT *)tc_handler.data).packet_error_ctrl,
-                                             current_obt, &status);
+            status = build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                                      tm_count,
+                                                      (*(TCHandlerT *)tc_handler.data).packet_header.packet_id,
+                                                      (*(TCHandlerT *)tc_handler.data).packet_error_ctrl,
+                                                      current_obt);
 
             if (status.__variant == Success) {
                 

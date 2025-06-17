@@ -78,8 +78,8 @@ void __termina_app__init_globals() {
     pus_service_9.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_9.exec_tc_req_status_update.next_OBT.finetime = 0U;
     pus_service_9.exec_tc_req_status_update.next_OBT.seconds = 0U;
-    pus_service_9.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_9.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_9.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_9.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_9.ref_obt.finetime = 0U;
     pus_service_9.ref_obt.seconds = 0U;
@@ -102,8 +102,8 @@ void __termina_app__init_globals() {
     pus_service_5.exec_tc_req_status_update.EvID = 0U;
     pus_service_5.exec_tc_req_status_update.N = 0U;
     pus_service_5.exec_tc_req_status_update.flags_ack = 0U;
-    pus_service_5.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_5.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_5.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_5.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_5.pus_service_9.__that = &pus_service_9;
     pus_service_5.pus_service_9.get_current_obt = PUSService9__get_current_obt;
@@ -122,8 +122,8 @@ void __termina_app__init_globals() {
     pus_service_3.exec_tc_req_status_update.tc_data.SID = 0U;
     pus_service_3.exec_tc_req_status_update.tc_data.collection_interval = 0U;
     pus_service_3.exec_tc_req_status_update.tc_data.flags_ack = 0U;
-    pus_service_3.exec_tc_req_status_update.tc_data.packet_error_ctrl = 0U;
     pus_service_3.exec_tc_req_status_update.tc_data.packet_id = 0U;
+    pus_service_3.exec_tc_req_status_update.tc_data.packet_seq_ctrl = 0U;
     pus_service_3.exec_tc_req_status_update.tc_data.tc_num_bytes = 0U;
     pus_service_3.hk_config_table[0U].SID = 0U;
     pus_service_3.hk_config_table[0U].enabled = 1;
@@ -317,8 +317,8 @@ void __termina_app__init_globals() {
     pus_service_12.do_monitoring_req_status_update.new_status.__variant = CheckState__Unselected;
     pus_service_12.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_12.exec_tc_req_status_update.flags_ack = 0U;
-    pus_service_12.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_12.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_12.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_1_2_6.N = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_1_2_6.PMONID = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.N = 0U;
@@ -405,8 +405,8 @@ void __termina_app__init_globals() {
     pus_service_19.exec_tc_req_status_update.tc_data.EvID = 0U;
     pus_service_19.exec_tc_req_status_update.tc_data.N = 0U;
     pus_service_19.exec_tc_req_status_update.tc_data.flags_ack = 0U;
-    pus_service_19.exec_tc_req_status_update.tc_data.packet_error_ctrl = 0U;
     pus_service_19.exec_tc_req_status_update.tc_data.packet_id = 0U;
+    pus_service_19.exec_tc_req_status_update.tc_data.packet_seq_ctrl = 0U;
     pus_service_19.exec_tc_req_status_update.tc_data.tc_num_bytes = 0U;
     for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
         pus_service_19.pending_action_head[__i0] = 0U;
@@ -488,8 +488,8 @@ void __termina_app__init_globals() {
     pus_service_20.exec_tc_req_status_update.N = 0U;
     pus_service_20.exec_tc_req_status_update.PID = 0U;
     pus_service_20.exec_tc_req_status_update.flags_ack = 0U;
-    pus_service_20.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_20.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_20.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_20.exec_tc_req_status_update.tc_20_3_data.PID_value_u32 = 0U;
     pus_service_20.exec_tc_req_status_update.tc_20_3_data.PID_value_u8 = 0U;
     pus_service_20.exec_tc_req_status_update.tc_num_bytes = 0U;
@@ -507,8 +507,8 @@ void __termina_app__init_globals() {
     pus_service_17.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_17.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_17.exec_tc_req_status_update.flags_ack = 0U;
-    pus_service_17.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_17.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_17.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_17.pus_service_9.__that = &pus_service_9;
     pus_service_17.pus_service_9.get_current_obt = PUSService9__get_current_obt;
     pus_service_17.tm_channel.__that = &telemetry_channel;
@@ -521,8 +521,8 @@ void __termina_app__init_globals() {
     pus_service_128.a_tm_handler_pool.free = __termina_pool__free;
     pus_service_128.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_128.exec_tc_req_status_update.flags_ack = 0U;
-    pus_service_128.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_128.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_128.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_128.exec_tc_req_status_update.reebot_flag = 0;
     pus_service_128.pus_service_9.__that = &pus_service_9;
     pus_service_128.pus_service_9.get_current_obt = PUSService9__get_current_obt;
@@ -538,8 +538,8 @@ void __termina_app__init_globals() {
     pus_service_2.exec_tc_req_status_update.N = 0U;
     pus_service_2.exec_tc_req_status_update.dev_address = 0U;
     pus_service_2.exec_tc_req_status_update.flags_ack = 0U;
-    pus_service_2.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_2.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_2.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_2.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_2.gpio_driver.__that = &gpio_drv;
     pus_service_2.gpio_driver.write_led = GPIODriver__write_led;
@@ -557,8 +557,8 @@ void __termina_app__init_globals() {
     pus_service_4.exec_tc_req_status_update.N = 0U;
     pus_service_4.exec_tc_req_status_update.PID = 0U;
     pus_service_4.exec_tc_req_status_update.flags_ack = 0U;
-    pus_service_4.exec_tc_req_status_update.packet_error_ctrl = 0U;
     pus_service_4.exec_tc_req_status_update.packet_id = 0U;
+    pus_service_4.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_4.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_4.exec_tc_req_status_update.valid_index = 0U;
     for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {

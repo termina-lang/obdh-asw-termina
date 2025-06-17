@@ -193,7 +193,7 @@ typedef struct {
 
 typedef struct {
     uint16_t packet_id;
-    uint16_t packet_error_ctrl;
+    uint16_t packet_seq_ctrl;
     uint8_t flags_ack;
     size_t tc_num_bytes;
     PS12TC_1_2_6_Data tc_data_1_2_6;
@@ -210,9 +210,9 @@ MonitorCheckType get_check_type(uint8_t aux);
 
 _Bool is_valid_check_limit_def(const MonitorDefinition * const param_limit_check_definition);
 
-void build_tm_12_12(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                    MissionObt current_obt, uint8_t counter,
-                    const ParamMonitoringTransition param_mon_transitions_table[1U],
-                    __status_int32_t * const status);
+__status_int32_t build_tm_12_12(TMHandlerT * const p_tm_handler,
+                                uint16_t tm_seq_counter, MissionObt current_obt,
+                                uint8_t counter,
+                                const ParamMonitoringTransition param_mon_transitions_table[1U]);
 
 #endif

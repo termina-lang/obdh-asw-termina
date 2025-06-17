@@ -150,7 +150,7 @@ struct PS12TC_5_Data {
 
 struct PS12ExecTCReqStatusUpdate {
     packet_id : u16;
-    packet_error_ctrl : u16;
+    packet_seq_ctrl : u16;
     flags_ack : u8;
     tc_num_bytes : usize;
     tc_data_1_2_6: PS12TC_1_2_6_Data;
@@ -159,7 +159,7 @@ struct PS12ExecTCReqStatusUpdate {
 
 constexpr ps12_init_tc_req_status_update : PS12ExecTCReqStatusUpdate = {
     packet_id = 0,
-    packet_error_ctrl = 0,
+    packet_seq_ctrl = 0,
     flags_ack = 0,
     tc_num_bytes = 0,
     tc_data_1_2_6 = {
@@ -341,39 +341,57 @@ function is_valid_check_limit_def (param_limit_check_definition : &MonitorDefini
 }
 
 
-function build_tm_12_12(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, current_obt : MissionObt, counter: u8, param_mon_transitions_table : &[ParamMonitoringTransition; max_num_transitions], status : &mut Status<i32>) {
+function build_tm_12_12(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, current_obt : MissionObt, counter: u8, param_mon_transitions_table : &[ParamMonitoringTransition; max_num_transitions]) -> Status<i32> {
+
+    var status : Status<i32> = Success;
 
     startup_tm(p_tm_handler);
-    append_u8_appdata_field(p_tm_handler, counter, status);
+    status = append_u8_appdata_field(p_tm_handler, counter);
 
     for i : usize in 0 .. max_num_transitions while (i < (counter as usize)) {
 
         var aux_prev_status : u8 = 0;
         var aux_new_status : u8 = 0;
 
-        append_u16_appdata_field(p_tm_handler, param_mon_transitions_table[i].PMONID, status);
-        append_u16_appdata_field(p_tm_handler, param_mon_transitions_table[i].PID, status);
-        var type_id : u8 = get_type_index(param_mon_transitions_table[i].type);
-        append_u8_appdata_field(p_tm_handler, type_id, status);
+        if (status is Success) {
+            status = append_u16_appdata_field(p_tm_handler, param_mon_transitions_table[i].PMONID);
+        }
+        if (status is Success) {
+            status = append_u16_appdata_field(p_tm_handler, param_mon_transitions_table[i].PID);
+        }
+        if (status is Success) {
+            var type_id : u8 = get_type_index(param_mon_transitions_table[i].type);
+            status = append_u8_appdata_field(p_tm_handler, type_id);
+        }
         
         
-        if(param_mon_transitions_table[i].type is MonitorCheckType::ExpectedValue){
-            append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].mask_value, status);
+        if(param_mon_transitions_table[i].type is MonitorCheckType::ExpectedValue && (status is Success)) {
+            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].mask_value);
         }
 
         aux_prev_status = get_check_status_index(param_mon_transitions_table[i].prev_status);
         aux_new_status = get_check_status_index(param_mon_transitions_table[i].new_status);
 
-        append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].new_value, status);
-        append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].limit_value, status);
-        append_u8_appdata_field(p_tm_handler, aux_prev_status, status);
-        append_u8_appdata_field(p_tm_handler, aux_new_status, status);
-        append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].trans_obt.seconds, status); 
+        if (status is Success) {
+            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].new_value);
+        }
+        if (status is Success) {
+            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].limit_value);
+        }
+        if (status is Success) {
+            status = append_u8_appdata_field(p_tm_handler, aux_prev_status);
+        }
+        if (status is Success) {
+            status = append_u8_appdata_field(p_tm_handler, aux_new_status);
+        }
+        if (status is Success) {
+            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].trans_obt.seconds); 
+        }
     }
-    if(*status is Success){
+    if(status is Success){
         close_tm(p_tm_handler, 12, 12, tm_seq_counter, current_obt);
     }
 
 
-    return;
+    return status;
 }

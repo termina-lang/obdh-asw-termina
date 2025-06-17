@@ -26,7 +26,7 @@ typedef struct {
 
 typedef struct {
     uint16_t packet_id;
-    uint16_t packet_error_ctrl;
+    uint16_t packet_seq_ctrl;
     uint8_t flags_ack;
     size_t tc_num_bytes;
     uint8_t N;
@@ -39,10 +39,10 @@ typedef struct {
     __status_int32_t status;
 } IndexStatus;
 
-void build_tm_4_2(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                  size_t index, uint8_t N,
-                  const StatsConfig * const stats_config_table,
-                  const StatsDef param_stats[4U], MissionObt current_obt,
-                  __status_int32_t * const status);
+__status_int32_t build_tm_4_2(TMHandlerT * const p_tm_handler,
+                              uint16_t tm_seq_counter, size_t index, uint8_t N,
+                              const StatsConfig * const stats_config_table,
+                              const StatsDef param_stats[4U],
+                              MissionObt current_obt);
 
 #endif

@@ -213,8 +213,8 @@ task class HouseKeepingFDIR {
                     self->tm_counter.get_next_tm_count(&mut tm_count);
 
                     self->pus_service_9.get_current_obt(&mut current_obt);
-                    build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, tc_handler.packet_header.packet_id, tc_handler.packet_error_ctrl,
-                                    current_obt, &mut status);
+                    status = build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, tc_handler.packet_header.packet_id, tc_handler.packet_error_ctrl,
+                                    current_obt);
                     
                     if (status is Success){
 

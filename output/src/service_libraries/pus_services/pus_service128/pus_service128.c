@@ -31,9 +31,11 @@ __status_int32_t PUSService128__exec128_1TC(const __termina_event_t * const __ev
         self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
-        build_tm_1_3((TMHandlerT *)b_tm_handler1.data, tm_count1,
-                     self->exec_tc_req_status_update.flags_ack, current_obt,
-                     &status, &ack_enabled);
+        status = build_tm_1_3((TMHandlerT *)b_tm_handler1.data, tm_count1,
+                              self->exec_tc_req_status_update.packet_id,
+                              self->exec_tc_req_status_update.packet_seq_ctrl,
+                              self->exec_tc_req_status_update.flags_ack,
+                              current_obt, &ack_enabled);
 
         if (ack_enabled) {
             
@@ -87,9 +89,11 @@ __status_int32_t PUSService128__exec128_1TC(const __termina_event_t * const __ev
                                                 self->pus_service_9.__that,
                                                 &current_obt);
 
-            build_tm_1_7((TMHandlerT *)b_tm_handler2.data, tm_count2,
-                         self->exec_tc_req_status_update.flags_ack, current_obt,
-                         &status, &ack_enabled);
+            status = build_tm_1_7((TMHandlerT *)b_tm_handler2.data, tm_count2,
+                                  self->exec_tc_req_status_update.packet_id,
+                                  self->exec_tc_req_status_update.packet_seq_ctrl,
+                                  self->exec_tc_req_status_update.flags_ack,
+                                  current_obt, &ack_enabled);
 
             if (ack_enabled) {
                 
@@ -148,7 +152,7 @@ void PUSService128__exec_tc(const __termina_event_t * const __ev,
             
             self->exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;
 
-            self->exec_tc_req_status_update.packet_error_ctrl = tc_handler->packet_error_ctrl;
+            self->exec_tc_req_status_update.packet_seq_ctrl = tc_handler->packet_header.packet_seq_ctrl;
 
             self->exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
 
@@ -214,19 +218,19 @@ void PUSService128__exec_tc(const __termina_event_t * const __ev,
 
                 if (error_code == ACCEPTANCE_ERROR) {
                     
-                    build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
-                                                     tm_count,
-                                                     self->exec_tc_req_status_update.packet_id,
-                                                     self->exec_tc_req_status_update.packet_error_ctrl,
-                                                     current_obt, &status);
+                    status = build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                                              tm_count,
+                                                              self->exec_tc_req_status_update.packet_id,
+                                                              self->exec_tc_req_status_update.packet_seq_ctrl,
+                                                              current_obt);
 
                 } else if (error_code == BUILD_TM_ERROR) {
                     
-                    build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
-                                                         tm_count,
-                                                         self->exec_tc_req_status_update.packet_id,
-                                                         self->exec_tc_req_status_update.packet_error_ctrl,
-                                                         current_obt, &status);
+                    status = build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
+                                                                  tm_count,
+                                                                  self->exec_tc_req_status_update.packet_id,
+                                                                  self->exec_tc_req_status_update.packet_seq_ctrl,
+                                                                  current_obt);
 
                 } else {
                     

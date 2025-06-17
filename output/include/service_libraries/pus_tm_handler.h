@@ -22,14 +22,14 @@ extern const uint16_t destinationID;
 
 extern const size_t tm_app_data_offset;
 
-void append_u8_appdata_field(TMHandlerT * const tm_handler, uint8_t data,
-                             __status_int32_t * const status);
+__status_int32_t append_u8_appdata_field(TMHandlerT * const tm_handler,
+                                         uint8_t data);
 
-void append_u16_appdata_field(TMHandlerT * const tm_handler, uint16_t data,
-                              __status_int32_t * const status);
+__status_int32_t append_u16_appdata_field(TMHandlerT * const tm_handler,
+                                          uint16_t data);
 
-void append_u32_appdata_field(TMHandlerT * const tm_handler, uint32_t data,
-                              __status_int32_t * const status);
+__status_int32_t append_u32_appdata_field(TMHandlerT * const tm_handler,
+                                          uint32_t data);
 
 void tm_handler_build_packet_header(TMHandlerT * const tm_handler,
                                     uint16_t tm_seq_counter);

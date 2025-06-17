@@ -22,8 +22,8 @@ void PUSService5__build_and_tx_tm_5_2(const __termina_event_t * const __ev,
 
         startup_tm((TMHandlerT *)b_tm_handler.data);
 
-        append_u16_appdata_field((TMHandlerT *)b_tm_handler.data,
-                                 EvID_build_tm_error, status);
+        *status = append_u16_appdata_field((TMHandlerT *)b_tm_handler.data,
+                                           EvID_build_tm_error);
 
         if ((*status).__variant == Success) {
             
@@ -102,17 +102,19 @@ void PUSService5__build_and_tx_tm_5_x(const __termina_event_t * const __ev,
             
             ParamOutOfLimitInfo fault_value_info = fault_info.ParamOutOfLimit.__0;
 
-            build_tm_5_x_param_out_of_limit((TMHandlerT *)b_tm_handler.data,
-                                            tm_count, fault_value_info, evID,
-                                            current_obt, status);
+            *status = build_tm_5_x_param_out_of_limit((TMHandlerT *)b_tm_handler.data,
+                                                      tm_count,
+                                                      fault_value_info, evID,
+                                                      current_obt);
 
         } else if (fault_info.__variant == FaultInfo__ParamFaultValue) {
             
             ParamFaultValueInfo fault_value_info = fault_info.ParamFaultValue.__0;
 
-            build_tm_5_x_param_check_value_fail((TMHandlerT *)b_tm_handler.data,
-                                                tm_count, fault_value_info,
-                                                evID, current_obt, status);
+            *status = build_tm_5_x_param_check_value_fail((TMHandlerT *)b_tm_handler.data,
+                                                          tm_count,
+                                                          fault_value_info,
+                                                          evID, current_obt);
 
         } else {
             
@@ -181,12 +183,12 @@ __status_int32_t PUSService5__exec5_5TC(const __termina_event_t * const __ev,
                                                 self->pus_service_9.__that,
                                                 &current_obt);
 
-            build_tm_1_4_num_of_instr_not_valid((TMHandlerT *)b_tm_handler.data,
-                                                tm_count,
-                                                self->exec_tc_req_status_update.packet_id,
-                                                self->exec_tc_req_status_update.packet_error_ctrl,
-                                                self->exec_tc_req_status_update.N,
-                                                current_obt, &status);
+            status = build_tm_1_4_num_of_instr_not_valid((TMHandlerT *)b_tm_handler.data,
+                                                         tm_count,
+                                                         self->exec_tc_req_status_update.packet_id,
+                                                         self->exec_tc_req_status_update.packet_seq_ctrl,
+                                                         self->exec_tc_req_status_update.N,
+                                                         current_obt);
 
             if (status.__variant == Success) {
                 
@@ -211,9 +213,11 @@ __status_int32_t PUSService5__exec5_5TC(const __termina_event_t * const __ev,
                                                     self->pus_service_9.__that,
                                                     &current_obt);
 
-                build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count,
-                             self->exec_tc_req_status_update.flags_ack,
-                             current_obt, &status, &ack_enabled);
+                status = build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count,
+                                      self->exec_tc_req_status_update.packet_id,
+                                      self->exec_tc_req_status_update.packet_seq_ctrl,
+                                      self->exec_tc_req_status_update.flags_ack,
+                                      current_obt, &ack_enabled);
 
                 if (ack_enabled) {
                     
@@ -263,9 +267,12 @@ __status_int32_t PUSService5__exec5_5TC(const __termina_event_t * const __ev,
                                                         self->pus_service_9.__that,
                                                         &current_obt);
 
-                    build_tm_1_7((TMHandlerT *)b_tm_handler2.data, tm_count2,
-                                 self->exec_tc_req_status_update.flags_ack,
-                                 current_obt, &status, &ack_enabled);
+                    status = build_tm_1_7((TMHandlerT *)b_tm_handler2.data,
+                                          tm_count2,
+                                          self->exec_tc_req_status_update.packet_id,
+                                          self->exec_tc_req_status_update.packet_seq_ctrl,
+                                          self->exec_tc_req_status_update.flags_ack,
+                                          current_obt, &ack_enabled);
 
                     if (ack_enabled) {
                         
@@ -304,12 +311,12 @@ __status_int32_t PUSService5__exec5_5TC(const __termina_event_t * const __ev,
                                                     self->pus_service_9.__that,
                                                     &current_obt);
 
-                build_tm_1_4_EvID_not_valid((TMHandlerT *)b_tm_handler.data,
-                                            tm_count,
-                                            self->exec_tc_req_status_update.packet_id,
-                                            self->exec_tc_req_status_update.packet_error_ctrl,
-                                            self->exec_tc_req_status_update.EvID,
-                                            current_obt, &status);
+                status = build_tm_1_4_EvID_not_valid((TMHandlerT *)b_tm_handler.data,
+                                                     tm_count,
+                                                     self->exec_tc_req_status_update.packet_id,
+                                                     self->exec_tc_req_status_update.packet_seq_ctrl,
+                                                     self->exec_tc_req_status_update.EvID,
+                                                     current_obt);
 
                 if (status.__variant == Success) {
                     
@@ -376,12 +383,12 @@ __status_int32_t PUSService5__exec5_6TC(const __termina_event_t * const __ev,
                                                 self->pus_service_9.__that,
                                                 &current_obt);
 
-            build_tm_1_4_num_of_instr_not_valid((TMHandlerT *)b_tm_handler.data,
-                                                tm_count,
-                                                self->exec_tc_req_status_update.packet_id,
-                                                self->exec_tc_req_status_update.packet_error_ctrl,
-                                                self->exec_tc_req_status_update.N,
-                                                current_obt, &status);
+            status = build_tm_1_4_num_of_instr_not_valid((TMHandlerT *)b_tm_handler.data,
+                                                         tm_count,
+                                                         self->exec_tc_req_status_update.packet_id,
+                                                         self->exec_tc_req_status_update.packet_seq_ctrl,
+                                                         self->exec_tc_req_status_update.N,
+                                                         current_obt);
 
             if (status.__variant == Success) {
                 
@@ -406,9 +413,11 @@ __status_int32_t PUSService5__exec5_6TC(const __termina_event_t * const __ev,
                                                     self->pus_service_9.__that,
                                                     &current_obt);
 
-                build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count,
-                             self->exec_tc_req_status_update.flags_ack,
-                             current_obt, &status, &ack_enabled);
+                status = build_tm_1_3((TMHandlerT *)b_tm_handler.data, tm_count,
+                                      self->exec_tc_req_status_update.packet_id,
+                                      self->exec_tc_req_status_update.packet_seq_ctrl,
+                                      self->exec_tc_req_status_update.flags_ack,
+                                      current_obt, &ack_enabled);
 
                 if (ack_enabled) {
                     
@@ -458,9 +467,12 @@ __status_int32_t PUSService5__exec5_6TC(const __termina_event_t * const __ev,
                                                         self->pus_service_9.__that,
                                                         &current_obt);
 
-                    build_tm_1_7((TMHandlerT *)b_tm_handler2.data, tm_count2,
-                                 self->exec_tc_req_status_update.flags_ack,
-                                 current_obt, &status, &ack_enabled);
+                    status = build_tm_1_7((TMHandlerT *)b_tm_handler2.data,
+                                          tm_count2,
+                                          self->exec_tc_req_status_update.packet_id,
+                                          self->exec_tc_req_status_update.packet_seq_ctrl,
+                                          self->exec_tc_req_status_update.flags_ack,
+                                          current_obt, &ack_enabled);
 
                     if (ack_enabled) {
                         
@@ -499,12 +511,12 @@ __status_int32_t PUSService5__exec5_6TC(const __termina_event_t * const __ev,
                                                     self->pus_service_9.__that,
                                                     &current_obt);
 
-                build_tm_1_4_EvID_not_valid((TMHandlerT *)b_tm_handler.data,
-                                            tm_count,
-                                            self->exec_tc_req_status_update.packet_id,
-                                            self->exec_tc_req_status_update.packet_error_ctrl,
-                                            self->exec_tc_req_status_update.EvID,
-                                            current_obt, &status);
+                status = build_tm_1_4_EvID_not_valid((TMHandlerT *)b_tm_handler.data,
+                                                     tm_count,
+                                                     self->exec_tc_req_status_update.packet_id,
+                                                     self->exec_tc_req_status_update.packet_seq_ctrl,
+                                                     self->exec_tc_req_status_update.EvID,
+                                                     current_obt);
 
                 if (status.__variant == Success) {
                     
@@ -554,7 +566,7 @@ void PUSService5__exec_tc(const __termina_event_t * const __ev,
             
             self->exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;
 
-            self->exec_tc_req_status_update.packet_error_ctrl = tc_handler->packet_error_ctrl;
+            self->exec_tc_req_status_update.packet_seq_ctrl = tc_handler->packet_header.packet_seq_ctrl;
 
             self->exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
 
@@ -643,28 +655,28 @@ void PUSService5__exec_tc(const __termina_event_t * const __ev,
 
                 if (error_code == ACCEPTANCE_ERROR) {
                     
-                    build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
-                                                     tm_count,
-                                                     self->exec_tc_req_status_update.packet_id,
-                                                     self->exec_tc_req_status_update.packet_error_ctrl,
-                                                     current_obt, &status);
+                    status = build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                                              tm_count,
+                                                              self->exec_tc_req_status_update.packet_id,
+                                                              self->exec_tc_req_status_update.packet_seq_ctrl,
+                                                              current_obt);
 
                 } else if (error_code == BUILD_TM_ERROR) {
                     
-                    build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
-                                                         tm_count,
-                                                         self->exec_tc_req_status_update.packet_id,
-                                                         self->exec_tc_req_status_update.packet_error_ctrl,
-                                                         current_obt, &status);
+                    status = build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
+                                                                  tm_count,
+                                                                  self->exec_tc_req_status_update.packet_id,
+                                                                  self->exec_tc_req_status_update.packet_seq_ctrl,
+                                                                  current_obt);
 
                 } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
                     
-                    build_tm_1_4_short_pack_length((TMHandlerT *)b_tm_handler.data,
-                                                   tm_count,
-                                                   self->exec_tc_req_status_update.packet_id,
-                                                   self->exec_tc_req_status_update.packet_error_ctrl,
-                                                   self->exec_tc_req_status_update.tc_num_bytes,
-                                                   current_obt, &status);
+                    status = build_tm_1_4_short_pack_length((TMHandlerT *)b_tm_handler.data,
+                                                            tm_count,
+                                                            self->exec_tc_req_status_update.packet_id,
+                                                            self->exec_tc_req_status_update.packet_seq_ctrl,
+                                                            self->exec_tc_req_status_update.tc_num_bytes,
+                                                            current_obt);
 
                 } else {
                     

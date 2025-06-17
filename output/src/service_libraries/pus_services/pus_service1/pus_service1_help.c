@@ -128,182 +128,232 @@ uint8_t get_failure_subtype(TCVerifyStage verify_stage) {
 
 }
 
-void build_tm_1_X_no_failure_data(TMHandlerT * const p_tm_handler,
-                                  uint16_t tm_seq_counter,
-                                  uint16_t tc_packet_id,
-                                  uint16_t tc_packet_error_ctrl,
-                                  TCVerifyStage verify_stage,
-                                  uint8_t failure_code, MissionObt current_obt,
-                                  __status_int32_t * const status) {
+__status_int32_t build_tm_1_X_no_failure_data(TMHandlerT * const p_tm_handler,
+                                              uint16_t tm_seq_counter,
+                                              uint16_t tc_packet_id,
+                                              uint16_t tc_packet_seq_ctrl,
+                                              TCVerifyStage verify_stage,
+                                              uint8_t failure_code,
+                                              MissionObt current_obt) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     uint8_t subtype = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
 
-    append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
 
     }
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u8_appdata_field(p_tm_handler, failure_code, status);
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
 
     }
 
-    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
+    if (status.__variant == Success) {
+        
+        close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
 
-    return;
+    }
+
+    return status;
 
 }
 
-void build_tm_1_X_u8_failure_data(TMHandlerT * const p_tm_handler,
-                                  uint16_t tm_seq_counter,
-                                  uint16_t tc_packet_id,
-                                  uint16_t tc_packet_error_ctrl,
-                                  TCVerifyStage verify_stage,
-                                  uint8_t failure_code, uint8_t failure_data,
-                                  MissionObt current_obt,
-                                  __status_int32_t * const status) {
+__status_int32_t build_tm_1_X_u8_failure_data(TMHandlerT * const p_tm_handler,
+                                              uint16_t tm_seq_counter,
+                                              uint16_t tc_packet_id,
+                                              uint16_t tc_packet_seq_ctrl,
+                                              TCVerifyStage verify_stage,
+                                              uint8_t failure_code,
+                                              uint8_t failure_data,
+                                              MissionObt current_obt) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     uint8_t subtype = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
 
-    append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
 
     }
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u8_appdata_field(p_tm_handler, failure_code, status);
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
 
     }
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u8_appdata_field(p_tm_handler, failure_data, status);
+        status = append_u8_appdata_field(p_tm_handler, failure_data);
 
     }
 
-    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
+    if (status.__variant == Success) {
+        
+        close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
 
-    return;
+    }
+
+    return status;
 
 }
 
-void build_tm_1_X_u16_failure_data(TMHandlerT * const p_tm_handler,
-                                   uint16_t tm_seq_counter,
-                                   uint16_t tc_packet_id,
-                                   uint16_t tc_packet_error_ctrl,
-                                   TCVerifyStage verify_stage,
-                                   uint8_t failure_code, uint16_t failure_data,
-                                   MissionObt current_obt,
-                                   __status_int32_t * const status) {
+__status_int32_t build_tm_1_X_u16_failure_data(TMHandlerT * const p_tm_handler,
+                                               uint16_t tm_seq_counter,
+                                               uint16_t tc_packet_id,
+                                               uint16_t tc_packet_seq_ctrl,
+                                               TCVerifyStage verify_stage,
+                                               uint8_t failure_code,
+                                               uint16_t failure_data,
+                                               MissionObt current_obt) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     uint8_t subtype = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
 
-    append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
 
     }
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u8_appdata_field(p_tm_handler, failure_code, status);
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
 
     }
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u16_appdata_field(p_tm_handler, failure_data, status);
+        status = append_u16_appdata_field(p_tm_handler, failure_data);
 
     }
 
-    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
+    if (status.__variant == Success) {
+        
+        close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
 
-    return;
+    }
+
+    return status;
 
 }
 
-void build_tm_1_X_u32_failure_data(TMHandlerT * const p_tm_handler,
-                                   uint16_t tm_seq_counter,
-                                   uint16_t tc_packet_id,
-                                   uint16_t tc_packet_error_ctrl,
-                                   TCVerifyStage verify_stage,
-                                   uint8_t failure_code, uint32_t failure_data,
-                                   MissionObt current_obt,
-                                   __status_int32_t * const status) {
+__status_int32_t build_tm_1_X_u32_failure_data(TMHandlerT * const p_tm_handler,
+                                               uint16_t tm_seq_counter,
+                                               uint16_t tc_packet_id,
+                                               uint16_t tc_packet_seq_ctrl,
+                                               TCVerifyStage verify_stage,
+                                               uint8_t failure_code,
+                                               uint32_t failure_data,
+                                               MissionObt current_obt) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     uint8_t subtype = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
 
-    append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
 
     }
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u8_appdata_field(p_tm_handler, failure_code, status);
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
 
     }
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
-        append_u32_appdata_field(p_tm_handler, failure_data, status);
+        status = append_u32_appdata_field(p_tm_handler, failure_data);
 
     }
 
-    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
+    if (status.__variant == Success) {
+        
+        close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
 
-    return;
+    }
+
+    return status;
 
 }
 
-void build_tm_1_X_u8_u32_failure_data(TMHandlerT * const p_tm_handler,
-                                      uint16_t tm_seq_counter,
-                                      uint16_t tc_packet_id,
-                                      uint16_t tc_packet_error_ctrl,
-                                      TCVerifyStage verify_stage,
-                                      uint8_t failure_code,
-                                      uint8_t failure_data1,
-                                      uint32_t failure_data2,
-                                      MissionObt current_obt,
-                                      __status_int32_t * const status) {
+__status_int32_t build_tm_1_X_u8_u32_failure_data(TMHandlerT * const p_tm_handler,
+                                                  uint16_t tm_seq_counter,
+                                                  uint16_t tc_packet_id,
+                                                  uint16_t tc_packet_seq_ctrl,
+                                                  TCVerifyStage verify_stage,
+                                                  uint8_t failure_code,
+                                                  uint8_t failure_data1,
+                                                  uint32_t failure_data2,
+                                                  MissionObt current_obt) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     uint8_t subtype = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
 
-    append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
-    append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+    if (status.__variant == Success) {
+        
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
 
-    append_u8_appdata_field(p_tm_handler, failure_code, status);
+    }
 
-    append_u8_appdata_field(p_tm_handler, failure_data1, status);
+    if (status.__variant == Success) {
+        
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
 
-    append_u32_appdata_field(p_tm_handler, failure_data2, status);
+    }
 
-    close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
+    if (status.__variant == Success) {
+        
+        status = append_u8_appdata_field(p_tm_handler, failure_data1);
 
-    return;
+    }
+
+    if (status.__variant == Success) {
+        
+        status = append_u32_appdata_field(p_tm_handler, failure_data2);
+
+    }
+
+    if (status.__variant == Success) {
+        
+        close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
+
+    }
+
+    return status;
 
 }

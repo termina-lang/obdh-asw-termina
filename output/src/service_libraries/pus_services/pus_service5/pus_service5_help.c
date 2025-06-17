@@ -137,53 +137,95 @@ uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID) {
 
 }
 
-void build_tm_5_x_param_out_of_limit(TMHandlerT * const p_tm_handler,
-                                     uint16_t tm_seq_counter,
-                                     ParamOutOfLimitInfo fault_info,
-                                     uint16_t ev_ID, MissionObt current_obt,
-                                     __status_int32_t * const status) {
+__status_int32_t build_tm_5_x_param_out_of_limit(TMHandlerT * const p_tm_handler,
+                                                 uint16_t tm_seq_counter,
+                                                 ParamOutOfLimitInfo fault_info,
+                                                 uint16_t ev_ID,
+                                                 MissionObt current_obt) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     startup_tm(p_tm_handler);
 
-    append_u16_appdata_field(p_tm_handler, ev_ID, status);
+    status = append_u16_appdata_field(p_tm_handler, ev_ID);
 
-    append_u16_appdata_field(p_tm_handler, fault_info.PID, status);
+    if (status.__variant == Success) {
+        
+        status = append_u16_appdata_field(p_tm_handler, fault_info.PID);
 
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_value, status);
+    }
 
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_limit, status);
+    if (status.__variant == Success) {
+        
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_value);
 
-    uint8_t subtype = (uint8_t)get_Ev_ID_enable_config_index(ev_ID);
+    }
 
-    close_tm(p_tm_handler, 5U, subtype, tm_seq_counter, current_obt);
+    if (status.__variant == Success) {
+        
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_limit);
 
-    return;
+    }
+
+    if (status.__variant == Success) {
+        
+        uint8_t subtype = (uint8_t)get_Ev_ID_enable_config_index(ev_ID);
+
+        close_tm(p_tm_handler, 5U, subtype, tm_seq_counter, current_obt);
+
+    }
+
+    return status;
 
 }
 
-void build_tm_5_x_param_check_value_fail(TMHandlerT * const p_tm_handler,
-                                         uint16_t tm_seq_counter,
-                                         ParamFaultValueInfo fault_info,
-                                         uint16_t ev_ID, MissionObt current_obt,
-                                         __status_int32_t * const status) {
+__status_int32_t build_tm_5_x_param_check_value_fail(TMHandlerT * const p_tm_handler,
+                                                     uint16_t tm_seq_counter,
+                                                     ParamFaultValueInfo fault_info,
+                                                     uint16_t ev_ID,
+                                                     MissionObt current_obt) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     startup_tm(p_tm_handler);
 
-    append_u16_appdata_field(p_tm_handler, ev_ID, status);
+    status = append_u16_appdata_field(p_tm_handler, ev_ID);
 
-    append_u16_appdata_field(p_tm_handler, fault_info.PID, status);
+    if (status.__variant == Success) {
+        
+        status = append_u16_appdata_field(p_tm_handler, fault_info.PID);
 
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_value, status);
+    }
 
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_mask, status);
+    if (status.__variant == Success) {
+        
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_value);
 
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value,
-                             status);
+    }
 
-    uint8_t subtype = (uint8_t)get_Ev_ID_enable_config_index(ev_ID);
+    if (status.__variant == Success) {
+        
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_mask);
 
-    close_tm(p_tm_handler, 5U, subtype, tm_seq_counter, current_obt);
+    }
 
-    return;
+    if (status.__variant == Success) {
+        
+        status = append_u32_appdata_field(p_tm_handler,
+                                          fault_info.PID_expected_value);
+
+    }
+
+    if (status.__variant == Success) {
+        
+        uint8_t subtype = (uint8_t)get_Ev_ID_enable_config_index(ev_ID);
+
+        close_tm(p_tm_handler, 5U, subtype, tm_seq_counter, current_obt);
+
+    }
+
+    return status;
 
 }

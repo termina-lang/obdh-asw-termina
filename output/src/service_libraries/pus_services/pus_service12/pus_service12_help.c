@@ -162,14 +162,17 @@ _Bool is_valid_check_limit_def(const MonitorDefinition * const param_limit_check
 
 }
 
-void build_tm_12_12(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                    MissionObt current_obt, uint8_t counter,
-                    const ParamMonitoringTransition param_mon_transitions_table[1U],
-                    __status_int32_t * const status) {
+__status_int32_t build_tm_12_12(TMHandlerT * const p_tm_handler,
+                                uint16_t tm_seq_counter, MissionObt current_obt,
+                                uint8_t counter,
+                                const ParamMonitoringTransition param_mon_transitions_table[1U]) {
     
+    __status_int32_t status;
+    status.__variant = Success;
+
     startup_tm(p_tm_handler);
 
-    append_u8_appdata_field(p_tm_handler, counter, status);
+    status = append_u8_appdata_field(p_tm_handler, counter);
 
     for (size_t i = 0U; i < 1U && i < (size_t)counter; i = i + 1U) {
         
@@ -177,28 +180,37 @@ void build_tm_12_12(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
 
         uint8_t aux_new_status = 0U;
 
-        append_u16_appdata_field(p_tm_handler,
-                                 param_mon_transitions_table[__termina_array__index(1U,
-                                                                                    i)].PMONID,
-                                 status);
+        if (status.__variant == Success) {
+            
+            status = append_u16_appdata_field(p_tm_handler,
+                                              param_mon_transitions_table[__termina_array__index(1U,
+                                                                                                 i)].PMONID);
 
-        append_u16_appdata_field(p_tm_handler,
-                                 param_mon_transitions_table[__termina_array__index(1U,
-                                                                                    i)].PID,
-                                 status);
+        }
 
-        uint8_t type_id = get_type_index(param_mon_transitions_table[__termina_array__index(1U,
-                                                                                            i)].type);
+        if (status.__variant == Success) {
+            
+            status = append_u16_appdata_field(p_tm_handler,
+                                              param_mon_transitions_table[__termina_array__index(1U,
+                                                                                                 i)].PID);
 
-        append_u8_appdata_field(p_tm_handler, type_id, status);
+        }
+
+        if (status.__variant == Success) {
+            
+            uint8_t type_id = get_type_index(param_mon_transitions_table[__termina_array__index(1U,
+                                                                                                i)].type);
+
+            status = append_u8_appdata_field(p_tm_handler, type_id);
+
+        }
 
         if (param_mon_transitions_table[__termina_array__index(1U,
-                                                               i)].type.__variant == MonitorCheckType__ExpectedValue) {
+                                                               i)].type.__variant == MonitorCheckType__ExpectedValue && status.__variant == Success) {
             
-            append_u32_appdata_field(p_tm_handler,
-                                     param_mon_transitions_table[__termina_array__index(1U,
-                                                                                        i)].mask_value,
-                                     status);
+            status = append_u32_appdata_field(p_tm_handler,
+                                              param_mon_transitions_table[__termina_array__index(1U,
+                                                                                                 i)].mask_value);
 
         }
 
@@ -208,33 +220,50 @@ void build_tm_12_12(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
         aux_new_status = get_check_status_index(param_mon_transitions_table[__termina_array__index(1U,
                                                                                                    i)].new_status);
 
-        append_u32_appdata_field(p_tm_handler,
-                                 param_mon_transitions_table[__termina_array__index(1U,
-                                                                                    i)].new_value,
-                                 status);
+        if (status.__variant == Success) {
+            
+            status = append_u32_appdata_field(p_tm_handler,
+                                              param_mon_transitions_table[__termina_array__index(1U,
+                                                                                                 i)].new_value);
 
-        append_u32_appdata_field(p_tm_handler,
-                                 param_mon_transitions_table[__termina_array__index(1U,
-                                                                                    i)].limit_value,
-                                 status);
+        }
 
-        append_u8_appdata_field(p_tm_handler, aux_prev_status, status);
+        if (status.__variant == Success) {
+            
+            status = append_u32_appdata_field(p_tm_handler,
+                                              param_mon_transitions_table[__termina_array__index(1U,
+                                                                                                 i)].limit_value);
 
-        append_u8_appdata_field(p_tm_handler, aux_new_status, status);
+        }
 
-        append_u32_appdata_field(p_tm_handler,
-                                 param_mon_transitions_table[__termina_array__index(1U,
-                                                                                    i)].trans_obt.seconds,
-                                 status);
+        if (status.__variant == Success) {
+            
+            status = append_u8_appdata_field(p_tm_handler, aux_prev_status);
+
+        }
+
+        if (status.__variant == Success) {
+            
+            status = append_u8_appdata_field(p_tm_handler, aux_new_status);
+
+        }
+
+        if (status.__variant == Success) {
+            
+            status = append_u32_appdata_field(p_tm_handler,
+                                              param_mon_transitions_table[__termina_array__index(1U,
+                                                                                                 i)].trans_obt.seconds);
+
+        }
 
     }
 
-    if ((*status).__variant == Success) {
+    if (status.__variant == Success) {
         
         close_tm(p_tm_handler, 12U, 12U, tm_seq_counter, current_obt);
 
     }
 
-    return;
+    return status;
 
 }

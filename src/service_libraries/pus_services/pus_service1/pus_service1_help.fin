@@ -227,29 +227,31 @@ function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
  * @param p_tm_handler Reference to the TM handler structure.
  * @param tm_seq_counter TM sequence counter.
  * @param tc_packet_id The TC packet ID.
- * @param tc_packet_error_ctrl The TC packet sequence control.
+ * @param tc_packet_seq_ctrl The TC packet sequence control.
  * @param verify_stage The TC verification stage.
  * @param failure_code The failure reason code.
  * @param current_obt The current onboard time.
  * @param status status container.
  */
 function build_tm_1_X_no_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, 
-			tc_packet_error_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, current_obt : MissionObt, status: &mut Status<i32>) {
+			tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, current_obt : MissionObt) -> Status<i32> {
 
+	var status : Status<i32> = Success;
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
-	if (*status is Success){
-		append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+	if (status is Success){
+		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
 	}
-	if(*status is Success){
-		append_u8_appdata_field(p_tm_handler, failure_code, status);
+	if(status is Success){
+		status = append_u8_appdata_field(p_tm_handler, failure_code);
+	}
+	if (status is Success){
+		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
 	}
 
-	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
-
-	return;
+	return status;
 }
 
 
@@ -258,25 +260,27 @@ function build_tm_1_X_no_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_cou
  * @param failure_data Failure-specific data (u8).
  */
 function build_tm_1_X_u8_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
-		 tc_packet_error_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8, current_obt : MissionObt, status: &mut Status<i32>) {
+		 tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8, current_obt : MissionObt) -> Status<i32> {
 
+	var status : Status<i32> = Success;
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
-	if (*status is Success){
-		append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+	if (status is Success){
+		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
 	}
-	if (*status is Success){
-		append_u8_appdata_field(p_tm_handler, failure_code, status);
+	if (status is Success){
+		status = append_u8_appdata_field(p_tm_handler, failure_code);
 	}
-	if (*status is Success){
-		append_u8_appdata_field(p_tm_handler, failure_data, status);
+	if (status is Success){
+		status = append_u8_appdata_field(p_tm_handler, failure_data);
+	}
+	if (status is Success){
+		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
 	}
 
-	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
-
-	return;
+	return status;
 }
 
 
@@ -285,25 +289,27 @@ function build_tm_1_X_u8_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_cou
  * @param failure_data Failure-specific data (u16).
  */
 function build_tm_1_X_u16_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16,
-		 tc_packet_error_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16, current_obt : MissionObt, status: &mut Status<i32>) {
+		 tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16, current_obt : MissionObt) -> Status<i32> {
 
+	var status : Status<i32> = Success;
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
-	if (*status is Success){
-		append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+	if (status is Success){
+		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
 	}
-	if(*status is Success){
-		append_u8_appdata_field(p_tm_handler, failure_code, status);
+	if(status is Success){
+		status = append_u8_appdata_field(p_tm_handler, failure_code);
 	}
-	if (*status is Success){
-		append_u16_appdata_field(p_tm_handler, failure_data, status);
+	if (status is Success){
+		status = append_u16_appdata_field(p_tm_handler, failure_data);
 	}
-	
-	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
+	if (status is Success){
+		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
+	}
 
-	return;
+	return status;
 }
 
 
@@ -311,26 +317,28 @@ function build_tm_1_X_u16_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_co
  * @brief Builds a TM[1,x] packet including one u32 failure data field.
  * @param failure_data Failure-specific data (u32).
  */
-function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_error_ctrl: u16,
-		 verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32, current_obt : MissionObt, status: &mut Status<i32>) {
+function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_seq_ctrl: u16,
+		 verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32, current_obt : MissionObt) -> Status<i32> {
 
+	var status : Status<i32> = Success;
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
-	if (*status is Success){
-		append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
+	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+	if (status is Success){
+		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
 	}
-	if (*status is Success){
-		append_u8_appdata_field(p_tm_handler, failure_code, status);
+	if (status is Success){
+		status = append_u8_appdata_field(p_tm_handler, failure_code);
 	}
-	if (*status is Success){
-		append_u32_appdata_field(p_tm_handler, failure_data, status);
+	if (status is Success){
+		status = append_u32_appdata_field(p_tm_handler, failure_data);
+	}
+	if (status is Success){
+		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
 	}
 
-	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
-
-	return;
+	return status;
 }
 
 
@@ -340,20 +348,31 @@ function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_co
  * @param failure_data1 First failure data (u8).
  * @param failure_data2 Second failure data (u32).
  */
-function build_tm_1_X_u8_u32_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_error_ctrl: u16,
- 					verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32, current_obt : MissionObt, status: &mut Status<i32>) {
+function build_tm_1_X_u8_u32_failure_data(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_seq_ctrl: u16,
+ 					verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32, current_obt : MissionObt) -> Status<i32> {
 
+	var status : Status<i32> = Success;
 	var subtype : u8 = get_failure_subtype(verify_stage);
 
 	startup_tm(p_tm_handler);
-	append_u16_appdata_field(p_tm_handler, tc_packet_id, status);
-	append_u16_appdata_field(p_tm_handler, tc_packet_error_ctrl, status);
-	append_u8_appdata_field(p_tm_handler, failure_code, status);
-	append_u8_appdata_field(p_tm_handler, failure_data1, status);
-	append_u32_appdata_field(p_tm_handler, failure_data2, status);
-	close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
+	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+	if (status is Success){
+		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
+	}
+	if (status is Success){
+		status = append_u8_appdata_field(p_tm_handler, failure_code);
+	}
+	if (status is Success){
+		status = append_u8_appdata_field(p_tm_handler, failure_data1);
+	}
+	if (status is Success){
+		status = append_u32_appdata_field(p_tm_handler, failure_data2);
+	}
+	if (status is Success){
+		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
+	}
 
-	return;
+	return status;
 }
 
 

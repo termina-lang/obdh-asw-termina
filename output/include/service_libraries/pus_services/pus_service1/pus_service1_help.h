@@ -87,50 +87,49 @@ _Bool is_tc_ack_completion_exec_enabled(uint8_t flags_ack);
 
 uint8_t get_failure_subtype(TCVerifyStage verify_stage);
 
-void build_tm_1_X_no_failure_data(TMHandlerT * const p_tm_handler,
-                                  uint16_t tm_seq_counter,
-                                  uint16_t tc_packet_id,
-                                  uint16_t tc_packet_error_ctrl,
-                                  TCVerifyStage verify_stage,
-                                  uint8_t failure_code, MissionObt current_obt,
-                                  __status_int32_t * const status);
+__status_int32_t build_tm_1_X_no_failure_data(TMHandlerT * const p_tm_handler,
+                                              uint16_t tm_seq_counter,
+                                              uint16_t tc_packet_id,
+                                              uint16_t tc_packet_seq_ctrl,
+                                              TCVerifyStage verify_stage,
+                                              uint8_t failure_code,
+                                              MissionObt current_obt);
 
-void build_tm_1_X_u8_failure_data(TMHandlerT * const p_tm_handler,
-                                  uint16_t tm_seq_counter,
-                                  uint16_t tc_packet_id,
-                                  uint16_t tc_packet_error_ctrl,
-                                  TCVerifyStage verify_stage,
-                                  uint8_t failure_code, uint8_t failure_data,
-                                  MissionObt current_obt,
-                                  __status_int32_t * const status);
+__status_int32_t build_tm_1_X_u8_failure_data(TMHandlerT * const p_tm_handler,
+                                              uint16_t tm_seq_counter,
+                                              uint16_t tc_packet_id,
+                                              uint16_t tc_packet_seq_ctrl,
+                                              TCVerifyStage verify_stage,
+                                              uint8_t failure_code,
+                                              uint8_t failure_data,
+                                              MissionObt current_obt);
 
-void build_tm_1_X_u16_failure_data(TMHandlerT * const p_tm_handler,
-                                   uint16_t tm_seq_counter,
-                                   uint16_t tc_packet_id,
-                                   uint16_t tc_packet_error_ctrl,
-                                   TCVerifyStage verify_stage,
-                                   uint8_t failure_code, uint16_t failure_data,
-                                   MissionObt current_obt,
-                                   __status_int32_t * const status);
+__status_int32_t build_tm_1_X_u16_failure_data(TMHandlerT * const p_tm_handler,
+                                               uint16_t tm_seq_counter,
+                                               uint16_t tc_packet_id,
+                                               uint16_t tc_packet_seq_ctrl,
+                                               TCVerifyStage verify_stage,
+                                               uint8_t failure_code,
+                                               uint16_t failure_data,
+                                               MissionObt current_obt);
 
-void build_tm_1_X_u32_failure_data(TMHandlerT * const p_tm_handler,
-                                   uint16_t tm_seq_counter,
-                                   uint16_t tc_packet_id,
-                                   uint16_t tc_packet_error_ctrl,
-                                   TCVerifyStage verify_stage,
-                                   uint8_t failure_code, uint32_t failure_data,
-                                   MissionObt current_obt,
-                                   __status_int32_t * const status);
+__status_int32_t build_tm_1_X_u32_failure_data(TMHandlerT * const p_tm_handler,
+                                               uint16_t tm_seq_counter,
+                                               uint16_t tc_packet_id,
+                                               uint16_t tc_packet_seq_ctrl,
+                                               TCVerifyStage verify_stage,
+                                               uint8_t failure_code,
+                                               uint32_t failure_data,
+                                               MissionObt current_obt);
 
-void build_tm_1_X_u8_u32_failure_data(TMHandlerT * const p_tm_handler,
-                                      uint16_t tm_seq_counter,
-                                      uint16_t tc_packet_id,
-                                      uint16_t tc_packet_error_ctrl,
-                                      TCVerifyStage verify_stage,
-                                      uint8_t failure_code,
-                                      uint8_t failure_data1,
-                                      uint32_t failure_data2,
-                                      MissionObt current_obt,
-                                      __status_int32_t * const status);
+__status_int32_t build_tm_1_X_u8_u32_failure_data(TMHandlerT * const p_tm_handler,
+                                                  uint16_t tm_seq_counter,
+                                                  uint16_t tc_packet_id,
+                                                  uint16_t tc_packet_seq_ctrl,
+                                                  TCVerifyStage verify_stage,
+                                                  uint8_t failure_code,
+                                                  uint8_t failure_data1,
+                                                  uint32_t failure_data2,
+                                                  MissionObt current_obt);
 
 #endif

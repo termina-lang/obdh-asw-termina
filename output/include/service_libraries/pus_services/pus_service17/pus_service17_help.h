@@ -11,7 +11,7 @@
 
 typedef struct {
     uint16_t packet_id;
-    uint16_t packet_error_ctrl;
+    uint16_t packet_seq_ctrl;
     uint8_t flags_ack;
 } PS17ExecTCReqStatusUpdate;
 

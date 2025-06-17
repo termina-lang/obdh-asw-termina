@@ -67,187 +67,192 @@ extern const uint8_t TM_1_8_TC_11_X_SCHED_TC_POOL_EMPTY;
 
 extern const uint8_t TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED;
 
-void build_tm_1_1(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                  uint16_t tc_packet_id, uint16_t tc_packet_error_ctrl,
-                  uint8_t flags_ack, MissionObt current_obt,
-                  __status_int32_t * const status, _Bool * const enabled);
+__status_int32_t build_tm_1_1(TMHandlerT * const p_tm_handler,
+                              uint16_t tm_seq_counter, uint16_t tc_packet_id,
+                              uint16_t tc_packet_seq_ctrl, uint8_t flags_ack,
+                              MissionObt current_obt, _Bool * const enabled);
 
-void build_tm_1_2(const TCStatus * const tc_status,
-                  TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                  const TCHandlerT * const tc_handler, MissionObt current_obt,
-                  __status_int32_t * const status);
+__status_int32_t build_tm_1_2(const TCStatus * const tc_status,
+                              TMHandlerT * const p_tm_handler,
+                              uint16_t tm_seq_counter,
+                              const TCHandlerT * const tc_handler,
+                              MissionObt current_obt);
 
-void build_tm_1_3(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                  uint8_t flags_ack, MissionObt current_obt,
-                  __status_int32_t * const status, _Bool * const enabled);
+__status_int32_t build_tm_1_3(TMHandlerT * const p_tm_handler,
+                              uint16_t tm_seq_counter, uint16_t tc_packet_id,
+                              uint16_t tc_packet_seq_ctrl, uint8_t flags_ack,
+                              MissionObt current_obt, _Bool * const enabled);
 
-void build_tm_1_4_short_pack_length(TMHandlerT * const p_tm_handler,
-                                    uint16_t tm_seq_counter,
-                                    uint16_t tc_packet_id,
-                                    uint16_t tc_packet_error_ctrl,
-                                    size_t tc_bytes, MissionObt current_obt,
-                                    __status_int32_t * const status);
+__status_int32_t build_tm_1_4_short_pack_length(TMHandlerT * const p_tm_handler,
+                                                uint16_t tm_seq_counter,
+                                                uint16_t tc_packet_id,
+                                                uint16_t tc_packet_seq_ctrl,
+                                                size_t tc_bytes,
+                                                MissionObt current_obt);
 
-void build_tm_1_4_num_of_instr_not_valid(TMHandlerT * const p_tm_handler,
-                                         uint16_t tm_seq_counter,
-                                         uint16_t tc_packet_id,
-                                         uint16_t tc_packet_error_ctrl,
-                                         uint8_t N, MissionObt current_obt,
-                                         __status_int32_t * const status);
+__status_int32_t build_tm_1_4_num_of_instr_not_valid(TMHandlerT * const p_tm_handler,
+                                                     uint16_t tm_seq_counter,
+                                                     uint16_t tc_packet_id,
+                                                     uint16_t tc_packet_seq_ctrl,
+                                                     uint8_t N,
+                                                     MissionObt current_obt);
 
-void build_tm_1_4_device_address_not_valid(TMHandlerT * const p_tm_handler,
-                                           uint16_t tm_seq_counter,
-                                           uint16_t tc_packet_id,
-                                           uint16_t tc_packet_error_ctrl,
-                                           uint32_t device_address,
-                                           MissionObt current_obt,
-                                           __status_int32_t * const status);
+__status_int32_t build_tm_1_4_device_address_not_valid(TMHandlerT * const p_tm_handler,
+                                                       uint16_t tm_seq_counter,
+                                                       uint16_t tc_packet_id,
+                                                       uint16_t tc_packet_seq_ctrl,
+                                                       uint32_t device_address,
+                                                       MissionObt current_obt);
 
-void build_tm_1_4_SID_not_valid(TMHandlerT * const p_tm_handler,
-                                uint16_t tm_seq_counter, uint16_t tc_packet_id,
-                                uint16_t tc_packet_error_ctrl, uint16_t SID,
-                                MissionObt current_obt,
-                                __status_int32_t * const status);
-
-void build_tm_1_4_mem_address_not_valid(TMHandlerT * const p_tm_handler,
-                                        uint16_t tm_seq_counter,
-                                        uint16_t tc_packet_id,
-                                        uint16_t tc_packet_error_ctrl,
-                                        uint8_t mem_id, uint32_t mem_address,
-                                        MissionObt current_obt,
-                                        __status_int32_t * const status);
-
-void build_tm_1_4_mem_id_read_only(TMHandlerT * const p_tm_handler,
-                                   uint16_t tm_seq_counter,
-                                   uint16_t tc_packet_id,
-                                   uint16_t tc_packet_error_ctrl,
-                                   uint8_t mem_id, MissionObt current_obt,
-                                   __status_int32_t * const status);
-
-void build_tm_1_4_EvID_not_valid(TMHandlerT * const p_tm_handler,
-                                 uint16_t tm_seq_counter, uint16_t tc_packet_id,
-                                 uint16_t tc_packet_error_ctrl, uint16_t EvID,
-                                 MissionObt current_obt,
-                                 __status_int32_t * const status);
-
-void build_tm_1_4_PID_not_valid(TMHandlerT * const p_tm_handler,
-                                uint16_t tm_seq_counter, uint16_t tc_packet_id,
-                                uint16_t tc_packet_error_ctrl, uint16_t PID,
-                                MissionObt current_obt,
-                                __status_int32_t * const status);
-
-void build_tm_1_4_PMON_undefined(TMHandlerT * const p_tm_handler,
-                                 uint16_t tm_seq_counter, uint16_t tc_packet_id,
-                                 uint16_t tc_packet_error_ctrl, uint16_t PMONID,
-                                 MissionObt current_obt,
-                                 __status_int32_t * const status);
-
-void build_tm_1_4_PMON_defined(TMHandlerT * const p_tm_handler,
-                               uint16_t tm_seq_counter, uint16_t tc_packet_id,
-                               uint16_t tc_packet_error_ctrl, uint16_t PMONID,
-                               MissionObt current_obt,
-                               __status_int32_t * const status);
-
-void build_tm_1_4_PMON_enabled(TMHandlerT * const p_tm_handler,
-                               uint16_t tm_seq_counter, uint16_t tc_packet_id,
-                               uint16_t tc_packet_error_ctrl, uint16_t PMONID,
-                               MissionObt current_obt,
-                               __status_int32_t * const status);
-
-void build_tm_1_4_PMONID_invalid(TMHandlerT * const p_tm_handler,
-                                 uint16_t tm_seq_counter, uint16_t tc_packet_id,
-                                 uint16_t tc_packet_error_ctrl, uint16_t PMONID,
-                                 MissionObt current_obt,
-                                 __status_int32_t * const status);
-
-void build_tm_1_4_PMON_definition_invalid(TMHandlerT * const p_tm_handler,
-                                          uint16_t tm_seq_counter,
-                                          uint16_t tc_packet_id,
-                                          uint16_t tc_packet_error_ctrl,
-                                          uint16_t PMONID,
-                                          MissionObt current_obt,
-                                          __status_int32_t * const status);
-
-void build_tm_1_4_ev_action_enabled(TMHandlerT * const p_tm_handler,
-                                    uint16_t tm_seq_counter,
-                                    uint16_t tc_packet_id,
-                                    uint16_t tc_packet_error_ctrl,
-                                    uint16_t event_ID, MissionObt current_obt,
-                                    __status_int32_t * const status);
-
-void build_tm_1_4_ev_action_rejected(TMHandlerT * const p_tm_handler,
-                                     uint16_t tm_seq_counter,
-                                     uint16_t tc_packet_id,
-                                     uint16_t tc_packet_error_ctrl,
-                                     uint16_t event_ID, MissionObt current_obt,
-                                     __status_int32_t * const status);
-
-void build_tm_1_4_ev_action_undefined(TMHandlerT * const p_tm_handler,
-                                      uint16_t tm_seq_counter,
-                                      uint16_t tc_packet_id,
-                                      uint16_t tc_packet_error_ctrl,
-                                      uint16_t event_ID, MissionObt current_obt,
-                                      __status_int32_t * const status);
-
-void build_tm_1_4_PID_stats_undefined(TMHandlerT * const p_tm_handler,
-                                      uint16_t tm_seq_counter,
-                                      uint16_t tc_packet_id,
-                                      uint16_t tc_packet_error_ctrl,
-                                      uint16_t PID, MissionObt current_obt,
-                                      __status_int32_t * const status);
-
-void build_tm_1_4_PID_read_only_via_TC(TMHandlerT * const p_tm_handler,
-                                       uint16_t tm_seq_counter,
-                                       uint16_t tc_packet_id,
-                                       uint16_t tc_packet_error_ctrl,
-                                       uint16_t PID, MissionObt current_obt,
-                                       __status_int32_t * const status);
-
-void build_tm_1_4_error_in_acceptance(TMHandlerT * const p_tm_handler,
-                                      uint16_t tm_seq_counter,
-                                      uint16_t tc_packet_id,
-                                      uint16_t tc_packet_error_ctrl,
-                                      MissionObt current_obt,
-                                      __status_int32_t * const status);
-
-void build_tm_1_7(TMHandlerT * const p_tm_handler, uint16_t tm_seq_counter,
-                  uint8_t flags_ack, MissionObt current_obt,
-                  __status_int32_t * const status, _Bool * const enabled);
-
-void build_tm_1_8_max_ev_actions_defined(TMHandlerT * const p_tm_handler,
-                                         uint16_t tm_seq_counter,
-                                         uint16_t tc_packet_id,
-                                         uint16_t tc_packet_error_ctrl,
-                                         uint16_t evID, MissionObt current_obt,
-                                         __status_int32_t * const status);
-
-void build_tm_1_8_tm_exceed_limit_appdata(TMHandlerT * const p_tm_handler,
-                                          uint16_t tm_seq_counter,
-                                          uint16_t tc_packet_id,
-                                          uint16_t tc_packet_error_ctrl,
-                                          MissionObt current_obt,
-                                          __status_int32_t * const status);
-
-void build_tm_1_8_device_command_exec_error(TMHandlerT * const p_tm_handler,
+__status_int32_t build_tm_1_4_SID_not_valid(TMHandlerT * const p_tm_handler,
                                             uint16_t tm_seq_counter,
                                             uint16_t tc_packet_id,
-                                            uint16_t tc_packet_error_ctrl,
-                                            uint32_t on_off_command,
-                                            MissionObt current_obt,
-                                            __status_int32_t * const status);
+                                            uint16_t tc_packet_seq_ctrl,
+                                            uint16_t SID,
+                                            MissionObt current_obt);
 
-void build_tm_1_8_not_free_stats_config(TMHandlerT * const p_tm_handler,
-                                        uint16_t tm_seq_counter,
-                                        uint16_t tc_packet_id,
-                                        uint16_t tc_packet_error_ctrl,
-                                        uint16_t PID, MissionObt current_obt,
-                                        __status_int32_t * const status);
+__status_int32_t build_tm_1_4_mem_address_not_valid(TMHandlerT * const p_tm_handler,
+                                                    uint16_t tm_seq_counter,
+                                                    uint16_t tc_packet_id,
+                                                    uint16_t tc_packet_seq_ctrl,
+                                                    uint8_t mem_id,
+                                                    uint32_t mem_address,
+                                                    MissionObt current_obt);
 
-void build_tm_1_8_mem_access_error(TMHandlerT * const p_tm_handler,
-                                   uint16_t tm_seq_counter,
-                                   uint16_t tc_packet_id,
-                                   uint16_t tc_packet_error_ctrl,
-                                   uint8_t mem_ID, MissionObt current_obt,
-                                   __status_int32_t * const status);
+__status_int32_t build_tm_1_4_mem_id_read_only(TMHandlerT * const p_tm_handler,
+                                               uint16_t tm_seq_counter,
+                                               uint16_t tc_packet_id,
+                                               uint16_t tc_packet_seq_ctrl,
+                                               uint8_t mem_id,
+                                               MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_EvID_not_valid(TMHandlerT * const p_tm_handler,
+                                             uint16_t tm_seq_counter,
+                                             uint16_t tc_packet_id,
+                                             uint16_t tc_packet_seq_ctrl,
+                                             uint16_t EvID,
+                                             MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_PID_not_valid(TMHandlerT * const p_tm_handler,
+                                            uint16_t tm_seq_counter,
+                                            uint16_t tc_packet_id,
+                                            uint16_t tc_packet_seq_ctrl,
+                                            uint16_t PID,
+                                            MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_PMON_undefined(TMHandlerT * const p_tm_handler,
+                                             uint16_t tm_seq_counter,
+                                             uint16_t tc_packet_id,
+                                             uint16_t tc_packet_seq_ctrl,
+                                             uint16_t PMONID,
+                                             MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_PMON_defined(TMHandlerT * const p_tm_handler,
+                                           uint16_t tm_seq_counter,
+                                           uint16_t tc_packet_id,
+                                           uint16_t tc_packet_seq_ctrl,
+                                           uint16_t PMONID,
+                                           MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_PMON_enabled(TMHandlerT * const p_tm_handler,
+                                           uint16_t tm_seq_counter,
+                                           uint16_t tc_packet_id,
+                                           uint16_t tc_packet_seq_ctrl,
+                                           uint16_t PMONID,
+                                           MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_PMONID_invalid(TMHandlerT * const p_tm_handler,
+                                             uint16_t tm_seq_counter,
+                                             uint16_t tc_packet_id,
+                                             uint16_t tc_packet_seq_ctrl,
+                                             uint16_t PMONID,
+                                             MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_PMON_definition_invalid(TMHandlerT * const p_tm_handler,
+                                                      uint16_t tm_seq_counter,
+                                                      uint16_t tc_packet_id,
+                                                      uint16_t tc_packet_seq_ctrl,
+                                                      uint16_t PMONID,
+                                                      MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_ev_action_enabled(TMHandlerT * const p_tm_handler,
+                                                uint16_t tm_seq_counter,
+                                                uint16_t tc_packet_id,
+                                                uint16_t tc_packet_seq_ctrl,
+                                                uint16_t event_ID,
+                                                MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_ev_action_rejected(TMHandlerT * const p_tm_handler,
+                                                 uint16_t tm_seq_counter,
+                                                 uint16_t tc_packet_id,
+                                                 uint16_t tc_packet_seq_ctrl,
+                                                 uint16_t event_ID,
+                                                 MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_ev_action_undefined(TMHandlerT * const p_tm_handler,
+                                                  uint16_t tm_seq_counter,
+                                                  uint16_t tc_packet_id,
+                                                  uint16_t tc_packet_seq_ctrl,
+                                                  uint16_t event_ID,
+                                                  MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_PID_stats_undefined(TMHandlerT * const p_tm_handler,
+                                                  uint16_t tm_seq_counter,
+                                                  uint16_t tc_packet_id,
+                                                  uint16_t tc_packet_seq_ctrl,
+                                                  uint16_t PID,
+                                                  MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_PID_read_only_via_TC(TMHandlerT * const p_tm_handler,
+                                                   uint16_t tm_seq_counter,
+                                                   uint16_t tc_packet_id,
+                                                   uint16_t tc_packet_seq_ctrl,
+                                                   uint16_t PID,
+                                                   MissionObt current_obt);
+
+__status_int32_t build_tm_1_4_error_in_acceptance(TMHandlerT * const p_tm_handler,
+                                                  uint16_t tm_seq_counter,
+                                                  uint16_t tc_packet_id,
+                                                  uint16_t tc_packet_seq_ctrl,
+                                                  MissionObt current_obt);
+
+__status_int32_t build_tm_1_7(TMHandlerT * const p_tm_handler,
+                              uint16_t tm_seq_counter, uint16_t tc_packet_id,
+                              uint16_t tc_packet_seq_ctrl, uint8_t flags_ack,
+                              MissionObt current_obt, _Bool * const enabled);
+
+__status_int32_t build_tm_1_8_max_ev_actions_defined(TMHandlerT * const p_tm_handler,
+                                                     uint16_t tm_seq_counter,
+                                                     uint16_t tc_packet_id,
+                                                     uint16_t tc_packet_seq_ctrl,
+                                                     uint16_t evID,
+                                                     MissionObt current_obt);
+
+__status_int32_t build_tm_1_8_tm_exceed_limit_appdata(TMHandlerT * const p_tm_handler,
+                                                      uint16_t tm_seq_counter,
+                                                      uint16_t tc_packet_id,
+                                                      uint16_t tc_packet_seq_ctrl,
+                                                      MissionObt current_obt);
+
+__status_int32_t build_tm_1_8_device_command_exec_error(TMHandlerT * const p_tm_handler,
+                                                        uint16_t tm_seq_counter,
+                                                        uint16_t tc_packet_id,
+                                                        uint16_t tc_packet_seq_ctrl,
+                                                        uint32_t on_off_command,
+                                                        MissionObt current_obt);
+
+__status_int32_t build_tm_1_8_not_free_stats_config(TMHandlerT * const p_tm_handler,
+                                                    uint16_t tm_seq_counter,
+                                                    uint16_t tc_packet_id,
+                                                    uint16_t tc_packet_seq_ctrl,
+                                                    uint16_t PID,
+                                                    MissionObt current_obt);
+
+__status_int32_t build_tm_1_8_mem_access_error(TMHandlerT * const p_tm_handler,
+                                               uint16_t tm_seq_counter,
+                                               uint16_t tc_packet_id,
+                                               uint16_t tc_packet_seq_ctrl,
+                                               uint8_t mem_ID,
+                                               MissionObt current_obt);
 
 #endif

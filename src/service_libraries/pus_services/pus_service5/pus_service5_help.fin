@@ -48,7 +48,7 @@ enum FaultInfo {
 
 struct PS5ExecTCReqStatusUpdate {
     packet_id : u16;
-    packet_error_ctrl : u16;
+    packet_seq_ctrl : u16;
     flags_ack : u8;
     tc_num_bytes : usize;
     N : u8;
@@ -56,7 +56,7 @@ struct PS5ExecTCReqStatusUpdate {
 };
 
 constexpr ps5_init_tc_req_status_update : PS5ExecTCReqStatusUpdate = {
-    packet_id = 0, packet_error_ctrl = 0, flags_ack = 0, tc_num_bytes = 0, N = 0, EvID = 0
+    packet_id = 0, packet_seq_ctrl = 0, flags_ack = 0, tc_num_bytes = 0, N = 0, EvID = 0
 };
 
 //These functions could become viewers !!!
@@ -146,30 +146,52 @@ function get_Ev_ID_enable_config_offset(Ev_ID : u16) -> u8 {
 
 
 
-function build_tm_5_x_param_out_of_limit(p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamOutOfLimitInfo, ev_ID : u16, current_obt : MissionObt, status : &mut Status<i32>){
+function build_tm_5_x_param_out_of_limit(p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamOutOfLimitInfo, ev_ID : u16, current_obt : MissionObt) -> Status<i32> {
+
+    var status : Status<i32> = Success;
 
     startup_tm(p_tm_handler);
-    append_u16_appdata_field(p_tm_handler, ev_ID, status);
-    append_u16_appdata_field(p_tm_handler, fault_info.PID, status);
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_value, status);
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_limit, status);
-    var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
-    close_tm(p_tm_handler, 5, subtype, tm_seq_counter, current_obt);
+    status = append_u16_appdata_field(p_tm_handler, ev_ID);
+    if (status is Success){
+        status = append_u16_appdata_field(p_tm_handler, fault_info.PID);
+    }
+    if (status is Success){
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_value);
+    }
+    if (status is Success){
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_limit);
+    }
+    if (status is Success){
+        var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
+        close_tm(p_tm_handler, 5, subtype, tm_seq_counter, current_obt);
+    }
 
-    return;
+    return status;
 }
 
 
-function build_tm_5_x_param_check_value_fail(p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamFaultValueInfo, ev_ID : u16, current_obt : MissionObt, status: &mut Status<i32>){
+function build_tm_5_x_param_check_value_fail(p_tm_handler : &mut TMHandlerT, tm_seq_counter: u16, fault_info : ParamFaultValueInfo, ev_ID : u16, current_obt : MissionObt) -> Status<i32> {
+
+    var status : Status<i32> = Success;
 
     startup_tm(p_tm_handler);
-    append_u16_appdata_field(p_tm_handler, ev_ID, status);
-    append_u16_appdata_field(p_tm_handler, fault_info.PID, status);
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_value, status);
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_mask, status);
-    append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value, status);
-    var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
-    close_tm(p_tm_handler, 5, subtype, tm_seq_counter, current_obt);
+    status = append_u16_appdata_field(p_tm_handler, ev_ID);
+    if (status is Success){
+        status = append_u16_appdata_field(p_tm_handler, fault_info.PID);
+    }
+    if (status is Success){
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_value);
+    }
+    if (status is Success){
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_mask);
+    }
+    if (status is Success){
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value);
+    }
+    if (status is Success){
+        var subtype : u8 = get_Ev_ID_enable_config_index(ev_ID) as u8;
+        close_tm(p_tm_handler, 5, subtype, tm_seq_counter, current_obt);
+    }
 
-    return;
+    return status;
 }

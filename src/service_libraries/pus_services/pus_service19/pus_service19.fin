@@ -143,8 +143,8 @@ resource class PUSService19 provides PUSS19Iface {
                 if (self->exec_tc_req_status_update.tc_data.N != 1) {
 
                     self->pus_service_9.get_current_obt(&mut current_obt);
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                             self->exec_tc_req_status_update.tc_data.N, current_obt, &mut status);
+                    status = build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                             self->exec_tc_req_status_update.tc_data.N, current_obt);
 
                     if (status is Success){
 
@@ -207,7 +207,7 @@ resource class PUSService19 provides PUSS19Iface {
                                 if (tc_status.acceptation_status is TCAcceptationStatus::Accepted){
 
                                     self->pus_service_9.get_current_obt(&mut current_obt);
-                                    build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
+                                    status = build_tm_1_3(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl), self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut ack_enabled);
 
                                     if (ack_enabled) {
 
@@ -239,7 +239,7 @@ resource class PUSService19 provides PUSS19Iface {
                                             var tm_count2 : u16 = 0 : u16;
                                             self->tm_counter.get_next_tm_count(&mut tm_count2);
                                             self->pus_service_9.get_current_obt(&mut current_obt);
-                                            build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
+                                            status = build_tm_1_7(&mut b_tm_handler2, tm_count2, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl), self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut ack_enabled);
 
                                             if (ack_enabled) {
 
@@ -266,8 +266,8 @@ resource class PUSService19 provides PUSS19Iface {
                                 } else {
 
                                     self->pus_service_9.get_current_obt(&mut current_obt);
-                                    build_tm_1_4_ev_action_rejected (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                                 self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                                    status = build_tm_1_4_ev_action_rejected (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                                 self->exec_tc_req_status_update.tc_data.EvID, current_obt);
                                     
                                     if (status is Success){
 
@@ -286,8 +286,8 @@ resource class PUSService19 provides PUSS19Iface {
                             case EvIDEnabled => {
 
                                 self->pus_service_9.get_current_obt(&mut current_obt);
-                                build_tm_1_4_ev_action_enabled(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                             self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                                status = build_tm_1_4_ev_action_enabled(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                             self->exec_tc_req_status_update.tc_data.EvID, current_obt);
 
                                 if (status is Success){
 
@@ -304,8 +304,8 @@ resource class PUSService19 provides PUSS19Iface {
                             case MaxEventActionDefinitions => {
 
                                 self->pus_service_9.get_current_obt(&mut current_obt);
-                                build_tm_1_8_max_ev_actions_defined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                         self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                                status = build_tm_1_8_max_ev_actions_defined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                         self->exec_tc_req_status_update.tc_data.EvID, current_obt);
 
                                 if (status is Success){
 
@@ -324,8 +324,8 @@ resource class PUSService19 provides PUSS19Iface {
                     } else {
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
-                        build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                     self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                        status = build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                     self->exec_tc_req_status_update.tc_data.EvID, current_obt);
 
                         if (status is Success){
 
@@ -372,8 +372,8 @@ resource class PUSService19 provides PUSS19Iface {
                 if (self->exec_tc_req_status_update.tc_data.N != 1) {
 
                     self->pus_service_9.get_current_obt(&mut current_obt);
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 self->exec_tc_req_status_update.tc_data.N, current_obt, &mut status);
+                    status = build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                 self->exec_tc_req_status_update.tc_data.N, current_obt);
                         
                     if (status is Success){
 
@@ -397,8 +397,8 @@ resource class PUSService19 provides PUSS19Iface {
                             if (is_enabled){
 
                                 self->pus_service_9.get_current_obt(&mut current_obt);
-                                build_tm_1_4_ev_action_enabled(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                             self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                                status = build_tm_1_4_ev_action_enabled(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                             self->exec_tc_req_status_update.tc_data.EvID, current_obt);
 
                                 if (status is Success){
 
@@ -412,7 +412,7 @@ resource class PUSService19 provides PUSS19Iface {
                             } else {
 
                                 self->pus_service_9.get_current_obt(&mut current_obt);
-                                build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
+                                status = build_tm_1_3(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl), self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut ack_enabled);
 
                                 if (ack_enabled) {
 
@@ -444,7 +444,7 @@ resource class PUSService19 provides PUSS19Iface {
                                             var tm_count2 : u16 = 0 : u16;
                                             self->tm_counter.get_next_tm_count(&mut tm_count2);
                                             self->pus_service_9.get_current_obt(&mut current_obt);
-                                            build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
+                                            status = build_tm_1_7(&mut b_tm_handler2, tm_count2, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl), self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut ack_enabled);
 
                                             if (ack_enabled) {
 
@@ -475,8 +475,8 @@ resource class PUSService19 provides PUSS19Iface {
                         } else {
 
                             self->pus_service_9.get_current_obt(&mut current_obt);
-                            build_tm_1_4_ev_action_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                         self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                            status = build_tm_1_4_ev_action_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                         self->exec_tc_req_status_update.tc_data.EvID, current_obt);
 
                             if (status is Success){
 
@@ -491,8 +491,8 @@ resource class PUSService19 provides PUSS19Iface {
                     } else {
                         
                         self->pus_service_9.get_current_obt(&mut current_obt);
-                        build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                         self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                        status = build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                         self->exec_tc_req_status_update.tc_data.EvID, current_obt);
 
                         if (status is Success){
 
@@ -537,8 +537,8 @@ resource class PUSService19 provides PUSS19Iface {
                 if (self->exec_tc_req_status_update.tc_data.N != 1) {
 
                     self->pus_service_9.get_current_obt(&mut current_obt);
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 self->exec_tc_req_status_update.tc_data.N, current_obt, &mut status);
+                    status = build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                 self->exec_tc_req_status_update.tc_data.N, current_obt);
 
                     if (status is Success){
 
@@ -560,7 +560,7 @@ resource class PUSService19 provides PUSS19Iface {
                         if (self->exec_tc_req_status_update.ev_action_ID.found){
 
                                 self->pus_service_9.get_current_obt(&mut current_obt);
-                                build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
+                                status = build_tm_1_3(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl), self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut ack_enabled);
 
                                 if (ack_enabled) {
 
@@ -593,7 +593,7 @@ resource class PUSService19 provides PUSS19Iface {
                                             var tm_count2 : u16 = 0 : u16;
                                             self->tm_counter.get_next_tm_count(&mut tm_count2);
                                             self->pus_service_9.get_current_obt(&mut current_obt);
-                                            build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
+                                            status = build_tm_1_7(&mut b_tm_handler2, tm_count2, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl), self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut ack_enabled);
 
                                             if (ack_enabled) {
 
@@ -622,8 +622,8 @@ resource class PUSService19 provides PUSS19Iface {
                         } else {
 
                             self->pus_service_9.get_current_obt(&mut current_obt);
-                            build_tm_1_4_ev_action_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                     self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                            status = build_tm_1_4_ev_action_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                     self->exec_tc_req_status_update.tc_data.EvID, current_obt);
 
                             if (status is Success){
 
@@ -638,8 +638,8 @@ resource class PUSService19 provides PUSS19Iface {
                     } else {
                         
                         self->pus_service_9.get_current_obt(&mut current_obt);
-                        build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                        status = build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                 self->exec_tc_req_status_update.tc_data.EvID, current_obt);
                                         
                         if (status is Success){
 
@@ -683,8 +683,8 @@ resource class PUSService19 provides PUSS19Iface {
                 if (self->exec_tc_req_status_update.tc_data.N != 1) {
 
                     self->pus_service_9.get_current_obt(&mut current_obt);
-                    build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 self->exec_tc_req_status_update.tc_data.N, current_obt, &mut status);
+                    status = build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                 self->exec_tc_req_status_update.tc_data.N, current_obt);
 
                     if (status is Success){
 
@@ -705,7 +705,7 @@ resource class PUSService19 provides PUSS19Iface {
                         if (self->exec_tc_req_status_update.ev_action_ID.found){
 
                                 self->pus_service_9.get_current_obt(&mut current_obt);
-                                build_tm_1_3(&mut b_tm_handler, tm_count, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
+                                status = build_tm_1_3(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl), self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut ack_enabled);
 
                                 if (ack_enabled) {
 
@@ -738,7 +738,7 @@ resource class PUSService19 provides PUSS19Iface {
                                             var tm_count2 : u16 = 0 : u16;
                                             self->tm_counter.get_next_tm_count(&mut tm_count2);
                                             self->pus_service_9.get_current_obt(&mut current_obt);
-                                            build_tm_1_7(&mut b_tm_handler2, tm_count2, self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut status, &mut ack_enabled);
+                                            status = build_tm_1_7(&mut b_tm_handler2, tm_count2, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl), self->exec_tc_req_status_update.tc_data.flags_ack, current_obt, &mut ack_enabled);
 
                                             if (ack_enabled) {
 
@@ -767,8 +767,8 @@ resource class PUSService19 provides PUSS19Iface {
                         } else {
 
                             self->pus_service_9.get_current_obt(&mut current_obt);
-                            build_tm_1_4_ev_action_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                         self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                            status = build_tm_1_4_ev_action_undefined(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                         self->exec_tc_req_status_update.tc_data.EvID, current_obt);
 
                             if (status is Success){
 
@@ -783,8 +783,8 @@ resource class PUSService19 provides PUSS19Iface {
                     } else {
                         
                         self->pus_service_9.get_current_obt(&mut current_obt);
-                        build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 self->exec_tc_req_status_update.tc_data.EvID, current_obt, &mut status);
+                        status = build_tm_1_4_EvID_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                 self->exec_tc_req_status_update.tc_data.EvID, current_obt);
 
                         if (status is Success){
 
@@ -824,7 +824,7 @@ resource class PUSService19 provides PUSS19Iface {
                 case Init => {
 
                     self->exec_tc_req_status_update.tc_data.packet_id = tc_handler->packet_header.packet_id;
-                    self->exec_tc_req_status_update.tc_data.packet_error_ctrl = tc_handler->packet_error_ctrl;
+                    self->exec_tc_req_status_update.tc_data.packet_seq_ctrl = tc_handler->packet_header.packet_seq_ctrl;
                     self->exec_tc_req_status_update.tc_data.flags_ack = tc_handler->df_header.flag_ver_ack;
                     self->exec_tc_req_status_update.tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
                     status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.N));
@@ -916,18 +916,18 @@ resource class PUSService19 provides PUSS19Iface {
 
                             if (error_code == ACCEPTANCE_ERROR) {
 
-                                build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                 current_obt, &mut status);
+                                status = build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                 current_obt);
 
                             } else if (error_code == BUILD_TM_ERROR) {
 
-                                build_tm_1_8_tm_exceed_limit_appdata(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                            current_obt, &mut status);
+                                status = build_tm_1_8_tm_exceed_limit_appdata(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                            current_obt);
 
                             } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
 
-                                build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_error_ctrl),
-                                    (self->exec_tc_req_status_update.tc_data.tc_num_bytes), current_obt, &mut status);
+                                status = build_tm_1_4_short_pack_length(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.tc_data.packet_id), (self->exec_tc_req_status_update.tc_data.packet_seq_ctrl),
+                                    (self->exec_tc_req_status_update.tc_data.tc_num_bytes), current_obt);
 
                             } else {
                               

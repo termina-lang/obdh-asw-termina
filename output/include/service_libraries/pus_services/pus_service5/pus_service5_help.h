@@ -70,7 +70,7 @@ typedef struct {
 
 typedef struct {
     uint16_t packet_id;
-    uint16_t packet_error_ctrl;
+    uint16_t packet_seq_ctrl;
     uint8_t flags_ack;
     size_t tc_num_bytes;
     uint8_t N;
@@ -85,16 +85,16 @@ size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID);
 
 uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID);
 
-void build_tm_5_x_param_out_of_limit(TMHandlerT * const p_tm_handler,
-                                     uint16_t tm_seq_counter,
-                                     ParamOutOfLimitInfo fault_info,
-                                     uint16_t ev_ID, MissionObt current_obt,
-                                     __status_int32_t * const status);
+__status_int32_t build_tm_5_x_param_out_of_limit(TMHandlerT * const p_tm_handler,
+                                                 uint16_t tm_seq_counter,
+                                                 ParamOutOfLimitInfo fault_info,
+                                                 uint16_t ev_ID,
+                                                 MissionObt current_obt);
 
-void build_tm_5_x_param_check_value_fail(TMHandlerT * const p_tm_handler,
-                                         uint16_t tm_seq_counter,
-                                         ParamFaultValueInfo fault_info,
-                                         uint16_t ev_ID, MissionObt current_obt,
-                                         __status_int32_t * const status);
+__status_int32_t build_tm_5_x_param_check_value_fail(TMHandlerT * const p_tm_handler,
+                                                     uint16_t tm_seq_counter,
+                                                     ParamFaultValueInfo fault_info,
+                                                     uint16_t ev_ID,
+                                                     MissionObt current_obt);
 
 #endif

@@ -59,11 +59,11 @@ void ManagerTCExecutor__PUS_prio_exec_tc(const __termina_event_t * const __ev,
                                                 self->pus_service_9.__that,
                                                 &current_obt);
 
-            build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
-                                             tm_count,
-                                             tc_handler->packet_header.packet_id,
-                                             tc_handler->packet_error_ctrl,
-                                             current_obt, status);
+            *status = build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
+                                                       tm_count,
+                                                       tc_handler->packet_header.packet_id,
+                                                       tc_handler->packet_error_ctrl,
+                                                       current_obt);
 
             if ((*status).__variant == Success) {
                 
@@ -127,11 +127,11 @@ void ManagerTCExecutor__mng_tc_acceptation(const __termina_event_t * const __ev,
         self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
-        build_tm_1_1((TMHandlerT *)b_tm_handler.data, tm_count,
-                     tc_handler->packet_header.packet_id,
-                     tc_handler->packet_error_ctrl,
-                     tc_handler->df_header.flag_ver_ack, current_obt, status,
-                     &ack_enabled);
+        *status = build_tm_1_1((TMHandlerT *)b_tm_handler.data, tm_count,
+                               tc_handler->packet_header.packet_id,
+                               tc_handler->packet_error_ctrl,
+                               tc_handler->df_header.flag_ver_ack, current_obt,
+                               &ack_enabled);
 
         if (ack_enabled) {
             
@@ -202,8 +202,8 @@ void ManagerTCExecutor__mng_tc_rejection(const __termina_event_t * const __ev,
         self->pus_service_9.get_current_obt(__ev, self->pus_service_9.__that,
                                             &current_obt);
 
-        build_tm_1_2(&tc_status, (TMHandlerT *)b_tm_handler.data, tm_count,
-                     tc_handler, current_obt, status);
+        *status = build_tm_1_2(&tc_status, (TMHandlerT *)b_tm_handler.data,
+                               tm_count, tc_handler, current_obt);
 
         if ((*status).__variant == Success) {
             
