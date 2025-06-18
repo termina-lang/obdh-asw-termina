@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MintermFilter SYSTEM "../../../DTDs/filters.dtd">
+
+<MintermFilter formatFile="../../TM_Formats/Level2/asw_pus_tm_5_4_format.xml">
+	<BoolVar id="0" name="EV_ID0x4000" constantType="hex">
+		<FieldRef name="EV_ID" />
+		<Op type="equal" />
+		<Constant value="0x4000" />
+	</BoolVar>
+	<Minterm id="0">
+		<BoolVarRef idRef="0" />
+	</Minterm>
+</MintermFilter>

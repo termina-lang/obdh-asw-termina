@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Export SYSTEM "../../../DTDs/export.dtd">
+
+<Export from="../../Level2/asw_pus_tc_12_2_format.xml" to="../../Level1/asw_pus_v2_tc_format.xml">
+	<settings>
+		<settingFromConst value="0" toFieldRef="CCSDSSecondaryHeaderFlag"/>
+		<settingFromConst value="1" toFieldRef="PUSVersion"/>
+		<settingFromConst value="9" toFieldRef="ACK"/>
+		<settingFromConst value="12" toFieldRef="ServiceType"/>
+		<settingFromConst value="2"	toFieldRef="ServiceSubtype"/>
+		<settingFromConst value="120" toFieldRef="SourceID"/>
+		<settingFromField fieldRef="ApplicationData" toFieldRef="ApplicationData"/>
+		<settingFromConst value="3" toFieldRef="AppDataLength"/> <!-- 3 bytes -->
+	</settings>
+</Export>

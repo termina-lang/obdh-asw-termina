@@ -17,7 +17,7 @@
 </Protocols>
 
 <Interfaces>
-	<MainInterface id="0" name="UART" ifType="uart" ifConfig="GSS_Interfaces/uart/uart_beef_port3.xml" ioType="in_out" protocolID="0">
+	<MainInterface id="0" name="UART" ifType="uart" ifConfig="GSS_Interfaces/uart/uart_beef_port1.xml" ioType="in_out" protocolID="0">
 		<LevelInOut id="0" name="CCSDS">
 			<TMformat				file="TM_Formats/Level0/ccsds_pus_v2_tm_format.xml" />
 			<TCformat				file="TC_Formats/Level0/ccsds_pus_v2_tc_format.xml" />
@@ -67,6 +67,9 @@
 		
 	<TestCase name="tp_0040_asw_pus_tc_20_1_get_pid10_equal_99" 						
 		procedure="FT_PROCS/st20/tp_0040_asw_pus_tc_20_1_get_pid10_equal_99.xml"/>
+		
+	<TestCase name="tp_0050_pus_tc_12_5_add_mon_def_pid10_to_01_0x4000_0x10_0x4001" 						
+		procedure="FT_PROCS/st12/tp_0050_pus_tc_12_5_add_mon_def_pid10_to_01_0x4000_0x10_0x4001.xml"/>
 
 </Tests>
 </gss_config>
