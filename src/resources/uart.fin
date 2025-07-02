@@ -413,7 +413,7 @@ resource class UARTDriver provides
 
             if self->tf_is_empty() {
 
-                for i : usize in 0 .. hw_fifo_size {
+                for i : usize in 0 .. hw_fifo_size while i < nbytes {
 
                     self->registers.data = output_bytes[i] as u32;
             
