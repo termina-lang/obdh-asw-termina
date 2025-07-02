@@ -16,7 +16,7 @@
 	</Protocol>
 </Protocols>
 
-<Interfaces>
+<Interfaces ProtocolPacketsFile="GSS_Interfaces/ProtocolPackets.xml">
 	<MainInterface id="0" name="UART" ifType="uart" ifConfig="GSS_Interfaces/uart/uart_beef_port1.xml" ioType="in_out" protocolID="0">
 		<LevelInOut id="0" name="CCSDS">
 			<TMformat				file="TM_Formats/Level0/ccsds_pus_v2_tm_format.xml" />
