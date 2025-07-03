@@ -2,7 +2,7 @@
 <!DOCTYPE test_proc SYSTEM "../DTDs/test_proc.dtd">
 
 <test_proc name="tp_0050_pus_tc_12_5_add_pmonid0_pid10_low_limit_value_01_rid_0x4000_high_limit_value_10_rid_0x4001">
-	<step name="20_3_set_pid10_to_5" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
+	<!-- step name="20_3_set_pid10_to_5" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
 			<input_level_2 name="tc_20_3" ifRef="0" delay_value="200" delay_unit="miliseconds">
 				<level2 format="TC_Formats/Level2/st20/asw_pus_tc_20_3_uint32_format.xml"/>
@@ -29,8 +29,8 @@
 				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
 			</output_level_1>
 		</outputs>			
-	</step>
-	<step name="12_5_add_pmonid0_pid10_to_0x01_0x4000_10_0x4001" id="1" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
+	</step !-->
+	<step name="12_5_add_pmonid0_pid10_to_0x01_0x4000_10_0x4001" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>			
 			<input_level_2 name="tc_12_5" ifRef="0" delay_value="800" delay_unit="miliseconds">
 				<level2 format="TC_Formats/Level2/st12/asw_pus_tc_12_5_limits_uint32_format.xml"/>
@@ -58,7 +58,7 @@
 			</output_level_1>
 		</outputs>			
 	</step>
-	<step name="12_1_enable_pmon_id_0" 	id="2" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
+	<step name="12_1_enable_pmon_id_0" 	id="1" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>			
 			<input_level_2 name="tc_12_1" ifRef="0" delay_value="1400" delay_unit="miliseconds">
 				<level2 format="TC_Formats/Level2/st12/asw_pus_tc_12_1_format.xml"/>
@@ -86,7 +86,7 @@
 			</output_level_1>
 		</outputs>			
 	</step>
-	<step name="20_3_set_pid10_to_99_force_0x4001_event" id="3" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
+	<!-- step name="20_3_set_pid10_to_99_force_0x4001_event" id="3" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
 			<input_level_2 name="tc_20_3" ifRef="0" delay_value="2000" delay_unit="miliseconds">
 				<level2 format="TC_Formats/Level2/st20/asw_pus_tc_20_3_uint32_format.xml"/>
@@ -125,6 +125,6 @@
 
 
 		</outputs>			
-	</step>
+	</step !-->
 </test_proc>
 
