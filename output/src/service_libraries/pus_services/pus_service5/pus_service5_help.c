@@ -147,34 +147,34 @@ size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID) {
     if (Ev_ID_type.__variant == Ev_IDType__Informative) {
         
         #line 123 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
-        index = 0U;
+        index = 1U;
 
     } else
     #line 125 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
     if (Ev_ID_type.__variant == Ev_IDType__LowSeverityAnomaly) {
         
         #line 126 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
-        index = 1U;
+        index = 2U;
 
     } else
     #line 128 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
     if (Ev_ID_type.__variant == Ev_IDType__MediumSeverityAnomaly) {
         
         #line 129 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
-        index = 2U;
+        index = 3U;
 
     } else
     #line 131 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
     if (Ev_ID_type.__variant == Ev_IDType__HighSeverityAnomaly) {
         
         #line 132 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
-        index = 3U;
+        index = 4U;
 
     } else
     {
         
         #line 135 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
-        index = 4U;
+        index = 0U;
 
     }
 

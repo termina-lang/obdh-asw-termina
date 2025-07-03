@@ -120,19 +120,19 @@ function get_Ev_ID_enable_config_index(Ev_ID : u16) -> usize {
     var index : usize = 4; //not valid index
     match Ev_ID_type {
         case Informative => {
-            index = 0;
-        }
-        case LowSeverityAnomaly => {
             index = 1;
         }
-        case MediumSeverityAnomaly => {
+        case LowSeverityAnomaly => {
             index = 2;
         }
-        case HighSeverityAnomaly => {
+        case MediumSeverityAnomaly => {
             index = 3;
         }
-        case Ev_IDNotValid => {
+        case HighSeverityAnomaly => {
             index = 4;
+        }
+        case Ev_IDNotValid => {
+            index = 0;
         }
     }
 
