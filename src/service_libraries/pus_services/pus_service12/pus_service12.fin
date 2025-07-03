@@ -646,7 +646,7 @@ resource class PUSService12 provides PUSS12Iface {
                 case CheckPMONID => {
 
                     //choice point
-                    if (self->is_valid_PMONID()) {
+                    if (self->is_valid_PMONID() && (self->param_mon_config_table[PMONID as usize].enabled == true)) {
                         self->do_monitoring_req_status = self->manage_interval_control(); //method 
                     } else {
                         self->do_monitoring_req_status = DoMonitoringReqStatus::Exit;
@@ -746,7 +746,7 @@ resource class PUSService12 provides PUSS12Iface {
 
         if (PMONID < max_num_pmon_ids) {
 
-            if(self->param_mon_config_table[PMONID].type is MonitorCheckType::Free == false){
+            if((self->param_mon_config_table[PMONID].type is MonitorCheckType::Free) == false){
 
                 *is_enabled = self->param_mon_config_table[PMONID as usize].enabled;
             }
@@ -1088,7 +1088,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     method add_valid_mng_mon_def (&priv self){
 
-        let PMONID : usize = (self->exec_tc_req_status_update.tc_data_5.mon_config.PID) as usize;
+        let PMONID : usize = (self->exec_tc_req_status_update.tc_data_5.PMONID) as usize;
 
         (self->param_mon_config_table)[PMONID] = self->exec_tc_req_status_update.tc_data_5.mon_config;
 
@@ -1149,6 +1149,7 @@ resource class PUSService12 provides PUSS12Iface {
                 if (self->exec_tc_req_status_update.tc_data_5.N != 1) {
 
                     self->pus_service_9.get_current_obt(&mut current_obt);
+
                     status = build_tm_1_4_num_of_instr_not_valid(&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl),
                                  self->exec_tc_req_status_update.tc_data_5.N, current_obt);
 

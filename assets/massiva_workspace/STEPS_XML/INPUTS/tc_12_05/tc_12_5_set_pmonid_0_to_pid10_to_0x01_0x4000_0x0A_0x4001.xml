@@ -2,9 +2,12 @@
 <!DOCTYPE Export SYSTEM "../../DTDs/export.dtd">
 <Export from="NULL" to="epd_pus_12_5.xml">
 	<settings>
+		<settingFromConst value="1" toFieldRef="N"/>
 		<settingFromConst value="0" toFieldRef="PMON_ID"/>
 		<settingFromConst value="10" toFieldRef="Parameter_ID"/>
-		<settingFromConst value="8" toFieldRef="Monitoring_Interval"/>		
+		<settingFromConst value="8" toFieldRef="Monitoring_Interval"/>
+		<settingFromConst value="2" toFieldRef="Repetition"/>
+		<settingFromConst value="1" toFieldRef="Type"/>				
 		<settingFromConst value="1" toFieldRef="Low_Limit"/>
 		<settingFromConst value="0x4000" toFieldRef="Low_Limit_EV_ID"/>
 		<settingFromConst value="10" toFieldRef="High_Limit"/>

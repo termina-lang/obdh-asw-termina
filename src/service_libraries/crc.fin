@@ -11,8 +11,12 @@ import service_libraries.tc_ccsds_pus_format;
  * 
  * @return The computed 16-bit CRC value
  */
+
+
+ 
+
 function cal_crc_16 (data : & [u8; max_tc_size], nbytes : usize) -> u16  {
-    
+
     var crc_value : u16 = 0xFFFF : u16;
     var k : usize = 0;
 

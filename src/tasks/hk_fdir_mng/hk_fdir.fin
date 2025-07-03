@@ -172,35 +172,34 @@ task class HouseKeepingFDIR {
     */
     action exec_tc(&priv self, tc_handler : box TCHandlerT)-> Status<i32> {
 
-        var res : Status<i32> = Success;
+        var status : Status<i32> = Success;
 
         var tc_type : u8 = tc_handler.df_header.type;
 
         if (tc_type == 3){
 
-            self->pus_service_3.exec_tc(&mut tc_handler, &mut res);
+            self->pus_service_3.exec_tc(&mut tc_handler, &mut status);
 
         } else if (tc_type == 5){
 
-            self->pus_service_5.exec_tc(&mut tc_handler, &mut res);
+            self->pus_service_5.exec_tc(&mut tc_handler, &mut status);
 
         } else if (tc_type == 12){
 
-            self->pus_service_12.exec_tc(&mut tc_handler, &mut res);
+            self->pus_service_12.exec_tc(&mut tc_handler, &mut status);
 
         } else if (tc_type == 19){
 
-            self->pus_service_19.exec_tc(&mut tc_handler, &mut res);
+            self->pus_service_19.exec_tc(&mut tc_handler, &mut status);
 
         } 
         else if (tc_type == 4){
 
-            self->pus_service_4.exec_tc(&mut tc_handler, &mut res);
+            self->pus_service_4.exec_tc(&mut tc_handler, &mut status);
 
         }else {
 
             var current_obt : MissionObt = {seconds = 0, finetime = 0};
-            var status : Status<i32> = Success;
 
             var tm_handler : Option<box TMHandlerT> = None;
             self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -213,7 +212,7 @@ task class HouseKeepingFDIR {
                     self->tm_counter.get_next_tm_count(&mut tm_count);
 
                     self->pus_service_9.get_current_obt(&mut current_obt);
-                    status = build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, tc_handler.packet_header.packet_id, tc_handler.packet_error_ctrl,
+                    status = build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, tc_handler.packet_header.packet_id, tc_handler.packet_header.packet_seq_ctrl,
                                     current_obt);
                     
                     if (status is Success){
@@ -236,7 +235,7 @@ task class HouseKeepingFDIR {
 
         self->a_tc_handler_pool.free(tc_handler);
 
-        return res;
+        return status;
     }
 
 

@@ -2,6 +2,7 @@
 <!DOCTYPE Export SYSTEM "../../../DTDs/export.dtd">
 <Export from="NULL" to="epd_pus_12_1.xml">
 	<settings>
+		<settingFromConst value="1" toFieldRef="N"/>
 		<settingFromConst value="0x00" toFieldRef="PMON_ID"/>	
 	</settings>
 </Export>

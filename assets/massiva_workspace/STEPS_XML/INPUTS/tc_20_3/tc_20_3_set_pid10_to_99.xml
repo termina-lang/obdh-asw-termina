@@ -4,6 +4,6 @@
 	<settings>
 		<settingFromConst value="1" toFieldRef="N"/>	
 		<settingFromConst value="0x0A" toFieldRef="PID"/>	
-		<settingFromConst value="0x63" toFieldRef="PIDValue"/>	
+		<settingFromConst value="99" toFieldRef="PIDValue"/>	
 	</settings>
 </Export>

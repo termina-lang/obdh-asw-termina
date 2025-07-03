@@ -38,7 +38,7 @@ typedef struct {
     _Atomic uint32_t * system_data_pool_u32;
     ParamMonitoringTransition param_mon_transitions_table[1U];
     uint8_t monitoring_transition_counter;
-    ParamMonitoringConfiguration param_mon_config_table[8U];
+    ParamMonitoringConfiguration param_mon_config_table[16U];
     PS12ExecTCReqStatusUpdate exec_tc_req_status_update;
     PSExecTCReqStatus exec_tc_req_status;
     DoMonitoringReqStatusUpdate do_monitoring_req_status_update;

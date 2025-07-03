@@ -4,7 +4,7 @@ name: obdh-asw-termina
 output-folder: output
 platform: rtems5-leon3-qemu
 source-modules: src
-profile: release
+profile: debug
 enable-system-init: true
 enable-system-port: true
 builder: make
