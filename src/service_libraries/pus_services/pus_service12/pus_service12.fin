@@ -632,7 +632,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &mut FaultInfo, event_triggered: &mut bool) {
 
-        for i : usize in 0 .. 4 while (self->do_monitoring_req_status is DoMonitoringReqStatus::Exit == false){
+        for i : usize in 0 .. 5 while (self->do_monitoring_req_status is DoMonitoringReqStatus::Exit == false){
             match self->do_monitoring_req_status {
                 case Init=> {
 
@@ -727,6 +727,8 @@ resource class PUSService12 provides PUSS12Iface {
                     *evID = self->do_monitoring_req_status_update.EvID;
                     *fault_info = self->do_monitoring_req_status_update.fault_info;
                     *event_triggered = self->do_monitoring_req_status_update.event_triggered;
+                    self->do_monitoring_req_status = DoMonitoringReqStatus::Exit;
+                    
                 }
                 case Exit => {
                     //error
@@ -744,6 +746,8 @@ resource class PUSService12 provides PUSS12Iface {
 
     procedure is_PMON_enabled(&mut self, PMONID : usize, is_enabled : &mut bool) {
 
+        *is_enabled = false;
+    
         if (PMONID < max_num_pmon_ids) {
 
             if((self->param_mon_config_table[PMONID].type is MonitorCheckType::Free) == false){

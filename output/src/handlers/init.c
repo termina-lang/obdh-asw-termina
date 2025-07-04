@@ -32,6 +32,9 @@ __status_int32_t Init__init(const __termina_event_t * const __ev,
 
     }
 
+    #line 56 "src/handlers/init.fin"
+    atomic_store(&self->system_data_pool_u32[10U], 5U);
+
     #line 58 "src/handlers/init.fin"
     atomic_store(&self->system_data_pool_u32[0U],
                  (uint32_t)(Zero + (uint32_t)(1U * Unit)) + (uint32_t)(1U * Dec));

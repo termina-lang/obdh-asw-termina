@@ -53,7 +53,7 @@ handler class Init {
         for i : usize in 5 .. sdp_num_u32_params {
             self->system_data_pool_u32.store_index(i,i as u32);
         }
-
+        self->system_data_pool_u32.store_index(10,5);
         // Set specific values for the first five elements of system_data_pool_u32
         self->system_data_pool_u32.store_index(0,Zero + 1*Unit + 1*Dec);
         self->system_data_pool_u32.store_index(1,Zero + 2*Unit + 4*Dec);

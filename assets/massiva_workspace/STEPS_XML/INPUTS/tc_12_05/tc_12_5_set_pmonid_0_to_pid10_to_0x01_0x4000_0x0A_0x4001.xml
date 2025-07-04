@@ -6,7 +6,7 @@
 		<settingFromConst value="0" toFieldRef="PMON_ID"/>
 		<settingFromConst value="10" toFieldRef="Parameter_ID"/>
 		<settingFromConst value="8" toFieldRef="Monitoring_Interval"/>
-		<settingFromConst value="1" toFieldRef="Repetition"/>
+		<settingFromConst value="2" toFieldRef="Repetition"/>
 		<settingFromConst value="1" toFieldRef="Type"/>				
 		<settingFromConst value="1" toFieldRef="Low_Limit"/>
 		<settingFromConst value="0x4000" toFieldRef="Low_Limit_EV_ID"/>

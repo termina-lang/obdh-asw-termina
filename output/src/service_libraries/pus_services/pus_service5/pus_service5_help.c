@@ -141,7 +141,7 @@ size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID) {
     Ev_IDType Ev_ID_type = get_Ev_ID_type(Ev_ID);
 
     #line 120 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
-    size_t index = 4U;
+    size_t index = 0U;
 
     #line 122 "src/service_libraries/pus_services/pus_service5/pus_service5_help.fin"
     if (Ev_ID_type.__variant == Ev_IDType__Informative) {

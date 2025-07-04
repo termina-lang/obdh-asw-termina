@@ -117,7 +117,7 @@ function is_Ev_ID_valid (evID : u16) -> bool {
 function get_Ev_ID_enable_config_index(Ev_ID : u16) -> usize {
 
     var Ev_ID_type : Ev_IDType = get_Ev_ID_type(Ev_ID);
-    var index : usize = 4; //not valid index
+    var index : usize = 0; //not valid index
     match Ev_ID_type {
         case Informative => {
             index = 1;
