@@ -112,6 +112,7 @@ struct DoMonitoringReqStatusUpdate {
     current_monitor_definition: MonitorDefinition;
     fault_info: FaultInfo;
     new_status: CheckState;
+    prev_status : CheckState;
     event_triggered: bool;
 };
 
@@ -121,6 +122,7 @@ constexpr ps12_init_do_monitoring_req_status_update : DoMonitoringReqStatusUpdat
     current_monitor_definition = MonitorDefinition::Unselected,
     fault_info = FaultInfo::Empty,
     new_status = CheckState::Unselected,
+    prev_status = CheckState::Unselected,
     event_triggered = false
 };
 

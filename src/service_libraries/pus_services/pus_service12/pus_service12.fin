@@ -528,6 +528,7 @@ resource class PUSService12 provides PUSS12Iface {
             if (self->param_mon_config_table[current_PMON_ID].repetition_control >= self->param_mon_config_table[current_PMON_ID].repetition) {
 
                 self->param_mon_config_table[current_PMON_ID].repetition_control = 0;
+                self->do_monitoring_req_status_update.prev_status = self->param_mon_config_table[current_PMON_ID].current_state;
                 self->param_mon_config_table[current_PMON_ID].current_state = new_state;
                 transition = true;
 
@@ -585,7 +586,7 @@ resource class PUSService12 provides PUSS12Iface {
             }
 
             self->param_mon_transitions_table[self->monitoring_transition_counter as usize].new_status = self->do_monitoring_req_status_update.new_status;
-            self->param_mon_transitions_table[self->monitoring_transition_counter as usize].prev_status = self->param_mon_config_table[current_PMON_ID].current_state;
+            self->param_mon_transitions_table[self->monitoring_transition_counter as usize].prev_status = self->do_monitoring_req_status_update.prev_status;
             self->param_mon_transitions_table[self->monitoring_transition_counter as usize].trans_obt = self->param_mon_config_table[current_PMON_ID].transition_obt;
 
             self->monitoring_transition_counter = self->monitoring_transition_counter + 1;

@@ -1074,18 +1074,26 @@ resource class PUSService19 provides PUSS19Iface {
         if (index == 0){
 
             *action_packet = self->pending_action_queue_1I[self->pending_action_head[0]];
+            self->pending_action_head[0] = (self->pending_action_head[0] + 1) % event_action_queue_dimension;
+            self->pending_action_number[0] = self->pending_action_number[0] - 1;
 
         } else if (index == 1){
 
             *action_packet = self->pending_action_queue_2LS[self->pending_action_head[1]];
+            self->pending_action_head[1] = (self->pending_action_head[1] + 1) % event_action_queue_dimension;
+            self->pending_action_number[1] = self->pending_action_number[1] - 1;
 
         } else if (index == 2){
 
             *action_packet = self->pending_action_queue_3MS[self->pending_action_head[2]];
+            self->pending_action_head[2] = (self->pending_action_head[2] + 1) % event_action_queue_dimension;
+            self->pending_action_number[2] = self->pending_action_number[2] - 1;
 
         } else if (index == 3){
 
             *action_packet = self->pending_action_queue_4HS[self->pending_action_head[3]];
+            self->pending_action_head[3] = (self->pending_action_head[3] + 1) % event_action_queue_dimension;
+            self->pending_action_number[3] = self->pending_action_number[3] - 1;
 
         } else {
             //error

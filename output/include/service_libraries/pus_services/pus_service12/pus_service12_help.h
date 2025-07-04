@@ -163,6 +163,7 @@ typedef struct {
     MonitorDefinition current_monitor_definition;
     FaultInfo fault_info;
     CheckState new_status;
+    CheckState prev_status;
     _Bool event_triggered;
 } DoMonitoringReqStatusUpdate;
 

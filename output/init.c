@@ -467,13 +467,15 @@ void __termina_app__init_globals() {
     pus_service_12.do_monitoring_req_status.__variant = DoMonitoringReqStatus__Init;
     pus_service_12.do_monitoring_req_status_update.EvID = 0U;
     pus_service_12.do_monitoring_req_status_update.PMONID = 0U;
-    #line 121 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 122 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.do_monitoring_req_status_update.current_monitor_definition.__variant = MonitorDefinition__Unselected;
     pus_service_12.do_monitoring_req_status_update.event_triggered = 0;
-    #line 122 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
-    pus_service_12.do_monitoring_req_status_update.fault_info.__variant = FaultInfo__Empty;
     #line 123 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    pus_service_12.do_monitoring_req_status_update.fault_info.__variant = FaultInfo__Empty;
+    #line 124 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.do_monitoring_req_status_update.new_status.__variant = CheckState__Unselected;
+    #line 125 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    pus_service_12.do_monitoring_req_status_update.prev_status.__variant = CheckState__Unselected;
     #line 139 "app/app.fin"
     pus_service_12.exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
     pus_service_12.exec_tc_req_status_update.flags_ack = 0U;
@@ -484,20 +486,20 @@ void __termina_app__init_globals() {
     pus_service_12.exec_tc_req_status_update.tc_data_5.N = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.PMONID = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.PID = 0U;
-    #line 183 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 185 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.current_state.__variant = CheckState__Unselected;
-    #line 176 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 178 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.definition.__variant = MonitorDefinition__Unselected;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.enabled = 0;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.interval = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.interval_control = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.repetition = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.repetition_control = 0U;
-    #line 182 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 184 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.temp_state.__variant = CheckState__Unselected;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.transition_obt.finetime = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.transition_obt.seconds = 0U;
-    #line 174 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
+    #line 176 "src/service_libraries/pus_services/pus_service12/pus_service12_help.fin"
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.type.__variant = MonitorCheckType__Free;
     pus_service_12.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_12.monitoring_transition_counter = 0U;

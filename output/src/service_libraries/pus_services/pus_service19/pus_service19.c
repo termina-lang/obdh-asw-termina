@@ -1900,29 +1900,53 @@ void PUSService19__extract_action(const __termina_event_t * const __ev,
         *action_packet = self->pending_action_queue_1I[__termina_array__index(8U,
                                                                               self->pending_action_head[0U])];
 
+        #line 1077 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+        self->pending_action_head[0U] = (size_t)(self->pending_action_head[0U] + 1U) % 8U;
+
+        #line 1078 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+        self->pending_action_number[0U] = self->pending_action_number[0U] - 1U;
+
     } else
-    #line 1078 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+    #line 1080 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
     if (index == 1U) {
         
-        #line 1080 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+        #line 1082 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
         *action_packet = self->pending_action_queue_2LS[__termina_array__index(8U,
                                                                                self->pending_action_head[1U])];
 
-    } else
-    #line 1082 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
-    if (index == 2U) {
-        
+        #line 1083 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+        self->pending_action_head[1U] = (size_t)(self->pending_action_head[1U] + 1U) % 8U;
+
         #line 1084 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
-        *action_packet = self->pending_action_queue_3MS[__termina_array__index(8U,
-                                                                               self->pending_action_head[2U])];
+        self->pending_action_number[1U] = self->pending_action_number[1U] - 1U;
 
     } else
     #line 1086 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
-    if (index == 3U) {
+    if (index == 2U) {
         
         #line 1088 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+        *action_packet = self->pending_action_queue_3MS[__termina_array__index(8U,
+                                                                               self->pending_action_head[2U])];
+
+        #line 1089 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+        self->pending_action_head[2U] = (size_t)(self->pending_action_head[2U] + 1U) % 8U;
+
+        #line 1090 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+        self->pending_action_number[2U] = self->pending_action_number[2U] - 1U;
+
+    } else
+    #line 1092 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+    if (index == 3U) {
+        
+        #line 1094 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
         *action_packet = self->pending_action_queue_4HS[__termina_array__index(8U,
                                                                                self->pending_action_head[3U])];
+
+        #line 1095 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+        self->pending_action_head[3U] = (size_t)(self->pending_action_head[3U] + 1U) % 8U;
+
+        #line 1096 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+        self->pending_action_number[3U] = self->pending_action_number[3U] - 1U;
 
     } else
     {
@@ -1930,10 +1954,10 @@ void PUSService19__extract_action(const __termina_event_t * const __ev,
 
     }
 
-    #line 1094 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+    #line 1102 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 1094 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
+    #line 1102 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
     return;
 
 }
