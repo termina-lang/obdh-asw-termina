@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MintermFilter SYSTEM "../../../DTDs/filters.dtd">
+
+<MintermFilter formatFile="../../TM_Formats/Level2/asw_pus_tm_12_12_limits_monitoring_format.xml">
+    <BoolVar id="0" name="counter_equal_to_1" constantType="hex">
+		<FieldRef name="counter" />
+		<Op type="equal" />
+		<Constant value="Ox1" />
+	</BoolVar>
+	<BoolVar id="1" name="limits_PMON_type" constantType="hex">
+		<FieldRef name="PMON_type" />
+		<Op type="equal" />
+		<Constant value="0x1" />
+	</BoolVar>
+	<Minterm id="0">
+		<BoolVarRef idRef="0" />
+		<BoolVarRef idRef="1" />
+	</Minterm>
+</MintermFilter>
