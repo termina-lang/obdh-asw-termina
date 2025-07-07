@@ -5,9 +5,19 @@
     <BoolVar id="0" name="counter_equal_to_1" constantType="hex">
 		<FieldRef name="counter" />
 		<Op type="equal" />
-		<Constant value="Ox1" />
+		<Constant value="0x1" />
 	</BoolVar>
-	<BoolVar id="1" name="limits_PMON_type" constantType="hex">
+	<BoolVar id="1" name="PMONID_equal_to_0" constantType="hex">
+		<FieldRef name="PMONID" />
+		<Op type="equal" />
+		<Constant value="0x0" />
+	</BoolVar>
+	<BoolVar id="2" name="PID_equal_to_10" constantType="hex">
+		<FieldRef name="PID" />
+		<Op type="equal" />
+		<Constant value="0xA" />
+	</BoolVar>
+	<BoolVar id="3" name="limits_PMON_type" constantType="hex">
 		<FieldRef name="PMON_type" />
 		<Op type="equal" />
 		<Constant value="0x1" />
@@ -15,5 +25,7 @@
 	<Minterm id="0">
 		<BoolVarRef idRef="0" />
 		<BoolVarRef idRef="1" />
+		<BoolVarRef idRef="2" />
+		<BoolVarRef idRef="3" />
 	</Minterm>
 </MintermFilter>
