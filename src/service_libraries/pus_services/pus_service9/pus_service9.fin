@@ -85,7 +85,7 @@ resource class PUSService9 provides PUSS9Iface {
         fine_time_increment = self->ref_obt.finetime as u32;
         fine_time_increment = fine_time_increment + (interval.tv_usec*1000)/15259;
 
-        current_obt->seconds = self->ref_obt.seconds + interval.tv_sec + fine_time_increment >>16 : u32;
+        current_obt->seconds = self->ref_obt.seconds + interval.tv_sec + (fine_time_increment >> 16 : u32);
         current_obt->finetime = (fine_time_increment &0xFFFF) as u16;
 
         return;

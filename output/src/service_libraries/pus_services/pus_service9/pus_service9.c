@@ -514,7 +514,7 @@ void PUSService9__get_current_obt(const __termina_event_t * const __ev,
     fine_time_increment = fine_time_increment + (uint32_t)((uint32_t)(interval.tv_usec * 1000U) / 15259U);
 
     #line 88 "src/service_libraries/pus_services/pus_service9/pus_service9.fin"
-    current_obt->seconds = (uint32_t)((uint32_t)(self->ref_obt.seconds + interval.tv_sec) + fine_time_increment) >> 16U;
+    current_obt->seconds = (uint32_t)(self->ref_obt.seconds + interval.tv_sec) + (uint32_t)(fine_time_increment >> 16U);
 
     #line 89 "src/service_libraries/pus_services/pus_service9/pus_service9.fin"
     current_obt->finetime = (uint16_t)(fine_time_increment & 0xFFFFU);
