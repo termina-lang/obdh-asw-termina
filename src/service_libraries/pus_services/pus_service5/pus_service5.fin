@@ -409,7 +409,9 @@ resource class PUSService5 provides PUSS5Iface {
                     self->exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
                     self->exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
                     status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.N));
-                    status = tc_handler_get_u16_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.EvID));
+                    if (status is Success){
+                        status = tc_handler_get_u16_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.EvID));
+                    }
 
                     if (status is Success) {
 
