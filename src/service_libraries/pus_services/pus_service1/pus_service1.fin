@@ -217,6 +217,19 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptorT) -> TCStatus {
 				tc_status.acceptation_status = TCAcceptationStatus::Rejected;
 				tc_status.error_code = TCErrorType::SubTypeError;
 			}
+		} else if (6 : u8 == type) {
+		
+			if (2 : u8 == subtype || 5 : u8 == subtype || 9 : u8 == subtype) {
+
+				tc_status.acceptation_status = TCAcceptationStatus::Accepted;
+				tc_status.execution_status = TCExecutionCtrl::ExecCtrlBKGTC;
+
+			}
+			else {
+                
+				tc_status.acceptation_status = TCAcceptationStatus::Rejected;
+				tc_status.error_code = TCErrorType::SubTypeError;
+			}
         } else {
 
 			tc_status.acceptation_status = TCAcceptationStatus::Rejected;

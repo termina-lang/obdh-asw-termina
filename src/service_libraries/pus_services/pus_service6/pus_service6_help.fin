@@ -27,19 +27,20 @@ constexpr ps6_init_tc_req_status_update : PS6ExecTCReqStatusUpdate = {
 function build_tm_6_6(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, current_obt : MissionObt, mem_data : &PS6ExecTCReqStatusUpdate) -> Status<i32> {
 
     var status : Status<i32> = Success;
+  
     startup_tm(p_tm_handler);
-    status = append_u8_appdata_field(p_tm_handler, mem_data.mem_id);
+    status = append_u8_appdata_field(p_tm_handler, mem_data->mem_id);
     if (status is Success) {
         status = append_u8_appdata_field(p_tm_handler,1);
     }
     if (status is Success) {
-        status = append_u32_appdata_field(p_tm_handler, mem_data.address);
+        status = append_u32_appdata_field(p_tm_handler, mem_data->address);
     }
     if (status is Success) {
-        status = append_u16_appdata_field(p_tm_handler, mem_data.length);
+        status = append_u16_appdata_field(p_tm_handler, mem_data->length);
     }
-    for i : usize in 0 .. mem_data.length as usize while (status is Success) {
-        status = append_u8_appdata_field(p_tm_handler, mem_data.data[i]);
+    for i : usize in 0 .. (max_send_size - tm_app_data_offset)  while ((status is Success) && (i < mem_data->length as usize)) {
+        status = append_u8_appdata_field(p_tm_handler, mem_data->data[i]);
     }
     if (status is Success) {
         close_tm(p_tm_handler, 6, 6, tm_seq_counter, current_obt);
@@ -53,15 +54,15 @@ function build_tm_6_10(p_tm_handler : &mut TMHandlerT, tm_seq_counter : u16, cur
 
     var status : Status<i32> = Success;
     startup_tm(p_tm_handler);
-    status = append_u8_appdata_field(p_tm_handler, mem_data.mem_id);
+    status = append_u8_appdata_field(p_tm_handler, mem_data->mem_id);
     if (status is Success) {
         status = append_u8_appdata_field(p_tm_handler,1);
     }
     if (status is Success) {
-        status = append_u32_appdata_field(p_tm_handler, mem_data.address);
+        status = append_u32_appdata_field(p_tm_handler, mem_data->address);
     }
     if (status is Success) {
-        status = append_u16_appdata_field(p_tm_handler, mem_data.length);
+        status = append_u16_appdata_field(p_tm_handler, mem_data->length);
     }
     if (status is Success) {
         status = append_u16_appdata_field(p_tm_handler, checksum);

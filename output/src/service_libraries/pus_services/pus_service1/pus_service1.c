@@ -332,19 +332,43 @@ TCStatus try_tc_acceptation(const TCDescriptorT * const tc_descriptor) {
             }
 
         } else
-        {
+        #line 220 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
+        if (6U == type) {
             
             #line 222 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
+            if (2U == subtype || 5U == subtype || 9U == subtype) {
+                
+                #line 224 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;
+
+                #line 225 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
+                tc_status.execution_status.__variant = TCExecutionCtrl__ExecCtrlBKGTC;
+
+            } else
+            {
+                
+                #line 230 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
+                tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
+
+                #line 231 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
+                tc_status.error_code.__variant = TCErrorType__SubTypeError;
+
+            }
+
+        } else
+        {
+            
+            #line 235 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
             tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
 
-            #line 223 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
+            #line 236 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
             tc_status.error_code.__variant = TCErrorType__TypeError;
 
         }
 
     }
 
-    #line 229 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
+    #line 242 "src/service_libraries/pus_services/pus_service1/pus_service1.fin"
     return tc_status;
 
 }

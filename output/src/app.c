@@ -47,6 +47,8 @@ PUSService128 pus_service_128;
 
 PUSService2 pus_service_2;
 
+PUSService6 pus_service_6;
+
 PUSService4 pus_service_4;
 
 ManagerTCExecutor mng_tc_executor;

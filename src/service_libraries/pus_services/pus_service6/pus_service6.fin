@@ -31,21 +31,25 @@ resource class PUSService6 provides PUSS6Iface {
 
 
 
-    viewer is_init_address_valid (&self) -> bool {
+    viewer is_address_valid (&self) -> bool {
 
         var is_valid : bool = true;
         // TO DO: Implement address validation logic
+        if (self->exec_tc_req_status_update.mem_id as usize >= banks_number) {
+            is_valid = false;
+        } else if (self->exec_tc_req_status_update.address as usize >= bank_size) {
+            is_valid = false;
+        } else if (self->exec_tc_req_status_update.address as usize + self->exec_tc_req_status_update.length as usize > bank_size) {
+            is_valid = false;
+        } else if (self->exec_tc_req_status_update.length as usize > max_num_of_bytes_memory_load) {
+            is_valid = false;
+        } else {
+
+        }
 
         return is_valid;
     }
 
-    viewer is_end_address_valid (&self) -> bool {
-
-        var is_valid : bool = true;
-        // TO DO: Implement address validation logic
-
-        return is_valid;
-    }
 
     viewer is_mem_id_write_enabled (&self) -> bool {
 
@@ -57,28 +61,48 @@ resource class PUSService6 provides PUSS6Iface {
         return is_enabled;
     }
 
-    method( &priv self) write_data() -> Status<i32> {
+    method write_data(&priv self) -> Status<i32> {
 
         var status : Status<i32> = Success;
-        // TO DO
+
+        let bank_index : usize = self->exec_tc_req_status_update.mem_id as usize;
+        let start_address : usize = self->exec_tc_req_status_update.address as usize;
+
+        for i : usize in 0 .. max_tc_size while (i < self->exec_tc_req_status_update.length as usize) {
+                self->memory[bank_index][start_address + i] = self->exec_tc_req_status_update.data[i];
+        }
+        
 
         return status;
     }
 
-    method( &priv self) read_data() -> Status<i32> {
+    method read_data(&priv self) -> Status<i32> {
 
         var status : Status<i32> = Success;
-        // TO DO
+        let bank_index : usize = self->exec_tc_req_status_update.mem_id as usize;
+        let start_address : usize = self->exec_tc_req_status_update.address as usize;
+
+        for i : usize in 0 .. max_tc_size while (i < self->exec_tc_req_status_update.length as usize) {
+            self->exec_tc_req_status_update.data[i] = self->memory[bank_index][start_address + i];
+        }
+        
+        
 
         return status;
     }
 
-    method( &priv self) check_data() -> Status<i32> {
+    method check_data(&priv self) -> u16 {
 
-        var status : Status<i32> = Success;
-        // TO DO
+        let bank_index : usize = self->exec_tc_req_status_update.mem_id as usize;
+        let start_address : usize = self->exec_tc_req_status_update.address as usize;
+        var data : [u8; max_tc_size] = [0; max_tc_size];
+        for i : usize in 0 .. max_tc_size while (i < self->exec_tc_req_status_update.length as usize) {
+            data[i] = self->memory[bank_index][start_address + i];
+        }
 
-        return status;
+        var checksum : u16 = cal_crc_16(&data, self->exec_tc_req_status_update.length as usize);
+        
+        return checksum;
     }
 
     method exec6_2TC(&priv self) -> Status<i32> {
@@ -117,11 +141,11 @@ resource class PUSService6 provides PUSS6Iface {
                 }
                 else {
 
-                    if(self->is_init_address_valid() == false) {
+                    if(self->is_address_valid() == false) {
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
                         status = build_tm_1_4_mem_address_not_valid (&mut b_tm_handler,tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl),
-                             (self->exec_tc_req_status_update.mem_id), (self->exec_tc_req_status_update.mem_address), current_obt);
+                             (self->exec_tc_req_status_update.mem_id), (self->exec_tc_req_status_update.address), current_obt);
 
                         if (status is Success){
 
@@ -130,22 +154,7 @@ resource class PUSService6 provides PUSS6Iface {
                         }
                         else {
                             self->a_tm_handler_pool.free(b_tm_handler);
-                        }                        
-                    }
-                    else if (self->is_end_address_valid() == false) {
-
-                        self->pus_service_9.get_current_obt(&mut current_obt);
-                        status = build_tm_1_4_mem_address_not_valid (&mut b_tm_handler,tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl),
-                             (self->exec_tc_req_status_update.mem_id), (self->exec_tc_req_status_update.mem_address + self->exec_tc_req_status_update.length - 1), current_obt);
-
-                        if (status is Success){
-
-                            self->tm_channel.send_tm(b_tm_handler, &mut status);
-
-                        }
-                        else {
-                            self->a_tm_handler_pool.free(b_tm_handler);
-                        }                        
+                        }                                               
                     }
                     else if (self->is_mem_id_write_enabled() == false) {
 
@@ -290,26 +299,11 @@ resource class PUSService6 provides PUSS6Iface {
                 }
                 else {
 
-                    if(self->is_init_address_valid() == false) {
+                    if(self->is_address_valid() == false) {
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
                         status = build_tm_1_4_mem_address_not_valid (&mut b_tm_handler,tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl),
-                             (self->exec_tc_req_status_update.mem_id), (self->exec_tc_req_status_update.mem_address), current_obt);
-
-                        if (status is Success){
-
-                            self->tm_channel.send_tm(b_tm_handler, &mut status);
-
-                        }
-                        else {
-                            self->a_tm_handler_pool.free(b_tm_handler);
-                        }                        
-                    }
-                    else if (self->is_end_address_valid() == false) {
-
-                        self->pus_service_9.get_current_obt(&mut current_obt);
-                        status = build_tm_1_4_mem_address_not_valid (&mut b_tm_handler,tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl),
-                             (self->exec_tc_req_status_update.mem_id), (self->exec_tc_req_status_update.mem_address + self->exec_tc_req_status_update.length - 1), current_obt);
+                             (self->exec_tc_req_status_update.mem_id), (self->exec_tc_req_status_update.address), current_obt);
 
                         if (status is Success){
 
@@ -459,11 +453,11 @@ resource class PUSService6 provides PUSS6Iface {
                 }
                 else {
 
-                    if(self->is_init_address_valid() == false) {
+                    if(self->is_address_valid() == false) {
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
                         status = build_tm_1_4_mem_address_not_valid (&mut b_tm_handler,tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl),
-                             (self->exec_tc_req_status_update.mem_id), (self->exec_tc_req_status_update.mem_address), current_obt);
+                             (self->exec_tc_req_status_update.mem_id), (self->exec_tc_req_status_update.address), current_obt);
 
                         if (status is Success){
 
@@ -472,22 +466,7 @@ resource class PUSService6 provides PUSS6Iface {
                         }
                         else {
                             self->a_tm_handler_pool.free(b_tm_handler);
-                        }                        
-                    }
-                    else if (self->is_end_address_valid() == false) {
-
-                        self->pus_service_9.get_current_obt(&mut current_obt);
-                        status = build_tm_1_4_mem_address_not_valid (&mut b_tm_handler,tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl),
-                             (self->exec_tc_req_status_update.mem_id), (self->exec_tc_req_status_update.mem_address + self->exec_tc_req_status_update.length - 1), current_obt);
-
-                        if (status is Success){
-
-                            self->tm_channel.send_tm(b_tm_handler, &mut status);
-
-                        }
-                        else {
-                            self->a_tm_handler_pool.free(b_tm_handler);
-                        }                        
+                        }                                           
                     }
                     else if (self->is_mem_id_write_enabled() == false) {
 
@@ -616,7 +595,7 @@ resource class PUSService6 provides PUSS6Iface {
                         status = tc_handler_get_u16_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.length));
                     }
                     if ((subtype == 2) && (status is Success)) {
-                        for j : usize in 0 .. self->exec_tc_req_status_update.length while ((j < max_num_of_bytes_memory_load) && (status is Success)) {
+                        for j : usize in 0 .. max_num_of_bytes_memory_load while ((j < self->exec_tc_req_status_update.length as usize) && (status is Success)) {
                             status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.data[j]));
                         }
                     } 

@@ -9,6 +9,7 @@ import service_libraries.pus_services.pus_service19.pus_service19;
 import service_libraries.pus_services.pus_service20.pus_service20;
 import service_libraries.pus_services.pus_service4.pus_service4;
 import service_libraries.pus_services.pus_service9.pus_service9;
+import service_libraries.pus_services.pus_service6.pus_service6;
 import resources.uart;
 import resources.gpio_driver;
 import tasks.hk_fdir_mng.hk_fdir;
@@ -210,6 +211,18 @@ resource pus_service_2 : PUSService2 = {
     pus_service_9 <-> pus_service_9
 } : PUSService2;
 
+resource pus_service_6 : PUSService6 = {
+    exec_tc_req_status = PSExecTCReqStatus::Init,
+    exec_tc_req_status_update = ps6_init_tc_req_status_update,
+    mem_id_write_permisssions = {false, true, true, true, true, true, true, false},
+    memory @ 0x40000000,
+    tm_channel <-> telemetry_channel,
+    a_tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    pus_service_9 <-> pus_service_9
+} : PUSService6;
+
+
 resource pus_service_4 : PUSService4 = {
     exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps4_init_tc_req_status_update,
@@ -296,6 +309,7 @@ task pus_bkg_tc_executor : PUSBKGTCExecutor = {
     bkg_message_queue_input <- bkg_message_queue,
     a_tc_handler_pool  <-> tc_pool,
     pus_service_20 <-> pus_service_20,
+    pus_service_6 <-> pus_service_6,
     pus_service_9 <-> pus_service_9,
     tm_channel <-> telemetry_channel,
     tm_counter <-> telemetry_counter,

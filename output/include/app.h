@@ -17,6 +17,7 @@
 #include "service_libraries/pus_services/pus_service3/pus_service3.h"
 #include "service_libraries/pus_services/pus_service4/pus_service4.h"
 #include "service_libraries/pus_services/pus_service5/pus_service5.h"
+#include "service_libraries/pus_services/pus_service6/pus_service6.h"
 #include "service_libraries/pus_services/pus_service9/pus_service9.h"
 #include "tasks/bkgtcexec.h"
 #include "tasks/hk_fdir_mng/hk_fdir.h"
@@ -70,6 +71,8 @@ extern PUSService17 pus_service_17;
 extern PUSService128 pus_service_128;
 
 extern PUSService2 pus_service_2;
+
+extern PUSService6 pus_service_6;
 
 extern PUSService4 pus_service_4;
 
