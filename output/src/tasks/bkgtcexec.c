@@ -5,84 +5,92 @@ __status_int32_t PUSBKGTCExecutor__exec_tc(const __termina_event_t * const __ev,
                                            void * const __this,
                                            __termina_box_t tc_handler) {
     
-    #line 56 "src/tasks/bkgtcexec.fin"
+    #line 60 "src/tasks/bkgtcexec.fin"
     PUSBKGTCExecutor * self = (PUSBKGTCExecutor *)__this;
 
-    #line 58 "src/tasks/bkgtcexec.fin"
+    #line 62 "src/tasks/bkgtcexec.fin"
     __status_int32_t res;
-    #line 58 "src/tasks/bkgtcexec.fin"
+    #line 62 "src/tasks/bkgtcexec.fin"
     res.__variant = Success;
 
-    #line 60 "src/tasks/bkgtcexec.fin"
+    #line 64 "src/tasks/bkgtcexec.fin"
     uint8_t tc_type = get_type((*(TCHandlerT *)tc_handler.data).tc_descriptor.tc_bytes);
 
-    #line 62 "src/tasks/bkgtcexec.fin"
+    #line 66 "src/tasks/bkgtcexec.fin"
     if (tc_type == 20U) {
         
-        #line 64 "src/tasks/bkgtcexec.fin"
+        #line 68 "src/tasks/bkgtcexec.fin"
         self->pus_service_20.exec_tc(__ev, self->pus_service_20.__that,
                                      (TCHandlerT *)tc_handler.data, &res);
 
     } else
+    #line 70 "src/tasks/bkgtcexec.fin"
+    if (tc_type == 6U) {
+        
+        #line 72 "src/tasks/bkgtcexec.fin"
+        self->pus_service_6.exec_tc(__ev, self->pus_service_6.__that,
+                                    (TCHandlerT *)tc_handler.data, &res);
+
+    } else
     {
         
-        #line 68 "src/tasks/bkgtcexec.fin"
+        #line 76 "src/tasks/bkgtcexec.fin"
         MissionObt current_obt;
-        #line 68 "src/tasks/bkgtcexec.fin"
+        #line 76 "src/tasks/bkgtcexec.fin"
         current_obt.finetime = 0U;
-        #line 68 "src/tasks/bkgtcexec.fin"
+        #line 76 "src/tasks/bkgtcexec.fin"
         current_obt.seconds = 0U;
 
-        #line 69 "src/tasks/bkgtcexec.fin"
+        #line 77 "src/tasks/bkgtcexec.fin"
         __status_int32_t status;
-        #line 69 "src/tasks/bkgtcexec.fin"
+        #line 77 "src/tasks/bkgtcexec.fin"
         status.__variant = Success;
 
-        #line 70 "src/tasks/bkgtcexec.fin"
+        #line 78 "src/tasks/bkgtcexec.fin"
         __option_box_t tm_handler;
-        #line 70 "src/tasks/bkgtcexec.fin"
+        #line 78 "src/tasks/bkgtcexec.fin"
         tm_handler.__variant = None;
 
-        #line 71 "src/tasks/bkgtcexec.fin"
+        #line 79 "src/tasks/bkgtcexec.fin"
         self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
                                       &tm_handler);
 
-        #line 75 "src/tasks/bkgtcexec.fin"
+        #line 83 "src/tasks/bkgtcexec.fin"
         if (tm_handler.__variant == Some) {
             
-            #line 73 "src/tasks/bkgtcexec.fin"
+            #line 81 "src/tasks/bkgtcexec.fin"
             __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-            #line 77 "src/tasks/bkgtcexec.fin"
+            #line 85 "src/tasks/bkgtcexec.fin"
             uint16_t tm_count = 0U;
 
-            #line 78 "src/tasks/bkgtcexec.fin"
+            #line 86 "src/tasks/bkgtcexec.fin"
             self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that,
                                                &tm_count);
 
-            #line 80 "src/tasks/bkgtcexec.fin"
+            #line 88 "src/tasks/bkgtcexec.fin"
             self->pus_service_9.get_current_obt(__ev,
                                                 self->pus_service_9.__that,
                                                 &current_obt);
 
-            #line 81 "src/tasks/bkgtcexec.fin"
+            #line 89 "src/tasks/bkgtcexec.fin"
             status = build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
                                                       tm_count,
                                                       (*(TCHandlerT *)tc_handler.data).packet_header.packet_id,
                                                       (*(TCHandlerT *)tc_handler.data).packet_header.packet_seq_ctrl,
                                                       current_obt);
 
-            #line 84 "src/tasks/bkgtcexec.fin"
+            #line 92 "src/tasks/bkgtcexec.fin"
             if (status.__variant == Success) {
                 
-                #line 86 "src/tasks/bkgtcexec.fin"
+                #line 94 "src/tasks/bkgtcexec.fin"
                 self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                          b_tm_handler, &status);
 
             } else
             {
                 
-                #line 89 "src/tasks/bkgtcexec.fin"
+                #line 97 "src/tasks/bkgtcexec.fin"
                 self->a_tm_handler_pool.free(__ev,
                                              self->a_tm_handler_pool.__that,
                                              b_tm_handler);
@@ -92,20 +100,20 @@ __status_int32_t PUSBKGTCExecutor__exec_tc(const __termina_event_t * const __ev,
         } else
         {
             
-            #line 95 "src/tasks/bkgtcexec.fin"
+            #line 103 "src/tasks/bkgtcexec.fin"
             status.__variant = Failure;
-            #line 95 "src/tasks/bkgtcexec.fin"
+            #line 103 "src/tasks/bkgtcexec.fin"
             status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
         }
 
     }
 
-    #line 102 "src/tasks/bkgtcexec.fin"
+    #line 110 "src/tasks/bkgtcexec.fin"
     self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,
                                  tc_handler);
 
-    #line 104 "src/tasks/bkgtcexec.fin"
+    #line 112 "src/tasks/bkgtcexec.fin"
     return res;
 
 }

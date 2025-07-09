@@ -70,7 +70,7 @@ resource uart_drv : UARTDriver = {
 } : UARTDriver;
 
 resource gpio_drv : GPIODriver = {
-    registers @ 0x80000900
+    registers @ 0x80000A00
 } : GPIODriver;
 
 

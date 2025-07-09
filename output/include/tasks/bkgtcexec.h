@@ -7,6 +7,7 @@
 #include "resources/tm_counter.h"
 #include "service_libraries/pus_services/pus_service1/pus_service1.h"
 #include "service_libraries/pus_services/pus_service20/pus_service20.h"
+#include "service_libraries/pus_services/pus_service6/pus_service6.h"
 #include "service_libraries/serialize.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
@@ -32,6 +33,11 @@ typedef struct {
         void (* get_current_obt)(const __termina_event_t * const, void * const,
                                  MissionObt * const);
     } pus_service_9;
+    struct {
+        void * __that;
+        void (* exec_tc)(const __termina_event_t * const, void * const,
+                         TCHandlerT * const, __status_int32_t * const);
+    } pus_service_6;
     struct {
         void * __that;
         void (* exec_tc)(const __termina_event_t * const, void * const,
