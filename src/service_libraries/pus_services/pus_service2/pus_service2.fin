@@ -211,8 +211,8 @@ resource class PUSService2 provides PUSS2Iface {
 
         var status : Status<i32> = Success;
 
-        var led: u8 = (self->exec_tc_req_status_update.dev_address & 0x10000000) as u8;
-        var on_off : u8 = (self->exec_tc_req_status_update.dev_address & 0x00000001) as u8;
+        var led: u8 = ((self->exec_tc_req_status_update.dev_address & 0xF0000000) >> 28 : u32) as u8;
+        var on_off : u8 = (self->exec_tc_req_status_update.dev_address & 0x0000000F) as u8;
 
         self->gpio_driver.write_led(led, on_off, &mut status);
 

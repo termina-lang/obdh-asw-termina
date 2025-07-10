@@ -10,10 +10,10 @@ __status_int32_t PUSService2__dev_drv_on_off(const __termina_event_t * const __e
     status.__variant = Success;
 
     #line 214 "src/service_libraries/pus_services/pus_service2/pus_service2.fin"
-    uint8_t led = (uint8_t)(self->exec_tc_req_status_update.dev_address & 0x10000000U);
+    uint8_t led = (uint8_t)((uint32_t)(self->exec_tc_req_status_update.dev_address & 0xF0000000U) >> 28U);
 
     #line 215 "src/service_libraries/pus_services/pus_service2/pus_service2.fin"
-    uint8_t on_off = (uint8_t)(self->exec_tc_req_status_update.dev_address & 0x1U);
+    uint8_t on_off = (uint8_t)(self->exec_tc_req_status_update.dev_address & 0xFU);
 
     #line 217 "src/service_libraries/pus_services/pus_service2/pus_service2.fin"
     self->gpio_driver.write_led(__ev, self->gpio_driver.__that, led, on_off,
