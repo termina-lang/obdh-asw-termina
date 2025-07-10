@@ -223,6 +223,8 @@ resource class PUSService6 provides PUSS6Iface {
                                         self->a_tm_handler_pool.free(b_tm_handler2);
                                     }
 
+                                    
+
                                 }
                                 else {
 
@@ -314,21 +316,6 @@ resource class PUSService6 provides PUSS6Iface {
                             self->a_tm_handler_pool.free(b_tm_handler);
                         }                        
                     }
-                    else if (self->is_mem_id_write_enabled() == false) {
-
-                        self->pus_service_9.get_current_obt(&mut current_obt);
-                        status = build_tm_1_4_mem_id_read_only (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl),
-                             (self->exec_tc_req_status_update.mem_id), current_obt);
-
-                        if (status is Success){
-
-                            self->tm_channel.send_tm(b_tm_handler, &mut status);
-
-                        }
-                        else {
-                            self->a_tm_handler_pool.free(b_tm_handler);
-                        }                        
-                    }
                     else {
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
@@ -375,7 +362,40 @@ resource class PUSService6 provides PUSS6Iface {
                                         self->a_tm_handler_pool.free(b_tm_handler2);
                                     }
 
-                                 
+                                    var tm_handler3 : Option<box TMHandlerT> = None;
+                                    self->a_tm_handler_pool.alloc(&mut tm_handler3);
+
+                                    match tm_handler3 {
+
+                                        case Some(b_tm_handler3) => {
+
+                                            var tm_count3 : u16 = 0 : u16;
+                                            self->tm_counter.get_next_tm_count(&mut tm_count3);
+                                            self->pus_service_9.get_current_obt(&mut current_obt);
+                                            status = build_tm_1_7(&mut b_tm_handler3, tm_count3, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl), self->exec_tc_req_status_update.flags_ack, current_obt, &mut ack_enabled);
+
+                                            if (ack_enabled) {
+
+                                                if (status is Success){
+
+                                                    self->tm_channel.send_tm(b_tm_handler3, &mut status);
+
+                                                }
+                                                else {
+                                                    self->a_tm_handler_pool.free(b_tm_handler3);
+                                
+                                                }
+
+                                            } else {
+                                                
+                                                self->a_tm_handler_pool.free(b_tm_handler3);
+                                            }
+                                        }
+                                        case None => {
+
+                                            status = Failure(TM_POOL_ALLOC_FAILURE);
+                                        }
+                                    }
 
                                 }
                                 else {
@@ -468,21 +488,6 @@ resource class PUSService6 provides PUSS6Iface {
                             self->a_tm_handler_pool.free(b_tm_handler);
                         }                                           
                     }
-                    else if (self->is_mem_id_write_enabled() == false) {
-
-                        self->pus_service_9.get_current_obt(&mut current_obt);
-                        status = build_tm_1_4_mem_id_read_only (&mut b_tm_handler, tm_count, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl),
-                             (self->exec_tc_req_status_update.mem_id), current_obt);
-
-                        if (status is Success){
-
-                            self->tm_channel.send_tm(b_tm_handler, &mut status);
-
-                        }
-                        else {
-                            self->a_tm_handler_pool.free(b_tm_handler);
-                        }                        
-                    }
                     else {
 
                         self->pus_service_9.get_current_obt(&mut current_obt);
@@ -529,6 +534,42 @@ resource class PUSService6 provides PUSS6Iface {
                                     else {
                                         self->a_tm_handler_pool.free(b_tm_handler2);
                                     }
+
+                                    var tm_handler3 : Option<box TMHandlerT> = None;
+                                    self->a_tm_handler_pool.alloc(&mut tm_handler3);
+
+                                    match tm_handler3 {
+
+                                        case Some(b_tm_handler3) => {
+
+                                            var tm_count3 : u16 = 0 : u16;
+                                            self->tm_counter.get_next_tm_count(&mut tm_count3);
+                                            self->pus_service_9.get_current_obt(&mut current_obt);
+                                            status = build_tm_1_7(&mut b_tm_handler3, tm_count3, (self->exec_tc_req_status_update.packet_id), (self->exec_tc_req_status_update.packet_seq_ctrl), self->exec_tc_req_status_update.flags_ack, current_obt, &mut ack_enabled);
+
+                                            if (ack_enabled) {
+
+                                                if (status is Success){
+
+                                                    self->tm_channel.send_tm(b_tm_handler3, &mut status);
+
+                                                }
+                                                else {
+                                                    self->a_tm_handler_pool.free(b_tm_handler3);
+                                
+                                                }
+
+                                            } else {
+                                                
+                                                self->a_tm_handler_pool.free(b_tm_handler3);
+                                            }
+                                        }
+                                        case None => {
+
+                                            status = Failure(TM_POOL_ALLOC_FAILURE);
+                                        }
+                                    }
+
 
                                 }
                                 else {
