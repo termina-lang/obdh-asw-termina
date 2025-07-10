@@ -34,13 +34,13 @@ void GPIODriver__write_led(const __termina_event_t * const __ev,
                                                        &self->__lock_type);
 
     #line 65 "src/resources/gpio_driver.fin"
-    if (led < 4U) {
+    if (led > 5U && led < 10U) {
         
         #line 67 "src/resources/gpio_driver.fin"
         (*status).__variant = Success;
 
         #line 69 "src/resources/gpio_driver.fin"
-        uint8_t bit = led + 16U;
+        uint8_t bit = led + 17U;
 
         #line 70 "src/resources/gpio_driver.fin"
         if (value == 0U) {

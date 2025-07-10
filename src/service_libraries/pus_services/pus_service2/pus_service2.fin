@@ -196,8 +196,8 @@ resource class PUSService2 provides PUSS2Iface {
         var is_valid : bool = false;
         var device_address : u32 = self->exec_tc_req_status_update.dev_address;
 
-        if (device_address == 0x00000001 || device_address == 0x10000001 || device_address == 0x20000001 || device_address == 0x30000001 ||
-            device_address == 0x00000000 || device_address == 0x10000000 || device_address == 0x20000000 || device_address == 0x30000000) {
+        if (device_address == 0x60000001 || device_address == 0x70000001 || device_address == 0x80000001 || device_address == 0x90000001 ||
+            device_address == 0x60000000 || device_address == 0x70000000 || device_address == 0x80000000 || device_address == 0x90000000) {
             is_valid = true;
         }
 

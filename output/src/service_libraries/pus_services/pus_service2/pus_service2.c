@@ -34,13 +34,13 @@ _Bool PUSService2__device_drv_is_on_off_address_valid(const __termina_event_t * 
     uint32_t device_address = self->exec_tc_req_status_update.dev_address;
 
     #line 199 "src/service_libraries/pus_services/pus_service2/pus_service2.fin"
-    if (device_address == 0x1U || device_address == 0x10000001U
-        || device_address == 0x20000001U
-        || device_address == 0x30000001U
-        || device_address == 0x0U
-        || device_address == 0x10000000U
-        || device_address == 0x20000000U
-        || device_address == 0x30000000U) {
+    if (device_address == 0x60000001U || device_address == 0x70000001U
+        || device_address == 0x80000001U
+        || device_address == 0x90000001U
+        || device_address == 0x60000000U
+        || device_address == 0x70000000U
+        || device_address == 0x80000000U
+        || device_address == 0x90000000U) {
         
         #line 201 "src/service_libraries/pus_services/pus_service2/pus_service2.fin"
         is_valid = 1;

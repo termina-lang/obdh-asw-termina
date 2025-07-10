@@ -62,11 +62,11 @@ resource class GPIODriver provides GPIODrvIface {
      */
     procedure write_led (&mut self, led : u8, value : u8, status : &mut Status<i32>) {
 
-        if (led < 4) {
+        if ((led) > 5 && (led < 10)) {
            
             *status = Success;
             
-            let bit : u8 = led + 16;
+            let bit : u8 = led + 17;
             if (value == 0) {
                 let mask : u32 = 0xFFFFFFFF ^ (1 << bit);
                 self->registers.Output = self->registers.Output & mask;
