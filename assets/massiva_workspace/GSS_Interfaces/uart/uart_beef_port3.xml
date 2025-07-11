@@ -2,7 +2,7 @@
 <!DOCTYPE portConfig SYSTEM "../../DTDs/iface.dtd">
 
 <portConfig name="spw_uart_debug">
-	<uartPort number="3" baudRate="38400" parity="NO" dataBits="8" stopBits="1" inputQueueSize="512" outputQueueSize="-1" >
+	<uartPort number="3" portName="uart" baudRate="38400" parity="NO" dataBits="8" stopBits="1" inputQueueSize="512" outputQueueSize="-1" >
 		<uartProtocol unit="bytes" power="no">
 			<constSize bytes="6" bits="0"/>
 			<sizeFieldOffset bytes="4" bits="0" />

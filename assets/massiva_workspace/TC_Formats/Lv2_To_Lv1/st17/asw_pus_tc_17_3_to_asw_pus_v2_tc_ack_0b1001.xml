@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Export SYSTEM "../../../DTDs/export.dtd">
 
-<Export from="../../Level2/st17/asw_pus_tc_17_3_format.xml" to="../../Level1/asw_pus_v2_tc_format.xml">
+<Export from="../Level2/st17/asw_pus_tc_17_3_format.xml" to="../Level1/asw_pus_v2_tc_format.xml">
 	<settings>
 		<settingFromConst value="0" toFieldRef="CCSDSSecondaryHeaderFlag"/>
 		<settingFromConst value="2" toFieldRef="PUSVersion"/>

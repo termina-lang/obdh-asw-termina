@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MintermFilter SYSTEM "../../../DTDs/filters.dtd">
+
+<MintermFilter formatFile="../../TM_Formats/Level2/st06/asw_pus_tm_6_6_size_64_bytes_format.xml">
+    <BoolVar id="0" name="memory_id_equal_to_0" constantType="hex">
+		<FieldRef name="MemoryID" />
+		<Op type="equal" />
+		<Constant value="0" />
+	</BoolVar>
+	<BoolVar id="1" name="N_equal_to_1" constantType="hex">
+		<FieldRef name="N" />
+		<Op type="equal" />
+		<Constant value="0x1" />
+	</BoolVar>
+	<BoolVar id="2" name="StartAddess_equal_to_0x1000" constantType="hex">
+		<FieldRef name="StartAddress" />
+		<Op type="equal" />
+		<Constant value="1000" />
+	</BoolVar>
+	<BoolVar id="3" name="Length_equal_to_64" constantType="decimal">
+		<FieldRef name="Length" />
+		<Op type="equal" />
+		<Constant value="64" />
+	</BoolVar>
+	<Minterm id="0">
+		<BoolVarRef idRef="0" />
+		<BoolVarRef idRef="1" />
+		<BoolVarRef idRef="2" />
+		<BoolVarRef idRef="3" />
+	</Minterm>
+</MintermFilter>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tm_tc_format SYSTEM "../../../DTDs/tm_tc_format.dtd">
+
+<tm_tc_format protocol="EPD_2.1" type="TC">
+	<CSField fid="0" pfid="0" name="ApplicationData" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="5" bits="0" />				<!-- size in bits = 40 -->
+		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
+	</CSField>
+
+	<CSField fid="1" pfid="0" name="N" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="1" bits="0" />				<!-- size in bits = 8 -->
+		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
+	</CSField>
+
+	<CSField fid="2" pfid="0" name="DeviceAddress" type="uint" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="4" bits="0" />				<!-- size in bits = 32 -->
+		<globalOffset bytes="1" bits="0" />		<!-- offset in bits = 8 -->
+	</CSField>
+
+</tm_tc_format>

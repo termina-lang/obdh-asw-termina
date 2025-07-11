@@ -68,8 +68,18 @@
 	<TestCase name="tp_0040_asw_pus_tc_20_1_get_pid10_equal_99" 						
 		procedure="FT_PROCS/st20/tp_0040_asw_pus_tc_20_1_get_pid10_equal_99.xml"/>
 		
-	<TestCase name="tp_0050_pus_tc_12_5_add_mon_def_pid10_to_01_0x4000_0x10_0x4001" 						
+	<TestCase name="tp_0050_asw_pus_tc_12_5_add_mon_def_pid10_to_01_0x4000_0x10_0x4001" 						
 		procedure="FT_PROCS/st12/tp_0050_pus_tc_12_5_add_mon_def_pid10_to_01_0x4000_0x10_0x4001.xml"/>
+
+	<TestCase name="tp_0080_asw_pus_tc_2_1_onoff_dev_address_0x60000001" 
+		procedure="FT_PROCS/st02/tp_0080_asw_pus_tc_2_1_onoff_dev_address_0x60000001.xml"/>
+
+	<TestCase name="tp_0090_asw_pus_tc_6_5_read_bytes_from_0x40001000_to_0x4000103F" 
+		procedure="FT_PROCS/st06/tp_0090_asw_pus_tc_6_5_read_bytes_from_0x40001000_to_0x4000103F.xml"/>
+	
+	<!-- TestCase name="tp_0070_asw_pus_tc_128_1_reboot" 						
+			procedure="FT_PROCS/st128/tp_0070_asw_pus_tc_128_1_reboot.xml"/ !-->
+
 
 </Tests>
 </gss_config>
