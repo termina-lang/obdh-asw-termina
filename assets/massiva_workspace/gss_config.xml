@@ -70,6 +70,9 @@
 		
 	<TestCase name="tp_0050_asw_pus_tc_12_5_add_mon_def_pid10_to_01_0x4000_0x10_0x4001" 						
 		procedure="FT_PROCS/st12/tp_0050_pus_tc_12_5_add_mon_def_pid10_to_01_0x4000_0x10_0x4001.xml"/>
+	
+	<TestCase name="tp_0060_asw_pus_service_4_parameter_statistics_reporting" 						
+		procedure="FT_PROCS/st04/tp_0060_asw_pus_service_4.xml"/>
 
 	<TestCase name="tp_0080_asw_pus_tc_2_1_onoff_dev_address_0x60000001" 
 		procedure="FT_PROCS/st02/tp_0080_asw_pus_tc_2_1_onoff_dev_address_0x60000001.xml"/>

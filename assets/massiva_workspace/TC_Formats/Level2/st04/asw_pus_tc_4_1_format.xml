@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tm_tc_format SYSTEM "../../../DTDs/tm_tc_format.dtd">
+
+<tm_tc_format protocol="ASW_4_1" type="TC">
+	<CSField fid="0" pfid="0" name="ApplicationData" type="structured" byteOrder="big_endian" firstBit="MSB">
+		<size bytes="0" bits="0" />			<!-- size in bits = 16 -->
+		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
+	</CSField>
+
+</tm_tc_format>

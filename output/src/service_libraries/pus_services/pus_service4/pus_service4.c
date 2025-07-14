@@ -5,42 +5,42 @@ uint32_t PUSService4__SDP_get_mean(const __termina_event_t * const __ev,
                                    const PUSService4 * const self,
                                    size_t pid_index) {
     
-    #line 800 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 801 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint16_t PID = self->stats_config_table.PID[__termina_array__index(4U,
                                                                        pid_index)];
 
-    #line 801 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 802 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint8_t u8_SDP_value = 0U;
 
-    #line 802 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 803 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint32_t u32_SDP_value = 0U;
 
-    #line 803 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 804 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint32_t mean_value = 0U;
 
-    #line 805 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 806 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
 
-    #line 808 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 809 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u8_t) {
         
-        #line 809 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 810 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
 
-        #line 810 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 811 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         mean_value = (uint32_t)((uint32_t)(self->param_stats[__termina_array__index(4U,
                                                                                     pid_index)].mean_value * self->param_stats[__termina_array__index(4U,
                                                                                                                                                       pid_index)].samples) + (uint32_t)u8_SDP_value) / (uint32_t)(self->param_stats[__termina_array__index(4U,
                                                                                                                                                                                                                                                            pid_index)].samples + 1U);
 
     } else
-    #line 812 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 813 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u32_t) {
         
-        #line 813 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 814 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
 
-        #line 814 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 815 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         mean_value = (uint32_t)((uint32_t)(self->param_stats[__termina_array__index(4U,
                                                                                     pid_index)].mean_value * self->param_stats[__termina_array__index(4U,
                                                                                                                                                       pid_index)].samples) + u32_SDP_value) / (uint32_t)(self->param_stats[__termina_array__index(4U,
@@ -52,7 +52,7 @@ uint32_t PUSService4__SDP_get_mean(const __termina_event_t * const __ev,
 
     }
 
-    #line 821 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 822 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     return mean_value;
 
 }
@@ -61,49 +61,49 @@ _Bool PUSService4__SDP_param_higher_than_limit(const __termina_event_t * const _
                                                const PUSService4 * const self,
                                                size_t pid_index) {
     
-    #line 716 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 717 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     _Bool is_higher = 0;
 
-    #line 717 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 718 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint16_t PID = self->stats_config_table.PID[__termina_array__index(4U,
                                                                        pid_index)];
 
-    #line 718 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 719 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint8_t u8_SDP_value = 0U;
 
-    #line 719 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 720 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint32_t u32_SDP_value = 0U;
 
-    #line 721 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 722 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
 
-    #line 724 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 725 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u8_t) {
         
-        #line 725 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 726 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
 
-        #line 726 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 727 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         if ((uint32_t)u8_SDP_value > self->param_stats[__termina_array__index(4U,
                                                                               pid_index)].max) {
             
-            #line 727 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 728 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             is_higher = 1;
 
         }
 
     } else
-    #line 730 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 731 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u32_t) {
         
-        #line 731 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 732 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
 
-        #line 732 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 733 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         if (u32_SDP_value > self->param_stats[__termina_array__index(4U,
                                                                      pid_index)].max) {
             
-            #line 733 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 734 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             is_higher = 1;
 
         }
@@ -114,7 +114,7 @@ _Bool PUSService4__SDP_param_higher_than_limit(const __termina_event_t * const _
 
     }
 
-    #line 741 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 742 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     return is_higher;
 
 }
@@ -123,49 +123,49 @@ _Bool PUSService4__SDP_param_lower_than_limit(const __termina_event_t * const __
                                               const PUSService4 * const self,
                                               size_t pid_index) {
     
-    #line 747 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 748 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     _Bool is_lower = 0;
 
-    #line 748 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 749 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint16_t PID = self->stats_config_table.PID[__termina_array__index(4U,
                                                                        pid_index)];
 
-    #line 749 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 750 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint8_t u8_SDP_value = 0U;
 
-    #line 750 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 751 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint32_t u32_SDP_value = 0U;
 
-    #line 752 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 753 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
 
-    #line 755 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 756 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u8_t) {
         
-        #line 756 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 757 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
 
-        #line 757 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 758 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         if ((uint32_t)u8_SDP_value < self->param_stats[__termina_array__index(4U,
                                                                               pid_index)].min) {
             
-            #line 758 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 759 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             is_lower = 1;
 
         }
 
     } else
-    #line 761 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 762 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u32_t) {
         
-        #line 762 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 763 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
 
-        #line 763 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 764 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         if (u32_SDP_value < self->param_stats[__termina_array__index(4U,
                                                                      pid_index)].min) {
             
-            #line 764 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 765 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             is_lower = 1;
 
         }
@@ -176,7 +176,7 @@ _Bool PUSService4__SDP_param_lower_than_limit(const __termina_event_t * const __
 
     }
 
-    #line 772 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 773 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     return is_lower;
 
 }
@@ -192,7 +192,7 @@ __status_int32_t PUSService4__get_PID_defined_stats_index(const __termina_event_
     status.Failure.__0 = INVALID_PID_ERROR;
 
     #line 37 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
-    for (size_t i = 0U; i < 4U && status.__variant == Success; i = i + 1U) {
+    for (size_t i = 0U; i < 4U && status.__variant == Failure; i = i + 1U) {
         
         #line 39 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         if (self->exec_tc_req_status_update.PID == self->stats_config_table.PID[__termina_array__index(4U,
@@ -287,7 +287,7 @@ __status_int32_t PUSService4__add_PID_stats(const __termina_event_t * const __ev
     status = PUSService4__get_PID_defined_stats_index(__ev, self);
 
     #line 102 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
-    if (status.__variant == Success) {
+    if (status.__variant == Failure) {
         
         #line 104 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         index_status = PUSService4__get_free_index(__ev, self);
@@ -329,17 +329,20 @@ __status_int32_t PUSService4__add_PID_stats(const __termina_event_t * const __ev
         self->stats_config_table.start_time[__termina_array__index(4U,
                                                                    PID_index)] = current_obt;
 
+        #line 119 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        status.__variant = Success;
+
     } else
     {
         
-        #line 122 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 123 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         status.__variant = Failure;
-        #line 122 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 123 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         status.Failure.__0 = NO_FREE_STATS_INDEX_ERROR;
 
     }
 
-    #line 125 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 126 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     return status;
 
 }
@@ -347,13 +350,10 @@ __status_int32_t PUSService4__add_PID_stats(const __termina_event_t * const __ev
 __status_int32_t PUSService4__delete_PID_stats(const __termina_event_t * const __ev,
                                                PUSService4 * const self) {
     
-    #line 130 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
-    __status_int32_t status;
-    #line 130 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
-    status.__variant = Success;
-
     #line 131 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
-    size_t PID_index = 0U;
+    __status_int32_t status;
+    #line 131 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    status.__variant = Success;
 
     #line 132 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     status = PUSService4__get_PID_defined_stats_index(__ev, self);
@@ -363,7 +363,7 @@ __status_int32_t PUSService4__delete_PID_stats(const __termina_event_t * const _
         
         #line 135 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         self->stats_config_table.defined[__termina_array__index(4U,
-                                                                PID_index)] = 0;
+                                                                self->exec_tc_req_status_update.valid_index)] = 0;
 
     }
 
@@ -1330,35 +1330,35 @@ void PUSService4__exec_tc(const __termina_event_t * const __ev,
         if (self->exec_tc_req_status.__variant == PSExecTCReqStatus__ExecTC) {
             
             #line 611 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
+
+            #line 613 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             if (subtype == 1U) {
                 
-                #line 613 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 615 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 status = PUSService4__exec4_1TC(__ev, self);
 
             } else
-            #line 615 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 617 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             if (subtype == 6U) {
                 
-                #line 617 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 619 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 status = PUSService4__exec4_6TC(__ev, self);
 
             } else
-            #line 619 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 621 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             if (subtype == 7U) {
                 
-                #line 621 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 623 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 status = PUSService4__exec4_7TC(__ev, self);
 
             } else
             {
                 
-                #line 625 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 627 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 status.__variant = Failure;
-                #line 625 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 627 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 status.Failure.__0 = ACCEPTANCE_ERROR;
-
-                #line 626 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
-                self->exec_tc_req_status.__variant = PSExecTCReqStatus__Exit;
 
             }
 
@@ -1370,64 +1370,64 @@ void PUSService4__exec_tc(const __termina_event_t * const __ev,
 
     }
 
-    #line 637 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 638 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     if (status.__variant == Success) {
         
-        #line 639 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 640 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         (*action_status).__variant = Success;
 
     } else
     {
         
-        #line 635 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 636 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         int32_t error_code = status.Failure.__0;
 
-        #line 644 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 645 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         if (error_code == ACCEPTANCE_ERROR || error_code == BUILD_TM_ERROR
             || error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
             
-            #line 646 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 647 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             (*action_status).__variant = Success;
 
-            #line 648 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 649 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             __option_box_t tm_handler;
-            #line 648 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 649 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             tm_handler.__variant = None;
 
-            #line 649 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 650 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that,
                                           &tm_handler);
 
-            #line 653 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 654 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             if (tm_handler.__variant == Some) {
                 
-                #line 651 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 652 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
-                #line 655 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 656 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 uint16_t tm_count = 0U;
 
-                #line 656 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 657 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 MissionObt current_obt;
-                #line 656 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 657 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 current_obt.finetime = 0U;
-                #line 656 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 657 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 current_obt.seconds = 0U;
 
-                #line 658 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 659 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 self->tm_counter.get_next_tm_count(__ev,
                                                    self->tm_counter.__that,
                                                    &tm_count);
 
-                #line 659 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 660 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 self->pus_service_9.get_current_obt(__ev,
                                                     self->pus_service_9.__that,
                                                     &current_obt);
 
-                #line 661 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 662 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 if (error_code == ACCEPTANCE_ERROR) {
                     
-                    #line 663 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 664 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     status = build_tm_1_4_error_in_acceptance((TMHandlerT *)b_tm_handler.data,
                                                               tm_count,
                                                               self->exec_tc_req_status_update.packet_id,
@@ -1435,10 +1435,10 @@ void PUSService4__exec_tc(const __termina_event_t * const __ev,
                                                               current_obt);
 
                 } else
-                #line 666 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 667 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 if (error_code == BUILD_TM_ERROR) {
                     
-                    #line 668 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 669 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     status = build_tm_1_8_tm_exceed_limit_appdata((TMHandlerT *)b_tm_handler.data,
                                                                   tm_count,
                                                                   self->exec_tc_req_status_update.packet_id,
@@ -1446,10 +1446,10 @@ void PUSService4__exec_tc(const __termina_event_t * const __ev,
                                                                   current_obt);
 
                 } else
-                #line 671 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 672 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
                     
-                    #line 673 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 674 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     status = build_tm_1_4_short_pack_length((TMHandlerT *)b_tm_handler.data,
                                                             tm_count,
                                                             self->exec_tc_req_status_update.packet_id,
@@ -1463,17 +1463,17 @@ void PUSService4__exec_tc(const __termina_event_t * const __ev,
 
                 }
 
-                #line 683 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 684 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 if (status.__variant == Success) {
                     
-                    #line 685 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 686 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     self->tm_channel.send_tm(__ev, self->tm_channel.__that,
                                              b_tm_handler, &status);
 
                 } else
                 {
                     
-                    #line 689 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 690 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     self->a_tm_handler_pool.free(__ev,
                                                  self->a_tm_handler_pool.__that,
                                                  b_tm_handler);
@@ -1483,9 +1483,9 @@ void PUSService4__exec_tc(const __termina_event_t * const __ev,
             } else
             {
                 
-                #line 695 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 696 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 status.__variant = Failure;
-                #line 695 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 696 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
             }
@@ -1493,22 +1493,22 @@ void PUSService4__exec_tc(const __termina_event_t * const __ev,
         } else
         {
             
-            #line 702 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 703 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             (*action_status).__variant = Failure;
-            #line 702 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 703 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             (*action_status).Failure.__0 = error_code;
 
         }
 
     }
 
-    #line 708 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 709 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     self->exec_tc_req_status.__variant = PSExecTCReqStatus__Init;
 
-    #line 710 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 711 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 710 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 711 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     return;
 
 }
@@ -1517,29 +1517,29 @@ uint32_t PUSService4__get_data_pool_item(const __termina_event_t * const __ev,
                                          const PUSService4 * const self,
                                          uint16_t PID) {
     
-    #line 777 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 778 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
 
-    #line 778 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 779 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     uint32_t SDP_value = 0U;
 
-    #line 781 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 782 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u8_t) {
         
-        #line 782 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 783 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         uint8_t aux_value = 0U;
 
-        #line 783 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 784 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         aux_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
 
-        #line 784 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 785 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         SDP_value = (uint32_t)aux_value;
 
     } else
-    #line 786 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 787 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u32_t) {
         
-        #line 787 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 788 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
 
     } else
@@ -1548,7 +1548,7 @@ uint32_t PUSService4__get_data_pool_item(const __termina_event_t * const __ev,
 
     }
 
-    #line 793 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 794 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     return SDP_value;
 
 }
@@ -1592,52 +1592,52 @@ _Bool PUSService4__is_stats_index_defined(const __termina_event_t * const __ev,
 void PUSService4__startup(const __termina_event_t * const __ev,
                           void * const __this) {
     
-    #line 897 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 898 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     PUSService4 * self = (PUSService4 *)__this;
 
-    #line 897 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 898 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
                                                        &self->__lock_type);
 
-    #line 899 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 900 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     for (size_t i = 0U; i < 4U; i = i + 1U) {
         
-        #line 901 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 902 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         if (PUSService4__is_stats_index_defined(__ev, self, i) == 1) {
             
-            #line 903 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 904 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             self->param_stats[__termina_array__index(4U, i)].samples = 0U;
 
-            #line 904 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 905 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             MissionObt current_obt;
-            #line 904 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 905 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             current_obt.finetime = 0U;
-            #line 904 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 905 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             current_obt.seconds = 0U;
 
-            #line 905 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 906 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             self->pus_service_9.get_current_obt(__ev,
                                                 self->pus_service_9.__that,
                                                 &current_obt);
 
-            #line 906 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 907 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             self->stats_config_table.start_time[__termina_array__index(4U,
                                                                        i)] = current_obt;
 
         } else
         {
             
-            #line 910 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 911 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             self->stats_config_table.defined[__termina_array__index(4U, i)] = 0;
 
         }
 
     }
 
-    #line 915 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 916 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 915 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 916 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     return;
 
 }
@@ -1645,82 +1645,82 @@ void PUSService4__startup(const __termina_event_t * const __ev,
 void PUSService4__update_all_stats(const __termina_event_t * const __ev,
                                    void * const __this) {
     
-    #line 824 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 825 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     PUSService4 * self = (PUSService4 *)__this;
 
-    #line 824 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 825 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
                                                        &self->__lock_type);
 
-    #line 826 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 827 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     for (size_t i = 0U; i < 4U; i = i + 1U) {
         
-        #line 828 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+        #line 829 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
         if (PUSService4__is_stats_index_defined(__ev, self, i) == 1) {
             
-            #line 830 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 831 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             uint16_t PID = self->stats_config_table.PID[__termina_array__index(4U,
                                                                                i)];
 
-            #line 832 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 833 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             if (self->param_stats[__termina_array__index(4U, i)].samples > 0U) {
                 
-                #line 834 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 835 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 if (PUSService4__SDP_param_higher_than_limit(__ev, self,
                                                              i) == 1) {
                     
-                    #line 836 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 837 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     uint32_t system_data_pool_item = PUSService4__get_data_pool_item(__ev,
                                                                                      self,
                                                                                      PID);
 
-                    #line 837 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 838 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     self->param_stats[__termina_array__index(4U,
                                                              i)].max = system_data_pool_item;
 
-                    #line 838 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 839 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     MissionObt current_time;
-                    #line 838 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 839 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     current_time.finetime = 0U;
-                    #line 838 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 839 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     current_time.seconds = 0U;
 
-                    #line 842 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 843 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     self->pus_service_9.get_current_obt(__ev,
                                                         self->pus_service_9.__that,
                                                         &current_time);
 
-                    #line 843 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 844 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     self->param_stats[__termina_array__index(4U,
                                                              i)].max_obt = current_time;
 
                 } else
-                #line 846 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 847 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 if (PUSService4__SDP_param_lower_than_limit(__ev, self,
                                                             i) == 1) {
                     
-                    #line 848 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 849 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     uint32_t system_data_pool_item = PUSService4__get_data_pool_item(__ev,
                                                                                      self,
                                                                                      PID);
 
-                    #line 849 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 850 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     self->param_stats[__termina_array__index(4U,
                                                              i)].min = system_data_pool_item;
 
-                    #line 850 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 851 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     MissionObt current_time;
-                    #line 850 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 851 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     current_time.finetime = 0U;
-                    #line 850 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 851 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     current_time.seconds = 0U;
 
-                    #line 854 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 855 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     self->pus_service_9.get_current_obt(__ev,
                                                         self->pus_service_9.__that,
                                                         &current_time);
 
-                    #line 855 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                    #line 856 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                     self->param_stats[__termina_array__index(4U,
                                                              i)].min_obt = current_time;
 
@@ -1730,7 +1730,7 @@ void PUSService4__update_all_stats(const __termina_event_t * const __ev,
 
                 }
 
-                #line 861 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 862 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 self->param_stats[__termina_array__index(4U,
                                                          i)].mean_value = PUSService4__SDP_get_mean(__ev,
                                                                                                     self,
@@ -1739,46 +1739,46 @@ void PUSService4__update_all_stats(const __termina_event_t * const __ev,
             } else
             {
                 
-                #line 866 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 867 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 uint32_t system_data_pool_item = PUSService4__get_data_pool_item(__ev,
                                                                                  self,
                                                                                  PID);
 
-                #line 867 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 868 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 self->param_stats[__termina_array__index(4U,
                                                          i)].max = system_data_pool_item;
 
-                #line 868 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 869 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 self->param_stats[__termina_array__index(4U,
                                                          i)].min = system_data_pool_item;
 
-                #line 869 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 870 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 self->param_stats[__termina_array__index(4U,
                                                          i)].mean_value = system_data_pool_item;
 
-                #line 870 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 871 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 MissionObt current_time;
-                #line 870 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 871 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 current_time.finetime = 0U;
-                #line 870 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 871 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 current_time.seconds = 0U;
 
-                #line 874 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 875 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 self->pus_service_9.get_current_obt(__ev,
                                                     self->pus_service_9.__that,
                                                     &current_time);
 
-                #line 875 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 876 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 self->param_stats[__termina_array__index(4U,
                                                          i)].max_obt = current_time;
 
-                #line 876 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+                #line 877 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
                 self->param_stats[__termina_array__index(4U,
                                                          i)].min_obt = current_time;
 
             }
 
-            #line 881 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 882 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             self->param_stats[__termina_array__index(4U,
                                                      i)].samples = self->param_stats[__termina_array__index(4U,
                                                                                                             i)].samples + 1U;
@@ -1786,17 +1786,17 @@ void PUSService4__update_all_stats(const __termina_event_t * const __ev,
         } else
         {
             
-            #line 886 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+            #line 887 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
             self->stats_config_table.defined[__termina_array__index(4U, i)] = 0;
 
         }
 
     }
 
-    #line 893 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 894 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 893 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
+    #line 894 "src/service_libraries/pus_services/pus_service4/pus_service4.fin"
     return;
 
 }

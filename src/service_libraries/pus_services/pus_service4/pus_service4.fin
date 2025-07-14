@@ -34,7 +34,7 @@ resource class PUSService4 provides PUSS4Iface {
 
         var status : Status<i32> = Failure(INVALID_PID_ERROR);
 
-        for i : usize in 0 .. max_num_of_stats while (status is Success) {
+        for i : usize in 0 .. max_num_of_stats while (status is Failure) {
 
             if(self->exec_tc_req_status_update.PID == self->stats_config_table.PID[i]) {
 
@@ -99,7 +99,7 @@ resource class PUSService4 provides PUSS4Iface {
         var index_status : IndexStatus = {index = 0, status = Success};
         status = self->get_PID_defined_stats_index();
 
-        if(status is Success) {
+        if(status is Failure) {
 
             index_status = self->get_free_index();
             self->exec_tc_req_status_update.valid_index = index_status.index;
@@ -116,6 +116,7 @@ resource class PUSService4 provides PUSS4Iface {
             var current_obt : MissionObt = {seconds = 0, finetime = 0};
             self->pus_service_9.get_current_obt(&mut current_obt);
             self->stats_config_table.start_time[PID_index] = current_obt;
+            status = Success;
             
         } else {
 
@@ -128,11 +129,10 @@ resource class PUSService4 provides PUSS4Iface {
     method delete_PID_stats (&priv self) -> Status<i32> {
 
         var status : Status<i32> = Success;
-        var PID_index: usize = 0;
         status = self->get_PID_defined_stats_index();
 
         if (status is Success) {
-            self->stats_config_table.defined[PID_index] = false;
+            self->stats_config_table.defined[self->exec_tc_req_status_update.valid_index] = false;
         }
 
         return status;
@@ -608,6 +608,8 @@ resource class PUSService4 provides PUSS4Iface {
                 }
                 case ExecTC => {
 
+                    self->exec_tc_req_status = PSExecTCReqStatus::Exit;
+
                     if (subtype == 1) {
 
                         status = self->exec4_1TC();
@@ -623,7 +625,6 @@ resource class PUSService4 provides PUSS4Iface {
                     } else {
 
                         status = Failure(ACCEPTANCE_ERROR);
-                        self->exec_tc_req_status = PSExecTCReqStatus::Exit;
                     }
                 }
                 case Exit => {
