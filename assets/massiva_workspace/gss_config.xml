@@ -79,6 +79,9 @@
 
 	<TestCase name="tp_0090_asw_pus_tc_6_5_read_bytes_from_0x40001000_to_0x4000103F" 
 		procedure="FT_PROCS/st06/tp_0090_asw_pus_tc_6_5_read_bytes_from_0x40001000_to_0x4000103F.xml"/>
+
+	<TestCase name="tp_0100_asw_pus_tc_9_129_set_obt" 
+		procedure="FT_PROCS/st09/tp_0100_asw_pus_tc_9_129_set_obt.xml"/>
 	
 	<!-- TestCase name="tp_0070_asw_pus_tc_128_1_reboot" 						
 			procedure="FT_PROCS/st128/tp_0070_asw_pus_tc_128_1_reboot.xml"/ !-->
