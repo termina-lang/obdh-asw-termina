@@ -5,7 +5,7 @@ const size_t max_num_of_bytes_memory_load = 256U;
 
 const size_t banks_number = 8U;
 
-const size_t bank_size = 16384U;
+const size_t bank_size = 1U << 24U;
 
 __status_int32_t build_tm_6_6(TMHandlerT * const p_tm_handler,
                               uint16_t tm_seq_counter, MissionObt current_obt,

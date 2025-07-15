@@ -839,7 +839,7 @@ resource class PUSService19 provides PUSS19Iface {
                         
                         for j : usize in 0 .. event_action_max_bytes while j < (self->exec_tc_req_status_update.action_tc_packet.tc_num_bytes) {
 
-                            self->exec_tc_req_status_update.action_tc_packet.tc_bytes[j] = tc_handler->tc_descriptor.tc_bytes[j + 12];
+                            self->exec_tc_req_status_update.action_tc_packet.tc_bytes[j] = tc_handler->tc_descriptor.tc_bytes[j + tc_handler->app_data_index];
 
                         }
 

@@ -1667,7 +1667,7 @@ void PUSService19__exec_tc(const __termina_event_t * const __ev,
                     #line 842 "src/service_libraries/pus_services/pus_service19/pus_service19.fin"
                     self->exec_tc_req_status_update.action_tc_packet.tc_bytes[__termina_array__index(256U,
                                                                                                      j)] = tc_handler->tc_descriptor.tc_bytes[__termina_array__index(256U,
-                                                                                                                                                                     j + 12U)];
+                                                                                                                                                                     j + tc_handler->app_data_index)];
 
                 }
 

@@ -31,7 +31,7 @@ typedef struct {
         void (* send_tm)(const __termina_event_t * const, void * const,
                          __termina_box_t, __status_int32_t * const);
     } tm_channel;
-    volatile uint8_t (* memory)[16384U];
+    volatile uint8_t (* memory)[16777216U];
     _Bool mem_id_write_permisssions[8U];
     PS6ExecTCReqStatusUpdate exec_tc_req_status_update;
     PSExecTCReqStatus exec_tc_req_status;
