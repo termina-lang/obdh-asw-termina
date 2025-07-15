@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE MintermFilter SYSTEM "../../../DTDs/filters.dtd">
 
-<MintermFilter formatFile="../../TM_Formats/Level2/st06/asw_pus_tm_6_6_size_64_bytes_format.xml">
+<MintermFilter formatFile="../../TM_Formats/Level2/st06/asw_pus_tm_6_6_format.xml">
     <BoolVar id="0" name="memory_id_equal_to_0" constantType="hex">
 		<FieldRef name="MemoryID" />
 		<Op type="equal" />
@@ -22,10 +22,16 @@
 		<Op type="equal" />
 		<Constant value="64" />
 	</BoolVar>
+	<BoolVar id="4" name="ReadDataEqual" constantType="string">
+		<FieldRef name="ReadData" />
+		<Op type="equal" />
+		<Select fromFile="TM_Filters/Level2/st06/read_bytes_from_0x40001000_to_0x4000103F.txt" type="data" />
+	</BoolVar>
 	<Minterm id="0">
 		<BoolVarRef idRef="0" />
 		<BoolVarRef idRef="1" />
 		<BoolVarRef idRef="2" />
 		<BoolVarRef idRef="3" />
+		<BoolVarRef idRef="4" />
 	</Minterm>
 </MintermFilter>

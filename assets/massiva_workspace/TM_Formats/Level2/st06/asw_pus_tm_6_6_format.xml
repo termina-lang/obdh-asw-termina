@@ -22,8 +22,13 @@
         <size bytes="2" bits="0" />				<!-- size in bits = 16 -->
         <globalOffset bytes="6" bits="0" /> 	<!-- offset in bits = 48 -->
 	</CSField>
-	<CSField fid="5" pfid="0" name="Data" type="uint" byteOrder="big_endian" firstBit="MSB">
-        <size bytes="64" bits="0" />			<!-- size in bits = 64*8 -->
-        <globalOffset bytes="8" bits="0" /> 	<!-- offset in bits = 64 -->
-	</CSField>
+	<VSField fid="5" pfid="0" name="ReadData" type="string" byteOrder="big_endian" firstBit="MSB">
+		<constSize bytes="0" bits="0" />		<!-- const size in bits = 0 -->
+		<variableSize fidRef="6" unit="bytes"/><!-- vble size = (SourceDataLength x 8) bits -->
+		<maxSize bytes="256" bits="0" />		<!-- max size in bits = 4094 * 8 -->
+		<globalOffset bytes="8" bits="0" />	<!-- offset in bits = 32 -->
+	</VSField>
+
+	<VRFieldSize fid="6" pfid="5" name="ReadDataLength" /> <!-- in bytes -->
+
 </tm_tc_format>

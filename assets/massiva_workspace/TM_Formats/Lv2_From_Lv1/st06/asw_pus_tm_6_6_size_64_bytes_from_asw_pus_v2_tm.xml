@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE Import SYSTEM "../../../DTDs/import.dtd">
-
-<Import from="../../Level1/asw_pus_v2_tm_format.xml" to="../../Level2/st06/asw_pus_tm_6_6_size_64_bytes_format.xml">
-	<dataSource FieldRef="SourceData" leftTrim="0" rightTrim="0" />
-</Import>
