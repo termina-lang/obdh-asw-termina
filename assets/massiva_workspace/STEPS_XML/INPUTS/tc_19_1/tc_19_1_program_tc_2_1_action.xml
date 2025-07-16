@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Export SYSTEM "../../../DTDs/export.dtd">
+<Export from="NULL" to="asw_pus_19_1.xml">
+	<settings>
+		<settingFromConst value="1" toFieldRef="N"/>	
+        <settingFromConst value="0x2002" toFieldRef="EvID"/>
+        <settingFromFile file="STEPS_XML/INPUTS/tc_19_1/tc_2_1.txt" toFieldRef="TCPacket"/>
+	</settings>
+</Export>

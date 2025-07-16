@@ -5,7 +5,7 @@ import service_libraries.pus_services.pus_service9.pus_service9;
 
 const max_num_of_bytes_memory_load : usize = 256;
 const banks_number : usize = 8; //Number of memory banks
-const bank_size : usize = 16384; //Size of each memory bank in bytes
+const bank_size : usize = 1 << 24 : usize; //Size of each memory bank in bytes
 
 struct PS6ExecTCReqStatusUpdate {
     packet_id : u16;

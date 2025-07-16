@@ -114,7 +114,7 @@
 			</output_level_1>
 			<output_level_2 name="tm_12_12_monitoring_transition" id="2" ifRef="0">
 				<level2 format="TM_Formats/Level2/st12/asw_pus_tm_12_12_limits_monitoring_format.xml"/>
-				<level2_filter apply_def_filter="no" extra_filter="TM_Filters/Level2/st12/asw_pus_tm_12_12_limits_monitoring_filter.xml"/>
+				<level2_filter apply_def_filter="no" extra_filter="TM_Filters/Level2/st12/asw_pus_tm_12_12_limits_monitoring_filter_PMONID_0_PID_10.xml"/>
 				<level1 format="DEFAULT"/>
  				<level2_from_level1 import="TM_Formats/Lv2_From_Lv1/st12/asw_pus_tm_12_12_from_asw_pus_v2_tm.xml"/>
 				<level1_filter apply_def_filter="yes" extra_filter="TM_Filters/Level1/st12/asw_pus_v2_tm_12_12_filter.xml"/>

@@ -273,12 +273,12 @@ resource class PUSService20 provides PUSS20Iface {
                             match item_type {
                                 case u8_t => {
                                     
-                                    self->system_data_pool_u8.store_index(self->exec_tc_req_status_update.PID as usize, self->exec_tc_req_status_update.tc_20_3_data.PID_value_u8);
+                                    self->system_data_pool_u8.store_index(((self->exec_tc_req_status_update.PID as usize) - sdp_first_u8_param_id), self->exec_tc_req_status_update.tc_20_3_data.PID_value_u8);
                                     succesful_execution = true;
                                 }
                                 case u32_t => {
 
-                                    self->system_data_pool_u32.store_index(self->exec_tc_req_status_update.PID as usize, self->exec_tc_req_status_update.tc_20_3_data.PID_value_u32);
+                                    self->system_data_pool_u32.store_index(((self->exec_tc_req_status_update.PID as usize) - sdp_first_u32_param_id), self->exec_tc_req_status_update.tc_20_3_data.PID_value_u32);
                                     succesful_execution = true;
                                 }
                                 case NoValidPID => {

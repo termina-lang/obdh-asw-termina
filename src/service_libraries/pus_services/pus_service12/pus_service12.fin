@@ -208,6 +208,7 @@ resource class PUSService12 provides PUSS12Iface {
             case u8_t => {
                 var SDP_value_u8 : u8 = 0;
                 self->system_data_pool_u8.load_index((PID as usize - sdp_first_u8_param_id), &mut SDP_value_u8);
+
                 SDP_value = SDP_value_u8 as u32;
             }
             case NoValidPID => {

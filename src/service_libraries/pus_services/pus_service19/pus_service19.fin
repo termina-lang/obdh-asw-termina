@@ -225,9 +225,10 @@ resource class PUSService19 provides PUSS19Iface {
                                         self->a_tm_handler_pool.free(b_tm_handler);
                                     }
                                 
+                                  
                                     self->event_action_config[self->exec_tc_req_status_update.ev_action_ID.ev_action_index].event_ID = self->exec_tc_req_status_update.tc_data.EvID;
                                     self->event_action_config[self->exec_tc_req_status_update.ev_action_ID.ev_action_index].enabled = false;
-
+                                    self->event_action_packets[self->exec_tc_req_status_update.ev_action_ID.ev_action_index] = action_tc_handler;
 
                                     var tm_handler2 : Option<box TMHandlerT> = None;
                                     self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -971,10 +972,9 @@ resource class PUSService19 provides PUSS19Iface {
     procedure manage_event_action(&mut self, evID: u16){
 
         var found_and_id: FoundID = {found = false, ev_action_index = 0, enabled = false};
-        var is_enabled : bool = false;
         found_and_id = self->is_ev_action_defined(evID);
 
-        if(found_and_id.found && is_enabled){
+        if(found_and_id.found && found_and_id.enabled){
 
             if(found_and_id.ev_action_index < max_event_action_definitions){
 

@@ -86,8 +86,11 @@
 	<TestCase name="tp_0100_asw_pus_tc_9_129_set_obt" 
 		procedure="FT_PROCS/st09/tp_0100_asw_pus_tc_9_129_set_obt.xml"/>
 
-		<TestCase name="tp_0110_asw_pus_tc_3_6_tc_3_5" 
+	<TestCase name="tp_0110_asw_pus_tc_3_6_tc_3_5" 
 		procedure="FT_PROCS/st03/tp_0110_asw_pus_tc_3_6_tc_3_5.xml"/>
+
+	<TestCase name="tp_0120_asw_pus_service_19" 
+		procedure="FT_PROCS/st19/tp_0120_pus_service_19.xml"/>
 	
 	<!-- TestCase name="tp_0070_asw_pus_tc_128_1_reboot" 						
 			procedure="FT_PROCS/st128/tp_0070_asw_pus_tc_128_1_reboot.xml"/ !-->

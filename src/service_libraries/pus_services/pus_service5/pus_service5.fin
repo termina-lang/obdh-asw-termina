@@ -39,7 +39,7 @@ resource class PUSService5 provides PUSS5Iface {
         if (index <= 4){
 
             var config_array_index : usize = index - 1; 
-            if(((self->Ev_ID_enable_config[config_array_index] >> offset) & 0x01) != 0){
+            if(((self->Ev_ID_enable_config[config_array_index] >> (offset-1)) & 0x01) != 0){
                 enabled = true;
             }
         }
@@ -94,7 +94,7 @@ resource class PUSService5 provides PUSS5Iface {
                 }
                 else {
 
-                    var is_valid_EvID : bool = index < 4;
+                    var is_valid_EvID : bool = index <= 4;
 
                     if(is_valid_EvID) {
 
@@ -116,7 +116,8 @@ resource class PUSService5 provides PUSS5Iface {
                             self->a_tm_handler_pool.free(b_tm_handler);
                         }
 
-                        self->Ev_ID_enable_config[index] = self->Ev_ID_enable_config[index] | (1 << offset);
+                        var mask : u32 = 0x1 << (offset - 1);
+                        self->Ev_ID_enable_config[index - 1] = self->Ev_ID_enable_config[index - 1] | mask;
 
                         var tm_handler2 : Option<box TMHandlerT> = None;
                         self->a_tm_handler_pool.alloc(&mut tm_handler2);
@@ -221,7 +222,7 @@ resource class PUSService5 provides PUSS5Iface {
                 }
                 else {
 
-                    var is_valid_EvID : bool = index < 4;
+                    var is_valid_EvID : bool = index <= 4;
 
                     if(is_valid_EvID) {
 
@@ -243,7 +244,8 @@ resource class PUSService5 provides PUSS5Iface {
                             self->a_tm_handler_pool.free(b_tm_handler);
                         }
 
-                        self->Ev_ID_enable_config[index] = self->Ev_ID_enable_config[index] & (0xFFFFFFFE << offset);
+                        var mask : u32 = 0x1 << (offset - 1);
+                        self->Ev_ID_enable_config[index - 1] = self->Ev_ID_enable_config[index - 1] & (0xFFFFFFFE ^ mask);
 
                         var tm_handler2 : Option<box TMHandlerT> = None;
                         self->a_tm_handler_pool.alloc(&mut tm_handler2);

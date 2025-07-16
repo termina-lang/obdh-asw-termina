@@ -509,7 +509,7 @@ __status_int32_t PUSService20__exec20_3TC(const __termina_event_t * const __ev,
                     if (item_type.__variant == DataPoolItemType__u8_t) {
                         
                         #line 276 "src/service_libraries/pus_services/pus_service20/pus_service20.fin"
-                        atomic_store(&self->system_data_pool_u8[(size_t)self->exec_tc_req_status_update.PID],
+                        atomic_store(&self->system_data_pool_u8[(size_t)self->exec_tc_req_status_update.PID - 11U],
                                      self->exec_tc_req_status_update.tc_20_3_data.PID_value_u8);
 
                         #line 277 "src/service_libraries/pus_services/pus_service20/pus_service20.fin"
@@ -520,7 +520,7 @@ __status_int32_t PUSService20__exec20_3TC(const __termina_event_t * const __ev,
                     if (item_type.__variant == DataPoolItemType__u32_t) {
                         
                         #line 281 "src/service_libraries/pus_services/pus_service20/pus_service20.fin"
-                        atomic_store(&self->system_data_pool_u32[(size_t)self->exec_tc_req_status_update.PID],
+                        atomic_store(&self->system_data_pool_u32[(size_t)self->exec_tc_req_status_update.PID - 0U],
                                      self->exec_tc_req_status_update.tc_20_3_data.PID_value_u32);
 
                         #line 282 "src/service_libraries/pus_services/pus_service20/pus_service20.fin"
