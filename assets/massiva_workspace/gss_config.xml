@@ -83,6 +83,9 @@
 	<TestCase name="tp_0091_asw_pus_tc_6_2_write_bytes_to_0x41020080" 
 		procedure="FT_PROCS/st06/tp_0091_asw_pus_tc_6_2_write_bytes_to_0x41020080.xml"/>
 
+	<TestCase name="tp_0092_asw_pus_tc_6_9_checksum_from_0x40000090_to_0x400000BF" 
+		procedure="FT_PROCS/st06/tp_0092_asw_pus_tc_6_9_checksum_from_0x40000090_to_0x400000BF.xml"/>
+
 	<TestCase name="tp_0100_asw_pus_tc_9_129_set_obt" 
 		procedure="FT_PROCS/st09/tp_0100_asw_pus_tc_9_129_set_obt.xml"/>
 

@@ -3,7 +3,7 @@
 
 <tm_tc_format protocol="ASW_6.6" type="TM">
 	<CSField fid="0" pfid="0" name="SourceData" type="structured" byteOrder="big_endian" firstBit="MSB">
-		<size bytes="8" bits="0" />			    <!-- size in bits = 8*8 -->
+		<size bytes="10" bits="0" />			<!-- size in bits = 10*8 -->
 		<globalOffset bytes="0" bits="0" />		<!-- offset in bits = 0 -->
 	</CSField>
 	<CSField fid="1" pfid="0" name="MemoryID" type="uint" byteOrder="big_endian" firstBit="MSB">
@@ -22,13 +22,9 @@
         <size bytes="2" bits="0" />				<!-- size in bits = 16 -->
         <globalOffset bytes="6" bits="0" /> 	<!-- offset in bits = 48 -->
 	</CSField>
-	<VSField fid="5" pfid="0" name="ReadData" type="string" byteOrder="big_endian" firstBit="MSB">
-		<constSize bytes="0" bits="0" />		<!-- const size in bits = 0 -->
-		<variableSize fidRef="6" unit="bytes"/><!-- vble size = (SourceDataLength x 8) bits -->
-		<maxSize bytes="256" bits="0" />		<!-- max size in bits = 4094 * 8 -->
-		<globalOffset bytes="8" bits="0" />	<!-- offset in bits = 32 -->
-	</VSField>
-
-	<VRFieldSize fid="6" pfid="5" name="ReadDataLength" /> <!-- in bytes -->
+    <CSField fid="5" pfid="0" name="Checksum" type="uint" byteOrder="big_endian" firstBit="MSB">
+        <size bytes="2" bits="0" />				<!-- size in bits = 16 -->
+        <globalOffset bytes="8" bits="0" /> 	<!-- offset in bits = 48 -->
+	</CSField>
 
 </tm_tc_format>
