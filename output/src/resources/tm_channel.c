@@ -13,7 +13,7 @@ void TMChannel__send_tm(const __termina_event_t * const __ev,
                                                        &self->__lock_type);
 
     #line 54 "src/resources/tm_channel.fin"
-    TMDescriptorT tm_descriptor = (*(TMHandlerT *)tm_handler.data).tm_descriptor;
+    TMDescriptor tm_descriptor = (*(TMHandler *)tm_handler.data).tm_descriptor;
 
     #line 57 "src/resources/tm_channel.fin"
     uint8_t frame_header[6U];

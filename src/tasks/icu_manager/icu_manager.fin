@@ -13,23 +13,23 @@ task class ICUManager {
 
     /// @var tc_message_queue_input
     /// @brief Input message queue for receiving regular telecommands.
-    tc_message_queue_input: in box TCHandlerT triggers process_tc;
+    tc_message_queue_input: in box TCHandler triggers process_tc;
 
     /// @var action_tc_message_queue_input
     /// @brief Input message queue for receiving action telecommands.
-    action_tc_message_queue_input: in box TCHandlerT triggers process_action_tc;
+    action_tc_message_queue_input: in box TCHandler triggers process_action_tc;
 
     /// @var a_tc_handler_pool
     /// @brief Allocator interface for managing TC handler memory.
-    a_tc_handler_pool : access Allocator<TCHandlerT>;
+    a_tc_handler_pool : access Allocator<TCHandler>;
 
     /// @var hkfdir_message_queue_output
     /// @brief Output queue for housekeeping/FDIR-related TCs.
-    hkfdir_message_queue_output: out box TCHandlerT;
+    hkfdir_message_queue_output: out box TCHandler;
 
     /// @var bkg_message_queue_output
     /// @brief Output queue for background telecommands.
-    bkg_message_queue_output: out box TCHandlerT;
+    bkg_message_queue_output: out box TCHandler;
 
     /// @var tc_executor
     /// @brief Interface for TC execution and rejection management logic.
@@ -46,10 +46,10 @@ task class ICUManager {
      * the corresponding management logic.
      * 
      * @param[in] self Reference to the ICUManager instance.
-     * @param[in] tc_handler Boxed TCHandlerT instance containing the telecommand to process.
+     * @param[in] tc_handler Boxed TCHandler instance containing the telecommand to process.
      * @return Status<i32> Success or failure code of the operation.
      */
-    action process_tc(&priv self, tc_handler: box TCHandlerT) -> Status<i32> {
+    action process_tc(&priv self, tc_handler: box TCHandler) -> Status<i32> {
 
         var ret : Status<i32> = Success;
         var reebot_flag : bool = false;
@@ -118,10 +118,10 @@ task class ICUManager {
      * Priority TCs are executed immediately and may trigger a system reboot if needed.
      * 
      * @param[in] self Reference to the ICUManager instance.
-     * @param[in] tc_handler Boxed TCHandlerT instance representing the action TC.
+     * @param[in] tc_handler Boxed TCHandler instance representing the action TC.
      * @return Status<i32> Success or failure code of the operation.
      */
-    action process_action_tc(&priv self, tc_handler: box TCHandlerT) -> Status<i32> {
+    action process_action_tc(&priv self, tc_handler: box TCHandler) -> Status<i32> {
 
         var ret : Status<i32> = Success;
         var reebot_flag : bool = false;

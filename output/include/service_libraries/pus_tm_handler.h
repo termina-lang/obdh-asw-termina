@@ -3,18 +3,18 @@
 
 #include <termina.h>
 
-#include "service_libraries/pus_services/pus_services.h"
+#include "resources/obt_manager.h"
 #include "service_libraries/serialize.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
 
 typedef struct {
-    TMDescriptorT tm_descriptor;
-    CCSDSPUSTMPacketHeaderT packet_header;
-    CCSDSPUSTMDFHeaderT df_header;
+    TMDescriptor tm_descriptor;
+    CCSDSPUSTMPacketHeader packet_header;
+    CCSDSPUSTMDFHeader df_header;
     size_t app_data_index;
-} TMHandlerT;
+} TMHandler;
 
 extern const uint16_t APID;
 
@@ -22,24 +22,24 @@ extern const uint16_t destinationID;
 
 extern const size_t tm_app_data_offset;
 
-__status_int32_t append_u8_appdata_field(TMHandlerT * const tm_handler,
+__status_int32_t append_u8_appdata_field(TMHandler * const tm_handler,
                                          uint8_t data);
 
-__status_int32_t append_u16_appdata_field(TMHandlerT * const tm_handler,
+__status_int32_t append_u16_appdata_field(TMHandler * const tm_handler,
                                           uint16_t data);
 
-__status_int32_t append_u32_appdata_field(TMHandlerT * const tm_handler,
+__status_int32_t append_u32_appdata_field(TMHandler * const tm_handler,
                                           uint32_t data);
 
-void tm_handler_build_packet_header(TMHandlerT * const tm_handler,
+void tm_handler_build_packet_header(TMHandler * const tm_handler,
                                     uint16_t tm_seq_counter);
 
-void tm_handler_build_df_header(TMHandlerT * const tm_handler, uint8_t tm_type,
-                                uint8_t tm_subtype, MissionObt current_obt);
+void tm_handler_build_df_header(TMHandler * const tm_handler, uint8_t tm_type,
+                                uint8_t tm_subtype, MissionOBT current_obt);
 
-void close_tm(TMHandlerT * const tm_handler, uint8_t type, uint8_t subtype,
-              uint16_t tm_count, MissionObt current_obt);
+void close_tm(TMHandler * const tm_handler, uint8_t type, uint8_t subtype,
+              uint16_t tm_count, MissionOBT current_obt);
 
-void startup_tm(TMHandlerT * const tm_handler);
+void startup_tm(TMHandler * const tm_handler);
 
 #endif

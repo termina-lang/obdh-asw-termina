@@ -1,12 +1,10 @@
 import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
-import service_libraries.pus_services.pus_service1.pus_service1;
-import service_libraries.pus_services.pus_service2.pus_service2;
-import service_libraries.pus_services.pus_service9.pus_service9;
-import service_libraries.pus_services.pus_service17.pus_service17;
-import service_libraries.pus_services.pus_service128.pus_service128;
-import resources.tm_counter;
-import resources.tm_channel;
+import service_libraries.pus_services.pus_service1;
+import service_libraries.pus_services.pus_service2;
+import service_libraries.pus_services.pus_service9;
+import service_libraries.pus_services.pus_service17;
+import service_libraries.pus_services.pus_service128;
 
 
 /**
@@ -17,9 +15,9 @@ import resources.tm_channel;
  * telecommand acceptance, and telecommand rejection.
  */
 interface MngTCExecIface {
-  procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, ret: &mut Status<i32>, reebot_flag: &mut bool);
-  procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, ret: &mut Status<i32>);
-  procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, ret: &mut Status<i32>);
+  procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandler, ret: &mut Status<i32>, reebot_flag: &mut bool);
+  procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandler, ret: &mut Status<i32>);
+  procedure mng_tc_rejection (&mut self, tc_handler: &TCHandler, ret: &mut Status<i32>);
 };
 
 
@@ -31,15 +29,6 @@ interface MngTCExecIface {
  * acceptance and rejection. Supports error reporting in case of unhandled telecommands.
  */
 resource class ManagerTCExecutor provides MngTCExecIface {
-
-    // Interface for telemetry (TM) channel to send telemetry packets.
-    tm_channel: access TMChannelIface;
-
-    /// Interface to manage telemetry count.
-    tm_counter: access TMCounterIface;
-
-    /// Allocator for TMHandler objects.
-    a_tm_handler_pool : access Allocator<TMHandlerT>;
 
     /// Pointer to the interface of PUS Service 17.
     pus_service_17 : access PUSS17Iface;
@@ -53,7 +42,7 @@ resource class ManagerTCExecutor provides MngTCExecIface {
     /// Pointer to the interface of PUS Service 128.
     pus_service_128 : access PUSS128Iface; 
     
-    
+    pus_service_1 : access PUSService1Iface;
 
 
     /**
@@ -66,7 +55,7 @@ resource class ManagerTCExecutor provides MngTCExecIface {
      * @param[out] ret Status result of the execution.
      * @param[out] reebot_flag Flag to indicate if a reboot is required.
      */
-    procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandlerT, status: &mut Status<i32>, reebot_flag: &mut bool) {
+    procedure PUS_prio_exec_tc (&mut self, tc_handler : &mut TCHandler, status: &mut Status<i32>, reebot_flag: &mut bool) {
 
         var tc_type : u8 = tc_handler->df_header.type;
 
@@ -88,37 +77,11 @@ resource class ManagerTCExecutor provides MngTCExecIface {
         
         } else {
 
-            var current_obt : MissionObt = {seconds = 0, finetime = 0};
-
-            var tm_handler : Option<box TMHandlerT> = None;
-            self->a_tm_handler_pool.alloc(&mut tm_handler);
-
-            match tm_handler {
-
-                case Some(b_tm_handler) => {
-
-                    var tm_count : u16 = 0 : u16;
-                    self->tm_counter.get_next_tm_count(&mut tm_count);
-
-                    self->pus_service_9.get_current_obt(&mut current_obt);
-                    *status = build_tm_1_4_error_in_acceptance(&mut b_tm_handler, tm_count, tc_handler->packet_header.packet_id, tc_handler->packet_header.packet_seq_ctrl,
-                                    current_obt);
+            self->pus_service_1.send_tm_1_4_error_in_acceptance(
+                    tc_handler->packet_header.packet_id,
+                    tc_handler->packet_header.packet_seq_ctrl,
+                    status);
                     
-                    if (*status is Success){
-
-                        self->tm_channel.send_tm(b_tm_handler, status);
-                    } 
-                    else {
-                        self->a_tm_handler_pool.free(b_tm_handler);
-                            
-                    }
-                    
-                }
-                case None => {
-                    *status = Failure(TM_POOL_ALLOC_FAILURE);
-                    
-                }
-            }
         }
         
         return;
@@ -134,54 +97,16 @@ resource class ManagerTCExecutor provides MngTCExecIface {
      * @param[in] tc_handler Pointer to the telecommand handler.
      * @param[out] ret Status result of the operation.
     */
-    procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandlerT, status: &mut Status<i32>) {
+    procedure mng_tc_acceptation (&mut self, tc_handler: &TCHandler, status: &mut Status<i32>) {
 
-        var tm_handler : Option<box TMHandlerT> = None;
-        self->a_tm_handler_pool.alloc(&mut tm_handler);
+        if is_tc_ack_start_exec_enabled(tc_handler->df_header.flag_ver_ack) {
 
-        match tm_handler {
+            self->pus_service_1.notify_tm_1_1(
+                    tc_handler->packet_header.packet_id, 
+                    tc_handler->packet_header.packet_seq_ctrl, 
+                    tc_handler->df_header.flag_ver_ack,
+                    status);
 
-            case Some(b_tm_handler) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
-          
-                var current_obt : MissionObt = {
-                    seconds = 0,
-                    finetime = 0
-                };
-               
-                var ack_enabled : bool = false;
-
-                self->pus_service_9.get_current_obt(&mut current_obt); 
-                *status = build_tm_1_1(&mut b_tm_handler, tm_count,
-                                       tc_handler->packet_header.packet_id, 
-                                       tc_handler->packet_header.packet_seq_ctrl, 
-                                       tc_handler->df_header.flag_ver_ack,
-                     current_obt, &mut ack_enabled);
-
-                if (ack_enabled) {
-
-                    if (*status is Success) {
-
-                        // If the TM packet is successfully built, send it through the TM channel.
-                        self->tm_channel.send_tm(b_tm_handler, status);
-
-                    } else {
-                        // If there was an error building the TM packet, free the handler.
-                        self->a_tm_handler_pool.free(b_tm_handler);
-                    }
-
-
-                } else {
-                    self->a_tm_handler_pool.free(b_tm_handler);
-                }
-                
-                        
-            }
-            case None => {
-                *status = Failure(TM_POOL_ALLOC_FAILURE);
-            }
         }
 
         return;
@@ -197,41 +122,12 @@ resource class ManagerTCExecutor provides MngTCExecIface {
      * @param[in] tc_handler Pointer to the telecommand handler.
      * @param[out] ret Status result of the operation.
     */
-    procedure mng_tc_rejection (&mut self, tc_handler: &TCHandlerT, status: &mut Status<i32>) {
+    procedure mng_tc_rejection (&mut self, tc_handler: &TCHandler, status: &mut Status<i32>) {
 
-        var tm_handler : Option<box TMHandlerT> = None;
-        self->a_tm_handler_pool.alloc(&mut tm_handler);
         var tc_status : TCStatus = try_tc_acceptation(&(tc_handler->tc_descriptor));
 
-        match tm_handler {
+        self->pus_service_1.send_tm_1_2(&tc_status, tc_handler, status);
 
-            case Some(b_tm_handler) => {
-
-                var tm_count : u16 = 0 : u16;
-                self->tm_counter.get_next_tm_count(&mut tm_count);
-                
-                var current_obt : MissionObt = {
-                    seconds = 0,
-                    finetime = 0
-                };
-           
-                self->pus_service_9.get_current_obt(&mut current_obt); 
-                *status = build_tm_1_2(&tc_status, &mut b_tm_handler, tm_count, tc_handler, current_obt);
-
-                if (*status is Success) {
-
-                    self->tm_channel.send_tm(b_tm_handler, status);
-
-                } else {
-                    self->a_tm_handler_pool.free(b_tm_handler);
-                }
-               
-            
-            }
-            case None => {
-                *status = Failure(TM_POOL_ALLOC_FAILURE);
-            }
-        }
         return;
     }
 

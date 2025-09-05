@@ -1,15 +1,15 @@
 
-import service_libraries.pus_services.pus_service1.pus_service1;
-import service_libraries.pus_services.pus_service2.pus_service2;
-import service_libraries.pus_services.pus_service3.pus_service3;
-import service_libraries.pus_services.pus_service5.pus_service5;
-import service_libraries.pus_services.pus_service12.pus_service12;
-import service_libraries.pus_services.pus_service17.pus_service17;
-import service_libraries.pus_services.pus_service19.pus_service19;
-import service_libraries.pus_services.pus_service20.pus_service20;
-import service_libraries.pus_services.pus_service4.pus_service4;
-import service_libraries.pus_services.pus_service9.pus_service9;
-import service_libraries.pus_services.pus_service6.pus_service6;
+import service_libraries.pus_services.pus_service1;
+import service_libraries.pus_services.pus_service2;
+import service_libraries.pus_services.pus_service3;
+import service_libraries.pus_services.pus_service5;
+import service_libraries.pus_services.pus_service12;
+import service_libraries.pus_services.pus_service17;
+import service_libraries.pus_services.pus_service19;
+import service_libraries.pus_services.pus_service20;
+import service_libraries.pus_services.pus_service4;
+import service_libraries.pus_services.pus_service9;
+import service_libraries.pus_services.pus_service6;
 import resources.uart;
 import resources.gpio_driver;
 import tasks.hk_fdir_mng.hk_fdir;
@@ -19,6 +19,7 @@ import handlers.init;
 import handlers.uart_irq_handler;
 import tasks.tc_rx;
 import resources.tm_counter;
+import resources.obt_manager;
 
 
 import tasks.icu_manager.icu_manager;
@@ -31,13 +32,13 @@ emitter hk_fdir_timer : PeriodicTimer = {
 
 
 channel rx_task_message_queue : MsgQueue<usize; 10>;
-channel tc_message_queue : MsgQueue<box TCHandlerT;10>;
-channel hkfdir_message_queue : MsgQueue<box TCHandlerT;10>;
-channel bkg_message_queue : MsgQueue<box TCHandlerT;10>;
-channel action_tc_message_queue : MsgQueue<box TCHandlerT;5>;
+channel tc_message_queue : MsgQueue<box TCHandler;10>;
+channel hkfdir_message_queue : MsgQueue<box TCHandler;10>;
+channel bkg_message_queue : MsgQueue<box TCHandler;10>;
+channel action_tc_message_queue : MsgQueue<box TCHandler;5>;
 
-resource tm_pool : Pool<TMHandlerT; 20>;
-resource tc_pool : Pool<TCHandlerT; 20>;
+resource tm_pool : Pool<TMHandler; 20>;
+resource tc_pool : Pool<TCHandler; 20>;
 
 resource u32_system_data_pool : AtomicArray<u32; sdp_num_u32_params> = {
     values = [0; sdp_num_u32_params]
@@ -84,28 +85,56 @@ resource telemetry_counter : TMCounter = {
     tm_count = 0
 } : TMCounter;
 
+resource obt_manager : OBTManager = {
 
-resource pus_service_9 : PUSService9 = {
     ref_obt = {seconds = 0, finetime = 0},
     ref_time_val_from_power_on = {tv_sec = 0, tv_usec = 0},
-    exec_tc_req_status = PSExecTCReqStatus::Init,
-    exec_tc_req_status_update = ps9_init_tc_req_status_update,
-    tm_channel <-> telemetry_channel,
-    a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
     system_port <-> system_entry
+};
+
+resource pus_service_9_service_1 : PUSService1 = {
+
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+
+};
+
+resource pus_service_9 : PUSService9 = {
+    exec_tc_req_status_update = ps9_init_tc_req_status_update,
+    obt_manager <-> obt_manager,
+    pus_service_1 <-> pus_service_9_service_1
 } : PUSService9;
+
+resource pus_service_5_service_1 : PUSService1 = {
+
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+
+};
+
 
 resource pus_service_5 : PUSService5 = {
     Ev_ID_enable_config = {0x00000007, 0x00000000, 0x00000000, 0x00000007},
-    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps5_init_tc_req_status_update,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
-    pus_service_9 <-> pus_service_9
+    obt_manager <-> obt_manager,
+    pus_service_1 <-> pus_service_5_service_1
 } : PUSService5;
 
+resource pus_service_3_service_1 : PUSService1 = {
+
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+
+};
 
 resource pus_service_3 : PUSService3 = {
     hk_config_table =  {{enabled = true, SID = 0, interval = 2, interval_control = 0, num_params =5, params_def={0,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0}},
@@ -116,28 +145,30 @@ resource pus_service_3 : PUSService3 = {
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}},
-    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps3_init_tc_req_status_update,
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> telemetry_channel,   
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
-    pus_service_9 <-> pus_service_9,
+    obt_manager <-> obt_manager,
+    pus_service_1 <-> pus_service_3_service_1,
     pus_service_5 <-> pus_service_5,
     random_seed = 42
 } : PUSService3;
 
+resource pus_service_12_service_1 : PUSService1 = {
 
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
 
+};
 
-
-
-
-resource pus_service_12: PUSService12 = {
+resource pus_service_12 : PUSService12 = {
     do_monitoring_req_status = DoMonitoringReqStatus::Init,
     do_monitoring_req_status_update = ps12_init_do_monitoring_req_status_update,
-    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps12_init_tc_req_status_update,
     param_mon_config_table = [{ PID = 0, type = MonitorCheckType::Free, enabled = false, definition = MonitorDefinition::Unselected, repetition= 0, repetition_control= 0, interval = 0, interval_control = 0,
     transition_obt = {seconds = 0, finetime = 0}, temp_state = CheckState::Unselected, current_state = CheckState::Unselected}; max_num_pmon_ids],
@@ -149,12 +180,20 @@ resource pus_service_12: PUSService12 = {
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
-    pus_service_9 <-> pus_service_9
+    obt_manager <-> obt_manager,
+    pus_service_1 <-> pus_service_12_service_1
 } : PUSService12;
 
+resource pus_service_19_service_1 : PUSService1 = {
+
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+
+};
 
 resource pus_service_19 : PUSService19 = {
-    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps19_init_tc_req_status_update,
     event_action_config = [{enabled = false, event_ID = 0}; max_event_action_definitions],
     event_action_packets = [tc_handler_init; max_event_action_definitions],
@@ -164,67 +203,96 @@ resource pus_service_19 : PUSService19 = {
     pending_action_queue_4HS = [tc_handler_init; event_action_queue_dimension],
     pending_action_number = [0; 4],
     pending_action_head = [0; 4],
-    tm_channel <-> telemetry_channel,
-    a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
-    pus_service_9 <-> pus_service_9
+    pus_service_1 <-> pus_service_19_service_1
 }: PUSService19;
 
+resource pus_service_20_service_1 : PUSService1 = {
+
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+
+};
 
 resource pus_service_20 : PUSService20 = {
-    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps20_init_tc_req_status_update,
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
-    pus_service_9 <-> pus_service_9
+    obt_manager <-> obt_manager,
+    pus_service_1 <-> pus_service_20_service_1
 }: PUSService20;
 
+resource pus_service_17_service_1 : PUSService1 = {
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+};
 
 resource pus_service_17 : PUSService17 = {
-    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps17_init_tc_req_status_update,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
-    pus_service_9 <-> pus_service_9
+    obt_manager <-> obt_manager,
+    pus_service_1 <-> pus_service_17_service_1
 }: PUSService17;
 
-resource pus_service_128 : PUSService128 = {
-    exec_tc_req_status = PSExecTCReqStatus::Init,
-    exec_tc_req_status_update = ps128_init_tc_req_status_update,
+resource pus_service_128_service_1 : PUSService1 = {
     tm_channel <-> telemetry_channel,
-    a_tm_handler_pool <-> tm_pool,
+    tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
-    pus_service_9 <-> pus_service_9
+    obt_manager <-> obt_manager
+};
+
+resource pus_service_128 : PUSService128 = {
+    exec_tc_req_status_update = ps128_init_tc_req_status_update,
+    pus_service_1 <-> pus_service_128_service_1
 }: PUSService128;
 
-resource pus_service_2 : PUSService2 = {
-    exec_tc_req_status = PSExecTCReqStatus::Init,
-    exec_tc_req_status_update = ps2_init_tc_req_status_update,
+resource pus_service_2_service_1 : PUSService1 = {
     tm_channel <-> telemetry_channel,
-    a_tm_handler_pool <-> tm_pool,
+    tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+};
+
+resource pus_service_2 : PUSService2 = {
+    exec_tc_req_status_update = ps2_init_tc_req_status_update,
     gpio_driver <-> gpio_drv,
-    pus_service_9 <-> pus_service_9
+    pus_service_1 <-> pus_service_2_service_1
 } : PUSService2;
 
+resource pus_service_6_service_1 : PUSService1 = {
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+};
+
 resource pus_service_6 : PUSService6 = {
-    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps6_init_tc_req_status_update,
     mem_id_write_permisssions = {false, true, true, true, true, true, true, false},
     memory @ 0x40000000,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
-    pus_service_9 <-> pus_service_9
+    obt_manager <-> obt_manager,
+    pus_service_1 <-> pus_service_6_service_1
 } : PUSService6;
 
+resource pus_service_4_service_1 : PUSService1 = {
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+};
 
 resource pus_service_4 : PUSService4 = {
-    exec_tc_req_status = PSExecTCReqStatus::Init,
     exec_tc_req_status_update = ps4_init_tc_req_status_update,
     param_stats = [{min = 0, min_obt = {seconds = 0, finetime = 0}, max = 0, max_obt = {seconds = 0, finetime = 0}, mean_value = 0, samples = 0}; max_num_of_stats],
     stats_config_table = {defined = [false; max_num_of_stats],  PID = [0; max_num_of_stats], start_time = [{seconds = 0, finetime = 0}; max_num_of_stats]},
@@ -233,19 +301,23 @@ resource pus_service_4 : PUSService4 = {
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
-    pus_service_9 <-> pus_service_9
+    obt_manager <-> obt_manager,
+    pus_service_1 <-> pus_service_4_service_1
 } : PUSService4;
 
-
+resource mng_tc_executor_service_1 : PUSService1 = {
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+};
 
 resource mng_tc_executor : ManagerTCExecutor = {
-    tm_channel <-> telemetry_channel,
-    tm_counter <-> telemetry_counter,
-    a_tm_handler_pool <-> tm_pool,
     pus_service_17 <-> pus_service_17,
     pus_service_2 <-> pus_service_2,
     pus_service_9 <-> pus_service_9,
-    pus_service_128 <-> pus_service_128
+    pus_service_128 <-> pus_service_128,
+    pus_service_1 <-> mng_tc_executor_service_1
 } : ManagerTCExecutor;
 
 
@@ -285,6 +357,12 @@ task icu_manager : ICUManager = {
     tc_executor <-> mng_tc_executor
 } : ICUManager;
 
+resource hk_fdir_service_1 : PUSService1 = {
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+};
 
 #[priority(6: u32)]
 task hk_fdir : HouseKeepingFDIR = {
@@ -297,12 +375,15 @@ task hk_fdir : HouseKeepingFDIR = {
     pus_service_5 <-> pus_service_5,
     pus_service_19 <-> pus_service_19,
     pus_service_4 <-> pus_service_4,
-    pus_service_9 <-> pus_service_9,
-    tm_channel <-> telemetry_channel,
-    tm_counter <-> telemetry_counter,
-    a_tm_handler_pool <-> tm_pool
+    pus_service_1 <-> hk_fdir_service_1
 } : HouseKeepingFDIR;
 
+resource pus_bkg_tc_executor_service_1 : PUSService1 = {
+    tm_channel <-> telemetry_channel,
+    tm_handler_pool <-> tm_pool,
+    tm_counter <-> telemetry_counter,
+    obt_manager <-> obt_manager
+};
 
 #[priority(8: u32)]
 task pus_bkg_tc_executor : PUSBKGTCExecutor = {
@@ -310,10 +391,7 @@ task pus_bkg_tc_executor : PUSBKGTCExecutor = {
     a_tc_handler_pool  <-> tc_pool,
     pus_service_20 <-> pus_service_20,
     pus_service_6 <-> pus_service_6,
-    pus_service_9 <-> pus_service_9,
-    tm_channel <-> telemetry_channel,
-    tm_counter <-> telemetry_counter,
-    a_tm_handler_pool <-> tm_pool
+    pus_service_1 <-> pus_bkg_tc_executor_service_1
 } : PUSBKGTCExecutor;
 
 

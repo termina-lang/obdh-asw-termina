@@ -1,0 +1,21 @@
+
+/**
+ * @brief Subtracts two TimeVal structures.
+ * 
+ * Computes the difference between timeval1 and timeval2 and returns the resulting TimeVal.
+ * Handles microseconds underflow by borrowing one second.
+ * 
+ * @param timeval1 First time value (minuend)
+ * @param timeval2 Second time value (subtrahend)
+ * @return TimeVal The result of the subtraction (timeval1 - timeval2)
+ */
+function substract_TimeVal(timeval1: TimeVal, timeval2: TimeVal) -> TimeVal {
+    var result : TimeVal = {tv_sec = 0, tv_usec = 0};
+    result.tv_sec = timeval1.tv_sec - timeval2.tv_sec;
+    result.tv_usec = timeval1.tv_usec - timeval2.tv_usec;
+    if (result.tv_usec < 0) {
+        result.tv_sec = result.tv_sec - 1;
+        result.tv_usec = result.tv_usec + 1000000;
+    }
+    return result;
+}

@@ -17,7 +17,7 @@ __status_int32_t ICUManager__process_action_tc(const __termina_event_t * const _
     _Bool reebot_flag = 0;
 
     #line 129 "src/tasks/icu_manager/icu_manager.fin"
-    TCExecutionCtrl execution_status = handle_tc(&(*(TCHandlerT *)tc_handler.data).tc_descriptor);
+    TCExecutionCtrl execution_status = handle_tc(&(*(TCHandler *)tc_handler.data).tc_descriptor);
 
     #line 133 "src/tasks/icu_manager/icu_manager.fin"
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
@@ -40,7 +40,7 @@ __status_int32_t ICUManager__process_action_tc(const __termina_event_t * const _
         
         #line 144 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.PUS_prio_exec_tc(__ev, self->tc_executor.__that,
-                                           (TCHandlerT *)tc_handler.data, &ret,
+                                           (TCHandler *)tc_handler.data, &ret,
                                            &reebot_flag);
 
         #line 145 "src/tasks/icu_manager/icu_manager.fin"
@@ -87,14 +87,14 @@ __status_int32_t ICUManager__process_tc(const __termina_event_t * const __ev,
     _Bool reebot_flag = 0;
 
     #line 57 "src/tasks/icu_manager/icu_manager.fin"
-    TCStatus current_tc_status = try_tc_acceptation(&(*(TCHandlerT *)tc_handler.data).tc_descriptor);
+    TCStatus current_tc_status = try_tc_acceptation(&(*(TCHandler *)tc_handler.data).tc_descriptor);
 
     #line 61 "src/tasks/icu_manager/icu_manager.fin"
     if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Accepted) {
         
         #line 63 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.mng_tc_acceptation(__ev, self->tc_executor.__that,
-                                             (TCHandlerT *)tc_handler.data,
+                                             (TCHandler *)tc_handler.data,
                                              &ret);
 
         #line 67 "src/tasks/icu_manager/icu_manager.fin"
@@ -118,7 +118,7 @@ __status_int32_t ICUManager__process_tc(const __termina_event_t * const __ev,
             
             #line 78 "src/tasks/icu_manager/icu_manager.fin"
             self->tc_executor.PUS_prio_exec_tc(__ev, self->tc_executor.__that,
-                                               (TCHandlerT *)tc_handler.data,
+                                               (TCHandler *)tc_handler.data,
                                                &ret, &reebot_flag);
 
             #line 80 "src/tasks/icu_manager/icu_manager.fin"
@@ -150,7 +150,7 @@ __status_int32_t ICUManager__process_tc(const __termina_event_t * const __ev,
         
         #line 97 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.mng_tc_rejection(__ev, self->tc_executor.__that,
-                                           (TCHandlerT *)tc_handler.data, &ret);
+                                           (TCHandler *)tc_handler.data, &ret);
 
         #line 98 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,

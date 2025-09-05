@@ -4,11 +4,11 @@
 #include <termina.h>
 
 #include "service_libraries/errors.h"
-#include "service_libraries/pus_services/pus_service12/pus_service12.h"
-#include "service_libraries/pus_services/pus_service19/pus_service19.h"
-#include "service_libraries/pus_services/pus_service3/pus_service3.h"
-#include "service_libraries/pus_services/pus_service4/pus_service4.h"
-#include "service_libraries/pus_services/pus_service5/pus_service5.h"
+#include "service_libraries/pus_services/pus_service12.h"
+#include "service_libraries/pus_services/pus_service19.h"
+#include "service_libraries/pus_services/pus_service3.h"
+#include "service_libraries/pus_services/pus_service4.h"
+#include "service_libraries/pus_services/pus_service5.h"
 
 #include "option.h"
 
@@ -17,35 +17,26 @@ extern const size_t num_actions_per_second;
 typedef struct {
     __termina_id_t __task_id;
     __termina_id_t __task_msg_queue_id;
-    __termina_allocator_t a_tm_handler_pool;
     struct {
         void * __that;
-        void (* get_next_tm_count)(const __termina_event_t * const,
-                                   void * const, uint16_t * const);
-    } tm_counter;
-    struct {
-        void * __that;
-        void (* send_tm)(const __termina_event_t * const, void * const,
-                         __termina_box_t, __status_int32_t * const);
-    } tm_channel;
-    struct {
-        void * __that;
-        void (* get_current_obt)(const __termina_event_t * const, void * const,
-                                 MissionObt * const);
-    } pus_service_9;
+        void (* send_tm_1_4_error_in_acceptance)(const __termina_event_t * const,
+                                                 void * const, uint16_t,
+                                                 uint16_t,
+                                                 __status_int32_t * const);
+    } pus_service_1;
     struct {
         void * __that;
         void (* exec_tc)(const __termina_event_t * const, void * const,
-                         TCHandlerT * const, __status_int32_t * const);
+                         TCHandler * const, __status_int32_t * const);
         void (* update_all_stats)(const __termina_event_t * const,
                                   void * const);
     } pus_service_4;
     struct {
         void * __that;
         void (* exec_tc)(const __termina_event_t * const, void * const,
-                         TCHandlerT * const, __status_int32_t * const);
+                         TCHandler * const, __status_int32_t * const);
         void (* extract_action)(const __termina_event_t * const, void * const,
-                                size_t, TCHandlerT * const);
+                                size_t, TCHandler * const);
         void (* get_pending_action_number)(const __termina_event_t * const,
                                            void * const, size_t *);
         void (* manage_event_action)(const __termina_event_t * const,
@@ -53,13 +44,12 @@ typedef struct {
     } pus_service_19;
     struct {
         void * __that;
-        void (* build_and_tx_tm_5_x)(const __termina_event_t * const,
-                                     void * const, __status_int32_t * const,
-                                     uint16_t, FaultInfo);
         void (* exec_tc)(const __termina_event_t * const, void * const,
-                         TCHandlerT * const, __status_int32_t * const);
+                         TCHandler * const, __status_int32_t * const);
         void (* is_Ev_ID_enabled_ext)(const __termina_event_t * const,
                                       void * const, uint16_t, _Bool * const);
+        void (* send_tm_5_x)(const __termina_event_t * const, void * const,
+                             uint16_t, FaultInfo, __status_int32_t * const);
     } pus_service_5;
     struct {
         void * __that;
@@ -67,7 +57,7 @@ typedef struct {
                                uint16_t, uint16_t * const, FaultInfo * const,
                                _Bool * const);
         void (* exec_tc)(const __termina_event_t * const, void * const,
-                         TCHandlerT * const, __status_int32_t * const);
+                         TCHandler * const, __status_int32_t * const);
         void (* is_PMON_enabled)(const __termina_event_t * const, void * const,
                                  size_t, _Bool * const);
     } pus_service_12;
@@ -76,7 +66,7 @@ typedef struct {
         void (* do_hk)(const __termina_event_t * const, void * const,
                        __status_int32_t * const);
         void (* exec_tc)(const __termina_event_t * const, void * const,
-                         TCHandlerT * const, __status_int32_t * const);
+                         TCHandler * const, __status_int32_t * const);
         void (* update_params)(const __termina_event_t * const, void * const);
     } pus_service_3;
     __termina_allocator_t a_tc_handler_pool;

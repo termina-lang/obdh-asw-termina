@@ -6,13 +6,13 @@ import resources.uart;
 
 task class TCRXBottomHalfTask {
 
-    telecommand : TCDescriptorT;
+    telecommand : TCDescriptor;
 
     uart : access CharDevRecv;
 
     rx_frame : in usize triggers get_tc;
-    tc_message_queue_output: out box TCHandlerT;
-    a_tc_handler_pool : access Allocator<TCHandlerT>;
+    tc_message_queue_output: out box TCHandler;
+    a_tc_handler_pool : access Allocator<TCHandler>;
 
     action get_tc (&priv self, frame_size : usize) -> Status<i32> {
 
@@ -37,7 +37,7 @@ task class TCRXBottomHalfTask {
 
         }
 
-        var tc_handler : Option<box TCHandlerT> = None;
+        var tc_handler : Option<box TCHandler> = None;
         self->a_tc_handler_pool.alloc(&mut tc_handler);
 
         match tc_handler {

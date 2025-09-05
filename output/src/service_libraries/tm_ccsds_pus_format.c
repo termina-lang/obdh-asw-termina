@@ -33,8 +33,8 @@ uint8_t ccsds_pus_tm_build_df_header_version(uint8_t version) {
 }
 
 void ccsds_pus_tm_set_fields(uint8_t tm_bytes[10U],
-                             const CCSDSPUSTMPacketHeaderT * const p_tm_packet_header,
-                             const CCSDSPUSTMDFHeaderT * const p_tm_df_header) {
+                             const CCSDSPUSTMPacketHeader * const p_tm_packet_header,
+                             const CCSDSPUSTMDFHeader * const p_tm_df_header) {
     
     #line 104 "src/service_libraries/tm_ccsds_pus_format.fin"
     serialize_uint16(p_tm_packet_header->packet_id, &tm_bytes[0U]);

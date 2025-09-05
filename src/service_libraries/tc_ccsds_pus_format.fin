@@ -9,7 +9,7 @@ constexpr max_tc_size : usize = 256 : usize;
 /**
  * @brief CCSDS PUS TC Packet Header structure
  */
-struct CCSDSPUSTCPacketHeaderT {
+struct CCSDSPUSTCPacketHeader {
 
     packet_id : u16;		/**< Packet identifier */
     packet_seq_ctrl : u16;	/**< Packet sequence control */
@@ -21,7 +21,7 @@ struct CCSDSPUSTCPacketHeaderT {
 /**
  * @brief CCSDS PUS TC Data Field Header structure
  */
-struct CCSDSPUSTCDFHeaderT {
+struct CCSDSPUSTCDFHeader {
 
 	flag_ver_ack : u8;	/**< Flag for version and acknowledgment */
 	type : u8;			/**< Packet type */
@@ -33,7 +33,7 @@ struct CCSDSPUSTCDFHeaderT {
 /**
  * @brief Descriptor for a TC packet containing data bytes and size
  */
- struct TCDescriptorT {
+ struct TCDescriptor {
 
 	tc_bytes : [u8 ; max_tc_size];	/**< Bytes of the TC packet */
 	tc_num_bytes : usize;			/**< Number of bytes in the TC packet */
@@ -177,8 +177,8 @@ function get_source_id(tc_bytes : &[u8 ; max_tc_size]) -> u16 {
  * @param p_tc_packet_err_ctrl Pointer to store the packet error control field
  */
 function tc_get_fields(tc_bytes : &[u8 ; max_tc_size],
-                      p_tc_packet_header : &mut CCSDSPUSTCPacketHeaderT,
-                      p_tc_df_header : &mut CCSDSPUSTCDFHeaderT,
+                      p_tc_packet_header : &mut CCSDSPUSTCPacketHeader,
+                      p_tc_df_header : &mut CCSDSPUSTCDFHeader,
                       p_tc_packet_err_ctrl : &mut u16) {
 
     // Deserialize Packet ID and store it into field packet_id

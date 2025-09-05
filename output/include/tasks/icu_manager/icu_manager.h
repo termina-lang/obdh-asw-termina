@@ -13,13 +13,13 @@ typedef struct {
     struct {
         void * __that;
         void (* PUS_prio_exec_tc)(const __termina_event_t * const, void * const,
-                                  TCHandlerT * const, __status_int32_t * const,
+                                  TCHandler * const, __status_int32_t * const,
                                   _Bool * const);
         void (* mng_tc_acceptation)(const __termina_event_t * const,
-                                    void * const, const TCHandlerT * const,
+                                    void * const, const TCHandler * const,
                                     __status_int32_t * const);
         void (* mng_tc_rejection)(const __termina_event_t * const, void * const,
-                                  const TCHandlerT * const,
+                                  const TCHandler * const,
                                   __status_int32_t * const);
     } tc_executor;
     __termina_out_port_t bkg_message_queue_output;

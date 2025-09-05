@@ -5,9 +5,9 @@
 
 void __termina_app__init_globals();
 
-static uint8_t __pool_tc_pool_memory[__termina_pool__size(sizeof(TCHandlerT),
+static uint8_t __pool_tc_pool_memory[__termina_pool__size(sizeof(TCHandler),
                                                           20U)];
-static uint8_t __pool_tm_pool_memory[__termina_pool__size(sizeof(TMHandlerT),
+static uint8_t __pool_tm_pool_memory[__termina_pool__size(sizeof(TMHandler),
                                                           20U)];
 
 static void __termina_app__init_tasks(int32_t * const status) {
@@ -113,7 +113,7 @@ static void __termina_app__init_mutexes(int32_t * const status) {
 
     if (0L == *status) {
         
-        __termina_mutex__init(__pus_service_9__mutex_id,
+        __termina_mutex__init(__obt_manager__mutex_id,
                               __termina_mutex_policy__ceiling, 5, status);
 
     }
@@ -157,7 +157,7 @@ static void __termina_app__init_pools(int32_t * const status) {
         tc_pool.__pool_id = __tc_pool__pool_id;
 
         __termina_pool__init(&tc_pool, (void *)__pool_tc_pool_memory,
-                             sizeof(__pool_tc_pool_memory), sizeof(TCHandlerT),
+                             sizeof(__pool_tc_pool_memory), sizeof(TCHandler),
                              status);
 
     }
@@ -167,7 +167,7 @@ static void __termina_app__init_pools(int32_t * const status) {
         tm_pool.__pool_id = __tm_pool__pool_id;
 
         __termina_pool__init(&tm_pool, (void *)__pool_tm_pool_memory,
-                             sizeof(__pool_tm_pool_memory), sizeof(TMHandlerT),
+                             sizeof(__pool_tm_pool_memory), sizeof(TMHandler),
                              status);
 
     }
@@ -252,8 +252,8 @@ static void __termina_app__init_msg_queues(int32_t * const status) {
 
 static void __termina_app__enable_protection() {
     
-    pus_service_9.__lock_type.type = __termina_resource_lock_type__mutex;
-    pus_service_9.__lock_type.mutex.mutex_id = __pus_service_9__mutex_id;
+    obt_manager.__lock_type.type = __termina_resource_lock_type__mutex;
+    obt_manager.__lock_type.mutex.mutex_id = __obt_manager__mutex_id;
 
     telemetry_channel.__lock_type.type = __termina_resource_lock_type__mutex;
     telemetry_channel.__lock_type.mutex.mutex_id = __telemetry_channel__mutex_id;

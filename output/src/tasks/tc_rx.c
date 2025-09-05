@@ -60,7 +60,7 @@ __status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev
         __termina_box_t tc_handler_b = tc_handler.Some.__0;
 
         #line 47 "src/tasks/tc_rx.fin"
-        tc_handler_build_from_descriptor((TCHandlerT *)tc_handler_b.data,
+        tc_handler_build_from_descriptor((TCHandler *)tc_handler_b.data,
                                          &self->telecommand);
 
         #line 49 "src/tasks/tc_rx.fin"

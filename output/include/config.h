@@ -15,7 +15,7 @@
 #define __irq_2__emitter_id 1
 #define __system_init__emitter_id 2
 
-#define __pus_service_9__mutex_id 0
+#define __obt_manager__mutex_id 0
 #define __tc_pool__mutex_id 1
 #define __telemetry_channel__mutex_id 2
 #define __telemetry_counter__mutex_id 3

@@ -8,10 +8,10 @@ import service_libraries.errors;
  * This structure holds the parsed components of a TC packet, including headers and
  * indexing information for accessing application data fields.
  */
-struct TCHandlerT {
-    tc_descriptor : TCDescriptorT;                 ///< Raw telecommand descriptor
-    packet_header : CCSDSPUSTCPacketHeaderT;       ///< CCSDS primary header
-    df_header : CCSDSPUSTCDFHeaderT;               ///< PUS data field header
+struct TCHandler {
+    tc_descriptor : TCDescriptor;                 ///< Raw telecommand descriptor
+    packet_header : CCSDSPUSTCPacketHeader;       ///< CCSDS primary header
+    df_header : CCSDSPUSTCDFHeader;               ///< PUS data field header
     packet_error_ctrl : u16;                       ///< Error control field
     app_data_index : usize;                        ///< Index to the next application data byte
 };
@@ -20,11 +20,26 @@ struct TCHandlerT {
 /**
  * @brief Initializes a TC handler structure with default values
  *
- * @return A new TCHandlerT instance with all fields set to zero or empty
+ * @return A new TCHandler instance with all fields set to zero or empty
  */
-constexpr tc_handler_init : TCHandlerT  = {
-    tc_descriptor = {tc_bytes = [0; max_tc_size], tc_num_bytes = 0}, packet_header = {packet_id = 0, packet_seq_ctrl = 0, packet_length = 0},
-     df_header = {flag_ver_ack = 0, type = 0, subtype = 0, sourceID = 0}, packet_error_ctrl = 0, app_data_index = 0
+constexpr tc_handler_init : TCHandler  = {
+    tc_descriptor = {
+        tc_bytes = [0; max_tc_size],
+        tc_num_bytes = 0
+    }, 
+    packet_header = {
+        packet_id = 0,
+        packet_seq_ctrl = 0,
+        packet_length = 0
+    },
+    df_header = {
+        flag_ver_ack = 0,
+        type = 0,
+        subtype = 0,
+        sourceID = 0
+    },
+    packet_error_ctrl = 0,
+    app_data_index = 0
 };
 
 /**
@@ -35,7 +50,7 @@ constexpr tc_handler_init : TCHandlerT  = {
  * @param tc_handler Pointer to the TC handler structure to populate
  * @param telecommand Pointer to the telecommand descriptor to parse
  */
-function tc_handler_build_from_descriptor (tc_handler : &mut TCHandlerT, telecommand : &TCDescriptorT) {
+function tc_handler_build_from_descriptor (tc_handler : &mut TCHandler, telecommand : &TCDescriptor) {
 
 
     for i: usize in 0 .. max_tc_size while i < telecommand->tc_num_bytes {
@@ -59,16 +74,14 @@ function tc_handler_build_from_descriptor (tc_handler : &mut TCHandlerT, telecom
  *
  * @return true if enough bytes are available, false otherwise
  */
-function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandlerT, field_size : usize) -> bool {
+function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandler, field_size : usize) -> bool {
 
 	var res : bool = false;
 
 	var required_size : usize = tc_handler->app_data_index + field_size;
 
 	if (required_size <= tc_handler->tc_descriptor.tc_num_bytes){ 
-
 		res = true;
-
 	}
 
 	return res;
@@ -86,7 +99,7 @@ function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandlerT, field
  *
  * @return Status::Ok if successful, Status::Error otherwise
  */
-function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u8) -> Status<i32> {
+function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandler, data : &mut u8) -> Status<i32> {
 
     var status : Status<i32> = Success;
 
@@ -115,7 +128,7 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandlerT, data : &
  *
  * @return Status::Ok if successful, Status::Error otherwise
  */
-function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u16) -> Status<i32> {
+function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandler, data : &mut u16) -> Status<i32> {
 
 	var status : Status<i32> = Success;
 
@@ -144,7 +157,7 @@ function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandlerT, data : 
  *
  * @return Status::Ok if successful, Status::Error otherwise
  */
-function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandlerT, data : &mut u32) -> Status<i32> {
+function tc_handler_get_u32_appdata_field (tc_handler : &mut TCHandler, data : &mut u32) -> Status<i32> {
 
     var status : Status<i32> = Success;
 

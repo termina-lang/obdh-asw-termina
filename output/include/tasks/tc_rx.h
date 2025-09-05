@@ -22,7 +22,7 @@ typedef struct {
         void (* receive)(const __termina_event_t * const, void * const,
                          __option_uint8_t * const);
     } uart;
-    TCDescriptorT telecommand;
+    TCDescriptor telecommand;
 } TCRXBottomHalfTask;
 
 void __TCRXBottomHalfTask__termina_task(void * const arg);
