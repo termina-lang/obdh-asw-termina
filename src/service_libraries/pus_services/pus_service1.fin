@@ -1,5 +1,6 @@
 import service_libraries.pus_services.pus_service1.internal;
 import service_libraries.pus_services.pus_service1.tc_acceptance;
+import service_libraries.pus_tc_handler;
 
 import resources.tm_channel;
 import resources.tm_counter;

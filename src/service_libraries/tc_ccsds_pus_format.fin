@@ -11,9 +11,9 @@ constexpr max_tc_size : usize = 256 : usize;
  */
 struct CCSDSPUSTCPacketHeader {
 
-    packet_id : u16;		/**< Packet identifier */
-    packet_seq_ctrl : u16;	/**< Packet sequence control */
-    packet_length : u16;	 /**< Packet length */
+    packet_id : u16;        /**< Packet identifier */
+    packet_seq_ctrl : u16;    /**< Packet sequence control */
+    packet_length : u16;     /**< Packet length */
 
 };
 
@@ -23,10 +23,10 @@ struct CCSDSPUSTCPacketHeader {
  */
 struct CCSDSPUSTCDFHeader {
 
-	flag_ver_ack : u8;	/**< Flag for version and acknowledgment */
-	type : u8;			/**< Packet type */
-	subtype : u8;		/**< Packet subtype */
-	sourceID : u16;		/**< Source identifier */
+    flag_ver_ack : u8;    /**< Flag for version and acknowledgment */
+    type : u8;            /**< Packet type */
+    subtype : u8;        /**< Packet subtype */
+    sourceID : u16;        /**< Source identifier */
 
 };
 
@@ -35,8 +35,8 @@ struct CCSDSPUSTCDFHeader {
  */
  struct TCDescriptor {
 
-	tc_bytes : [u8 ; max_tc_size];	/**< Bytes of the TC packet */
-	tc_num_bytes : usize;			/**< Number of bytes in the TC packet */
+    tc_bytes : [u8 ; max_tc_size];    /**< Bytes of the TC packet */
+    tc_num_bytes : usize;            /**< Number of bytes in the TC packet */
 
  };
 
@@ -63,9 +63,9 @@ struct CCSDSPUSTCDFHeader {
  */
 function get_APID(tc_bytes : &[u8 ; max_tc_size]) -> u16 {
 
-	var packet_id : u16 = get_packet_id(tc_bytes);
+    var packet_id : u16 = get_packet_id(tc_bytes);
 
-	return ((packet_id) & 0x07FF : u16);
+    return ((packet_id) & 0x07FF : u16);
 }
 
 
@@ -77,7 +77,7 @@ function get_APID(tc_bytes : &[u8 ; max_tc_size]) -> u16 {
  */
 function get_seq_flags(packet_seq_ctrl : u16) -> u16 {
 
-	return ((packet_seq_ctrl) >> 14 : u16);
+    return ((packet_seq_ctrl) >> 14 : u16);
 } 
 
 
@@ -89,7 +89,7 @@ function get_seq_flags(packet_seq_ctrl : u16) -> u16 {
  */
 function get_seq_count(packet_seq_ctrl : u16) -> u16 {
 
-	return ((packet_seq_ctrl) & 0x3FFF : u16);
+    return ((packet_seq_ctrl) & 0x3FFF : u16);
 }
 
 /**
@@ -100,7 +100,7 @@ function get_seq_count(packet_seq_ctrl : u16) -> u16 {
  */
 function get_packet_length(tc_bytes : &[u8 ; max_tc_size]) -> u16 {
 
-	return (deserialize_uint16(&(*tc_bytes)[4 : usize .. 6 : usize]));
+    return (deserialize_uint16(&(*tc_bytes)[4 : usize .. 6 : usize]));
 }
 
 
@@ -112,11 +112,11 @@ function get_packet_length(tc_bytes : &[u8 ; max_tc_size]) -> u16 {
  */
 function get_packet_seq_ctrl(tc_bytes : &[u8 ; max_tc_size]) -> u16 {
 
-	var packet_error_ctrl : u16 = 0 : u16;
-	let crc_offset : u16 = get_packet_length(tc_bytes) + 5 : u16;
-	packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[crc_offset as usize .. (crc_offset + 2) as usize]);	
+    var packet_error_ctrl : u16 = 0 : u16;
+    let crc_offset : u16 = get_packet_length(tc_bytes) + 5 : u16;
+    packet_error_ctrl = deserialize_uint16(&(*tc_bytes)[crc_offset as usize .. (crc_offset + 2) as usize]);    
 
-	return packet_error_ctrl;
+    return packet_error_ctrl;
 }
 
 /**
@@ -127,7 +127,7 @@ function get_packet_seq_ctrl(tc_bytes : &[u8 ; max_tc_size]) -> u16 {
  */
 function get_ack(flag_ver_ack : u8) -> u8 {
 
-	return ((flag_ver_ack) & 0x0F : u8);
+    return ((flag_ver_ack) & 0x0F : u8);
 } 
 
 /**
@@ -138,8 +138,8 @@ function get_ack(flag_ver_ack : u8) -> u8 {
  */
 function get_type(tc_bytes : &[u8 ; max_tc_size]) -> u8 {
 
-	var type : u8 = (*tc_bytes)[7 : usize];
-	return type;
+    var type : u8 = (*tc_bytes)[7 : usize];
+    return type;
 }
 
 /**
@@ -150,8 +150,8 @@ function get_type(tc_bytes : &[u8 ; max_tc_size]) -> u8 {
  */
 function get_subtype(tc_bytes : &[u8 ; max_tc_size]) -> u8 {
 
-	var subtype : u8 = (*tc_bytes)[8 : usize];
-	return subtype;
+    var subtype : u8 = (*tc_bytes)[8 : usize];
+    return subtype;
 }
 
 
@@ -163,8 +163,8 @@ function get_subtype(tc_bytes : &[u8 ; max_tc_size]) -> u8 {
  */
 function get_source_id(tc_bytes : &[u8 ; max_tc_size]) -> u16 {
 
-	var sourceID : u16 = deserialize_uint16(&(*tc_bytes)[9 : usize .. 11 : usize]);
-	return sourceID;
+    var sourceID : u16 = deserialize_uint16(&(*tc_bytes)[9 : usize .. 11 : usize]);
+    return sourceID;
 }
 
 

@@ -14,7 +14,7 @@ const medium_severity_anomaly_Ev_IDs : u16 = 0;
 const high_severity_anomaly_Ev_IDs : u16 = 16;
 
 const offset_mask : u16 = 0x001F; //Maximum Ev_IDs of each type in the baseline configuration is 32,
-	                              //from 0xX000 to 0xX01F, where X is the Ev_ID type
+                                  //from 0xX000 to 0xX01F, where X is the Ev_ID type
 
 const EvID_build_tm_error : u16 = 0x2100; //Ev_ID for the build TM error
 

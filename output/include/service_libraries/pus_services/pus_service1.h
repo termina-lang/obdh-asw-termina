@@ -7,6 +7,7 @@
 #include "resources/tm_counter.h"
 #include "service_libraries/pus_services/pus_service1/internal.h"
 #include "service_libraries/pus_services/pus_service1/tc_acceptance.h"
+#include "service_libraries/pus_tc_handler.h"
 
 #include "option.h"
 

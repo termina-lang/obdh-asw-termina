@@ -142,7 +142,7 @@ function tm_handler_build_packet_header (tm_handler : &mut TMHandler, tm_seq_cou
 
     tm_handler->packet_header.packet_seq_ctrl = tm_seq_counter & 0x3FFF;
 
-	tm_handler->packet_header.packet_length = ((tm_handler->app_data_index) - 7) as u16; 
+    tm_handler->packet_header.packet_length = ((tm_handler->app_data_index) - 7) as u16; 
 
     return;
 }
@@ -164,9 +164,9 @@ function tm_handler_build_df_header (tm_handler : &mut TMHandler, tm_type : u8, 
     tm_handler->df_header.type = tm_type;
     tm_handler->df_header.subtype = tm_subtype;
     tm_handler->df_header.msg_type_counter = 0; 
-	tm_handler->df_header.destinationID = destinationID;
-	tm_handler->df_header.obt_secs = current_obt.seconds;
-	tm_handler->df_header.obt_finetime = current_obt.finetime;
+    tm_handler->df_header.destinationID = destinationID;
+    tm_handler->df_header.obt_secs = current_obt.seconds;
+    tm_handler->df_header.obt_finetime = current_obt.finetime;
     
     return;
 }

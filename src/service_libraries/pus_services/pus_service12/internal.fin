@@ -94,11 +94,11 @@ struct ParamMonitoringTransition {
     PID : u16;
     type : MonitorCheckType;
     mask_value : u32;
-	limit_value : u32;
-	new_value : u32;
-	prev_status : CheckState;
-	new_status : CheckState;
-	trans_obt : MissionOBT;
+    limit_value : u32;
+    new_value : u32;
+    prev_status : CheckState;
+    new_status : CheckState;
+    trans_obt : MissionOBT;
 
 };
 

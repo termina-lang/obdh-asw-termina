@@ -2,6 +2,8 @@ import service_libraries.queue_u8;
 import service_libraries.serialize;
 import service_libraries.errors;
 
+import service_libraries.tc_ccsds_pus_format;
+
 /**
  * @file uart.fin
  * @brief UART driver implementation using memory-mapped register access.

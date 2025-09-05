@@ -76,15 +76,15 @@ function tc_handler_build_from_descriptor (tc_handler : &mut TCHandler, telecomm
  */
 function tc_handler_is_valid_next_appdata_field (tc_handler : &TCHandler, field_size : usize) -> bool {
 
-	var res : bool = false;
+    var res : bool = false;
 
-	var required_size : usize = tc_handler->app_data_index + field_size;
+    var required_size : usize = tc_handler->app_data_index + field_size;
 
-	if (required_size <= tc_handler->tc_descriptor.tc_num_bytes){ 
-		res = true;
-	}
+    if (required_size <= tc_handler->tc_descriptor.tc_num_bytes){ 
+        res = true;
+    }
 
-	return res;
+    return res;
 
 }
 
@@ -130,7 +130,7 @@ function tc_handler_get_u8_appdata_field (tc_handler : &mut TCHandler, data : &m
  */
 function tc_handler_get_u16_appdata_field (tc_handler : &mut TCHandler, data : &mut u16) -> Status<i32> {
 
-	var status : Status<i32> = Success;
+    var status : Status<i32> = Success;
 
     if (tc_handler_is_valid_next_appdata_field(&(*tc_handler), 2)){
 

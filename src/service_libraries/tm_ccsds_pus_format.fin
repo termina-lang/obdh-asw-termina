@@ -43,8 +43,8 @@ struct TMDescriptor {
  * @return u16 Packet ID constructed according to CCSDS PUS standard
  */
 function ccsds_pus_tm_build_packet_id(apid : u16) -> u16 {
-	
-	return (((1 : u16 << 14 : u16) | (1 : u16 << 11 : u16) | ((apid) & 0x07FF : u16)));
+    
+    return (((1 : u16 << 14 : u16) | (1 : u16 << 11 : u16) | ((apid) & 0x07FF : u16)));
 
 }
 
@@ -58,7 +58,7 @@ function ccsds_pus_tm_build_packet_id(apid : u16) -> u16 {
  */
 function ccsds_pus_tm_build_packet_seq_ctrl(sequence_flags : u16, tm_count : u16) -> u16 {
 
-	return (((sequence_flags &0x3) << 14 : u16) | (tm_count) & 0x3FFF : u16);
+    return (((sequence_flags &0x3) << 14 : u16) | (tm_count) & 0x3FFF : u16);
 }
 
 
@@ -72,7 +72,7 @@ function ccsds_pus_tm_build_packet_seq_ctrl(sequence_flags : u16, tm_count : u16
  */
 function ccsds_pus_tm_build_df_header(service_type : u8,service_subtype : u8,destinationID : u8) -> u32 {
 
-	return (0x10 : u32 << 24 : u32)| (service_type as u32 << 16 : u32) | (service_subtype as u32 << 8 : u32) | destinationID as u32;
+    return (0x10 : u32 << 24 : u32)| (service_type as u32 << 16 : u32) | (service_subtype as u32 << 8 : u32) | destinationID as u32;
 
 }
  
@@ -84,8 +84,8 @@ function ccsds_pus_tm_build_df_header(service_type : u8,service_subtype : u8,des
  * @return u8 Version field shifted to the high nibble position
  */
 function ccsds_pus_tm_build_df_header_version(version : u8) -> u8 {
-	
-	return (((version) & 0xF : u8) << 4 : u8);
+    
+    return (((version) & 0xF : u8) << 4 : u8);
 } 
 
 

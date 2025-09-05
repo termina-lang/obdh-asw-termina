@@ -4,11 +4,7 @@
 #include <termina.h>
 
 #include "service_libraries/crc.h"
-#include "service_libraries/pus_tc_handler.h"
 #include "service_libraries/pus_tm_handler.h"
-#include "service_libraries/serialize.h"
-#include "service_libraries/tc_ccsds_pus_format.h"
-#include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
 

@@ -2,11 +2,7 @@
  *  @brief Functions and structures related to TC (Telecommand) packet validation and TM[1,x] failure report generation.
  */
 
-import service_libraries.tc_ccsds_pus_format;
-import service_libraries.tm_ccsds_pus_format;
 import service_libraries.crc;
-import service_libraries.serialize;
-import service_libraries.pus_tc_handler;
 import service_libraries.pus_tm_handler;
 
 /** @brief Acknowledgement flag for TC[1,x] Accept Acknowledgement. */
@@ -23,9 +19,9 @@ const EXEC_COMPLETION_ACK_ENABLED_MASK : u8 = 0x08;
  * @brief statusrepresenting whether a telecommand has been accepted or rejected.
  */
 enum TCAcceptationStatus{
-	Accepted,      /**< TC accepted */
-	Rejected,      /**< TC rejected */
-	Undefined      /**< TC statusundefined */
+    Accepted,      /**< TC accepted */
+    Rejected,      /**< TC rejected */
+    Undefined      /**< TC statusundefined */
 };
 
 /**
@@ -33,12 +29,12 @@ enum TCAcceptationStatus{
  * @brief Enumeration of possible error types for TC verification failures.
  */
 enum TCErrorType {
-	CRCError,      /**< CRC mismatch error */
-	APIDError,     /**< Incorrect APID */
-	SourceIDError, /**< Incorrect source ID */
-	TypeError,     /**< Invalid packet type */
-	SubTypeError,  /**< Invalid packet subtype */
-	Undefined      /**< Undefined error */
+    CRCError,      /**< CRC mismatch error */
+    APIDError,     /**< Incorrect APID */
+    SourceIDError, /**< Incorrect source ID */
+    TypeError,     /**< Invalid packet type */
+    SubTypeError,  /**< Invalid packet subtype */
+    Undefined      /**< Undefined error */
 };
 
 /**
@@ -59,9 +55,9 @@ enum TCExecutionCtrl {
 
  
 struct TCStatus{
-	acceptation_status: TCAcceptationStatus;  /**< Acceptation status */
+    acceptation_status: TCAcceptationStatus;  /**< Acceptation status */
     execution_status: TCExecutionCtrl;        /**< Execution control type */
-	error_code : TCErrorType;                  /**< Error code (if any) */
+    error_code : TCErrorType;                  /**< Error code (if any) */
 };
 
 /**
@@ -69,10 +65,10 @@ struct TCStatus{
  * @brief Represents the verification stage for which a TM[1,x] response is issued.
  */
 enum TCVerifyStage {
-	Acceptation,     /**< Acceptation stage */
-	ExecStart,       /**< Start of execution */
-	Progress,        /**< Execution progress */
-	ExecCompletion   /**< Completion of execution */
+    Acceptation,     /**< Acceptation stage */
+    ExecStart,       /**< Start of execution */
+    Progress,        /**< Execution progress */
+    ExecCompletion   /**< Completion of execution */
 };
 
 /**
@@ -82,12 +78,12 @@ enum TCVerifyStage {
  */
 function is_crc_valid(tc_descriptor : &TCDescriptor) -> bool {
 
-	let cal_crc_value : u16 = cal_crc_16(&(tc_descriptor->tc_bytes), (tc_descriptor->tc_num_bytes - 2));
-	var packet_error_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
+    let cal_crc_value : u16 = cal_crc_16(&(tc_descriptor->tc_bytes), (tc_descriptor->tc_num_bytes - 2));
+    var packet_error_ctrl : u16 = get_packet_seq_ctrl(&(tc_descriptor->tc_bytes));
 
-	var is_valid : bool = (cal_crc_value == packet_error_ctrl);
+    var is_valid : bool = (cal_crc_value == packet_error_ctrl);
 
-	return is_valid;
+    return is_valid;
 }
 
 
@@ -97,13 +93,13 @@ function is_crc_valid(tc_descriptor : &TCDescriptor) -> bool {
  * @return true if the APID matches the expected value.
  */
 function is_apid_valid(tc_descriptor : &TCDescriptor) -> bool {
-	
-	let epd_apid : u16 = 0x32C : u16;
-	var tc_apid : u16 = get_APID(&(tc_descriptor->tc_bytes));
-	
-	var is_valid : bool = (epd_apid == tc_apid);
+    
+    let epd_apid : u16 = 0x32C : u16;
+    var tc_apid : u16 = get_APID(&(tc_descriptor->tc_bytes));
+    
+    var is_valid : bool = (epd_apid == tc_apid);
 
-	return is_valid;
+    return is_valid;
 }
 
 
@@ -113,14 +109,14 @@ function is_apid_valid(tc_descriptor : &TCDescriptor) -> bool {
  * @return true if Source ID is valid.
  */
 function is_sourceID_valid(tc_descriptor : &TCDescriptor) -> bool {
-	
-	let System_SourceID : u16 = 0x78;
+    
+    let System_SourceID : u16 = 0x78;
 
-	var sourceID : u16 = get_source_id(&(tc_descriptor->tc_bytes));
+    var sourceID : u16 = get_source_id(&(tc_descriptor->tc_bytes));
 
-	var is_valid : bool = (System_SourceID == sourceID);
+    var is_valid : bool = (System_SourceID == sourceID);
 
-	return is_valid;
+    return is_valid;
 }
 
 
@@ -131,12 +127,12 @@ function is_sourceID_valid(tc_descriptor : &TCDescriptor) -> bool {
  */
 function is_tc_ack_accept_enabled(flags_ack : u8) -> bool{
 
-	var ack_enabled : bool = false;
+    var ack_enabled : bool = false;
 
-	if ((flags_ack & ACCEPT_ACK_ENABLED_MASK) != 0) {
-		ack_enabled = true;
-	}
-	return ack_enabled;
+    if ((flags_ack & ACCEPT_ACK_ENABLED_MASK) != 0) {
+        ack_enabled = true;
+    }
+    return ack_enabled;
 
 }
 
@@ -149,12 +145,12 @@ function is_tc_ack_accept_enabled(flags_ack : u8) -> bool{
  */
 function is_tc_ack_start_exec_enabled(flags_ack : u8) -> bool{
 
-	var ack_enabled : bool = false;
-	
-	if ((flags_ack & EXEC_START_ACK_ENABLED_MASK) != 0) {
-		ack_enabled = true;
-	}
-	return ack_enabled;
+    var ack_enabled : bool = false;
+    
+    if ((flags_ack & EXEC_START_ACK_ENABLED_MASK) != 0) {
+        ack_enabled = true;
+    }
+    return ack_enabled;
 
 }
 
@@ -166,12 +162,12 @@ function is_tc_ack_start_exec_enabled(flags_ack : u8) -> bool{
  */
 function is_tc_ack_progress_exec_enabled(flags_ack : u8) -> bool{
 
-	var ack_enabled : bool = false;
-	
-	if ((flags_ack & EXEC_PROGRESS_ACK_ENABLED_MASK) != 0) {
-		ack_enabled = true;
-	}
-	return ack_enabled;
+    var ack_enabled : bool = false;
+    
+    if ((flags_ack & EXEC_PROGRESS_ACK_ENABLED_MASK) != 0) {
+        ack_enabled = true;
+    }
+    return ack_enabled;
 
 }
 
@@ -183,12 +179,12 @@ function is_tc_ack_progress_exec_enabled(flags_ack : u8) -> bool{
  */
 function is_tc_ack_completion_exec_enabled(flags_ack : u8) -> bool{
 
-	var ack_enabled : bool = false;
-	
-	if ((flags_ack & EXEC_COMPLETION_ACK_ENABLED_MASK) != 0) {
-		ack_enabled = true;
-	}
-	return ack_enabled;
+    var ack_enabled : bool = false;
+    
+    if ((flags_ack & EXEC_COMPLETION_ACK_ENABLED_MASK) != 0) {
+        ack_enabled = true;
+    }
+    return ack_enabled;
 
 }
 
@@ -200,24 +196,24 @@ function is_tc_ack_completion_exec_enabled(flags_ack : u8) -> bool{
  */
 function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
 
-	var subtype : u8 = 0;
+    var subtype : u8 = 0;
 
-	match verify_stage {
-		case Acceptation => {
-			subtype = 2;
-		}
-		case ExecStart => {
-			subtype = 4;
-		}
-		case Progress => {
-			subtype = 6;
-		}
-		case ExecCompletion => {
-			subtype = 8;
-		}
-	}
+    match verify_stage {
+        case Acceptation => {
+            subtype = 2;
+        }
+        case ExecStart => {
+            subtype = 4;
+        }
+        case Progress => {
+            subtype = 6;
+        }
+        case ExecCompletion => {
+            subtype = 8;
+        }
+    }
 
-	return subtype;
+    return subtype;
 }
 
 
@@ -234,24 +230,24 @@ function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
  * @param status status container.
  */
 function build_tm_1_X_no_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16, 
-			tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, current_obt : MissionOBT) -> Status<i32> {
+            tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, current_obt : MissionOBT) -> Status<i32> {
 
-	var status : Status<i32> = Success;
-	var subtype : u8 = get_failure_subtype(verify_stage);
+    var status : Status<i32> = Success;
+    var subtype : u8 = get_failure_subtype(verify_stage);
 
-	startup_tm(p_tm_handler);
-	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
-	if (status is Success){
-		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
-	}
-	if(status is Success){
-		status = append_u8_appdata_field(p_tm_handler, failure_code);
-	}
-	if (status is Success){
-		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
-	}
+    startup_tm(p_tm_handler);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    if (status is Success){
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
+    }
+    if(status is Success){
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
+    }
+    if (status is Success){
+        close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
+    }
 
-	return status;
+    return status;
 }
 
 
@@ -260,27 +256,27 @@ function build_tm_1_X_no_failure_data(p_tm_handler : &mut TMHandler, tm_seq_coun
  * @param failure_data Failure-specific data (u8).
  */
 function build_tm_1_X_u8_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16,
-		 tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8, current_obt : MissionOBT) -> Status<i32> {
+         tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8, current_obt : MissionOBT) -> Status<i32> {
 
-	var status : Status<i32> = Success;
-	var subtype : u8 = get_failure_subtype(verify_stage);
+    var status : Status<i32> = Success;
+    var subtype : u8 = get_failure_subtype(verify_stage);
 
-	startup_tm(p_tm_handler);
-	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
-	if (status is Success){
-		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
-	}
-	if (status is Success){
-		status = append_u8_appdata_field(p_tm_handler, failure_code);
-	}
-	if (status is Success){
-		status = append_u8_appdata_field(p_tm_handler, failure_data);
-	}
-	if (status is Success){
-		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
-	}
+    startup_tm(p_tm_handler);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    if (status is Success){
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
+    }
+    if (status is Success){
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
+    }
+    if (status is Success){
+        status = append_u8_appdata_field(p_tm_handler, failure_data);
+    }
+    if (status is Success){
+        close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
+    }
 
-	return status;
+    return status;
 }
 
 
@@ -289,27 +285,27 @@ function build_tm_1_X_u8_failure_data(p_tm_handler : &mut TMHandler, tm_seq_coun
  * @param failure_data Failure-specific data (u16).
  */
 function build_tm_1_X_u16_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16,
-		 tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16, current_obt : MissionOBT) -> Status<i32> {
+         tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16, current_obt : MissionOBT) -> Status<i32> {
 
-	var status : Status<i32> = Success;
-	var subtype : u8 = get_failure_subtype(verify_stage);
+    var status : Status<i32> = Success;
+    var subtype : u8 = get_failure_subtype(verify_stage);
 
-	startup_tm(p_tm_handler);
-	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
-	if (status is Success){
-		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
-	}
-	if(status is Success){
-		status = append_u8_appdata_field(p_tm_handler, failure_code);
-	}
-	if (status is Success){
-		status = append_u16_appdata_field(p_tm_handler, failure_data);
-	}
-	if (status is Success){
-		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
-	}
+    startup_tm(p_tm_handler);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    if (status is Success){
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
+    }
+    if(status is Success){
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
+    }
+    if (status is Success){
+        status = append_u16_appdata_field(p_tm_handler, failure_data);
+    }
+    if (status is Success){
+        close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
+    }
 
-	return status;
+    return status;
 }
 
 
@@ -318,27 +314,27 @@ function build_tm_1_X_u16_failure_data(p_tm_handler : &mut TMHandler, tm_seq_cou
  * @param failure_data Failure-specific data (u32).
  */
 function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_seq_ctrl: u16,
-		 verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32, current_obt : MissionOBT) -> Status<i32> {
+         verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32, current_obt : MissionOBT) -> Status<i32> {
 
-	var status : Status<i32> = Success;
-	var subtype : u8 = get_failure_subtype(verify_stage);
+    var status : Status<i32> = Success;
+    var subtype : u8 = get_failure_subtype(verify_stage);
 
-	startup_tm(p_tm_handler);
-	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
-	if (status is Success){
-		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
-	}
-	if (status is Success){
-		status = append_u8_appdata_field(p_tm_handler, failure_code);
-	}
-	if (status is Success){
-		status = append_u32_appdata_field(p_tm_handler, failure_data);
-	}
-	if (status is Success){
-		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
-	}
+    startup_tm(p_tm_handler);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    if (status is Success){
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
+    }
+    if (status is Success){
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
+    }
+    if (status is Success){
+        status = append_u32_appdata_field(p_tm_handler, failure_data);
+    }
+    if (status is Success){
+        close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
+    }
 
-	return status;
+    return status;
 }
 
 
@@ -349,30 +345,30 @@ function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandler, tm_seq_cou
  * @param failure_data2 Second failure data (u32).
  */
 function build_tm_1_X_u8_u32_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_seq_ctrl: u16,
- 					verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32, current_obt : MissionOBT) -> Status<i32> {
+                     verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32, current_obt : MissionOBT) -> Status<i32> {
 
-	var status : Status<i32> = Success;
-	var subtype : u8 = get_failure_subtype(verify_stage);
+    var status : Status<i32> = Success;
+    var subtype : u8 = get_failure_subtype(verify_stage);
 
-	startup_tm(p_tm_handler);
-	status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
-	if (status is Success){
-		status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
-	}
-	if (status is Success){
-		status = append_u8_appdata_field(p_tm_handler, failure_code);
-	}
-	if (status is Success){
-		status = append_u8_appdata_field(p_tm_handler, failure_data1);
-	}
-	if (status is Success){
-		status = append_u32_appdata_field(p_tm_handler, failure_data2);
-	}
-	if (status is Success){
-		close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
-	}
+    startup_tm(p_tm_handler);
+    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    if (status is Success){
+        status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
+    }
+    if (status is Success){
+        status = append_u8_appdata_field(p_tm_handler, failure_code);
+    }
+    if (status is Success){
+        status = append_u8_appdata_field(p_tm_handler, failure_data1);
+    }
+    if (status is Success){
+        status = append_u32_appdata_field(p_tm_handler, failure_data2);
+    }
+    if (status is Success){
+        close_tm(p_tm_handler, 1, subtype, tm_seq_counter, current_obt);
+    }
 
-	return status;
+    return status;
 }
 
 
