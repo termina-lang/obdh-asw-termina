@@ -20,7 +20,7 @@ typedef struct {
     void (* mng_tc_acceptation)(void * const, const TCHandler * const,
                                 __status_int32_t * const);
     void (* mng_tc_rejection)(void * const, const TCHandler * const,
-                              __status_int32_t * const);
+                              const TCStatus * const, __status_int32_t * const);
 } MngTCExecIface;
 
 typedef struct {
@@ -75,6 +75,7 @@ void ManagerTCExecutor__mng_tc_acceptation(const __termina_event_t * const __ev,
 void ManagerTCExecutor__mng_tc_rejection(const __termina_event_t * const __ev,
                                          void * const __this,
                                          const TCHandler * const tc_handler,
+                                         const TCStatus * const tc_status,
                                          __status_int32_t * const status);
 
 #endif

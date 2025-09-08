@@ -81,21 +81,16 @@ void ManagerTCExecutor__mng_tc_acceptation(const __termina_event_t * const __ev,
                                                        &self->__lock_type);
 
     #line 102 "src/tasks/icu_manager/mng_tc_executor.fin"
-    if (is_tc_ack_start_exec_enabled(tc_handler->df_header.flag_ver_ack)) {
-        
-        #line 104 "src/tasks/icu_manager/mng_tc_executor.fin"
-        self->pus_service_1.notify_tm_1_1(__ev, self->pus_service_1.__that,
-                                          tc_handler->packet_header.packet_id,
-                                          tc_handler->packet_header.packet_seq_ctrl,
-                                          tc_handler->df_header.flag_ver_ack,
-                                          status);
+    self->pus_service_1.notify_tm_1_1(__ev, self->pus_service_1.__that,
+                                      tc_handler->packet_header.packet_id,
+                                      tc_handler->packet_header.packet_seq_ctrl,
+                                      tc_handler->df_header.flag_ver_ack,
+                                      status);
 
-    }
-
-    #line 112 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 108 "src/tasks/icu_manager/mng_tc_executor.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 112 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 108 "src/tasks/icu_manager/mng_tc_executor.fin"
     return;
 
 }
@@ -103,26 +98,24 @@ void ManagerTCExecutor__mng_tc_acceptation(const __termina_event_t * const __ev,
 void ManagerTCExecutor__mng_tc_rejection(const __termina_event_t * const __ev,
                                          void * const __this,
                                          const TCHandler * const tc_handler,
+                                         const TCStatus * const tc_status,
                                          __status_int32_t * const status) {
     
-    #line 125 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 121 "src/tasks/icu_manager/mng_tc_executor.fin"
     ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
 
-    #line 125 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 121 "src/tasks/icu_manager/mng_tc_executor.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
                                                        &self->__lock_type);
 
-    #line 127 "src/tasks/icu_manager/mng_tc_executor.fin"
-    TCStatus tc_status = try_tc_acceptation(&tc_handler->tc_descriptor);
+    #line 123 "src/tasks/icu_manager/mng_tc_executor.fin"
+    self->pus_service_1.send_tm_1_2(__ev, self->pus_service_1.__that, tc_status,
+                                    tc_handler, status);
 
-    #line 129 "src/tasks/icu_manager/mng_tc_executor.fin"
-    self->pus_service_1.send_tm_1_2(__ev, self->pus_service_1.__that,
-                                    &tc_status, tc_handler, status);
-
-    #line 131 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 125 "src/tasks/icu_manager/mng_tc_executor.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 131 "src/tasks/icu_manager/mng_tc_executor.fin"
+    #line 125 "src/tasks/icu_manager/mng_tc_executor.fin"
     return;
 
 }

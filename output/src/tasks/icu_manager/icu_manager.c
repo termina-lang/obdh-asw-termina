@@ -150,7 +150,8 @@ __status_int32_t ICUManager__process_tc(const __termina_event_t * const __ev,
         
         #line 97 "src/tasks/icu_manager/icu_manager.fin"
         self->tc_executor.mng_tc_rejection(__ev, self->tc_executor.__that,
-                                           (TCHandler *)tc_handler.data, &ret);
+                                           (TCHandler *)tc_handler.data,
+                                           &current_tc_status, &ret);
 
         #line 98 "src/tasks/icu_manager/icu_manager.fin"
         self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that,

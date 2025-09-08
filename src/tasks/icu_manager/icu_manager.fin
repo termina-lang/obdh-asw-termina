@@ -94,7 +94,7 @@ task class ICUManager {
             }
             case Rejected => { 
 
-                self->tc_executor.mng_tc_rejection(&(tc_handler), &mut ret);
+                self->tc_executor.mng_tc_rejection(&tc_handler, &current_tc_status, &mut ret);
                 self->a_tc_handler_pool.free(tc_handler);
             }
             case Undefined => {

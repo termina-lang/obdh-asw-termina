@@ -20,6 +20,7 @@ typedef struct {
                                     __status_int32_t * const);
         void (* mng_tc_rejection)(const __termina_event_t * const, void * const,
                                   const TCHandler * const,
+                                  const TCStatus * const,
                                   __status_int32_t * const);
     } tc_executor;
     __termina_out_port_t bkg_message_queue_output;
