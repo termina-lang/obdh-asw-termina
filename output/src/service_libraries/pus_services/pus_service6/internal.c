@@ -7,9 +7,7 @@ const size_t banks_number = 8U;
 
 const size_t bank_size = 1U << 24U;
 
-__status_int32_t build_tm_6_6(TMHandler * const p_tm_handler,
-                              uint16_t tm_seq_counter, MissionOBT current_obt,
-                              const PS6ExecTCReqStatusUpdate * const mem_data) {
+__status_int32_t build_tm_6_6(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data) {
     
     #line 30 "src/service_libraries/pus_services/pus_service6/internal.fin"
     __status_int32_t status;
@@ -47,15 +45,10 @@ __status_int32_t build_tm_6_6(TMHandler * const p_tm_handler,
     }
 
     #line 43 "src/service_libraries/pus_services/pus_service6/internal.fin"
-    for (size_t i = 0U;
-         i < 256U - tm_app_data_offset
-         && (status.__variant == Success && i < (size_t)mem_data->length);
-         i = i + 1U) {
+    for (size_t i = 0U; i < 256U - tm_app_data_offset && (status.__variant == Success && i < (size_t)mem_data->length); i = i + 1U) {
         
         #line 44 "src/service_libraries/pus_services/pus_service6/internal.fin"
-        status = append_u8_appdata_field(p_tm_handler,
-                                         mem_data->data[__termina_array__index(max_num_of_bytes_memory_load,
-                                                                               i)]);
+        status = append_u8_appdata_field(p_tm_handler, mem_data->data[__termina_array__index(max_num_of_bytes_memory_load, i)]);
 
     }
 
@@ -72,10 +65,7 @@ __status_int32_t build_tm_6_6(TMHandler * const p_tm_handler,
 
 }
 
-__status_int32_t build_tm_6_10(TMHandler * const p_tm_handler,
-                               uint16_t tm_seq_counter, MissionOBT current_obt,
-                               const PS6ExecTCReqStatusUpdate * const mem_data,
-                               uint16_t checksum) {
+__status_int32_t build_tm_6_10(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data, uint16_t checksum) {
     
     #line 56 "src/service_libraries/pus_services/pus_service6/internal.fin"
     __status_int32_t status;

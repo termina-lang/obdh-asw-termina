@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MintermFilter SYSTEM "../../../DTDs/filters.dtd">
+
+<MintermFilter formatFile="../../../TM_Formats/Level1/asw_pus_v2_tm_format.xml">
+	<BoolVar id="0" name="ServiceType1" constantType="decimal">
+		<FieldRef name="ServiceType" />
+		<Op type="equal" />
+		<Constant value="1" />
+	</BoolVar>
+	<BoolVar id="1" name="ServiceSubtype4" constantType="decimal">
+		<FieldRef name="ServiceSubtype" />
+		<Op type="equal" />
+		<Constant value="4" />
+	</BoolVar>
+
+	<Minterm id="0">
+		<BoolVarRef idRef="0" />
+		<BoolVarRef idRef="1" />
+	</Minterm>
+</MintermFilter>

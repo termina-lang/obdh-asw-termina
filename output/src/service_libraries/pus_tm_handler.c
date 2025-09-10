@@ -7,8 +7,7 @@ const uint16_t destinationID = 0x78U;
 
 const size_t tm_app_data_offset = 19U;
 
-__status_int32_t append_u8_appdata_field(TMHandler * const tm_handler,
-                                         uint8_t data) {
+__status_int32_t append_u8_appdata_field(TMHandler * const tm_handler, uint8_t data) {
     
     #line 57 "src/service_libraries/pus_tm_handler.fin"
     __status_int32_t status;
@@ -19,8 +18,7 @@ __status_int32_t append_u8_appdata_field(TMHandler * const tm_handler,
     if (tm_handler->app_data_index < 256U) {
         
         #line 61 "src/service_libraries/pus_tm_handler.fin"
-        tm_handler->tm_descriptor.tm_bytes[__termina_array__index(256U,
-                                                                  tm_handler->app_data_index)] = data;
+        tm_handler->tm_descriptor.tm_bytes[__termina_array__index(256U, tm_handler->app_data_index)] = data;
 
         #line 62 "src/service_libraries/pus_tm_handler.fin"
         tm_handler->app_data_index = tm_handler->app_data_index + 1U;
@@ -43,8 +41,7 @@ __status_int32_t append_u8_appdata_field(TMHandler * const tm_handler,
 
 }
 
-__status_int32_t append_u16_appdata_field(TMHandler * const tm_handler,
-                                          uint16_t data) {
+__status_int32_t append_u16_appdata_field(TMHandler * const tm_handler, uint16_t data) {
     
     #line 85 "src/service_libraries/pus_tm_handler.fin"
     __status_int32_t status;
@@ -55,11 +52,7 @@ __status_int32_t append_u16_appdata_field(TMHandler * const tm_handler,
     if ((size_t)(tm_handler->app_data_index + 1U) < 256U) {
         
         #line 89 "src/service_libraries/pus_tm_handler.fin"
-        serialize_uint16(data,
-                         &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(256U,
-                                                                                    2U,
-                                                                                    tm_handler->app_data_index,
-                                                                                    tm_handler->app_data_index + 2U)]);
+        serialize_uint16(data, &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(256U, 2U, tm_handler->app_data_index, tm_handler->app_data_index + 2U)]);
 
         #line 90 "src/service_libraries/pus_tm_handler.fin"
         tm_handler->app_data_index = tm_handler->app_data_index + 2U;
@@ -82,8 +75,7 @@ __status_int32_t append_u16_appdata_field(TMHandler * const tm_handler,
 
 }
 
-__status_int32_t append_u32_appdata_field(TMHandler * const tm_handler,
-                                          uint32_t data) {
+__status_int32_t append_u32_appdata_field(TMHandler * const tm_handler, uint32_t data) {
     
     #line 112 "src/service_libraries/pus_tm_handler.fin"
     __status_int32_t status;
@@ -94,11 +86,7 @@ __status_int32_t append_u32_appdata_field(TMHandler * const tm_handler,
     if ((size_t)(tm_handler->app_data_index + 3U) < 256U) {
         
         #line 116 "src/service_libraries/pus_tm_handler.fin"
-        serialize_uint32(data,
-                         &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(256U,
-                                                                                    4U,
-                                                                                    tm_handler->app_data_index,
-                                                                                    tm_handler->app_data_index + 4U)]);
+        serialize_uint32(data, &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(256U, 4U, tm_handler->app_data_index, tm_handler->app_data_index + 4U)]);
 
         #line 117 "src/service_libraries/pus_tm_handler.fin"
         tm_handler->app_data_index = tm_handler->app_data_index + 4U;
@@ -121,8 +109,7 @@ __status_int32_t append_u32_appdata_field(TMHandler * const tm_handler,
 
 }
 
-void tm_handler_build_packet_header(TMHandler * const tm_handler,
-                                    uint16_t tm_seq_counter) {
+void tm_handler_build_packet_header(TMHandler * const tm_handler, uint16_t tm_seq_counter) {
     
     #line 141 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->packet_header.packet_id = ccsds_pus_tm_build_packet_id(APID);
@@ -138,8 +125,7 @@ void tm_handler_build_packet_header(TMHandler * const tm_handler,
 
 }
 
-void tm_handler_build_df_header(TMHandler * const tm_handler, uint8_t tm_type,
-                                uint8_t tm_subtype, MissionOBT current_obt) {
+void tm_handler_build_df_header(TMHandler * const tm_handler, uint8_t tm_type, uint8_t tm_subtype, MissionOBT current_obt) {
     
     #line 163 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->df_header.version = 0x20U;
@@ -167,8 +153,7 @@ void tm_handler_build_df_header(TMHandler * const tm_handler, uint8_t tm_type,
 
 }
 
-void close_tm(TMHandler * const tm_handler, uint8_t type, uint8_t subtype,
-              uint16_t tm_count, MissionOBT current_obt) {
+void close_tm(TMHandler * const tm_handler, uint8_t type, uint8_t subtype, uint16_t tm_count, MissionOBT current_obt) {
     
     #line 189 "src/service_libraries/pus_tm_handler.fin"
     tm_handler_build_packet_header(tm_handler, tm_count);
@@ -177,8 +162,7 @@ void close_tm(TMHandler * const tm_handler, uint8_t type, uint8_t subtype,
     tm_handler_build_df_header(tm_handler, type, subtype, current_obt);
 
     #line 192 "src/service_libraries/pus_tm_handler.fin"
-    ccsds_pus_tm_set_fields(&tm_handler->tm_descriptor.tm_bytes[0U],
-                            &tm_handler->packet_header, &tm_handler->df_header);
+    ccsds_pus_tm_set_fields(&tm_handler->tm_descriptor.tm_bytes[0U], &tm_handler->packet_header, &tm_handler->df_header);
 
     #line 194 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->tm_descriptor.tm_num_bytes = (size_t)tm_handler->packet_header.packet_length + 7U;

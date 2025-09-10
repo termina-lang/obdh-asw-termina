@@ -25,7 +25,7 @@
 	<BoolVar id="4" name="ChecksumEqual" constantType="hex">
 		<FieldRef name="Checksum" />
 		<Op type="equal" />
-		<Constant value="DD18" />
+		<Constant value="41BE" />
 	</BoolVar>
 	<Minterm id="0">
 		<BoolVarRef idRef="0" />

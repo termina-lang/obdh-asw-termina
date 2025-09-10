@@ -190,11 +190,7 @@ uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID) {
 
 }
 
-__status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler,
-                                                 uint16_t tm_seq_counter,
-                                                 ParamOutOfLimitInfo fault_info,
-                                                 uint16_t ev_ID,
-                                                 MissionOBT current_obt) {
+__status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamOutOfLimitInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
     
     #line 145 "src/service_libraries/pus_services/pus_service5/internal.fin"
     __status_int32_t status;
@@ -247,11 +243,7 @@ __status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler,
 
 }
 
-__status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler,
-                                                     uint16_t tm_seq_counter,
-                                                     ParamFaultValueInfo fault_info,
-                                                     uint16_t ev_ID,
-                                                     MissionOBT current_obt) {
+__status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamFaultValueInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
     
     #line 169 "src/service_libraries/pus_services/pus_service5/internal.fin"
     __status_int32_t status;
@@ -292,8 +284,7 @@ __status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_hand
     if (status.__variant == Success) {
         
         #line 183 "src/service_libraries/pus_services/pus_service5/internal.fin"
-        status = append_u32_appdata_field(p_tm_handler,
-                                          fault_info.PID_expected_value);
+        status = append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value);
 
     }
 

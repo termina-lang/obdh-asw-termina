@@ -13,8 +13,7 @@ uint16_t cal_crc_16(const uint8_t data[256U], size_t nbytes) {
     for (size_t i = 0U; i < 256U && k < nbytes; i = i + 1U) {
         
         #line 25 "src/service_libraries/crc.fin"
-        crc_value = crc_value ^ (uint16_t)((uint16_t)data[__termina_array__index(256U,
-                                                                                 i)] << 8U);
+        crc_value = crc_value ^ (uint16_t)((uint16_t)data[__termina_array__index(256U, i)] << 8U);
 
         #line 27 "src/service_libraries/crc.fin"
         for (uint16_t j = 0U; j < 8U; j = j + 1U) {

@@ -276,7 +276,7 @@ resource pus_service_6_service_1 : PUSService1 = {
 
 resource pus_service_6 : PUSService6 = {
     exec_tc_req_status_update = ps6_init_tc_req_status_update,
-    mem_id_write_permisssions = {false, true, true, true, true, true, true, false},
+    mem_id_write_permissions = {false, true, true, true, true, true, true, false},
     memory @ 0x40000000,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,

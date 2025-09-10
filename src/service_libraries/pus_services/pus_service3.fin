@@ -189,16 +189,16 @@ resource class PUSService3 provides PUSS3Iface {
                                 self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
                                 self->exec_tc_req_status_update.tc_data.flags_ack,
                                 &mut status);
+                    }
 
-                } else {
+            } else {
 
-                    self->pus_service_1.send_tm_1_4_SID_not_valid(
-                                self->exec_tc_req_status_update.tc_data.packet_id,
-                                self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                                self->exec_tc_req_status_update.tc_data.SID,
-                                &mut status);
+                self->pus_service_1.send_tm_1_4_SID_not_valid(
+                            self->exec_tc_req_status_update.tc_data.packet_id,
+                            self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
+                            self->exec_tc_req_status_update.tc_data.SID,
+                            &mut status);
 
-                }
             }
         
         }

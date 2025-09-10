@@ -287,8 +287,7 @@ TCStatus try_tc_acceptation(const TCDescriptor * const tc_descriptor) {
         if (19U == type) {
             
             #line 194 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-            if (1U == subtype || 2U == subtype || 4U == subtype
-                || 5U == subtype) {
+            if (1U == subtype || 2U == subtype || 4U == subtype || 5U == subtype) {
                 
                 #line 196 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
                 tc_status.acceptation_status.__variant = TCAcceptationStatus__Accepted;

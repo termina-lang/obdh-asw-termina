@@ -15,7 +15,6 @@ typedef struct {
     uint16_t tm_count;
 } TMCounter;
 
-void TMCounter__get_next_tm_count(const __termina_event_t * const __ev,
-                                  void * const __this, uint16_t * const count);
+void TMCounter__get_next_tm_count(const __termina_event_t * const __ev, void * const __this, uint16_t * const count);
 
 #endif

@@ -22,23 +22,17 @@ extern const uint16_t destinationID;
 
 extern const size_t tm_app_data_offset;
 
-__status_int32_t append_u8_appdata_field(TMHandler * const tm_handler,
-                                         uint8_t data);
+__status_int32_t append_u8_appdata_field(TMHandler * const tm_handler, uint8_t data);
 
-__status_int32_t append_u16_appdata_field(TMHandler * const tm_handler,
-                                          uint16_t data);
+__status_int32_t append_u16_appdata_field(TMHandler * const tm_handler, uint16_t data);
 
-__status_int32_t append_u32_appdata_field(TMHandler * const tm_handler,
-                                          uint32_t data);
+__status_int32_t append_u32_appdata_field(TMHandler * const tm_handler, uint32_t data);
 
-void tm_handler_build_packet_header(TMHandler * const tm_handler,
-                                    uint16_t tm_seq_counter);
+void tm_handler_build_packet_header(TMHandler * const tm_handler, uint16_t tm_seq_counter);
 
-void tm_handler_build_df_header(TMHandler * const tm_handler, uint8_t tm_type,
-                                uint8_t tm_subtype, MissionOBT current_obt);
+void tm_handler_build_df_header(TMHandler * const tm_handler, uint8_t tm_type, uint8_t tm_subtype, MissionOBT current_obt);
 
-void close_tm(TMHandler * const tm_handler, uint8_t type, uint8_t subtype,
-              uint16_t tm_count, MissionOBT current_obt);
+void close_tm(TMHandler * const tm_handler, uint8_t type, uint8_t subtype, uint16_t tm_count, MissionOBT current_obt);
 
 void startup_tm(TMHandler * const tm_handler);
 

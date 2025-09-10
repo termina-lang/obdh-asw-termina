@@ -16,8 +16,7 @@ typedef struct {
 typedef struct {
     void * __that;
     void (* init_gpio)(void * const);
-    void (* write_led)(void * const, uint8_t, uint8_t,
-                       __status_int32_t * const);
+    void (* write_led)(void * const, uint8_t, uint8_t, __status_int32_t * const);
 } GPIODrvIface;
 
 typedef struct {
@@ -25,11 +24,8 @@ typedef struct {
     volatile GPIO_registers * registers;
 } GPIODriver;
 
-void GPIODriver__init_gpio(const __termina_event_t * const __ev,
-                           void * const __this);
+void GPIODriver__init_gpio(const __termina_event_t * const __ev, void * const __this);
 
-void GPIODriver__write_led(const __termina_event_t * const __ev,
-                           void * const __this, uint8_t led, uint8_t value,
-                           __status_int32_t * const status);
+void GPIODriver__write_led(const __termina_event_t * const __ev, void * const __this, uint8_t led, uint8_t value, __status_int32_t * const status);
 
 #endif

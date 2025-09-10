@@ -53,47 +53,65 @@
 
 <Tests ProtocolPacketsFile="GSS_Interfaces/ProtocolPackets.xml" >
 
-	<TestCase name="tp_0010_asw_pus_tc_17_1_are_you_alive" 							
+	<TestCase name="TP_0010_ASW_PUS_TC_17_1_ARE_YOU_ALIVE" 							
 		procedure="FT_PROCS/st17/tp_0010_asw_pus_tc_17_1_are_you_alive.xml"/>
 
-	<TestCase name="tp_0011_asw_pus_tc_17_3_ob_connection_test"
-		procedure="FT_PROCS/st17/tp_0011_asw_pus_tc_17_3_ob_connection_test.xml"/>
+	<TestCase name="TP_0020_ASW_PUS_TC_REJECT_INVALID_SUBTYPE"
+		procedure="FT_PROCS/st17/tp_0020_asw_pus_tc_reject_invalid_subtype.xml"/>
 
-	<TestCase name="tp_0020_asw_pus_tc_3_31_set_hk_period_sid0_to_0x05" 
-		procedure="FT_PROCS/st03/tp_0020_asw_pus_tc_3_31_set_hk_period_sid0_to_0x05.xml"/>
+	<TestCase name="TP_0030_ASW_PUS_TC_REJECT_INVALID_CRC" 							
+		procedure="FT_PROCS/st17/tp_0030_asw_pus_tc_reject_invalid_crc.xml"/>
+
+	<TestCase name="TP_0040_ASW_PUS_TC_3_31_SET_HK_PERIOD_SID_0_TO_0X05" 
+		procedure="FT_PROCS/st03/tp_0040_asw_pus_tc_3_31_set_hk_period_sid_0_to_0x05.xml"/>
+
+	<TestCase name="TP_0050_ASW_PUS_TC_3_6_TC_3_5_DISABLE_ENABLE_SID_REPORT" 
+		procedure="FT_PROCS/st03/tp_0050_asw_pus_tc_3_6_tc_3_5_disable_enable_sid_report.xml"/>
+
+	<TestCase name="TP_0060_ASW_PUS_TC_3_31_REJECT_INVALID_SID" 
+		procedure="FT_PROCS/st03/tp_0060_asw_pus_tc_3_31_reject_invalid_sid.xml"/>
+
+	<TestCase name="TP_0070_ASW_PUS_TC_3_31_REJECT_INVALID_N" 
+		procedure="FT_PROCS/st03/tp_0070_asw_pus_tc_3_31_reject_invalid_N.xml"/>
+
+	<TestCase name="TP_0080_ASW_PUS_TC_20_3_TC_20_1_SET_PID_10_TO_99" 							
+		procedure="FT_PROCS/st20/tp_0080_asw_pus_tc_20_3_tc_20_1_set_pid_10_to_99.xml"/>
+
+	<TestCase name="TP_0090_ASW_PUS_TC_20_1_INVALID_PID" 						
+		procedure="FT_PROCS/st20/tp_0090_asw_pus_tc_20_1_invalid_pid.xml"/>
 		
-	<TestCase name="tp_0030_asw_pus_tc_20_3_set_pid10_to_99" 							
-		procedure="FT_PROCS/st20/tp_0030_asw_pus_tc_20_3_set_pid10_to_99.xml"/>
-		
-	<TestCase name="tp_0040_asw_pus_tc_20_1_get_pid10_equal_99" 						
-		procedure="FT_PROCS/st20/tp_0040_asw_pus_tc_20_1_get_pid10_equal_99.xml"/>
-		
-	<TestCase name="tp_0050_asw_pus_tc_12_5_add_mon_def_pid10_to_01_0x4000_0x10_0x4001" 						
-		procedure="FT_PROCS/st12/tp_0050_pus_tc_12_5_add_mon_def_pid10_to_01_0x4000_0x10_0x4001.xml"/>
+	<TestCase name="TP_0100_ASW_PUS_TC_20_3_INVALID_PID" 						
+		procedure="FT_PROCS/st20/tp_0100_asw_pus_tc_20_3_invalid_pid.xml"/>
+
+	<TestCase name="TP_0110_ASW_PUS_TC_12_5_ADD_MON_DEF_PID_10" 						
+		procedure="FT_PROCS/st12/tp_0110_asw_pus_tc_12_5_add_mon_def_pid_10.xml"/>
+
+	<TestCase name="TP_0120_ASW_PUS_SERV_4_PARAM_STATS_REPORTING" 						
+		procedure="FT_PROCS/st04/tp_0120_asw_pus_serv_4_param_stats_reporting.xml"/>
+
+	<TestCase name="TP_0130_ASW_PUS_TC_2_1_ONOFF_DEV_ADDRESS_0x60000001" 
+		procedure="FT_PROCS/st02/tp_0130_asw_pus_tc_2_1_onoff_dev_address_0x60000001.xml"/>
+
+	<TestCase name="TP_0140_ASW_PUS_TC_6_5_READ_BYTES_FROM_0x40001000_TO_0x4000103F" 
+		procedure="FT_PROCS/st06/tp_0140_asw_pus_tc_6_5_read_bytes_from_0x40001000_to_0x4000103F.xml"/>
+
+	<TestCase name="TP_0150_ASW_PUS_TC_6_2_WRITE_BYTES_TO_0x41020080" 
+		procedure="FT_PROCS/st06/tp_0150_asw_pus_tc_6_2_write_bytes_to_0x41020080.xml"/>
+
+	<TestCase name="TP_0160_ASW_PUS_TC_6_9_CHECKSUM_FROM_0x40000090_TO_0x400000BF" 
+		procedure="FT_PROCS/st06/tp_0160_asw_pus_tc_6_9_checksum_from_0x40000090_to_0x400000BF.xml"/>
+
+	<TestCase name="TP_0170_ASW_PUS_TC_6_5_READ_BYTES_FROM_INVALID_MEMORY_ID" 
+		procedure="FT_PROCS/st06/tp_0170_asw_pus_tc_6_5_read_bytes_from_invalid_memory_id.xml"/>
 	
-	<TestCase name="tp_0060_asw_pus_service_4_parameter_statistics_reporting" 						
-		procedure="FT_PROCS/st04/tp_0060_asw_pus_service_4.xml"/>
+	<TestCase name="TP_0180_ASW_PUS_TC_6_2_WRITE_BYTES_TO_READ_ONLY_MEMORY" 
+		procedure="FT_PROCS/st06/tp_0180_asw_pus_tc_6_2_write_bytes_to_read_only_memory.xml"/>
 
-	<TestCase name="tp_0080_asw_pus_tc_2_1_onoff_dev_address_0x60000001" 
-		procedure="FT_PROCS/st02/tp_0080_asw_pus_tc_2_1_onoff_dev_address_0x60000001.xml"/>
+	<TestCase name="TP_0190_ASW_PUS_TC_9_129_SET_OBT" 
+		procedure="FT_PROCS/st09/tp_0190_asw_pus_tc_9_129_set_obt.xml"/>
 
-	<TestCase name="tp_0090_asw_pus_tc_6_5_read_bytes_from_0x40001000_to_0x4000103F" 
-		procedure="FT_PROCS/st06/tp_0090_asw_pus_tc_6_5_read_bytes_from_0x40001000_to_0x4000103F.xml"/>
-
-	<TestCase name="tp_0091_asw_pus_tc_6_2_write_bytes_to_0x41020080" 
-		procedure="FT_PROCS/st06/tp_0091_asw_pus_tc_6_2_write_bytes_to_0x41020080.xml"/>
-
-	<TestCase name="tp_0092_asw_pus_tc_6_9_checksum_from_0x40000090_to_0x400000BF" 
-		procedure="FT_PROCS/st06/tp_0092_asw_pus_tc_6_9_checksum_from_0x40000090_to_0x400000BF.xml"/>
-
-	<TestCase name="tp_0100_asw_pus_tc_9_129_set_obt" 
-		procedure="FT_PROCS/st09/tp_0100_asw_pus_tc_9_129_set_obt.xml"/>
-
-	<TestCase name="tp_0110_asw_pus_tc_3_6_tc_3_5" 
-		procedure="FT_PROCS/st03/tp_0110_asw_pus_tc_3_6_tc_3_5.xml"/>
-
-	<TestCase name="tp_0120_asw_pus_service_19" 
-		procedure="FT_PROCS/st19/tp_0120_pus_service_19.xml"/>
+	<TestCase name="TP_0200_ASW_PUS_SERV_19_EVENT_ACTION" 
+		procedure="FT_PROCS/st19/tp_0200_asw_pus_serv_19_event_action.xml"/>
 	
 	<!-- TestCase name="tp_0070_asw_pus_tc_128_1_reboot" 						
 			procedure="FT_PROCS/st128/tp_0070_asw_pus_tc_128_1_reboot.xml"/ !-->

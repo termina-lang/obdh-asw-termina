@@ -3,8 +3,7 @@
 
 const size_t hw_fifo_size = 1U;
 
-void UARTDriver__disable_RF(const __termina_event_t * const __ev,
-                            UARTDriver * const self) {
+void UARTDriver__disable_RF(const __termina_event_t * const __ev, UARTDriver * const self) {
     
     #line 216 "src/resources/uart.fin"
     uint32_t riscv_uart_rf = 0xFFFFFBFFU;
@@ -17,8 +16,7 @@ void UARTDriver__disable_RF(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__disable_TF(const __termina_event_t * const __ev,
-                            UARTDriver * const self) {
+void UARTDriver__disable_TF(const __termina_event_t * const __ev, UARTDriver * const self) {
     
     #line 206 "src/resources/uart.fin"
     uint32_t riscv_uart_tf = 0xFFFFFCFFU;
@@ -31,8 +29,7 @@ void UARTDriver__disable_TF(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__disable_TI(const __termina_event_t * const __ev,
-                            UARTDriver * const self) {
+void UARTDriver__disable_TI(const __termina_event_t * const __ev, UARTDriver * const self) {
     
     #line 196 "src/resources/uart.fin"
     uint32_t riscv_uart_ti = 0xFFFFFFF7U;
@@ -45,8 +42,7 @@ void UARTDriver__disable_TI(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__enable_RI(const __termina_event_t * const __ev,
-                           UARTDriver * const self) {
+void UARTDriver__enable_RI(const __termina_event_t * const __ev, UARTDriver * const self) {
     
     #line 176 "src/resources/uart.fin"
     uint32_t riscv_uart_ri = 0x4U;
@@ -59,8 +55,7 @@ void UARTDriver__enable_RI(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__enable_RX(const __termina_event_t * const __ev,
-                           UARTDriver * const self) {
+void UARTDriver__enable_RX(const __termina_event_t * const __ev, UARTDriver * const self) {
     
     #line 166 "src/resources/uart.fin"
     uint32_t riscv_uart_rxe = 0x1U;
@@ -73,8 +68,7 @@ void UARTDriver__enable_RX(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__enable_TI(const __termina_event_t * const __ev,
-                           UARTDriver * const self) {
+void UARTDriver__enable_TI(const __termina_event_t * const __ev, UARTDriver * const self) {
     
     #line 186 "src/resources/uart.fin"
     uint32_t riscv_uart_ti = 0x8U;
@@ -87,8 +81,7 @@ void UARTDriver__enable_TI(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__enable_TX(const __termina_event_t * const __ev,
-                           UARTDriver * const self) {
+void UARTDriver__enable_TX(const __termina_event_t * const __ev, UARTDriver * const self) {
     
     #line 156 "src/resources/uart.fin"
     uint32_t riscv_uart_txe = 0x2U;
@@ -101,8 +94,7 @@ void UARTDriver__enable_TX(const __termina_event_t * const __ev,
 
 }
 
-_Bool UARTDriver__rf_data_ready(const __termina_event_t * const __ev,
-                                const UARTDriver * const self) {
+_Bool UARTDriver__rf_data_ready(const __termina_event_t * const __ev, const UARTDriver * const self) {
     
     #line 147 "src/resources/uart.fin"
     uint32_t riscv_uart_rf = 0x1U;
@@ -112,16 +104,13 @@ _Bool UARTDriver__rf_data_ready(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__enqueue_rx(const __termina_event_t * const __ev,
-                            void * const __this,
-                            __option_size_t * const tc_completed) {
+void UARTDriver__enqueue_rx(const __termina_event_t * const __ev, void * const __this, __option_size_t * const tc_completed) {
     
     #line 245 "src/resources/uart.fin"
     UARTDriver * self = (UARTDriver *)__this;
 
     #line 245 "src/resources/uart.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
-                                                       &self->__lock_type);
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 247 "src/resources/uart.fin"
     __status_int32_t status;
@@ -132,13 +121,7 @@ void UARTDriver__enqueue_rx(const __termina_event_t * const __ev,
     (*tc_completed).__variant = None;
 
     #line 250 "src/resources/uart.fin"
-    for (size_t i = 0U;
-         i < queue_max_noe
-         && (is_full(&self->uart_rx_queue) == 0
-             && UARTDriver__rf_data_ready(__ev, self)
-             && status.__variant == Failure == 0
-             && self->rx_status.__variant == RXStatus__FinishedTCRx == 0);
-         i = i + 1U) {
+    for (size_t i = 0U; i < queue_max_noe && (is_full(&self->uart_rx_queue) == 0 && UARTDriver__rf_data_ready(__ev, self) && status.__variant == Failure == 0 && self->rx_status.__variant == RXStatus__FinishedTCRx == 0); i = i + 1U) {
         
         #line 256 "src/resources/uart.fin"
         uint8_t byte = (uint8_t)self->registers->data;
@@ -147,8 +130,7 @@ void UARTDriver__enqueue_rx(const __termina_event_t * const __ev,
         if (self->rx_status.__variant == RXStatus__SyncBytesRx) {
             
             #line 262 "src/resources/uart.fin"
-            if (byte == self->sync_word[__termina_array__index(4U,
-                                                               self->aux_index)]) {
+            if (byte == self->sync_word[__termina_array__index(4U, self->aux_index)]) {
                 
                 #line 264 "src/resources/uart.fin"
                 if (3U == self->aux_index) {
@@ -180,8 +162,7 @@ void UARTDriver__enqueue_rx(const __termina_event_t * const __ev,
         if (self->rx_status.__variant == RXStatus__SyncLengthRx) {
             
             #line 278 "src/resources/uart.fin"
-            self->raw_rx_tc_length[__termina_array__index(2U,
-                                                          self->aux_index)] = byte;
+            self->raw_rx_tc_length[__termina_array__index(2U, self->aux_index)] = byte;
 
             #line 279 "src/resources/uart.fin"
             self->aux_index = self->aux_index + 1U;
@@ -261,15 +242,13 @@ void UARTDriver__enqueue_rx(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__initialize(const __termina_event_t * const __ev,
-                            void * const __this) {
+void UARTDriver__initialize(const __termina_event_t * const __ev, void * const __this) {
     
     #line 467 "src/resources/uart.fin"
     UARTDriver * self = (UARTDriver *)__this;
 
     #line 467 "src/resources/uart.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
-                                                       &self->__lock_type);
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 469 "src/resources/uart.fin"
     UARTDriver__enable_RX(__ev, self);
@@ -297,15 +276,13 @@ void UARTDriver__initialize(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__receive(const __termina_event_t * const __ev,
-                         void * const __this, __option_uint8_t * const byte) {
+void UARTDriver__receive(const __termina_event_t * const __ev, void * const __this, __option_uint8_t * const byte) {
     
     #line 227 "src/resources/uart.fin"
     UARTDriver * self = (UARTDriver *)__this;
 
     #line 227 "src/resources/uart.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
-                                                       &self->__lock_type);
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 230 "src/resources/uart.fin"
     dequeue(&self->uart_rx_queue, byte);
@@ -318,15 +295,13 @@ void UARTDriver__receive(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__release_tx(const __termina_event_t * const __ev,
-                            void * const __this) {
+void UARTDriver__release_tx(const __termina_event_t * const __ev, void * const __this) {
     
     #line 335 "src/resources/uart.fin"
     UARTDriver * self = (UARTDriver *)__this;
 
     #line 335 "src/resources/uart.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
-                                                       &self->__lock_type);
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 337 "src/resources/uart.fin"
     if (self->rem_bytes) {
@@ -354,7 +329,7 @@ void UARTDriver__release_tx(const __termina_event_t * const __ev,
             #line 351 "src/resources/uart.fin"
             if (extracted_elem.__variant == Some) {
                 
-                #line 350 "src/resources/uart.fin"
+                #line 351 "src/resources/uart.fin"
                 uint8_t elem = extracted_elem.Some.__0;
 
                 #line 352 "src/resources/uart.fin"
@@ -395,8 +370,7 @@ void UARTDriver__release_tx(const __termina_event_t * const __ev,
 
 }
 
-_Bool UARTDriver__tf_is_empty(const __termina_event_t * const __ev,
-                              const UARTDriver * const self) {
+_Bool UARTDriver__tf_is_empty(const __termina_event_t * const __ev, const UARTDriver * const self) {
     
     #line 137 "src/resources/uart.fin"
     uint32_t riscv_uart_te = 0x4U;
@@ -406,16 +380,13 @@ _Bool UARTDriver__tf_is_empty(const __termina_event_t * const __ev,
 
 }
 
-void UARTDriver__send(const __termina_event_t * const __ev, void * const __this,
-                      const size_t nbytes, const uint8_t output_bytes[nbytes],
-                      __status_int32_t * const status) {
+void UARTDriver__send(const __termina_event_t * const __ev, void * const __this, const size_t nbytes, const uint8_t output_bytes[nbytes], __status_int32_t * const status) {
     
     #line 389 "src/resources/uart.fin"
     UARTDriver * self = (UARTDriver *)__this;
 
     #line 389 "src/resources/uart.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner,
-                                                       &self->__lock_type);
+    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 393 "src/resources/uart.fin"
     (*status).__variant = Success;
@@ -433,14 +404,10 @@ void UARTDriver__send(const __termina_event_t * const __ev, void * const __this,
         if ((size_t)(queue_max_noe - num_elements) >= nbytes) {
             
             #line 402 "src/resources/uart.fin"
-            for (size_t i = 0U;
-                 i < nbytes && (*status).__variant == Failure == 0;
-                 i = i + 1U) {
+            for (size_t i = 0U; i < nbytes && (*status).__variant == Failure == 0; i = i + 1U) {
                 
                 #line 404 "src/resources/uart.fin"
-                *status = enqueue(&self->uart_tx_queue,
-                                  output_bytes[__termina_array__index(nbytes,
-                                                                      i)]);
+                *status = enqueue(&self->uart_tx_queue, output_bytes[__termina_array__index(nbytes, i)]);
 
             }
 
@@ -467,8 +434,7 @@ void UARTDriver__send(const __termina_event_t * const __ev, void * const __this,
             for (size_t i = 0U; i < hw_fifo_size && i < nbytes; i = i + 1U) {
                 
                 #line 420 "src/resources/uart.fin"
-                self->registers->data = (uint32_t)output_bytes[__termina_array__index(nbytes,
-                                                                                      i)];
+                self->registers->data = (uint32_t)output_bytes[__termina_array__index(nbytes, i)];
 
                 #line 422 "src/resources/uart.fin"
                 sent_bytes = sent_bytes + 1U;
@@ -496,15 +462,10 @@ void UARTDriver__send(const __termina_event_t * const __ev, void * const __this,
             if ((size_t)(queue_max_noe - num_elements) >= left_bytes) {
                 
                 #line 439 "src/resources/uart.fin"
-                for (size_t i = 0U;
-                     i < nbytes
-                     && (i < left_bytes && (*status).__variant == Failure == 0);
-                     i = i + 1U) {
+                for (size_t i = 0U; i < nbytes && (i < left_bytes && (*status).__variant == Failure == 0); i = i + 1U) {
                     
                     #line 441 "src/resources/uart.fin"
-                    *status = enqueue(&self->uart_tx_queue,
-                                      output_bytes[__termina_array__index(nbytes,
-                                                                          i + sent_bytes)]);
+                    *status = enqueue(&self->uart_tx_queue, output_bytes[__termina_array__index(nbytes, i + sent_bytes)]);
 
                 }
 
@@ -530,8 +491,7 @@ void UARTDriver__send(const __termina_event_t * const __ev, void * const __this,
 
 }
 
-_Bool UARTDriver__tf_is_full(const __termina_event_t * const __ev,
-                             const UARTDriver * const self) {
+_Bool UARTDriver__tf_is_full(const __termina_event_t * const __ev, const UARTDriver * const self) {
     
     #line 127 "src/resources/uart.fin"
     uint32_t riscv_uart_tf = 0x200U;

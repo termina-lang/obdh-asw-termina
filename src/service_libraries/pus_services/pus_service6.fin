@@ -17,7 +17,7 @@ resource class PUSService6 provides PUSS6Iface {
 
     exec_tc_req_status_update : PS6ExecTCReqStatusUpdate;
 
-    mem_id_write_permisssions : [bool; banks_number];
+    mem_id_write_permissions : [bool; banks_number];
     memory : loc [[u8; bank_size] ; banks_number];
 
     tm_channel : access TMChannelIface;
@@ -31,7 +31,7 @@ resource class PUSService6 provides PUSS6Iface {
     viewer is_address_valid (&self) -> bool {
 
         var is_valid : bool = true;
-        // TO DO: Implement address validation logic
+
         if (self->exec_tc_req_status_update.mem_id as usize >= banks_number) {
             is_valid = false;
         } else if (self->exec_tc_req_status_update.address as usize >= bank_size) {
@@ -50,12 +50,8 @@ resource class PUSService6 provides PUSS6Iface {
 
     viewer is_mem_id_write_enabled (&self) -> bool {
 
-        var is_enabled : bool = true;
-        if (self->mem_id_write_permisssions[self->exec_tc_req_status_update.mem_id as usize] == false) {
-            is_enabled = false;
-        }
-        
-        return is_enabled;
+        return (self->mem_id_write_permissions[self->exec_tc_req_status_update.mem_id as usize] == true);
+
     }
 
     method write_data(&priv self) -> Status<i32> {

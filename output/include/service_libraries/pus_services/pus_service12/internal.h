@@ -208,9 +208,6 @@ MonitorCheckType get_check_type(uint8_t aux);
 
 _Bool is_valid_check_limit_def(const MonitorDefinition * const param_limit_check_definition);
 
-__status_int32_t build_tm_12_12(TMHandler * const p_tm_handler,
-                                uint16_t tm_seq_counter, MissionOBT current_obt,
-                                uint8_t counter,
-                                const ParamMonitoringTransition param_mon_transitions_table[1U]);
+__status_int32_t build_tm_12_12(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, uint8_t counter, const ParamMonitoringTransition param_mon_transitions_table[1U]);
 
 #endif

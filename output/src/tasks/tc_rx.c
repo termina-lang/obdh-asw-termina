@@ -1,9 +1,7 @@
 
 #include "tasks/tc_rx.h"
 
-__status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev,
-                                            void * const __this,
-                                            size_t frame_size) {
+__status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this, size_t frame_size) {
     
     #line 17 "src/tasks/tc_rx.fin"
     TCRXBottomHalfTask * self = (TCRXBottomHalfTask *)__this;
@@ -30,7 +28,7 @@ __status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev
         #line 30 "src/tasks/tc_rx.fin"
         if (byte.__variant == Some) {
             
-            #line 29 "src/tasks/tc_rx.fin"
+            #line 30 "src/tasks/tc_rx.fin"
             uint8_t b = byte.Some.__0;
 
             #line 31 "src/tasks/tc_rx.fin"
@@ -50,22 +48,19 @@ __status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev
     tc_handler.__variant = None;
 
     #line 41 "src/tasks/tc_rx.fin"
-    self->a_tc_handler_pool.alloc(__ev, self->a_tc_handler_pool.__that,
-                                  &tc_handler);
+    self->a_tc_handler_pool.alloc(__ev, self->a_tc_handler_pool.__that, &tc_handler);
 
     #line 45 "src/tasks/tc_rx.fin"
     if (tc_handler.__variant == Some) {
         
-        #line 43 "src/tasks/tc_rx.fin"
+        #line 45 "src/tasks/tc_rx.fin"
         __termina_box_t tc_handler_b = tc_handler.Some.__0;
 
         #line 47 "src/tasks/tc_rx.fin"
-        tc_handler_build_from_descriptor((TCHandler *)tc_handler_b.data,
-                                         &self->telecommand);
+        tc_handler_build_from_descriptor((TCHandler *)tc_handler_b.data, &self->telecommand);
 
         #line 49 "src/tasks/tc_rx.fin"
-        __termina_out_port__send(__ev, self->tc_message_queue_output,
-                                 (void *)&tc_handler_b);
+        __termina_out_port__send(__ev, self->tc_message_queue_output, (void *)&tc_handler_b);
 
     } else
     {
@@ -107,16 +102,13 @@ void __TCRXBottomHalfTask__termina_task(void * arg) {
             
             case __TCRXBottomHalfTask__rx_frame:
 
-                __termina_msg_queue__recv(self->rx_frame,
-                                          (void *)&get_tc__msg_data, &status);
+                __termina_msg_queue__recv(self->rx_frame, (void *)&get_tc__msg_data, &status);
 
                 if (status != 0L) {
-                    __termina_except__msg_queue_recv_error(self->rx_frame,
-                                                           status);
+                    __termina_except__msg_queue_recv_error(self->rx_frame, status);
                 }
 
-                result = TCRXBottomHalfTask__get_tc(&event, self,
-                                                    get_tc__msg_data);
+                result = TCRXBottomHalfTask__get_tc(&event, self, get_tc__msg_data);
 
                 if (result.__variant != Success) {
                     
@@ -124,9 +116,7 @@ void __TCRXBottomHalfTask__termina_task(void * arg) {
                     source.__variant = ExceptSource__Handler;
                     source.Task.__0 = self->__task_id;
 
-                    __termina_except__action_failure(source,
-                                                     __TCRXBottomHalfTask__rx_frame,
-                                                     result.Failure.__0);
+                    __termina_except__action_failure(source, __TCRXBottomHalfTask__rx_frame, result.Failure.__0);
 
                 }
 

@@ -8,17 +8,14 @@ uint16_t ccsds_pus_tm_build_packet_id(uint16_t apid) {
 
 }
 
-uint16_t ccsds_pus_tm_build_packet_seq_ctrl(uint16_t sequence_flags,
-                                            uint16_t tm_count) {
+uint16_t ccsds_pus_tm_build_packet_seq_ctrl(uint16_t sequence_flags, uint16_t tm_count) {
     
     #line 61 "src/service_libraries/tm_ccsds_pus_format.fin"
     return (uint16_t)((uint16_t)(sequence_flags & 0x3U) << 14U) | (uint16_t)(tm_count & 0x3FFFU);
 
 }
 
-uint32_t ccsds_pus_tm_build_df_header(uint8_t service_type,
-                                      uint8_t service_subtype,
-                                      uint8_t destinationID) {
+uint32_t ccsds_pus_tm_build_df_header(uint8_t service_type, uint8_t service_subtype, uint8_t destinationID) {
     
     #line 75 "src/service_libraries/tm_ccsds_pus_format.fin"
     return (uint32_t)((uint32_t)((uint32_t)(0x10U << 24U) | (uint32_t)((uint32_t)service_type << 16U)) | (uint32_t)((uint32_t)service_subtype << 8U)) | (uint32_t)destinationID;
@@ -32,9 +29,7 @@ uint8_t ccsds_pus_tm_build_df_header_version(uint8_t version) {
 
 }
 
-void ccsds_pus_tm_set_fields(uint8_t tm_bytes[10U],
-                             const CCSDSPUSTMPacketHeader * const p_tm_packet_header,
-                             const CCSDSPUSTMDFHeader * const p_tm_df_header) {
+void ccsds_pus_tm_set_fields(uint8_t tm_bytes[10U], const CCSDSPUSTMPacketHeader * const p_tm_packet_header, const CCSDSPUSTMDFHeader * const p_tm_df_header) {
     
     #line 104 "src/service_libraries/tm_ccsds_pus_format.fin"
     serialize_uint16(p_tm_packet_header->packet_id, &tm_bytes[0U]);

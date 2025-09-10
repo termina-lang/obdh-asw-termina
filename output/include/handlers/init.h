@@ -29,7 +29,6 @@ typedef struct {
     } uart;
 } Init;
 
-__status_int32_t Init__init(const __termina_event_t * const __ev,
-                            void * const __this, TimeVal _boot_time);
+__status_int32_t Init__init(const __termina_event_t * const __ev, void * const __this, TimeVal _boot_time);
 
 #endif

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MintermFilter SYSTEM "../../../DTDs/filters.dtd">
+
+<MintermFilter formatFile="../../../TM_Formats/Level2/st01/asw_pus_v2_tm_1_4_error_uint8_data.xml">
+	<BoolVar id="0" name="Error_Code_2" constantType="decimal">
+		<FieldRef name="Error_Code" />
+		<Op type="equal" />
+		<Constant value="2" />
+	</BoolVar>
+	<BoolVar id="1" name="Error_Data_4" constantType="hex">
+		<FieldRef name="Error_Data" />
+		<Op type="equal" />
+		<Constant value="4" />
+	</BoolVar>
+	<Minterm id="0">
+		<BoolVarRef idRef="0" />
+		<BoolVarRef idRef="1" />
+	</Minterm>
+</MintermFilter>

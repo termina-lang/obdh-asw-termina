@@ -1,9 +1,7 @@
 
 #include "handlers/uart_irq_handler.h"
 
-__status_int32_t UARTIrqHandler__irq_handler(const __termina_event_t * const __ev,
-                                             void * const __this,
-                                             uint32_t _vector) {
+__status_int32_t UARTIrqHandler__irq_handler(const __termina_event_t * const __ev, void * const __this, uint32_t _vector) {
     
     #line 46 "src/handlers/uart_irq_handler.fin"
     UARTIrqHandler * self = (UARTIrqHandler *)__this;
@@ -38,7 +36,7 @@ __status_int32_t UARTIrqHandler__irq_handler(const __termina_event_t * const __e
         #line 63 "src/handlers/uart_irq_handler.fin"
         if (tc_completed.__variant == Some) {
             
-            #line 62 "src/handlers/uart_irq_handler.fin"
+            #line 63 "src/handlers/uart_irq_handler.fin"
             size_t size = tc_completed.Some.__0;
 
             #line 64 "src/handlers/uart_irq_handler.fin"

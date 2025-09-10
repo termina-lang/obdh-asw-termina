@@ -40,8 +40,7 @@ __status_int32_t enqueue(QueueU8 * const queue, uint8_t new_elem) {
         size_t next_tail_index = (size_t)(queue->head_index + queue->num_elements) % queue_max_noe;
 
         #line 30 "src/service_libraries/queue_u8.fin"
-        queue->elements[__termina_array__index(queue_max_noe,
-                                               next_tail_index)] = new_elem;
+        queue->elements[__termina_array__index(queue_max_noe, next_tail_index)] = new_elem;
 
         #line 31 "src/service_libraries/queue_u8.fin"
         queue->num_elements = queue->num_elements + 1U;
@@ -70,8 +69,7 @@ void dequeue(QueueU8 * const queue, __option_uint8_t * const old_elem) {
     if (0 == queue_is_empty) {
         
         #line 43 "src/service_libraries/queue_u8.fin"
-        uint8_t element = queue->elements[__termina_array__index(queue_max_noe,
-                                                                 queue->head_index)];
+        uint8_t element = queue->elements[__termina_array__index(queue_max_noe, queue->head_index)];
 
         #line 44 "src/service_libraries/queue_u8.fin"
         (*old_elem).__variant = Some;
@@ -97,8 +95,7 @@ void dequeue(QueueU8 * const queue, __option_uint8_t * const old_elem) {
 
 }
 
-void get_num_enqueued_elems(const QueueU8 * const queue,
-                            size_t * const nelems) {
+void get_num_enqueued_elems(const QueueU8 * const queue, size_t * const nelems) {
     
     #line 54 "src/service_libraries/queue_u8.fin"
     *nelems = queue->num_elements;

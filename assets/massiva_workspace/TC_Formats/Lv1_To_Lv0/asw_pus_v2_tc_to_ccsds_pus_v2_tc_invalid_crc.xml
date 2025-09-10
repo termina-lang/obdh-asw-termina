@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Export SYSTEM "../../DTDs/export.dtd">
+
+<Export from="../Level1/asw_pus_v2_tc_format.xml" to="../Level0/cssds_pus_v2_tc_format.xml">
+	<Sizes>
+		<sizeInBits id="0" from="ApplicationData" addSize="6" unit="bytes"/>
+		<!-- added 5 bytes of SecHeader plus 2 of CRC, but substracted 1 byte because of PacketLength ICD definition -->
+	</Sizes>
+	
+	<settings>
+		<settingFromField fieldRef="SecondaryHeader" toFieldRef="SecondaryHeader"/>
+		<settingFromField fieldRef="ApplicationData" toFieldRef="ApplicationData"/>
+		<settingFromConst value="2" toFieldRef="VersionNumber"/>
+		<settingFromConst value="1" toFieldRef="Type"/>
+		<settingFromConst value="1" toFieldRef="DFHFlag"/>
+		<settingFromConst value="812" toFieldRef="APID"/> <!-- asw APID -->
+		<!--settingFromConst value="50" toFieldRef="PID"/>--> <!-- PID -->
+		<!--settingFromConst value="12" toFieldRef="PCAT"/-->>
+		<settingFromConst value="3" toFieldRef="SequenceFlag"/> <!-- stand alone packet (11) -->
+		<settingFromConst value="0xFADE" toFieldRef="CRC"/>
+		<settingFromSize sizeRef="0" toFieldRef="PacketLength"/>
+	</settings>
+	
+</Export>

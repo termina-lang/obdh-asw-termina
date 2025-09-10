@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Export SYSTEM "../../DTDs/export.dtd">
+<Export from="NULL" to="asw_pus_3_31.xml">
+	<settings>
+		<settingFromConst value="1" toFieldRef="N"/>
+		<settingFromConst value="0xF" toFieldRef="SID"/>
+		<settingFromConst value="0x10" toFieldRef="Period"/>		
+	</settings>
+</Export>

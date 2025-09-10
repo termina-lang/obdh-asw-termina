@@ -1,8 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service17/internal.h"
 
-void build_tm_17_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter,
-                   MissionOBT current_obt) {
+void build_tm_17_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt) {
     
     #line 36 "src/service_libraries/pus_services/pus_service17/internal.fin"
     startup_tm(p_tm_handler);

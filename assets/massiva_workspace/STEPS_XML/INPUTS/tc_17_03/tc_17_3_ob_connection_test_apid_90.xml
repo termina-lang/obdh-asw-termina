@@ -2,6 +2,6 @@
 <!DOCTYPE Export SYSTEM "../../../DTDs/export.dtd">
 <Export from="NULL" to="epd_pus_17_3.xml">
 	<settings>
-		<settingFromConst value="90" toFieldRef="APID"/>
+		<settingFromConst value="0x90" toFieldRef="APID"/>
 	</settings>
 </Export>

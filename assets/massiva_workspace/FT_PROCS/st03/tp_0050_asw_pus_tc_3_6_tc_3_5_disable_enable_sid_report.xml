@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
+
+<test_proc name="TP_0050_ASW_PUS_TC_3_6_TC_3_5_DISABLE_ENABLE_SID_REPORT">
+	<step name="tc_3_6_disable_sid_0" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
+		<inputs>
+			
+			<input_level_2 name="tc_3_6" ifRef="0" delay_value="100" delay_unit="miliseconds">
+				<level2 format="TC_Formats/Level2/st03/asw_pus_tc_3_5_tc_3_6_format.xml"/>
+				<app_to_level2 export="STEPS_XML/INPUTS/tc_3_6/tc_3_6_disable_hk_period_sid0.xml"/>
+				<level1 format="DEFAULT"/>
+				<level2_to_level1 export="TC_Formats/Lv2_To_Lv1/st03/asw_pus_tc_3_6_to_asw_pus_v2_tc_ack.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_to_level0 export="DEFAULT"/>
+			</input_level_2>
+		
+		</inputs>
+		<outputs checkmode="all" valid_time_interval_value="500" valid_time_interval_unit="miliseconds">
+			<output_level_1 name="tm_1_1" id="0" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="TM_Filters/Level1/st01/asw_pus_v2_tm_1_1_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+			<output_level_1 name="tm_1_3" id="1" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="TM_Filters/Level1/st01/asw_pus_v2_tm_1_3_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+			<output_level_1 name="tm_1_7" id="2" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="TM_Filters/Level1/st01/asw_pus_v2_tm_1_7_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+		</outputs>			
+	</step>
+    <step name="tc_3_5_enable_sid_0" id="1" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
+		<inputs>
+			
+			<input_level_2 name="tc_3_5" ifRef="0" delay_value="24000" delay_unit="miliseconds">
+				<level2 format="TC_Formats/Level2/st03/asw_pus_tc_3_5_tc_3_6_format.xml"/>
+				<app_to_level2 export="STEPS_XML/INPUTS/tc_3_5/tc_3_5_enable_hk_period_sid0.xml"/>
+				<level1 format="DEFAULT"/>
+				<level2_to_level1 export="TC_Formats/Lv2_To_Lv1/st03/asw_pus_tc_3_5_to_asw_pus_v2_tc_ack.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_to_level0 export="DEFAULT"/>
+			</input_level_2>
+		
+		</inputs>
+		<outputs checkmode="all" valid_time_interval_value="500" valid_time_interval_unit="miliseconds">
+			<output_level_1 name="tm_1_1" id="0" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="TM_Filters/Level1/st01/asw_pus_v2_tm_1_1_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+			<output_level_1 name="tm_1_3" id="1" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="TM_Filters/Level1/st01/asw_pus_v2_tm_1_3_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+			<output_level_1 name="tm_1_7" id="2" ifRef="0">
+				<level1 format="DEFAULT"/>
+				<level1_filter apply_def_filter="yes" extra_filter="TM_Filters/Level1/st01/asw_pus_v2_tm_1_7_filter.xml"/>
+				<level0 format="DEFAULT"/>
+				<level1_from_level0 import="DEFAULT"/>
+				<level0_filter apply_def_filter="yes" extra_filter="NULL"/>
+			</output_level_1>
+		</outputs>			
+	</step>
+</test_proc>

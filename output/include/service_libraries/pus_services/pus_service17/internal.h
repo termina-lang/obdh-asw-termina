@@ -14,7 +14,6 @@ typedef struct {
     uint8_t flags_ack;
 } PS17ExecTCReqStatusUpdate;
 
-void build_tm_17_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter,
-                   MissionOBT current_obt);
+void build_tm_17_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt);
 
 #endif

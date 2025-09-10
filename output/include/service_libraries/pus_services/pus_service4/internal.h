@@ -39,10 +39,6 @@ typedef struct {
     __status_int32_t status;
 } IndexStatus;
 
-__status_int32_t build_tm_4_2(TMHandler * const p_tm_handler,
-                              uint16_t tm_seq_counter, size_t index, uint8_t N,
-                              const StatsConfig * const stats_config_table,
-                              const StatsDef param_stats[4U],
-                              MissionOBT current_obt);
+__status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, size_t index, uint8_t N, const StatsConfig * const stats_config_table, const StatsDef param_stats[4U], MissionOBT current_obt);
 
 #endif

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MintermFilter SYSTEM "../../../DTDs/filters.dtd">
+
+<MintermFilter formatFile="../../../TM_Formats/Level2/asw_pus_tm_20_2_uint32_format.xml">
+	<BoolVar id="0" name="Error_Code_2" constantType="decimal">
+		<FieldRef name="Error_Code" />
+		<Op type="equal" />
+		<Constant value="2" />
+	</BoolVar>
+	<BoolVar id="1" name="Received_CRC_FADE" constantType="hex">
+		<FieldRef name="Received_CRC" />
+		<Op type="equal" />
+		<Constant value="0xFADE" />
+	</BoolVar>
+	<BoolVar id="2" name="Expected_CRC_A91E" constantType="hex">
+		<FieldRef name="Expected_CRC" />
+		<Op type="equal" />
+		<Constant value="0xA91E" />
+	</BoolVar>
+	<Minterm id="0">
+		<BoolVarRef idRef="0" />
+		<BoolVarRef idRef="1" />
+		<BoolVarRef idRef="2" />
+	</Minterm>
+</MintermFilter>

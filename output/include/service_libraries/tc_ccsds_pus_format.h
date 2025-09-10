@@ -45,9 +45,6 @@ uint8_t get_subtype(const uint8_t tc_bytes[256U]);
 
 uint16_t get_source_id(const uint8_t tc_bytes[256U]);
 
-void tc_get_fields(const uint8_t tc_bytes[256U],
-                   CCSDSPUSTCPacketHeader * const p_tc_packet_header,
-                   CCSDSPUSTCDFHeader * const p_tc_df_header,
-                   uint16_t * const p_tc_packet_err_ctrl);
+void tc_get_fields(const uint8_t tc_bytes[256U], CCSDSPUSTCPacketHeader * const p_tc_packet_header, CCSDSPUSTCDFHeader * const p_tc_df_header, uint16_t * const p_tc_packet_err_ctrl);
 
 #endif

@@ -7,8 +7,7 @@ const uint32_t Unit = 204U;
 
 const uint32_t Dec = 20U;
 
-__status_int32_t Init__init(const __termina_event_t * const __ev,
-                            void * const __this, TimeVal _boot_time) {
+__status_int32_t Init__init(const __termina_event_t * const __ev, void * const __this, TimeVal _boot_time) {
     
     #line 42 "src/handlers/init.fin"
     Init * self = (Init *)__this;
@@ -36,20 +35,16 @@ __status_int32_t Init__init(const __termina_event_t * const __ev,
     atomic_store(&self->system_data_pool_u32[10U], 5U);
 
     #line 58 "src/handlers/init.fin"
-    atomic_store(&self->system_data_pool_u32[0U],
-                 (uint32_t)(Zero + (uint32_t)(1U * Unit)) + (uint32_t)(1U * Dec));
+    atomic_store(&self->system_data_pool_u32[0U], (uint32_t)(Zero + (uint32_t)(1U * Unit)) + (uint32_t)(1U * Dec));
 
     #line 59 "src/handlers/init.fin"
-    atomic_store(&self->system_data_pool_u32[1U],
-                 (uint32_t)(Zero + (uint32_t)(2U * Unit)) + (uint32_t)(4U * Dec));
+    atomic_store(&self->system_data_pool_u32[1U], (uint32_t)(Zero + (uint32_t)(2U * Unit)) + (uint32_t)(4U * Dec));
 
     #line 60 "src/handlers/init.fin"
-    atomic_store(&self->system_data_pool_u32[2U],
-                 (uint32_t)(Zero + (uint32_t)(3U * Unit)) + (uint32_t)(2U * Dec));
+    atomic_store(&self->system_data_pool_u32[2U], (uint32_t)(Zero + (uint32_t)(3U * Unit)) + (uint32_t)(2U * Dec));
 
     #line 61 "src/handlers/init.fin"
-    atomic_store(&self->system_data_pool_u32[3U],
-                 (uint32_t)(Zero + (uint32_t)(4U * Unit)) + (uint32_t)(9U * Dec));
+    atomic_store(&self->system_data_pool_u32[3U], (uint32_t)(Zero + (uint32_t)(4U * Unit)) + (uint32_t)(9U * Dec));
 
     #line 62 "src/handlers/init.fin"
     atomic_store(&self->system_data_pool_u32[4U], Zero + (uint32_t)(5U * Unit));
