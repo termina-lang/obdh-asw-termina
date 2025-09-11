@@ -62,7 +62,7 @@
 	<TestCase name="TP_0030_ASW_PUS_TC_REJECT_INVALID_CRC" 							
 		procedure="FT_PROCS/st17/tp_0030_asw_pus_tc_reject_invalid_crc.xml"/>
 
-	<TestCase name="TP_0040_ASW_PUS_TC_3_31_SET_HK_PERIOD_SID_0_TO_0X05" 
+	<TestCase name="TP_0040_ASW_PUS_TC_3_31_SET_HK_PERIOD_SID_0_TO_0x05" 
 		procedure="FT_PROCS/st03/tp_0040_asw_pus_tc_3_31_set_hk_period_sid_0_to_0x05.xml"/>
 
 	<TestCase name="TP_0050_ASW_PUS_TC_3_6_TC_3_5_DISABLE_ENABLE_SID_REPORT" 

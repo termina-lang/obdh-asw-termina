@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
+<!--
+
+ID: TP_0030_ASW_PUS_TC_REJECT_INVALID_CRC
+Description:
+
+The test sends a telecommand TC(17,1) with invalid CRC and checks that it is
+effectively rejected and the TM (1,2) is received with error code 2 (invalid
+CRC).
+
+-->
+
 <test_proc name="TP_0030_ASW_PUS_TC_REJECT_INVALID_CRC">
 	<step name="Send 17_1" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>

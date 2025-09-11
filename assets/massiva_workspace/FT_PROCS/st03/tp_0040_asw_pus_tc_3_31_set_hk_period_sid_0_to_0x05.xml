@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
-<test_proc name="TP_0040_ASW_PUS_TC_3_31_SET_HK_PERIOD_SID_0_TO_0X05">
+<test_proc name="TP_0040_ASW_PUS_TC_3_31_SET_HK_PERIOD_SID_0_TO_0x05">
 	<step name="tc_3_31" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
 			
