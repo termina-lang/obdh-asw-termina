@@ -8,6 +8,6 @@ to 0x05 is executed correctly and the TM (1,1) and TM (1,7) are received.
 |-------|-|-|-|-|
 | **TO + 1** | **STEP0** | | | |
 | | | **INPUTS** | **TC** | **App Data** |
-| | Send the TC (3,31) to set HK period SID 0 to 0x05  | | TC(17,1) | SID = 0, Period = 0x05 |
+| | Send the TC (3,31) to set HK period SID 0 to 0x05  | | TC(17,1) | N = 1<br>SID = 0<br>Period = 0x05 |
 | | | **OUTPUTS** | **TM** | **App Data Filter** |
 | | Check that the received sequence is TM (1,1), TM (1,7) | | TM(1,1)<br>TM(1,7) | N/A |

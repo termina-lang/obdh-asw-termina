@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
+<!--
+
+ID: TP_0070_ASW_PUS_TC_3_31_REJECT_INVALID_N
+Description:
+
+The test checks that telecommand TC(3,31) with invalid N parameter is
+effectively rejected and the TM (1,1) and TM (1,4) are received with error code
+2 (invalid N).
+
+-->
+
 <test_proc name="TP_0070_ASW_PUS_TC_3_31_REJECT_INVALID_N">
 	<step name="tc_3_31_invalid_N" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>

@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
+<!--
+
+ID: TP_0050_ASW_PUS_TC_3_6_TC_3_5_DISABLE_ENABLE_SID_REPORT
+Description:
+
+The test checks that telecommand TC(3,6) to disable SID report and TC(3,5) to
+enable SID report are executed correctly and the appropriate TM responses are
+received.
+
+-->
+
 <test_proc name="TP_0050_ASW_PUS_TC_3_6_TC_3_5_DISABLE_ENABLE_SID_REPORT">
 	<step name="tc_3_6_disable_sid_0" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
