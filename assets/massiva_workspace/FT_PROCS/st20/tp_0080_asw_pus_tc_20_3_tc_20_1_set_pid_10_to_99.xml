@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
+<!--
+
+ID: TP_0080_ASW_PUS_TC_20_3_TC_20_1_SET_PID_10_TO_99
+Description:
+
+The test checks that telecommand TC(20,3) to set PID 10 to value 99 is executed
+correctly, and then TC(20,1) retrieves the parameter value confirming it was set
+to 99.
+
+-->
+
 <test_proc name="TP_0080_ASW_PUS_TC_20_3_TC_20_1_SET_PID_10_TO_99">
 	<step name="tc_20_3_set_pid_10_to_99" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
