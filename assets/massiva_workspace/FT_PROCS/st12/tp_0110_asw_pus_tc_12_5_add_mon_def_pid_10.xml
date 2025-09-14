@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../DTDs/test_proc.dtd">
 
+<!--
+
+ID: TP_0110_ASW_PUS_TC_12_5_ADD_MON_DEF_PID_10
+Description:
+
+The test checks that a monitoring definition for PID 10 is added using TC(12,5),
+enabled using TC(12,1), and that the monitoring system correctly detects limit
+violations and generates the appropriate events.
+
+-->
+
+
 <test_proc name="TP_0110_ASW_PUS_TC_12_5_ADD_MON_DEF_PID_10">
 	<step name="tc_20_3_set_pid_10_to_5" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
-			<input_level_2 name="tc_20_3" ifRef="0" delay_value="200" delay_unit="miliseconds">
+			<input_level_2 name="tc_20_3" ifRef="0" delay_value="100" delay_unit="miliseconds">
 				<level2 format="TC_Formats/Level2/st20/asw_pus_tc_20_3_uint32_format.xml"/>
 				<app_to_level2 export="STEPS_XML/INPUTS/tc_20_3/tc_20_3_set_pid_10_to_99.xml"/>
 				<level1 format="DEFAULT"/>
