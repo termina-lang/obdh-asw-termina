@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
-<test_proc name="tp_0190_asw_pus_tc_9_129_set_obt">
+<!--
+
+ID: TP_0190_ASW_PUS_TC_9_129_SET_OBT
+Description:
+
+The test checks that telecommand TC(9,129) to set the On-Board Time (OBT) to
+6000 seconds is executed correctly and the TM (1,1), TM (1,3), and TM (1,7) are
+received.
+
+-->
+
+<test_proc name="TP_0190_ASW_PUS_TC_9_129_SET_OBT">
 	<step name="tc_9_129" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
 			<input_level_2 name="tc_9_129" ifRef="0" delay_value="120" delay_unit="miliseconds">
 				<level2 format="TC_Formats/Level2/st09/asw_pus_tc_9_129_format.xml"/>
-				<app_to_level2 export="STEPS_XML/INPUTS/tc_9_129/tc_9_129_set_obt_to_6000seconds.xml"/>
+				<app_to_level2 export="STEPS_XML/INPUTS/tc_9_129/tc_9_129_set_obt_to_6000_seconds.xml"/>
 				<level1 format="DEFAULT"/>
 				<level2_to_level1 export="TC_Formats/Lv2_To_Lv1/st09/asw_pus_tc_9_129_to_asw_pus_tc_ack.xml"/>
 				<level0 format="DEFAULT"/>

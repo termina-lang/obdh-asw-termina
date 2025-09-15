@@ -6,9 +6,9 @@
 ID: TP_0110_ASW_PUS_TC_12_5_ADD_MON_DEF_PID_10
 Description:
 
-The test checks that a monitoring definition for PID 10 is added using TC(12,5),
-enabled using TC(12,1), and that the monitoring system correctly detects limit
-violations and generates the appropriate events.
+The test checks that a monitoring definition for Parameter 10 is added using
+TC(12,5), enabled using TC(12,1), and that the monitoring system correctly
+detects limit violations and generates the appropriate events.
 
 -->
 
