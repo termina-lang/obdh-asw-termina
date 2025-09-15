@@ -6,9 +6,10 @@
 ID: TP_0120_ASW_PUS_SERV_4_PARAM_STATS_REPORTING
 Description:
 
-The test checks that parameter statistics can be defined for PIDs 1 and 3 using
-TC(4,6), retrieved using TC(4,1), and that PID 3 statistics can be deleted using
-TC(4,7), verifying the complete parameter statistics reporting functionality. 
+The test checks that parameter statistics can be defined for Parameters 1 and 3
+using TC(4,6), retrieved using TC(4,1), and that Parameter 3 statistics can be
+deleted using TC(4,7), verifying the complete parameter statistics reporting
+functionality. 
 
 -->
 
