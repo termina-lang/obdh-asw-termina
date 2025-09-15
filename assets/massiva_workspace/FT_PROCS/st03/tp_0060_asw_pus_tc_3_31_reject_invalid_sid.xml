@@ -7,8 +7,8 @@ ID: TP_0060_ASW_PUS_TC_3_31_REJECT_INVALID_SID
 Description:
 
 The test checks that telecommand TC(3,31) with invalid SID is effectively
-rejected and the TM (1,1) and TM (1,4) are received with error code 5 (invalid
-SID).
+rejected and the TM (1,1), and TM (1,4) with error code 5 (invalid SID), are
+received.
 
 -->
 

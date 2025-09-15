@@ -6,9 +6,9 @@
 ID: TP_0100_ASW_PUS_TC_20_3_INVALID_PID
 Description:
 
-The test checks that telecommand TC(20,3) with invalid PID is effectively
-rejected and the TM (1,1) and TM (1,4) are received with error code 22 (invalid
-PID).
+The test checks that telecommand TC(20,3) with invalid Parameter ID is
+effectively rejected and the TM (1,1), and TM (1,4) with error code 22 (invalid
+Parameter ID), are received.
 
 -->
 
@@ -16,7 +16,7 @@ PID).
 	<step name="tc_20_3_invalid_pid" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
 			<input_level_2 name="tc_20_1" ifRef="0" delay_value="120" delay_unit="miliseconds">
-				<level2 format="TC_Formats/Level2/st20/asw_pus_tc_20_3_format.xml"/>
+				<level2 format="TC_Formats/Level2/st20/asw_pus_tc_20_3_uint32_format.xml"/>
 				<app_to_level2 export="STEPS_XML/INPUTS/tc_20_1/tc_20_3_set_invalid_pid.xml"/>
 				<level1 format="DEFAULT"/>
 				<level2_to_level1 export="TC_Formats/Lv2_To_Lv1/st20/asw_pus_tc_20_3_to_asw_pus_tc_ack_0b1001.xml"/>
