@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
+<!--
+
+ID: TP_0150_ASW_PUS_TC_6_2_WRITE_BYTES_TO_0x41020080
+Description:
+
+The test checks that telecommand TC(6,2) writes specific data to memory address
+0x41020080, and then TC(6,5) reads back the data to verify the write operation
+was successful.
+
+-->
+
+
 <test_proc name="TP_0150_ASW_PUS_TC_6_2_WRITE_BYTES_TO_0x41020080">
 	<step name="tc_6_2_write_bytes_to_0x41020080" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>

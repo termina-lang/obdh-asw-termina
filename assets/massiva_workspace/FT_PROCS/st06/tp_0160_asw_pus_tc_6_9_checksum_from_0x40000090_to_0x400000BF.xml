@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
+<!--
+
+ID: TP_0160_ASW_PUS_TC_6_9_CHECKSUM_FROM_0x40000090_TO_0x400000BF
+Description:
+
+The test checks that telecommand TC(6,9) calculates checksum for 48 bytes from
+memory address 0x40000090 to 0x400000BF and returns the expected checksum value
+0x41BE in TM (6,10).
+
+-->
+
 <test_proc name="TP_0160_ASW_PUS_TC_6_9_CHECKSUM_FROM_0x40000090_TO_0x400000BF">
 	<step name="tc_6_9_checksum_from_0x40000090_to_0x400000BF" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>

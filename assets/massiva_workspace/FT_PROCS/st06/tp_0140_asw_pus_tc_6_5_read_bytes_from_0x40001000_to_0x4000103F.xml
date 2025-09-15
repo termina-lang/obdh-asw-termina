@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
+<!--
+
+ID: TP_0140_ASW_PUS_TC_6_5_READ_BYTES_FROM_0x40001000_TO_0x4000103F
+Description:
+
+The test checks that telecommand TC(6,5) to read 64 bytes from memory address
+0x40001000 to 0x4000103F is executed correctly and the TM (6,6) with the
+expected data is received.
+
+-->
+
 <test_proc name="TP_0140_ASW_PUS_TC_6_5_READ_BYTES_FROM_0x40001000_TO_0x4000103F">
 	<step name="tc_6_5_read_bytes_from_0x40001000_to_0x4000103F" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>

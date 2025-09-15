@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE test_proc SYSTEM "../../DTDs/test_proc.dtd">
 
+<!--
+
+ID: TP_0120_ASW_PUS_SERV_4_PARAM_STATS_REPORTING
+Description:
+
+The test checks that parameter statistics can be defined for PIDs 1 and 3 using
+TC(4,6), retrieved using TC(4,1), and that PID 3 statistics can be deleted using
+TC(4,7), verifying the complete parameter statistics reporting functionality. 
+
+-->
+
 <test_proc name="TP_0120_ASW_PUS_SERV_4_PARAM_STATS_REPORTING">
 	<step name="tc_4_6" id="0" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
-			<input_level_2 name="tc_4_6" ifRef="0" delay_value="200" delay_unit="miliseconds">
+			<input_level_2 name="tc_4_6" ifRef="0" delay_value="100" delay_unit="miliseconds">
 				<level2 format="TC_Formats/Level2/st04/asw_pus_tc_4_6_format.xml"/>
 				<app_to_level2 export="STEPS_XML/INPUTS/tc_4_6/tc_4_6_define_stats_PID_1.xml"/>
 				<level1 format="DEFAULT"/>
