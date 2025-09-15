@@ -24,6 +24,6 @@ detects limit violations and generates the appropriate events.
 | | Check that the received sequence is TM (1,1), TM (1,7) | | TM(1,1)<br>TM(1,7) | N/A |
 | **TO + 20** | **STEP3** | | | |
 | | | **INPUTS** | **TC** | **App Data** |
-| | Send the TC (20,3) to set PID 10 to 99 to force event 0x4001 | | TC(20,3) | N = 1, Parameter ID = 10, Parameter Value = 99 |
+| | Send the TC (20,3) to set Parameter 10 to 99 to force event 0x4001 | | TC(20,3) | N = 1, Parameter ID = 10, Parameter Value = 99 |
 | | | **OUTPUTS** | **TM** | **App Data Filter** |
 | | Check that monitoring transition and event are generated | | TM(1,1)<br>TM(1,7)<br>TM(12,12)<br>TM(5,4) | Param. Monitoring ID = 0, Parameter ID = 10, Event ID = 0x4001 |

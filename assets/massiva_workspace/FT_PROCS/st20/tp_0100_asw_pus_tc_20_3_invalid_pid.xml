@@ -19,7 +19,7 @@ Parameter ID), are received.
 				<level2 format="TC_Formats/Level2/st20/asw_pus_tc_20_3_uint32_format.xml"/>
 				<app_to_level2 export="STEPS_XML/INPUTS/tc_20_1/tc_20_3_set_invalid_pid.xml"/>
 				<level1 format="DEFAULT"/>
-				<level2_to_level1 export="TC_Formats/Lv2_To_Lv1/st20/asw_pus_tc_20_3_to_asw_pus_tc_ack_0b1001.xml"/>
+				<level2_to_level1 export="TC_Formats/Lv2_To_Lv1/st20/asw_pus_tc_20_3_uint32_to_asw_pus_tc_ack_0b1001.xml"/>
 				<level0 format="DEFAULT"/>
 				<level1_to_level0 export="DEFAULT"/>
 			</input_level_2>
