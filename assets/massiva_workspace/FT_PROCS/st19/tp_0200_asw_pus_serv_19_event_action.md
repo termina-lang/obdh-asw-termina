@@ -29,7 +29,7 @@ verifying that the action is triggered when a limit violation occurs.
 | | Check that the received sequence is TM (1,1), TM (1,7) | | TM(1,1)<br>TM(1,7) | N/A |
 | **TO + 23** | **STEP4** | | | |
 | | | **INPUTS** | **TC** | **App Data** |
-| | Send the TC (12,1) to enable monitoring for PMONID 2 | | TC(12,1) | N = 1, Param. Monitoring ID = 2 |
+| | Send the TC (12,1) to enable monitoring for Param. Monitoring 2 | | TC(12,1) | N = 1, Param. Monitoring ID = 2 |
 | | | **OUTPUTS** | **TM** | **App Data Filter** |
 | | Check that monitoring is enabled and transition is detected | | TM(1,1)<br>TM(1,7)<br>TM(12,12) | Param. Monitoring ID = 2, Parameter ID = 15 |
 | **TO + 70** | **STEP5** | | | |
