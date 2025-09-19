@@ -9,7 +9,7 @@ detects limit violations and generates the appropriate events.
 |-------|-|-|-|-|
 | **TO + 1** | **STEP0** | | | |
 | | | **INPUTS** | **TC** | **App Data** |
-| | Send the TC (20,3) to set Parameter 10 to 99 | | TC(20,3) | N = 1, Parameter ID = 10, Parameter Value = 99 |
+| | Send the TC (20,3) to set Parameter 10 to 5 | | TC(20,3) | N = 1, Parameter ID = 10, Parameter Value = 5 |
 | | | **OUTPUTS** | **TM** | **App Data Filter** |
 | | Check that the received sequence is TM (1,1), TM (1,7) | | TM(1,1)<br>TM(1,7) | N/A |
 | **TO + 8** | **STEP1** | | | |
