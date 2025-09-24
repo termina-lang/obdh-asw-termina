@@ -18,7 +18,7 @@ detects limit violations and generates the appropriate events.
 		<inputs>
 			<input_level_2 name="tc_20_3" ifRef="0" delay_value="100" delay_unit="miliseconds">
 				<level2 format="TC_Formats/Level2/st20/asw_pus_tc_20_3_uint32_format.xml"/>
-				<app_to_level2 export="STEPS_XML/INPUTS/tc_20_3/tc_20_3_set_pid_10_to_99.xml"/>
+				<app_to_level2 export="STEPS_XML/INPUTS/tc_20_3/tc_20_3_set_pid_10_to_5.xml"/>
 				<level1 format="DEFAULT"/>
 				<level2_to_level1 export="TC_Formats/Lv2_To_Lv1/st20/asw_pus_tc_20_3_uint32_to_asw_pus_tc_ack_0b1001.xml"/>
 				<level0 format="DEFAULT"/>
