@@ -30,18 +30,19 @@ interface MngTCExecIface {
  */
 resource class ManagerTCExecutor provides MngTCExecIface {
 
-    /// Pointer to the interface of PUS Service 17.
+    /// @brief Interface to PUS Service 17 (Alive check service).
     pus_service_17 : access PUSS17Iface;
 
-    /// Pointer to the interface of PUS Service 2.
+    /// @brief Interface to PUS Service 2 (Device management service).
     pus_service_2 : access PUSS2Iface;
 
-    /// Pointer to the interface of PUS Service 9.
+    /// @brief Interface to PUS Service 9 (On-board time management service).
     pus_service_9 : access PUSS9Iface;
 
-    /// Pointer to the interface of PUS Service 128.
+    /// @brief Interface to PUS Service 128.
     pus_service_128 : access PUSS128Iface; 
     
+    /// @brief Interface to PUS service 1 (Telemetry service).
     pus_service_1 : access PUSService1Iface;
 
 

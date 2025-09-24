@@ -43,6 +43,7 @@ task class HouseKeepingFDIR {
     /// @brief Interface to PUS service 4 (Statistics service).
     pus_service_4 : access PUSS4Iface;
 
+    /// @brief Interface to PUS service 1 (Telemetry service).
     pus_service_1 : access PUSService1Iface;
 
     /**
