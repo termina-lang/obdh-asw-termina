@@ -28,7 +28,7 @@ resource class PUSService6 provides PUSS6Iface {
 
     pus_service_1 : access PUSService1Iface;
 
-    viewer is_address_valid (&self) -> bool {
+    method is_address_valid (&self) -> bool {
 
         var is_valid : bool = true;
 
@@ -48,7 +48,7 @@ resource class PUSService6 provides PUSS6Iface {
     }
 
 
-    viewer is_mem_id_write_enabled (&self) -> bool {
+    method is_mem_id_write_enabled (&self) -> bool {
 
         return (self->mem_id_write_permissions[self->exec_tc_req_status_update.mem_id as usize] == true);
 

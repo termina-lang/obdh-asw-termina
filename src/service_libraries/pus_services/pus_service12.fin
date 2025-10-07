@@ -38,7 +38,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     pus_service_1 : access PUSService1Iface;
 
-    viewer is_valid_PMONID(&self) -> bool{
+    method is_valid_PMONID(&self) -> bool{
 
         var is_valid : bool = false;
 
@@ -50,7 +50,7 @@ resource class PUSService12 provides PUSS12Iface {
         return is_valid;
     }
 
-    viewer is_limits_monitoring(&self) -> bool{
+    method is_limits_monitoring(&self) -> bool{
 
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
         var is_limits_mon : bool = false;
@@ -64,7 +64,7 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
 
-    viewer is_expected_value_monitoring(&self) -> bool{
+    method is_expected_value_monitoring(&self) -> bool{
 
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
         var is_exp_val_mon : bool = false;
@@ -77,7 +77,7 @@ resource class PUSService12 provides PUSS12Iface {
         return is_exp_val_mon;
     }
 
-    viewer get_limits_monitoring_definition(&self) -> ParamLimitCheckDefinition {
+    method get_limits_monitoring_definition(&self) -> ParamLimitCheckDefinition {
 
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
         var monitoring_definition : ParamLimitCheckDefinition = {
@@ -103,7 +103,7 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
 
-    viewer get_expected_value_monitoring_definition(&self) -> ParamValueCheckDefinition {
+    method get_expected_value_monitoring_definition(&self) -> ParamValueCheckDefinition {
 
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
         var monitoring_definition : ParamValueCheckDefinition = {
@@ -149,7 +149,7 @@ resource class PUSService12 provides PUSS12Iface {
         return next_status;
     }
 
-    viewer check_PID_status_limits_monitoring(&self)-> CheckLimitsStatus{
+    method check_PID_status_limits_monitoring(&self)-> CheckLimitsStatus{
 
         var current_monitor_definition : ParamLimitCheckDefinition = self->get_limits_monitoring_definition();
         var check_status: CheckLimitsStatus = CheckLimitsStatus::MonitorUnchecked;
@@ -174,7 +174,7 @@ resource class PUSService12 provides PUSS12Iface {
 
     }
 
-    viewer check_PID_status_exp_val_monitoring(&self)-> CheckValueStatus {
+    method check_PID_status_exp_val_monitoring(&self)-> CheckValueStatus {
 
         var current_monitor_definition : ParamValueCheckDefinition = self->get_expected_value_monitoring_definition();
         var check_status : CheckValueStatus = CheckValueStatus::MonitorUnchecked;
@@ -193,7 +193,7 @@ resource class PUSService12 provides PUSS12Iface {
         return check_status;
     }
 
-    viewer PID_is_above_upper_limit(&self, limit_check_def : &ParamLimitCheckDefinition) -> bool {
+    method PID_is_above_upper_limit(&self, limit_check_def : &ParamLimitCheckDefinition) -> bool {
 
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
         var res : bool = false;
@@ -226,7 +226,7 @@ resource class PUSService12 provides PUSS12Iface {
         return res;
     }
 
-   viewer PID_is_below_lower_limit(&self, limit_check_def : &ParamLimitCheckDefinition) -> bool {
+    method PID_is_below_lower_limit(&self, limit_check_def : &ParamLimitCheckDefinition) -> bool {
 
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
         var res : bool = false;
@@ -259,7 +259,7 @@ resource class PUSService12 provides PUSS12Iface {
     }
 
     
-    viewer PID_has_expected_masked_value(&self, expected_value_check_definition : &ParamValueCheckDefinition) -> bool {
+    method PID_has_expected_masked_value(&self, expected_value_check_definition : &ParamValueCheckDefinition) -> bool {
 
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize;
         var res : bool = false;
@@ -493,7 +493,7 @@ resource class PUSService12 provides PUSS12Iface {
         return next_status;
     }
 
-    viewer are_status_equal(&self, status1: CheckState, status2: CheckState)->bool{
+    method are_status_equal(&self, status1: CheckState, status2: CheckState) -> bool{
 
         var equal : bool = get_check_status_index(status1) == get_check_status_index(status2);
         return equal;
@@ -756,7 +756,7 @@ resource class PUSService12 provides PUSS12Iface {
         return;
     }
 
-    viewer get_PMON_type (&self, PMONID : usize) -> MonitorCheckType {
+    method get_PMON_type (&self, PMONID : usize) -> MonitorCheckType {
 
         var mon_type : MonitorCheckType = MonitorCheckType::Free;
 

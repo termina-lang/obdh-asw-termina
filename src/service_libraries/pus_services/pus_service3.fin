@@ -34,7 +34,7 @@ resource class PUSService3 provides PUSS3Iface {
 
     random_seed : u32;
 
-    viewer get_SIDindex (&self) -> IndexFound {
+    method get_SIDindex (&self) -> IndexFound {
 
         var index_found: IndexFound = {found = false, index = 0};
 

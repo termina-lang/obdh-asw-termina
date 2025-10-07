@@ -177,7 +177,7 @@ function try_tc_acceptation(tc_descriptor: &TCDescriptor) -> TCStatus {
 
         } else if (12 : u8 == type) {
         
-            if (1 : u8 == subtype || 5 : u8 == subtype || 6 : u8 == subtype) {
+            if (1 == subtype || 2 == subtype || 5 == subtype || 6  == subtype) {
 
                 tc_status.acceptation_status = TCAcceptationStatus::Accepted;
                 tc_status.execution_status = TCExecutionCtrl::ExecCtrlHK_FDIRTC;

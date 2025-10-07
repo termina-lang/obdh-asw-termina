@@ -59,7 +59,7 @@ resource class PUSService5 provides PUSS5Iface {
 
     pus_service_1 : access PUSService1Iface;
 
-    viewer is_Ev_ID_enabled(&self, Ev_ID : u16) -> bool {
+    method is_Ev_ID_enabled(&self, Ev_ID : u16) -> bool {
 
         var enabled : bool = false;
         var index : usize = get_Ev_ID_enable_config_index(Ev_ID);

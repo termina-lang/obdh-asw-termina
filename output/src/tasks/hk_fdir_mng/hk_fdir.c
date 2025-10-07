@@ -3,8 +3,108 @@
 
 const size_t num_actions_per_second = 2U;
 
-__status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev, HouseKeepingFDIR * const self) {
+__status_int32_t HouseKeepingFDIR__check_pending_actions(const __termina_event_t * const __ev, void * const __this) {
     
+    #line 96 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
+
+    #line 98 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    __status_int32_t result;
+    #line 98 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    result.__variant = Success;
+
+    #line 100 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    size_t pending_actions[4U];
+    #line 100 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
+        #line 100 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        pending_actions[__i0] = 0U;
+    }
+
+    #line 101 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    self->pus_service_19.get_pending_action_number(__ev, self->pus_service_19.__that, pending_actions);
+
+    #line 103 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    size_t n = 4U;
+
+    #line 105 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (pending_actions[3U] > 0U) {
+        
+        #line 107 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        n = 3U;
+
+    } else
+    #line 109 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (pending_actions[2U] > 0U) {
+        
+        #line 111 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        n = 2U;
+
+    } else
+    #line 113 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (pending_actions[1U] > 0U) {
+        
+        #line 115 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        n = 1U;
+
+    } else
+    #line 117 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (pending_actions[0U] > 0U) {
+        
+        #line 119 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        n = 0U;
+
+    } else
+    {
+        
+
+    }
+
+    #line 125 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    if (n < 4U) {
+        
+        #line 127 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        __option_box_t tc_handler;
+        #line 127 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        tc_handler.__variant = None;
+
+        #line 128 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        self->a_tc_handler_pool.alloc(__ev, self->a_tc_handler_pool.__that, &tc_handler);
+
+        #line 132 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        if (tc_handler.__variant == Some) {
+            
+            #line 132 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            __termina_box_t b_tc_handler = tc_handler.Some.__0;
+
+            #line 134 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            self->pus_service_19.extract_action(__ev, self->pus_service_19.__that, n, (TCHandler *)b_tc_handler.data);
+
+            #line 135 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            __termina_out_port__send(__ev, self->action_tc_message_queue_output, (void *)&b_tc_handler);
+
+        } else
+        {
+            
+            #line 139 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            result.__variant = Failure;
+            #line 139 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+            result.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+
+        }
+
+    }
+
+    #line 145 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    return result;
+
+}
+
+__status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev, void * const __this) {
+    
+    #line 53 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
+
     #line 55 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     __status_int32_t result;
     #line 55 "src/tasks/hk_fdir_mng/hk_fdir.fin"
@@ -63,178 +163,104 @@ __status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev,
     }
 
     #line 88 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    return result;
+    if (result.__variant == Success) {
+        
+        #line 89 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        return HouseKeepingFDIR__check_pending_actions(__ev, self);
+
+    } else
+    {
+        
+        #line 91 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        return result;
+
+    }
 
 }
 
 __status_int32_t HouseKeepingFDIR__do_hk_fdir(const __termina_event_t * const __ev, void * const __this, TimeVal _current_time) {
     
-    #line 98 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 156 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
 
-    #line 100 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 158 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     __status_int32_t result;
-    #line 100 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 158 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     result.__variant = Success;
 
-    #line 102 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 160 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     self->pus_service_3.update_params(__ev, self->pus_service_3.__that);
 
-    #line 103 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 161 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     self->pus_service_4.update_all_stats(__ev, self->pus_service_4.__that);
 
-    #line 104 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 162 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     self->pus_service_3.do_hk(__ev, self->pus_service_3.__that, &result);
 
-    #line 105 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    result = HouseKeepingFDIR__do_fdir(__ev, self);
-
-    #line 107 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    size_t pending_actions[4U];
-    #line 107 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
-        #line 107 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        pending_actions[__i0] = 0U;
-    }
-
-    #line 108 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    self->pus_service_19.get_pending_action_number(__ev, self->pus_service_19.__that, pending_actions);
-
-    #line 110 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    size_t n = 4U;
-
-    #line 112 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (pending_actions[3U] > 0U) {
-        
-        #line 114 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        n = 3U;
-
-    } else
-    #line 116 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (pending_actions[2U] > 0U) {
-        
-        #line 118 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        n = 2U;
-
-    } else
-    #line 120 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (pending_actions[1U] > 0U) {
-        
-        #line 122 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        n = 1U;
-
-    } else
-    #line 124 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (pending_actions[0U] > 0U) {
-        
-        #line 126 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        n = 0U;
-
-    } else
-    {
-        
-
-    }
-
-    #line 132 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    if (n < 4U) {
-        
-        #line 134 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        __option_box_t tc_handler;
-        #line 134 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        tc_handler.__variant = None;
-
-        #line 135 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        self->a_tc_handler_pool.alloc(__ev, self->a_tc_handler_pool.__that, &tc_handler);
-
-        #line 139 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        if (tc_handler.__variant == Some) {
-            
-            #line 139 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            __termina_box_t b_tc_handler = tc_handler.Some.__0;
-
-            #line 141 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->pus_service_19.extract_action(__ev, self->pus_service_19.__that, n, (TCHandler *)b_tc_handler.data);
-
-            #line 142 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            __termina_out_port__send(__ev, self->action_tc_message_queue_output, (void *)&b_tc_handler);
-
-        } else
-        {
-            
-            #line 146 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            result.__variant = Failure;
-            #line 146 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            result.Failure.__0 = TM_POOL_ALLOC_FAILURE;
-
-        }
-
-    }
-
-    #line 153 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    return result;
+    #line 164 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    return HouseKeepingFDIR__do_fdir(__ev, self);
 
 }
 
 __status_int32_t HouseKeepingFDIR__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
     
-    #line 163 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 175 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
 
-    #line 165 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 177 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     __status_int32_t status;
-    #line 165 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 177 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     status.__variant = Success;
 
-    #line 167 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 179 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     uint8_t tc_type = (*(TCHandler *)tc_handler.data).df_header.type;
 
-    #line 169 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 181 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     if (tc_type == 3U) {
         
-        #line 171 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        #line 183 "src/tasks/hk_fdir_mng/hk_fdir.fin"
         self->pus_service_3.exec_tc(__ev, self->pus_service_3.__that, (TCHandler *)tc_handler.data, &status);
 
     } else
-    #line 173 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 185 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     if (tc_type == 5U) {
         
-        #line 175 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        #line 187 "src/tasks/hk_fdir_mng/hk_fdir.fin"
         self->pus_service_5.exec_tc(__ev, self->pus_service_5.__that, (TCHandler *)tc_handler.data, &status);
 
     } else
-    #line 177 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 189 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     if (tc_type == 12U) {
         
-        #line 179 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        #line 191 "src/tasks/hk_fdir_mng/hk_fdir.fin"
         self->pus_service_12.exec_tc(__ev, self->pus_service_12.__that, (TCHandler *)tc_handler.data, &status);
 
     } else
-    #line 181 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 193 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     if (tc_type == 19U) {
         
-        #line 183 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        #line 195 "src/tasks/hk_fdir_mng/hk_fdir.fin"
         self->pus_service_19.exec_tc(__ev, self->pus_service_19.__that, (TCHandler *)tc_handler.data, &status);
 
     } else
-    #line 186 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 198 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     if (tc_type == 4U) {
         
-        #line 188 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        #line 200 "src/tasks/hk_fdir_mng/hk_fdir.fin"
         self->pus_service_4.exec_tc(__ev, self->pus_service_4.__that, (TCHandler *)tc_handler.data, &status);
 
     } else
     {
         
-        #line 192 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+        #line 204 "src/tasks/hk_fdir_mng/hk_fdir.fin"
         self->pus_service_1.send_tm_1_4_error_in_acceptance(__ev, self->pus_service_1.__that, (*(TCHandler *)tc_handler.data).packet_header.packet_id, (*(TCHandler *)tc_handler.data).packet_header.packet_seq_ctrl, &status);
 
     }
 
-    #line 199 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 211 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that, tc_handler);
 
-    #line 201 "src/tasks/hk_fdir_mng/hk_fdir.fin"
+    #line 213 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     return status;
 
 }

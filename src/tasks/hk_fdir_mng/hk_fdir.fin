@@ -50,7 +50,7 @@ task class HouseKeepingFDIR {
      * @brief Performs FDIR monitoring for all enabled PMON IDs and handles triggered events.
      * @return Status code indicating the result of the operation.
     */ 
-    method do_fdir(&priv self) -> Status<i32> {
+    action do_fdir(&priv self) -> Status<i32> {
 
         var result : Status<i32> = Success;
 
@@ -85,24 +85,17 @@ task class HouseKeepingFDIR {
             
         }
 
-        return result;
+        if result is Success {
+            continue self->check_pending_actions();
+        } else {
+            return result;
+        }
 
     }
 
-
-    /**
-    * @brief Executes housekeeping updates and fault monitoring, then extracts pending FDIR actions.
-    * @param _current_time The current mission time value triggering the update.
-    * @return Status code indicating the result of the operation.
-    */
-    action do_hk_fdir(&priv self, _current_time : TimeVal) -> Status<i32> {
+    action check_pending_actions(&priv self) -> Status<i32> {
 
         var result : Status<i32> = Success;
-
-        self->pus_service_3.update_params();
-        self->pus_service_4.update_all_stats(); 
-        self->pus_service_3.do_hk(&mut result);
-        result = self->do_fdir();
 
         var pending_actions : [usize; 4] = [0;4];
         self->pus_service_19.get_pending_action_number(&mut pending_actions);
@@ -149,8 +142,27 @@ task class HouseKeepingFDIR {
             }
         }
 
-
         return result;
+
+
+    }
+
+
+    /**
+    * @brief Executes housekeeping updates and fault monitoring, then extracts pending FDIR actions.
+    * @param _current_time The current mission time value triggering the update.
+    * @return Status code indicating the result of the operation.
+    */
+    action do_hk_fdir(&priv self, _current_time : TimeVal) -> Status<i32> {
+
+        var result : Status<i32> = Success;
+
+        self->pus_service_3.update_params();
+        self->pus_service_4.update_all_stats(); 
+        self->pus_service_3.do_hk(&mut result);
+
+        continue self->do_fdir();
+
     }
 
 

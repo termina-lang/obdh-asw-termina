@@ -57,7 +57,7 @@ resource class PUSService4 provides PUSS4Iface {
         return status;
     }
 
-    viewer get_free_index (&self) -> IndexStatus {
+    method get_free_index (&self) -> IndexStatus {
 
         var id_status: IndexStatus = {index = 0, status = Failure(NO_FREE_STATS_INDEX_ERROR)};
 
@@ -72,7 +72,7 @@ resource class PUSService4 provides PUSS4Iface {
         return id_status;
     }
 
-    viewer is_stats_index_defined(&self, index: usize) -> bool {
+    method is_stats_index_defined(&self, index: usize) -> bool {
 
         var is_defined: bool = false;
 
@@ -414,7 +414,7 @@ resource class PUSService4 provides PUSS4Iface {
     
     }
 
-    viewer SDP_param_higher_than_limit(&self, pid_index : usize) -> bool {
+    method SDP_param_higher_than_limit(&self, pid_index : usize) -> bool {
 
         var is_higher : bool = false;
         var PID : u16 = self->stats_config_table.PID[pid_index];
@@ -445,7 +445,7 @@ resource class PUSService4 provides PUSS4Iface {
     }
 
 
-    viewer SDP_param_lower_than_limit(&self, pid_index : usize) -> bool {
+    method SDP_param_lower_than_limit(&self, pid_index : usize) -> bool {
 
         var is_lower : bool = false;
         var PID : u16 = self->stats_config_table.PID[pid_index];
@@ -475,7 +475,7 @@ resource class PUSService4 provides PUSS4Iface {
         return is_lower;
     }
 
-    viewer get_data_pool_item(&self, PID: u16 ) -> u32 {
+    method get_data_pool_item(&self, PID: u16 ) -> u32 {
 
         var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
         var SDP_value : u32 = 0;
@@ -498,7 +498,7 @@ resource class PUSService4 provides PUSS4Iface {
     }
 
 
-    viewer SDP_get_mean(&self, pid_index : usize) -> u32 {
+    method SDP_get_mean(&self, pid_index : usize) -> u32 {
 
         var PID : u16 = self->stats_config_table.PID[pid_index];
         var u8_SDP_value : u8 = 0;

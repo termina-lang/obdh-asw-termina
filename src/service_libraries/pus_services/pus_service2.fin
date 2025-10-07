@@ -88,7 +88,7 @@ resource class PUSService2 provides PUSS2Iface {
         return status;
     }
 
-    viewer device_drv_is_on_off_address_valid(&self) -> bool {
+    method device_drv_is_on_off_address_valid(&self) -> bool {
 
         var is_valid : bool = false;
         var device_address : u32 = self->exec_tc_req_status_update.dev_address;

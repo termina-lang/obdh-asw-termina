@@ -59,7 +59,9 @@ typedef struct {
 
 void __HouseKeepingFDIR__termina_task(void * const arg);
 
-__status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev, HouseKeepingFDIR * const self);
+__status_int32_t HouseKeepingFDIR__check_pending_actions(const __termina_event_t * const __ev, void * const __this);
+
+__status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev, void * const __this);
 
 __status_int32_t HouseKeepingFDIR__do_hk_fdir(const __termina_event_t * const __ev, void * const __this, TimeVal _current_time);
 

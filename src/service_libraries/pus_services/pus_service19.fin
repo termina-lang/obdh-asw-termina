@@ -80,7 +80,7 @@ resource class PUSService19 provides PUSS19Iface {
         return status;
     }
 
-    viewer get_free_event_action_index (&self)-> FoundID {
+    method get_free_event_action_index (&self)-> FoundID {
 
         var found_and_id: FoundID = {found = false, ev_action_index = 0, enabled = false};
 
@@ -95,7 +95,7 @@ resource class PUSService19 provides PUSS19Iface {
         return found_and_id;
     }
 
-    viewer is_ev_action_defined (&self, evID : u16) -> FoundID {
+    method is_ev_action_defined (&self, evID : u16) -> FoundID {
 
         var found_and_id: FoundID = {found = false, ev_action_index = 0, enabled = false};
 
