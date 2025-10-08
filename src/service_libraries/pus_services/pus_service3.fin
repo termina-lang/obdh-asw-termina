@@ -18,8 +18,6 @@ resource class PUSService3 provides PUSS3Iface {
 
     hk_config_table : [HKConfiguration; max_num_of_SIDs];
 
-    exec_tc_req_status_update : PS3ExecTCReqStatusUpdate;
-    
     system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
@@ -34,65 +32,72 @@ resource class PUSService3 provides PUSS3Iface {
 
     random_seed : u32;
 
-    method get_SIDindex (&self) -> IndexFound {
+    method get_SIDindex (&self, exec_tc_req_status_update : &PS3ExecTCReqStatusUpdate) -> Option<usize> {
 
-        var index_found: IndexFound = {found = false, index = 0};
+        var index_found: Option<usize> = None;
 
-        for i : usize in 0 .. max_num_of_SIDs while (index_found.found == false) {
+        for i : usize in 0 .. max_num_of_SIDs while (index_found is None) {
 
-            if (self->exec_tc_req_status_update.tc_data.SID == self->hk_config_table[i].SID){
+            if (exec_tc_req_status_update->SID == self->hk_config_table[i].SID){
 
-                index_found.found = true;
-                index_found.index = i;
+                index_found = Some(i);
+
             }
         }
         return index_found;
     }
 
-    method exec3_5TC(&priv self)-> Status<i32> {
+    method exec3_5TC(&priv self, exec_tc_req_status_update : &PS3ExecTCReqStatusUpdate) -> Status<i32> {
 
         var status : Status<i32> = Success;
+        var opt_index : Option<usize> = None;
 
-        if (self->exec_tc_req_status_update.tc_data.N != 1) {
+        if (exec_tc_req_status_update->N != 1) {
 
             self->pus_service_1.send_tm_1_4_num_of_instr_not_valid(
-                        self->exec_tc_req_status_update.tc_data.packet_id,
-                        self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                        self->exec_tc_req_status_update.tc_data.N, 
+                        exec_tc_req_status_update->packet_id,
+                        exec_tc_req_status_update->packet_seq_ctrl,
+                        exec_tc_req_status_update->N, 
                         &mut status);
         
         } else {
 
-            self->exec_tc_req_status_update.index = self->get_SIDindex();
+            opt_index = self->get_SIDindex(exec_tc_req_status_update);
 
-            if (self->exec_tc_req_status_update.index.found) {
+            match opt_index {
 
-                self->pus_service_1.notify_tm_1_3(
-                            self->exec_tc_req_status_update.tc_data.packet_id,
-                            self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                            self->exec_tc_req_status_update.tc_data.flags_ack,
-                            &mut status);
-                
-                if (status is Success) {
+                case Some(index) => {
 
-                    self->hk_config_table[self->exec_tc_req_status_update.index.index].enabled = true;
-                    self->hk_config_table[self->exec_tc_req_status_update.index.index].interval_control = 0;
+                    self->pus_service_1.notify_tm_1_3(
+                                exec_tc_req_status_update->packet_id,
+                                exec_tc_req_status_update->packet_seq_ctrl,
+                                exec_tc_req_status_update->flags_ack,
+                                &mut status);
 
-                    self->pus_service_1.notify_tm_1_7(
-                                self->exec_tc_req_status_update.tc_data.packet_id,
-                                self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                                self->exec_tc_req_status_update.tc_data.flags_ack,
+                    if (status is Success) {
+
+                        self->hk_config_table[index].enabled = true;
+                        self->hk_config_table[index].interval_control = 0;
+
+                        self->pus_service_1.notify_tm_1_7(
+                                    exec_tc_req_status_update->packet_id,
+                                    exec_tc_req_status_update->packet_seq_ctrl,
+                                    exec_tc_req_status_update->flags_ack,
+                                    &mut status);
+
+                    }
+
+                }
+
+                case None => {
+
+                    self->pus_service_1.send_tm_1_4_SID_not_valid(
+                                exec_tc_req_status_update->packet_id,
+                                exec_tc_req_status_update->packet_seq_ctrl,
+                                exec_tc_req_status_update->SID,
                                 &mut status);
 
                 }
-            
-            } else {
-
-                self->pus_service_1.send_tm_1_4_SID_not_valid(
-                            self->exec_tc_req_status_update.tc_data.packet_id,
-                            self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                            self->exec_tc_req_status_update.tc_data.SID,
-                            &mut status);
 
             }
 
@@ -101,51 +106,56 @@ resource class PUSService3 provides PUSS3Iface {
         return status;
     }
 
-    method exec3_6TC(&priv self) -> Status<i32> {
+    method exec3_6TC(&priv self, exec_tc_req_status_update : & PS3ExecTCReqStatusUpdate) -> Status<i32> {
 
         var status : Status<i32> = Success;
+        var opt_index : Option<usize> = None;
 
-        if (self->exec_tc_req_status_update.tc_data.N != 1) {
+        if (exec_tc_req_status_update->N != 1) {
 
             self->pus_service_1.send_tm_1_4_num_of_instr_not_valid(
-                        self->exec_tc_req_status_update.tc_data.packet_id,
-                        self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                        self->exec_tc_req_status_update.tc_data.N,
+                        exec_tc_req_status_update->packet_id,
+                        exec_tc_req_status_update->packet_seq_ctrl,
+                        exec_tc_req_status_update->N,
                         &mut status);
         
         } else {
 
-            self->exec_tc_req_status_update.index = self->get_SIDindex();
+            opt_index = self->get_SIDindex(exec_tc_req_status_update);
+            
+            match opt_index {
 
-            if (self->exec_tc_req_status_update.index.found) {
+                case Some(index) => {
 
-                self->pus_service_1.notify_tm_1_3(
-                            self->exec_tc_req_status_update.tc_data.packet_id,
-                            self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                            self->exec_tc_req_status_update.tc_data.flags_ack,
-                            &mut status);
-                
-                if (status is Success) {
-
-                    self->hk_config_table[self->exec_tc_req_status_update.index.index].enabled = false;
-                    self->hk_config_table[self->exec_tc_req_status_update.index.index].interval_control = 0;
-
-                    self->pus_service_1.notify_tm_1_7(
-                                self->exec_tc_req_status_update.tc_data.packet_id,
-                                self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                                self->exec_tc_req_status_update.tc_data.flags_ack,
+                    self->pus_service_1.notify_tm_1_3(
+                                exec_tc_req_status_update->packet_id,
+                                exec_tc_req_status_update->packet_seq_ctrl,
+                                exec_tc_req_status_update->flags_ack,
                                 &mut status);
+                    
+                    if (status is Success) {
+
+                        self->hk_config_table[index].enabled = false;
+                        self->hk_config_table[index].interval_control = 0;
+
+                        self->pus_service_1.notify_tm_1_7(
+                                    exec_tc_req_status_update->packet_id,
+                                    exec_tc_req_status_update->packet_seq_ctrl,
+                                    exec_tc_req_status_update->flags_ack,
+                                    &mut status);
+
+                    }
 
                 }
+
+                case None => {
             
-            } else {
-
-                self->pus_service_1.send_tm_1_4_SID_not_valid(
-                            self->exec_tc_req_status_update.tc_data.packet_id,
-                            self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                            self->exec_tc_req_status_update.tc_data.SID,
-                            &mut status);
-
+                    self->pus_service_1.send_tm_1_4_SID_not_valid(
+                                exec_tc_req_status_update->packet_id,
+                                exec_tc_req_status_update->packet_seq_ctrl,
+                                exec_tc_req_status_update->SID,
+                                &mut status);
+                }
 
             }
 
@@ -155,49 +165,56 @@ resource class PUSService3 provides PUSS3Iface {
     
     }
 
-    method exec3_31TC(&priv self) -> Status<i32> {
+    method exec3_31TC(&priv self, exec_tc_req_status_update : &mut PS3ExecTCReqStatusUpdate) -> Status<i32> {
 
         var status : Status<i32> = Success;
+        var opt_index : Option<usize> = None;
 
-        if (self->exec_tc_req_status_update.tc_data.N != 1) {
+        if (exec_tc_req_status_update->N != 1) {
 
             self->pus_service_1.send_tm_1_4_num_of_instr_not_valid(
-                        self->exec_tc_req_status_update.tc_data.packet_id,
-                        self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                        self->exec_tc_req_status_update.tc_data.N,
+                        exec_tc_req_status_update->packet_id,
+                        exec_tc_req_status_update->packet_seq_ctrl,
+                        exec_tc_req_status_update->N,
                         &mut status);
 
         } else {
 
-            self->exec_tc_req_status_update.index = self->get_SIDindex();
+            opt_index = self->get_SIDindex(&(*exec_tc_req_status_update));
 
-            if (self->exec_tc_req_status_update.index.found) {
+            match opt_index {
 
-                self->pus_service_1.notify_tm_1_3(
-                            self->exec_tc_req_status_update.tc_data.packet_id,
-                            self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                            self->exec_tc_req_status_update.tc_data.flags_ack,
-                            &mut status);
+                case Some(index) => {
 
-                if (status is Success) {
-                              
-                    self->hk_config_table[self->exec_tc_req_status_update.index.index].interval = self->exec_tc_req_status_update.tc_data.collection_interval;
-                    self->hk_config_table[self->exec_tc_req_status_update.index.index].interval_control = 0;
-
-                    self->pus_service_1.notify_tm_1_7(
-                                self->exec_tc_req_status_update.tc_data.packet_id,
-                                self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                                self->exec_tc_req_status_update.tc_data.flags_ack,
+                    self->pus_service_1.notify_tm_1_3(
+                                exec_tc_req_status_update->packet_id,
+                                exec_tc_req_status_update->packet_seq_ctrl,
+                                exec_tc_req_status_update->flags_ack,
                                 &mut status);
+
+                    if (status is Success) {
+                                
+                        self->hk_config_table[index].interval = exec_tc_req_status_update->collection_interval;
+                        self->hk_config_table[index].interval_control = 0;
+
+                        self->pus_service_1.notify_tm_1_7(
+                                    exec_tc_req_status_update->packet_id,
+                                    exec_tc_req_status_update->packet_seq_ctrl,
+                                    exec_tc_req_status_update->flags_ack,
+                                    &mut status);
                     }
 
-            } else {
+                }
 
-                self->pus_service_1.send_tm_1_4_SID_not_valid(
-                            self->exec_tc_req_status_update.tc_data.packet_id,
-                            self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                            self->exec_tc_req_status_update.tc_data.SID,
-                            &mut status);
+                case None => {
+
+                    self->pus_service_1.send_tm_1_4_SID_not_valid(
+                                exec_tc_req_status_update->packet_id,
+                                exec_tc_req_status_update->packet_seq_ctrl,
+                                exec_tc_req_status_update->SID,
+                                &mut status);
+
+                }
 
             }
         
@@ -212,35 +229,36 @@ resource class PUSService3 provides PUSS3Iface {
 
         var status : Status<i32> = Success;
         var subtype : u8 = tc_handler->df_header.subtype;
+        var exec_tc_req_status_update : PS3ExecTCReqStatusUpdate = ps3_init_tc_req_status_update;
 
-        self->exec_tc_req_status_update.tc_data.packet_id = tc_handler->packet_header.packet_id;
-        self->exec_tc_req_status_update.tc_data.packet_seq_ctrl = tc_handler->packet_header.packet_seq_ctrl;
-        self->exec_tc_req_status_update.tc_data.flags_ack = tc_handler->df_header.flag_ver_ack;
-        self->exec_tc_req_status_update.tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
+        exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;
+        exec_tc_req_status_update.packet_seq_ctrl = tc_handler->packet_header.packet_seq_ctrl;
+        exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
+        exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
-        status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.N));
+        status = tc_handler_get_u8_appdata_field(tc_handler, &mut (exec_tc_req_status_update.N));
 
         if (status is Success) {
-            status = tc_handler_get_u16_appdata_field(tc_handler, &mut self->exec_tc_req_status_update.tc_data.SID);
+            status = tc_handler_get_u16_appdata_field(tc_handler, &mut exec_tc_req_status_update.SID);
         }
 
         if ((status is Success) && subtype == 31) {
-            status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.collection_interval));
+            status = tc_handler_get_u8_appdata_field(tc_handler, &mut (exec_tc_req_status_update.collection_interval));
         }
 
         if (status is Success) {
 
             if (subtype == 5) {
 
-                status = self->exec3_5TC();
+                status = self->exec3_5TC(&exec_tc_req_status_update);
 
             } else if (subtype == 6) {
 
-                status = self->exec3_6TC();
+                status = self->exec3_6TC(&exec_tc_req_status_update);
 
             } else if (subtype == 31) {
 
-                status = self->exec3_31TC();
+                status = self->exec3_31TC(&mut exec_tc_req_status_update);
 
             } else {
 
@@ -263,23 +281,23 @@ resource class PUSService3 provides PUSS3Iface {
                 if (error_code == ACCEPTANCE_ERROR) {
 
                     self->pus_service_1.send_tm_1_4_error_in_acceptance(
-                                self->exec_tc_req_status_update.tc_data.packet_id,
-                                self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
+                                exec_tc_req_status_update.packet_id,
+                                exec_tc_req_status_update.packet_seq_ctrl,
                                 action_status);
 
                 } else if (error_code == BUILD_TM_ERROR) {
 
                     self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(
-                                self->exec_tc_req_status_update.tc_data.packet_id,
-                                self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
+                                exec_tc_req_status_update.packet_id,
+                                exec_tc_req_status_update.packet_seq_ctrl,
                                 action_status);
                         
                 } else if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
 
                     self->pus_service_1.send_tm_1_4_short_pack_length(
-                                self->exec_tc_req_status_update.tc_data.packet_id,
-                                self->exec_tc_req_status_update.tc_data.packet_seq_ctrl,
-                                self->exec_tc_req_status_update.tc_data.tc_num_bytes,
+                                exec_tc_req_status_update.packet_id,
+                                exec_tc_req_status_update.packet_seq_ctrl,
+                                exec_tc_req_status_update.tc_num_bytes,
                                 action_status);
 
                 } else {

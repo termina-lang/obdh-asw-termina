@@ -24,11 +24,6 @@ typedef struct {
     uint8_t N;
     uint16_t SID;
     uint8_t collection_interval;
-} PS3TCData;
-
-typedef struct {
-    IndexFound index;
-    PS3TCData tc_data;
 } PS3ExecTCReqStatusUpdate;
 
 typedef struct {

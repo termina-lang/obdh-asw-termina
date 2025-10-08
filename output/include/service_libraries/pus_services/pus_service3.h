@@ -47,19 +47,18 @@ typedef struct {
     } tm_channel;
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
-    PS3ExecTCReqStatusUpdate exec_tc_req_status_update;
     HKConfiguration hk_config_table[8U];
 } PUSService3;
 
 void PUSService3__do_hk(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const action_status);
 
-IndexFound PUSService3__get_SIDindex(const __termina_event_t * const __ev, const PUSService3 * const self);
+__option_size_t PUSService3__get_SIDindex(const __termina_event_t * const __ev, const PUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-__status_int32_t PUSService3__exec3_31TC(const __termina_event_t * const __ev, PUSService3 * const self);
+__status_int32_t PUSService3__exec3_31TC(const __termina_event_t * const __ev, PUSService3 * const self, PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-__status_int32_t PUSService3__exec3_5TC(const __termina_event_t * const __ev, PUSService3 * const self);
+__status_int32_t PUSService3__exec3_5TC(const __termina_event_t * const __ev, PUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-__status_int32_t PUSService3__exec3_6TC(const __termina_event_t * const __ev, PUSService3 * const self);
+__status_int32_t PUSService3__exec3_6TC(const __termina_event_t * const __ev, PUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
 void PUSService3__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 

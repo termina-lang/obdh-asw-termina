@@ -154,15 +154,6 @@ void __termina_app__init_globals() {
     pus_service_3.a_tm_handler_pool.__that = &tm_pool;
     pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_3.a_tm_handler_pool.free = __termina_pool__free;
-    pus_service_3.exec_tc_req_status_update.index.found = 0;
-    pus_service_3.exec_tc_req_status_update.index.index = 0U;
-    pus_service_3.exec_tc_req_status_update.tc_data.N = 0U;
-    pus_service_3.exec_tc_req_status_update.tc_data.SID = 0U;
-    pus_service_3.exec_tc_req_status_update.tc_data.collection_interval = 0U;
-    pus_service_3.exec_tc_req_status_update.tc_data.flags_ack = 0U;
-    pus_service_3.exec_tc_req_status_update.tc_data.packet_id = 0U;
-    pus_service_3.exec_tc_req_status_update.tc_data.packet_seq_ctrl = 0U;
-    pus_service_3.exec_tc_req_status_update.tc_data.tc_num_bytes = 0U;
     pus_service_3.hk_config_table[0U].SID = 0U;
     pus_service_3.hk_config_table[0U].enabled = 1;
     pus_service_3.hk_config_table[0U].interval = 2U;
