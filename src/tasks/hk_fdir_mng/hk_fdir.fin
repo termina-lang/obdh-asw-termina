@@ -75,7 +75,7 @@ task class HouseKeepingFDIR {
 
                     if(is_Ev_ID_enabled){
 
-                        self->pus_service_5.send_tm_5_x(evID, fault_info, &mut result);
+                        self->pus_service_5.send_tm_5_x(evID, &fault_info, &mut result);
                         self->pus_service_19.manage_event_action(evID);
                     } 
 
@@ -161,7 +161,11 @@ task class HouseKeepingFDIR {
         self->pus_service_4.update_all_stats(); 
         self->pus_service_3.do_hk(&mut result);
 
-        continue self->do_fdir();
+        if (result is Success) {
+            continue self->do_fdir();
+        } else {
+            return result;
+        }
 
     }
 

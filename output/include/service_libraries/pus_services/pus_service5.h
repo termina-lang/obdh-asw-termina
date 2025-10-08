@@ -33,7 +33,7 @@ typedef struct {
     void * __that;
     void (* exec_tc)(void * const, TCHandler * const, __status_int32_t * const);
     void (* is_Ev_ID_enabled_ext)(void * const, uint16_t, _Bool * const);
-    void (* send_tm_5_x)(void * const, uint16_t, FaultInfo, __status_int32_t * const);
+    void (* send_tm_5_x)(void * const, uint16_t, const FaultInfo * const, __status_int32_t * const);
     void (* send_tm_5_2)(void * const, __status_int32_t * const);
 } PUSS5Iface;
 
@@ -78,6 +78,6 @@ void PUSService5__is_Ev_ID_enabled_ext(const __termina_event_t * const __ev, voi
 
 void PUSService5__send_tm_5_2(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const status);
 
-void PUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * const __this, uint16_t evID, FaultInfo fault_info, __status_int32_t * const status);
+void PUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * const __this, uint16_t evID, const FaultInfo * const fault_info, __status_int32_t * const status);
 
 #endif

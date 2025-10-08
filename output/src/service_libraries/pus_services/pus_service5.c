@@ -356,7 +356,7 @@ void PUSService5__send_tm_5_2(const __termina_event_t * const __ev, void * const
 
 }
 
-void PUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * const __this, uint16_t evID, FaultInfo fault_info, __status_int32_t * const status) {
+void PUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * const __this, uint16_t evID, const FaultInfo * const fault_info, __status_int32_t * const status) {
     
     #line 220 "src/service_libraries/pus_services/pus_service5.fin"
     PUSService5 * self = (PUSService5 *)__this;
@@ -395,20 +395,20 @@ void PUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * const
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 236 "src/service_libraries/pus_services/pus_service5.fin"
-        if (fault_info.__variant == FaultInfo__ParamOutOfLimit) {
+        if ((*fault_info).__variant == FaultInfo__ParamOutOfLimit) {
             
             #line 236 "src/service_libraries/pus_services/pus_service5.fin"
-            ParamOutOfLimitInfo fault_value_info = fault_info.ParamOutOfLimit.__0;
+            ParamOutOfLimitInfo fault_value_info = (*fault_info).ParamOutOfLimit.__0;
 
             #line 237 "src/service_libraries/pus_services/pus_service5.fin"
             *status = build_tm_5_x_param_out_of_limit((TMHandler *)b_tm_handler.data, tm_count, fault_value_info, evID, current_obt);
 
         } else
         #line 239 "src/service_libraries/pus_services/pus_service5.fin"
-        if (fault_info.__variant == FaultInfo__ParamFaultValue) {
+        if ((*fault_info).__variant == FaultInfo__ParamFaultValue) {
             
             #line 239 "src/service_libraries/pus_services/pus_service5.fin"
-            ParamFaultValueInfo fault_value_info = fault_info.ParamFaultValue.__0;
+            ParamFaultValueInfo fault_value_info = (*fault_info).ParamFaultValue.__0;
 
             #line 240 "src/service_libraries/pus_services/pus_service5.fin"
             *status = build_tm_5_x_param_check_value_fail((TMHandler *)b_tm_handler.data, tm_count, fault_value_info, evID, current_obt);

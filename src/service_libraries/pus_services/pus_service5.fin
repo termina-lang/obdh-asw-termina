@@ -17,7 +17,7 @@ interface PUSS5Iface {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>);
     procedure is_Ev_ID_enabled_ext(&mut self, Ev_ID: u16, p_enabled: &mut bool); 
-    procedure send_tm_5_x(&mut self, evID: u16, fault_info: FaultInfo, status: &mut Status<i32>);
+    procedure send_tm_5_x(&mut self, evID: u16, fault_info: &FaultInfo, status: &mut Status<i32>);
     procedure send_tm_5_2(&mut self, status: &mut Status<i32>);
 
 };
@@ -217,7 +217,7 @@ resource class PUSService5 provides PUSS5Iface {
 
     }
 
-    procedure send_tm_5_x(&mut self, evID: u16, fault_info: FaultInfo, status: &mut Status<i32>){
+    procedure send_tm_5_x(&mut self, evID: u16, fault_info: &FaultInfo, status: &mut Status<i32>){
 
         var tm_handler : Option<box TMHandler> = None;
         self->a_tm_handler_pool.alloc(&mut tm_handler);
@@ -232,7 +232,7 @@ resource class PUSService5 provides PUSS5Iface {
                 self->tm_counter.get_next_tm_count(&mut tm_count);
                 self->obt_manager.get_current_obt(&mut current_obt);
                 
-                match (fault_info) {
+                match (*fault_info) {
                     case ParamOutOfLimit(fault_value_info) => {
                         *status = build_tm_5_x_param_out_of_limit(&mut b_tm_handler, tm_count, fault_value_info, evID, current_obt);
                     }

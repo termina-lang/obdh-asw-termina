@@ -261,7 +261,6 @@ resource pus_service_2_service_1 : PUSService1 = {
 };
 
 resource pus_service_2 : PUSService2 = {
-    exec_tc_req_status_update = ps2_init_tc_req_status_update,
     gpio_driver <-> gpio_drv,
     pus_service_1 <-> pus_service_2_service_1
 } : PUSService2;

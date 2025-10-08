@@ -34,14 +34,13 @@ typedef struct {
         void (* send_tm_1_8_device_command_exec_error)(const __termina_event_t * const, void * const, uint16_t, uint16_t, uint32_t, __status_int32_t * const);
         void (* send_tm_1_8_tm_exceed_limit_appdata)(const __termina_event_t * const, void * const, uint16_t, uint16_t, __status_int32_t * const);
     } pus_service_1;
-    PS2ExecTCReqStatusUpdate exec_tc_req_status_update;
 } PUSService2;
 
-__status_int32_t PUSService2__dev_drv_on_off(const __termina_event_t * const __ev, PUSService2 * const self);
+__status_int32_t PUSService2__dev_drv_on_off(const __termina_event_t * const __ev, PUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-_Bool PUSService2__device_drv_is_on_off_address_valid(const __termina_event_t * const __ev, const PUSService2 * const self);
+_Bool PUSService2__device_drv_is_on_off_address_valid(const __termina_event_t * const __ev, const PUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-__status_int32_t PUSService2__exec2_1TC(const __termina_event_t * const __ev, PUSService2 * const self);
+__status_int32_t PUSService2__exec2_1TC(const __termina_event_t * const __ev, PUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
 void PUSService2__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 

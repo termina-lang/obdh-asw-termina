@@ -649,12 +649,6 @@ void __termina_app__init_globals() {
     pus_service_2_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
     pus_service_2_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_2.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_2.exec_tc_req_status_update.N = 0U;
-    pus_service_2.exec_tc_req_status_update.dev_address = 0U;
-    pus_service_2.exec_tc_req_status_update.flags_ack = 0U;
-    pus_service_2.exec_tc_req_status_update.packet_id = 0U;
-    pus_service_2.exec_tc_req_status_update.packet_seq_ctrl = 0U;
-    pus_service_2.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_2.gpio_driver.__that = &gpio_drv;
     pus_service_2.gpio_driver.write_led = GPIODriver__write_led;
     pus_service_2.pus_service_1.__that = &pus_service_2_service_1;

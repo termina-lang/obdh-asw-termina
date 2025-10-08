@@ -37,7 +37,7 @@ typedef struct {
         void * __that;
         void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const);
         void (* is_Ev_ID_enabled_ext)(const __termina_event_t * const, void * const, uint16_t, _Bool * const);
-        void (* send_tm_5_x)(const __termina_event_t * const, void * const, uint16_t, FaultInfo, __status_int32_t * const);
+        void (* send_tm_5_x)(const __termina_event_t * const, void * const, uint16_t, const FaultInfo * const, __status_int32_t * const);
     } pus_service_5;
     struct {
         void * __that;
