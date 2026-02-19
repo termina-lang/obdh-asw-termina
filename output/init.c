@@ -2,10 +2,9 @@
 #include <termina.h>
 
 #include "app.h"
+#include "drivers/char_dev/uart/apbuart.h"
 #include "handlers/init.h"
-#include "handlers/uart_irq_handler.h"
 #include "resources/system_data_pool.h"
-#include "resources/uart.h"
 #include "service_libraries/errors.h"
 #include "service_libraries/pus_services/pus_service1.h"
 #include "service_libraries/pus_services/pus_service1/internal.h"
@@ -39,36 +38,40 @@ void __termina_app__init_globals() {
     for (size_t __i0 = 0U; __i0 < 18U; __i0 = __i0 + 1U) {
         atomic_store(&u8_system_data_pool[__i0], 0U);
     }
-    uart_drv.__lock_type.type = __termina_resource_lock_type__none;
-    uart_drv.aux_index = 0U;
-    uart_drv.raw_rx_tc_length[0U] = 0U;
-    uart_drv.raw_rx_tc_length[1U] = 0U;
-    uart_drv.registers = (volatile UARTRegs *)2147483904U;
-    uart_drv.rem_bytes = 0;
-    uart_drv.rx_status.__variant = RXStatus__SyncBytesRx;
-    uart_drv.sync_word[0U] = 0xBEU;
-    uart_drv.sync_word[1U] = 0xBAU;
-    uart_drv.sync_word[2U] = 0xBEU;
-    uart_drv.sync_word[3U] = 0xEFU;
-    uart_drv.tc_num_bytes = 0U;
-    for (size_t __i0 = 0U; __i0 < queue_max_noe; __i0 = __i0 + 1U) {
-        uart_drv.uart_rx_queue.elements[__i0] = 0U;
+    tc_channel.__lock_type.type = __termina_resource_lock_type__none;
+    tc_channel.aux_index = 0U;
+    for (size_t __i0 = 0U; __i0 < 2U; __i0 = __i0 + 1U) {
+        tc_channel.raw_rx_tc_length[__i0] = 0U;
     }
-    uart_drv.uart_rx_queue.head_index = 0U;
-    uart_drv.uart_rx_queue.num_elements = 0U;
+    tc_channel.rx_status.__variant = TCRxStatus__SyncBytesRx;
+    tc_channel.sync_word[0U] = 0xBEU;
+    tc_channel.sync_word[1U] = 0xBAU;
+    tc_channel.sync_word[2U] = 0xBEU;
+    tc_channel.sync_word[3U] = 0xEFU;
+    tc_channel.tc_num_bytes = 0U;
+    for (size_t __i0 = 0U; __i0 < queue_max_noe; __i0 = __i0 + 1U) {
+        tc_channel.tc_rx_queue.elements[__i0] = 0U;
+    }
+    tc_channel.tc_rx_queue.head_index = 0U;
+    tc_channel.tc_rx_queue.num_elements = 0U;
+    uart_drv.__lock_type.type = __termina_resource_lock_type__none;
+    uart_drv.registers = (volatile APBUARTRegs *)0x80000100U;
+    uart_drv.rem_bytes = 0;
+    uart_drv.rx_queue.__that = &tc_channel;
+    uart_drv.rx_queue.enqueue_rx = CTCChannel__enqueue_rx;
     for (size_t __i0 = 0U; __i0 < queue_max_noe; __i0 = __i0 + 1U) {
         uart_drv.uart_tx_queue.elements[__i0] = 0U;
     }
     uart_drv.uart_tx_queue.head_index = 0U;
     uart_drv.uart_tx_queue.num_elements = 0U;
     gpio_drv.__lock_type.type = __termina_resource_lock_type__none;
-    gpio_drv.registers = (volatile GPIO_registers *)2147486208U;
+    gpio_drv.registers = (volatile GPIO_registers *)0x80000A00U;
     telemetry_channel.__lock_type.type = __termina_resource_lock_type__none;
     telemetry_channel.a_tm_handler_pool.__that = &tm_pool;
     telemetry_channel.a_tm_handler_pool.alloc = __termina_pool__alloc;
     telemetry_channel.a_tm_handler_pool.free = __termina_pool__free;
-    telemetry_channel.uart.__that = &uart_drv;
-    telemetry_channel.uart.send = UARTDriver__send;
+    telemetry_channel.char_dev.__that = &uart_drv;
+    telemetry_channel.char_dev.send = CAPBUARTDriver__send;
     telemetry_counter.__lock_type.type = __termina_resource_lock_type__none;
     telemetry_counter.tm_count = 0U;
     obt_manager.__lock_type.type = __termina_resource_lock_type__none;
@@ -77,16 +80,16 @@ void __termina_app__init_globals() {
     obt_manager.ref_time_val_from_power_on.tv_sec = 0U;
     obt_manager.ref_time_val_from_power_on.tv_usec = 0U;
     obt_manager.system_port.clock_get_uptime = SystemEntry__clock_get_uptime;
-    pus_service_9_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_9_service_1.obt_manager.__that = &obt_manager;
-    pus_service_9_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_9_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_9_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_9_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_9_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_9_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_9_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_9_service_1.tm_handler_pool.free = __termina_pool__free;
+    pus_service_1.__lock_type.type = __termina_resource_lock_type__none;
+    pus_service_1.obt_manager.__that = &obt_manager;
+    pus_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
+    pus_service_1.tm_channel.__that = &telemetry_channel;
+    pus_service_1.tm_channel.send_tm = TMChannel__send_tm;
+    pus_service_1.tm_counter.__that = &telemetry_counter;
+    pus_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
+    pus_service_1.tm_handler_pool.__that = &tm_pool;
+    pus_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
+    pus_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_9.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_9.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_9.exec_tc_req_status_update.next_OBT.finetime = 0U;
@@ -96,22 +99,12 @@ void __termina_app__init_globals() {
     pus_service_9.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_9.obt_manager.__that = &obt_manager;
     pus_service_9.obt_manager.set_obt = OBTManager__set_obt;
-    pus_service_9.pus_service_1.__that = &pus_service_9_service_1;
+    pus_service_9.pus_service_1.__that = &pus_service_1;
     pus_service_9.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_9.pus_service_1.send_tm_1_4_short_pack_length = PUSService1__send_tm_1_4_short_pack_length;
     pus_service_9.pus_service_1.send_tm_1_4_error_in_acceptance = PUSService1__send_tm_1_4_error_in_acceptance;
     pus_service_9.pus_service_1.notify_tm_1_7 = PUSService1__notify_tm_1_7;
     pus_service_9.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = PUSService1__send_tm_1_8_tm_exceed_limit_appdata;
-    pus_service_5_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_5_service_1.obt_manager.__that = &obt_manager;
-    pus_service_5_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_5_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_5_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_5_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_5_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_5_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_5_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_5_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_5.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_5.Ev_ID_enable_config[0U] = 0x7U;
     pus_service_5.Ev_ID_enable_config[1U] = 0x0U;
@@ -128,7 +121,7 @@ void __termina_app__init_globals() {
     pus_service_5.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_5.obt_manager.__that = &obt_manager;
     pus_service_5.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_5.pus_service_1.__that = &pus_service_5_service_1;
+    pus_service_5.pus_service_1.__that = &pus_service_1;
     pus_service_5.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_5.pus_service_1.send_tm_1_4_short_pack_length = PUSService1__send_tm_1_4_short_pack_length;
     pus_service_5.pus_service_1.send_tm_1_4_num_of_instr_not_valid = PUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -140,16 +133,6 @@ void __termina_app__init_globals() {
     pus_service_5.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_5.tm_counter.__that = &telemetry_counter;
     pus_service_5.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_3_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_3_service_1.obt_manager.__that = &obt_manager;
-    pus_service_3_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_3_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_3_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_3_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_3_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_3_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_3_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_3_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_3.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_3.a_tm_handler_pool.__that = &tm_pool;
     pus_service_3.a_tm_handler_pool.alloc = __termina_pool__alloc;
@@ -324,7 +307,7 @@ void __termina_app__init_globals() {
     pus_service_3.hk_config_table[7U].params_def[15U] = 0U;
     pus_service_3.obt_manager.__that = &obt_manager;
     pus_service_3.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_3.pus_service_1.__that = &pus_service_3_service_1;
+    pus_service_3.pus_service_1.__that = &pus_service_1;
     pus_service_3.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_3.pus_service_1.send_tm_1_4_short_pack_length = PUSService1__send_tm_1_4_short_pack_length;
     pus_service_3.pus_service_1.send_tm_1_4_num_of_instr_not_valid = PUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -341,16 +324,6 @@ void __termina_app__init_globals() {
     pus_service_3.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_3.tm_counter.__that = &telemetry_counter;
     pus_service_3.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_12_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_12_service_1.obt_manager.__that = &obt_manager;
-    pus_service_12_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_12_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_12_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_12_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_12_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_12_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_12_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_12_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_12.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_12.a_tm_handler_pool.__that = &tm_pool;
     pus_service_12.a_tm_handler_pool.alloc = __termina_pool__alloc;
@@ -412,7 +385,7 @@ void __termina_app__init_globals() {
         pus_service_12.param_mon_transitions_table[__i0].trans_obt.seconds = 0U;
         pus_service_12.param_mon_transitions_table[__i0].type.__variant = MonitorCheckType__Free;
     }
-    pus_service_12.pus_service_1.__that = &pus_service_12_service_1;
+    pus_service_12.pus_service_1.__that = &pus_service_1;
     pus_service_12.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_12.pus_service_1.send_tm_1_4_short_pack_length = PUSService1__send_tm_1_4_short_pack_length;
     pus_service_12.pus_service_1.send_tm_1_4_num_of_instr_not_valid = PUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -430,16 +403,6 @@ void __termina_app__init_globals() {
     pus_service_12.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_12.tm_counter.__that = &telemetry_counter;
     pus_service_12.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_19_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_19_service_1.obt_manager.__that = &obt_manager;
-    pus_service_19_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_19_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_19_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_19_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_19_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_19_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_19_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_19_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_19.__lock_type.type = __termina_resource_lock_type__none;
     for (size_t __i0 = 0U; __i0 < 16U; __i0 = __i0 + 1U) {
         pus_service_19.event_action_config[__i0].enabled = 0;
@@ -539,7 +502,7 @@ void __termina_app__init_globals() {
         }
         pus_service_19.pending_action_queue_4HS[__i0].tc_descriptor.tc_num_bytes = 0U;
     }
-    pus_service_19.pus_service_1.__that = &pus_service_19_service_1;
+    pus_service_19.pus_service_1.__that = &pus_service_1;
     pus_service_19.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_19.pus_service_1.send_tm_1_4_short_pack_length = PUSService1__send_tm_1_4_short_pack_length;
     pus_service_19.pus_service_1.send_tm_1_4_num_of_instr_not_valid = PUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -551,16 +514,6 @@ void __termina_app__init_globals() {
     pus_service_19.pus_service_1.notify_tm_1_7 = PUSService1__notify_tm_1_7;
     pus_service_19.pus_service_1.send_tm_1_8_max_ev_actions_defined = PUSService1__send_tm_1_8_max_ev_actions_defined;
     pus_service_19.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = PUSService1__send_tm_1_8_tm_exceed_limit_appdata;
-    pus_service_20_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_20_service_1.obt_manager.__that = &obt_manager;
-    pus_service_20_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_20_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_20_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_20_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_20_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_20_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_20_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_20_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_20.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_20.a_tm_handler_pool.__that = &tm_pool;
     pus_service_20.a_tm_handler_pool.alloc = __termina_pool__alloc;
@@ -575,7 +528,7 @@ void __termina_app__init_globals() {
     pus_service_20.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_20.obt_manager.__that = &obt_manager;
     pus_service_20.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_20.pus_service_1.__that = &pus_service_20_service_1;
+    pus_service_20.pus_service_1.__that = &pus_service_1;
     pus_service_20.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_20.pus_service_1.send_tm_1_4_short_pack_length = PUSService1__send_tm_1_4_short_pack_length;
     pus_service_20.pus_service_1.send_tm_1_4_num_of_instr_not_valid = PUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -590,16 +543,6 @@ void __termina_app__init_globals() {
     pus_service_20.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_20.tm_counter.__that = &telemetry_counter;
     pus_service_20.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_17_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_17_service_1.obt_manager.__that = &obt_manager;
-    pus_service_17_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_17_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_17_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_17_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_17_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_17_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_17_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_17_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_17.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_17.a_tm_handler_pool.__that = &tm_pool;
     pus_service_17.a_tm_handler_pool.alloc = __termina_pool__alloc;
@@ -609,7 +552,7 @@ void __termina_app__init_globals() {
     pus_service_17.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_17.obt_manager.__that = &obt_manager;
     pus_service_17.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_17.pus_service_1.__that = &pus_service_17_service_1;
+    pus_service_17.pus_service_1.__that = &pus_service_1;
     pus_service_17.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_17.pus_service_1.send_tm_1_4_error_in_acceptance = PUSService1__send_tm_1_4_error_in_acceptance;
     pus_service_17.pus_service_1.notify_tm_1_7 = PUSService1__notify_tm_1_7;
@@ -618,40 +561,20 @@ void __termina_app__init_globals() {
     pus_service_17.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_17.tm_counter.__that = &telemetry_counter;
     pus_service_17.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_128_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_128_service_1.obt_manager.__that = &obt_manager;
-    pus_service_128_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_128_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_128_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_128_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_128_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_128_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_128_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_128_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_128.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_128.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_128.exec_tc_req_status_update.packet_id = 0U;
     pus_service_128.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_128.exec_tc_req_status_update.reebot_flag = 0;
-    pus_service_128.pus_service_1.__that = &pus_service_128_service_1;
+    pus_service_128.pus_service_1.__that = &pus_service_1;
     pus_service_128.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_128.pus_service_1.send_tm_1_4_error_in_acceptance = PUSService1__send_tm_1_4_error_in_acceptance;
     pus_service_128.pus_service_1.notify_tm_1_7 = PUSService1__notify_tm_1_7;
     pus_service_128.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = PUSService1__send_tm_1_8_tm_exceed_limit_appdata;
-    pus_service_2_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_2_service_1.obt_manager.__that = &obt_manager;
-    pus_service_2_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_2_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_2_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_2_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_2_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_2_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_2_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_2_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_2.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_2.gpio_driver.__that = &gpio_drv;
     pus_service_2.gpio_driver.write_led = GPIODriver__write_led;
-    pus_service_2.pus_service_1.__that = &pus_service_2_service_1;
+    pus_service_2.pus_service_1.__that = &pus_service_1;
     pus_service_2.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_2.pus_service_1.send_tm_1_4_short_pack_length = PUSService1__send_tm_1_4_short_pack_length;
     pus_service_2.pus_service_1.send_tm_1_4_num_of_instr_not_valid = PUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -660,16 +583,6 @@ void __termina_app__init_globals() {
     pus_service_2.pus_service_1.notify_tm_1_7 = PUSService1__notify_tm_1_7;
     pus_service_2.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = PUSService1__send_tm_1_8_tm_exceed_limit_appdata;
     pus_service_2.pus_service_1.send_tm_1_8_device_command_exec_error = PUSService1__send_tm_1_8_device_command_exec_error;
-    pus_service_6_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_6_service_1.obt_manager.__that = &obt_manager;
-    pus_service_6_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_6_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_6_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_6_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_6_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_6_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_6_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_6_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_6.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_6.a_tm_handler_pool.__that = &tm_pool;
     pus_service_6.a_tm_handler_pool.alloc = __termina_pool__alloc;
@@ -695,10 +608,10 @@ void __termina_app__init_globals() {
     pus_service_6.mem_id_write_permissions[5U] = 1;
     pus_service_6.mem_id_write_permissions[6U] = 1;
     pus_service_6.mem_id_write_permissions[7U] = 0;
-    pus_service_6.memory = (volatile uint8_t (*)[bank_size])1073741824U;
+    pus_service_6.memory = (volatile uint8_t (*)[bank_size])0x40000000U;
     pus_service_6.obt_manager.__that = &obt_manager;
     pus_service_6.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_6.pus_service_1.__that = &pus_service_6_service_1;
+    pus_service_6.pus_service_1.__that = &pus_service_1;
     pus_service_6.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_6.pus_service_1.send_tm_1_4_short_pack_length = PUSService1__send_tm_1_4_short_pack_length;
     pus_service_6.pus_service_1.send_tm_1_4_num_of_instr_not_valid = PUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -712,16 +625,6 @@ void __termina_app__init_globals() {
     pus_service_6.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_6.tm_counter.__that = &telemetry_counter;
     pus_service_6.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_4_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_4_service_1.obt_manager.__that = &obt_manager;
-    pus_service_4_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_service_4_service_1.tm_channel.__that = &telemetry_channel;
-    pus_service_4_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_service_4_service_1.tm_counter.__that = &telemetry_counter;
-    pus_service_4_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_service_4_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_4_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_4_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_service_4.__lock_type.type = __termina_resource_lock_type__none;
     pus_service_4.a_tm_handler_pool.__that = &tm_pool;
     pus_service_4.a_tm_handler_pool.alloc = __termina_pool__alloc;
@@ -745,7 +648,7 @@ void __termina_app__init_globals() {
         pus_service_4.param_stats[__i0].min_obt.seconds = 0U;
         pus_service_4.param_stats[__i0].samples = 0U;
     }
-    pus_service_4.pus_service_1.__that = &pus_service_4_service_1;
+    pus_service_4.pus_service_1.__that = &pus_service_1;
     pus_service_4.pus_service_1.notify_tm_1_3 = PUSService1__notify_tm_1_3;
     pus_service_4.pus_service_1.send_tm_1_4_short_pack_length = PUSService1__send_tm_1_4_short_pack_length;
     pus_service_4.pus_service_1.send_tm_1_4_num_of_instr_not_valid = PUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -771,18 +674,8 @@ void __termina_app__init_globals() {
     pus_service_4.tm_channel.send_tm = TMChannel__send_tm;
     pus_service_4.tm_counter.__that = &telemetry_counter;
     pus_service_4.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    mng_tc_executor_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    mng_tc_executor_service_1.obt_manager.__that = &obt_manager;
-    mng_tc_executor_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    mng_tc_executor_service_1.tm_channel.__that = &telemetry_channel;
-    mng_tc_executor_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    mng_tc_executor_service_1.tm_counter.__that = &telemetry_counter;
-    mng_tc_executor_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    mng_tc_executor_service_1.tm_handler_pool.__that = &tm_pool;
-    mng_tc_executor_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    mng_tc_executor_service_1.tm_handler_pool.free = __termina_pool__free;
     mng_tc_executor.__lock_type.type = __termina_resource_lock_type__none;
-    mng_tc_executor.pus_service_1.__that = &mng_tc_executor_service_1;
+    mng_tc_executor.pus_service_1.__that = &pus_service_1;
     mng_tc_executor.pus_service_1.notify_tm_1_1 = PUSService1__notify_tm_1_1;
     mng_tc_executor.pus_service_1.send_tm_1_2 = PUSService1__send_tm_1_2;
     mng_tc_executor.pus_service_1.send_tm_1_4_error_in_acceptance = PUSService1__send_tm_1_4_error_in_acceptance;
@@ -799,22 +692,16 @@ void __termina_app__init_globals() {
     init.system_data_pool_u32 = u32_system_data_pool;
     init.system_data_pool_u8 = u8_system_data_pool;
     init.uart.__that = &uart_drv;
-    init.uart.initialize = UARTDriver__initialize;
-    uart_hdlr.rx_frame = &rx_task_message_queue;
-    uart_hdlr.uart.__that = &uart_drv;
-    uart_hdlr.uart.release_tx = UARTDriver__release_tx;
-    uart_hdlr.uart.enqueue_rx = UARTDriver__enqueue_rx;
-    uart_hdlr.uart_registers = (volatile UARTRegs *)2147483904U;
+    init.uart.initialize = CAPBUARTDriver__initialize;
+    uart_hdlr.notify_rx = &rx_task_message_queue;
+    uart_hdlr.uart_drv.__that = &uart_drv;
+    uart_hdlr.uart_drv.notify_irq = CAPBUARTDriver__notify_irq;
     tc_rx_bottom_half_task.a_tc_handler_pool.__that = &tc_pool;
     tc_rx_bottom_half_task.a_tc_handler_pool.alloc = __termina_pool__alloc;
     tc_rx_bottom_half_task.a_tc_handler_pool.free = __termina_pool__free;
+    tc_rx_bottom_half_task.tc_channel.__that = &tc_channel;
+    tc_rx_bottom_half_task.tc_channel.receive_tc = CTCChannel__receive_tc;
     tc_rx_bottom_half_task.tc_message_queue_output = &tc_message_queue;
-    for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
-        tc_rx_bottom_half_task.telecommand.tc_bytes[__i0] = 0U;
-    }
-    tc_rx_bottom_half_task.telecommand.tc_num_bytes = 0U;
-    tc_rx_bottom_half_task.uart.__that = &uart_drv;
-    tc_rx_bottom_half_task.uart.receive = UARTDriver__receive;
     icu_manager.a_tc_handler_pool.__that = &tc_pool;
     icu_manager.a_tc_handler_pool.alloc = __termina_pool__alloc;
     icu_manager.a_tc_handler_pool.free = __termina_pool__free;
@@ -824,21 +711,11 @@ void __termina_app__init_globals() {
     icu_manager.tc_executor.PUS_prio_exec_tc = ManagerTCExecutor__PUS_prio_exec_tc;
     icu_manager.tc_executor.mng_tc_acceptation = ManagerTCExecutor__mng_tc_acceptation;
     icu_manager.tc_executor.mng_tc_rejection = ManagerTCExecutor__mng_tc_rejection;
-    hk_fdir_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    hk_fdir_service_1.obt_manager.__that = &obt_manager;
-    hk_fdir_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    hk_fdir_service_1.tm_channel.__that = &telemetry_channel;
-    hk_fdir_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    hk_fdir_service_1.tm_counter.__that = &telemetry_counter;
-    hk_fdir_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    hk_fdir_service_1.tm_handler_pool.__that = &tm_pool;
-    hk_fdir_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    hk_fdir_service_1.tm_handler_pool.free = __termina_pool__free;
     hk_fdir.a_tc_handler_pool.__that = &tc_pool;
     hk_fdir.a_tc_handler_pool.alloc = __termina_pool__alloc;
     hk_fdir.a_tc_handler_pool.free = __termina_pool__free;
     hk_fdir.action_tc_message_queue_output = &action_tc_message_queue;
-    hk_fdir.pus_service_1.__that = &hk_fdir_service_1;
+    hk_fdir.pus_service_1.__that = &pus_service_1;
     hk_fdir.pus_service_1.send_tm_1_4_error_in_acceptance = PUSService1__send_tm_1_4_error_in_acceptance;
     hk_fdir.pus_service_12.__that = &pus_service_12;
     hk_fdir.pus_service_12.exec_tc = PUSService12__exec_tc;
@@ -860,20 +737,10 @@ void __termina_app__init_globals() {
     hk_fdir.pus_service_5.exec_tc = PUSService5__exec_tc;
     hk_fdir.pus_service_5.is_Ev_ID_enabled_ext = PUSService5__is_Ev_ID_enabled_ext;
     hk_fdir.pus_service_5.send_tm_5_x = PUSService5__send_tm_5_x;
-    pus_bkg_tc_executor_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_bkg_tc_executor_service_1.obt_manager.__that = &obt_manager;
-    pus_bkg_tc_executor_service_1.obt_manager.get_current_obt = OBTManager__get_current_obt;
-    pus_bkg_tc_executor_service_1.tm_channel.__that = &telemetry_channel;
-    pus_bkg_tc_executor_service_1.tm_channel.send_tm = TMChannel__send_tm;
-    pus_bkg_tc_executor_service_1.tm_counter.__that = &telemetry_counter;
-    pus_bkg_tc_executor_service_1.tm_counter.get_next_tm_count = TMCounter__get_next_tm_count;
-    pus_bkg_tc_executor_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_bkg_tc_executor_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_bkg_tc_executor_service_1.tm_handler_pool.free = __termina_pool__free;
     pus_bkg_tc_executor.a_tc_handler_pool.__that = &tc_pool;
     pus_bkg_tc_executor.a_tc_handler_pool.alloc = __termina_pool__alloc;
     pus_bkg_tc_executor.a_tc_handler_pool.free = __termina_pool__free;
-    pus_bkg_tc_executor.pus_service_1.__that = &pus_bkg_tc_executor_service_1;
+    pus_bkg_tc_executor.pus_service_1.__that = &pus_service_1;
     pus_bkg_tc_executor.pus_service_1.send_tm_1_4_error_in_acceptance = PUSService1__send_tm_1_4_error_in_acceptance;
     pus_bkg_tc_executor.pus_service_20.__that = &pus_service_20;
     pus_bkg_tc_executor.pus_service_20.exec_tc = PUSService20__exec_tc;

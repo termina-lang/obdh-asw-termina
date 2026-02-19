@@ -4,11 +4,7 @@
 #include <termina.h>
 
 #include "option.h"
-
-typedef struct {
-    void * __that;
-    void (* get_next_tm_count)(void * const, uint16_t * const);
-} TMCounterIface;
+#include "result.h"
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;

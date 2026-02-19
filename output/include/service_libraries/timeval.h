@@ -4,6 +4,7 @@
 #include <termina.h>
 
 #include "option.h"
+#include "result.h"
 
 TimeVal substract_TimeVal(TimeVal timeval1, TimeVal timeval2);
 

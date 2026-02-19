@@ -7,6 +7,7 @@
 #include "service_libraries/pus_tm_handler.h"
 
 #include "option.h"
+#include "result.h"
 
 extern const uint8_t ACCEPT_ACK_ENABLED_MASK;
 

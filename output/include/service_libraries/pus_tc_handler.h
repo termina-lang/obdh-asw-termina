@@ -7,6 +7,7 @@
 #include "service_libraries/tc_ccsds_pus_format.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     TCDescriptor tc_descriptor;
@@ -16,7 +17,7 @@ typedef struct {
     size_t app_data_index;
 } TCHandler;
 
-void tc_handler_build_from_descriptor(TCHandler * const tc_handler, const TCDescriptor * const telecommand);
+void tc_handler_build(TCHandler * const tc_handler);
 
 _Bool tc_handler_is_valid_next_appdata_field(const TCHandler * const tc_handler, size_t field_size);
 

@@ -8,11 +8,7 @@
 #include "service_libraries/pus_tc_handler.h"
 
 #include "option.h"
-
-typedef struct {
-    void * __that;
-    void (* exec_tc)(void * const, TCHandler * const, __status_int32_t * const, _Bool * const);
-} PUSS128Iface;
+#include "result.h"
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;

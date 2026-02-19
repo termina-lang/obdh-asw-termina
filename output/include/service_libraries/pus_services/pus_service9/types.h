@@ -6,6 +6,7 @@
 #include "resources/obt_manager.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     uint16_t packet_id;

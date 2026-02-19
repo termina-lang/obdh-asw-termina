@@ -3,11 +3,12 @@
 
 #include <termina.h>
 
+#include "drivers/char_dev/uart/apbuart.h"
 #include "resources/gpio_driver.h"
 #include "resources/system_data_pool.h"
-#include "resources/uart.h"
 
 #include "option.h"
+#include "result.h"
 
 extern const uint32_t Zero;
 

@@ -88,7 +88,7 @@ static void __termina_app__init_emitters(int32_t * const status) {
         connection.type = __termina_emitter_connection_type__handler;
         connection.handler.handler_object = (void *)&uart_hdlr;
         connection.handler.handler_id = __uart_hdlr__handler_id;
-        connection.handler.handler_action = UARTIrqHandler__irq_handler;
+        connection.handler.handler_action = CCharDevIRQHandler__irq_handler;
 
         __termina_interrupt__init(2, __irq_2__emitter_id, &connection, status);
 
@@ -103,6 +103,12 @@ static void __termina_app__init_mutexes(int32_t * const status) {
     if (0L == *status) {
         
         __termina_mutex__init(__obt_manager__mutex_id, __termina_mutex_policy__ceiling, 5, status);
+
+    }
+
+    if (0L == *status) {
+        
+        __termina_mutex__init(__pus_service_1__mutex_id, __termina_mutex_policy__ceiling, 5, status);
 
     }
 
@@ -196,12 +202,6 @@ static void __termina_app__init_msg_queues(int32_t * const status) {
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__rx_task_message_queue__channel_msg_queue_id, sizeof(size_t), 10U, status);
-
-    }
-
-    if (0L == *status) {
-        
         __termina_msg_queue__init(__hkfdir_message_queue__channel_msg_queue_id, sizeof(__termina_box_t), 10U, status);
 
     }
@@ -224,6 +224,11 @@ static void __termina_app__enable_protection() {
     
     obt_manager.__lock_type.type = __termina_resource_lock_type__mutex;
     obt_manager.__lock_type.mutex.mutex_id = __obt_manager__mutex_id;
+
+    pus_service_1.__lock_type.type = __termina_resource_lock_type__mutex;
+    pus_service_1.__lock_type.mutex.mutex_id = __pus_service_1__mutex_id;
+
+    tc_channel.__lock_type.type = __termina_resource_lock_type__irq;
 
     telemetry_channel.__lock_type.type = __termina_resource_lock_type__mutex;
     telemetry_channel.__lock_type.mutex.mutex_id = __telemetry_channel__mutex_id;
@@ -268,7 +273,7 @@ static void __termina_app__init_channel_connections(int32_t * const status) {
 
     rx_task_message_queue.task_id = __tc_rx_bottom_half_task__task_id;
     rx_task_message_queue.task_msg_queue_id = __tc_rx_bottom_half_task__task_msg_queue_id;
-    rx_task_message_queue.channel_msg_queue_id = __rx_task_message_queue__channel_msg_queue_id;
+    rx_task_message_queue.channel_msg_queue_id = __TERMINA_ID_INVALID;
     rx_task_message_queue.port_id = __TCRXBottomHalfTask__rx_frame;
 
     tc_rx_bottom_half_task.rx_frame = __rx_task_message_queue__channel_msg_queue_id;

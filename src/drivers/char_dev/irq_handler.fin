@@ -1,0 +1,35 @@
+import drivers.char_dev;
+
+/**
+ * @brief Generic character device interrupt handler
+ */
+handler class CCharDevIRQHandler {
+
+    irq_entry : sink u32 triggers irq_handler;
+
+    uart_drv : access ICharDevNotifyIrq;
+
+    notify_rx : out unit;
+
+    action irq_handler(&priv self, _vector : u32) -> Status<i32> {
+
+        var status : Status<i32> = Success;
+        var result : Result<bool; i32> = Ok(false);
+
+        self->uart_drv.notify_irq(&mut result);
+
+        match result {
+            case Ok(notify) => {
+                // If a complete frame was received, trigger the upper layer notification
+                if notify {
+                    self->notify_rx.send(null);
+                }
+            }
+            case Error(error_code) => {
+                status = Failure(error_code);
+            }
+        }
+
+        return status;
+    }
+};

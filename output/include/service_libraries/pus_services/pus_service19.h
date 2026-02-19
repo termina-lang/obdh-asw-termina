@@ -6,14 +6,7 @@
 #include "service_libraries/pus_services/pus_service19/types.h"
 
 #include "option.h"
-
-typedef struct {
-    void * __that;
-    void (* exec_tc)(void * const, TCHandler * const, __status_int32_t * const);
-    void (* manage_event_action)(void * const, uint16_t);
-    void (* get_pending_action_number)(void * const, size_t *);
-    void (* extract_action)(void * const, size_t, TCHandler * const);
-} PUSS19Iface;
+#include "result.h"
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;

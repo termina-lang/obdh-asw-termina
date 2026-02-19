@@ -10,7 +10,7 @@ void GPIODriver__init_gpio(const __termina_event_t * const __ev, void * const __
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 48 "src/resources/gpio_driver.fin"
-    self->registers->Direction = self->registers->Direction | (uint32_t)((uint32_t)((uint32_t)((uint32_t)(1U << 16U) | (uint32_t)(1U << 17U)) | (uint32_t)(1U << 18U)) | (uint32_t)(1U << 19U));
+    self->registers->Direction = self->registers->Direction | 983040U;
 
     #line 50 "src/resources/gpio_driver.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);

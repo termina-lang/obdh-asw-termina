@@ -3,7 +3,7 @@
  * @brief Implementation of a telemetry (TM) channel using UART communication.
  */
 
-import resources.uart;
+import drivers.char_dev;
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.pus_tm_handler;
 
@@ -29,9 +29,9 @@ interface TMChannelIface {
 resource class TMChannel provides TMChannelIface {
 
     /**
-     * @brief UART driver interface used to transmit telemetry data.
+     * @brief Device driver interface used to transmit telemetry data.
      */
-    uart : access CharDevSend;
+    char_dev : access ICharDevSend;
 
     /**
      * @brief Allocator pool for telemetry handlers.
@@ -61,14 +61,14 @@ resource class TMChannel provides TMChannelIface {
         serialize_uint16(tm_descriptor.tm_num_bytes as u16, &mut frame_header[4 .. 6]);
 
 
-        self->uart.send(6, &frame_header, status);
+        self->char_dev.send(6, &frame_header, status);
 
         // Send telemetry packet bytes
         for i : usize in 0 .. 256 while (i < tm_descriptor.tm_num_bytes) && (*status is Success) {
 
             let index : usize = i as usize;
 
-            self->uart.send(1, &tm_descriptor.tm_bytes[index .. index + 1], status);
+            self->char_dev.send(1, &tm_descriptor.tm_bytes[index .. index + 1], status);
 
         }
         

@@ -50,15 +50,12 @@ constexpr tc_handler_init : TCHandler  = {
  * @param tc_handler Pointer to the TC handler structure to populate
  * @param telecommand Pointer to the telecommand descriptor to parse
  */
-function tc_handler_build_from_descriptor (tc_handler : &mut TCHandler, telecommand : &TCDescriptor) {
+function tc_handler_build(tc_handler : &mut TCHandler) {
 
-
-    for i: usize in 0 .. max_tc_size while i < telecommand->tc_num_bytes {
-        tc_handler->tc_descriptor.tc_bytes[i] = telecommand->tc_bytes[i];
-    }
-    tc_handler->tc_descriptor.tc_num_bytes = telecommand->tc_num_bytes;
-
-    tc_get_fields(&(telecommand->tc_bytes), &mut (tc_handler->packet_header), &mut (tc_handler->df_header), &mut (tc_handler->packet_error_ctrl));
+    tc_get_fields(&(tc_handler->tc_descriptor.tc_bytes), 
+                  &mut (tc_handler->packet_header), 
+                  &mut (tc_handler->df_header), 
+                  &mut (tc_handler->packet_error_ctrl));
 
     tc_handler->app_data_index = 11;
 

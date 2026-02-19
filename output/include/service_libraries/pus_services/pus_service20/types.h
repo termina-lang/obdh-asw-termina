@@ -9,6 +9,7 @@
 #include "service_libraries/pus_services/pus_service1.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     uint8_t PID_value_u8;

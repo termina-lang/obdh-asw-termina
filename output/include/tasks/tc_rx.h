@@ -3,13 +3,14 @@
 
 #include <termina.h>
 
-#include "resources/uart.h"
+#include "resources/tc_channel.h"
 #include "service_libraries/errors.h"
 #include "service_libraries/pus_tc_handler.h"
 #include "service_libraries/serialize.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     __termina_id_t __task_id;
@@ -19,13 +20,12 @@ typedef struct {
     __termina_id_t rx_frame;
     struct {
         void * __that;
-        void (* receive)(const __termina_event_t * const, void * const, __option_uint8_t * const);
-    } uart;
-    TCDescriptor telecommand;
+        void (* receive_tc)(const __termina_event_t * const, void * const, TCDescriptor * const, __status_int32_t * const);
+    } tc_channel;
 } TCRXBottomHalfTask;
 
 void __TCRXBottomHalfTask__termina_task(void * const arg);
 
-__status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this, size_t frame_size);
+__status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this);
 
 #endif

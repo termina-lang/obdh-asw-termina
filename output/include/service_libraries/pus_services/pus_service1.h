@@ -10,6 +10,7 @@
 #include "service_libraries/pus_tc_handler.h"
 
 #include "option.h"
+#include "result.h"
 
 extern const uint8_t TM_1_4_TC_X_Y_TC_SHORT_PACK_LENGTH;
 
@@ -70,38 +71,6 @@ extern const uint8_t TM_1_8_TC_6_X_MEM_ACCESS_FAIL;
 extern const uint8_t TM_1_8_TC_11_X_SCHED_TC_POOL_EMPTY;
 
 extern const uint8_t TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED;
-
-typedef struct {
-    void * __that;
-    void (* notify_tm_1_1)(void * const, uint16_t, uint16_t, uint8_t, __status_int32_t * const);
-    void (* send_tm_1_2)(void * const, const TCStatus * const, const TCHandler * const, __status_int32_t * const);
-    void (* notify_tm_1_3)(void * const, uint16_t, uint16_t, uint8_t, __status_int32_t * const);
-    void (* send_tm_1_4_short_pack_length)(void * const, uint16_t, uint16_t, size_t, __status_int32_t * const);
-    void (* send_tm_1_4_num_of_instr_not_valid)(void * const, uint16_t, uint16_t, uint8_t, __status_int32_t * const);
-    void (* send_tm_1_4_device_address_not_valid)(void * const, uint16_t, uint16_t, uint32_t, __status_int32_t * const);
-    void (* send_tm_1_4_SID_not_valid)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_mem_address_not_valid)(void * const, uint16_t, uint16_t, uint8_t, uint32_t, __status_int32_t * const);
-    void (* send_tm_1_4_mem_id_read_only)(void * const, uint16_t, uint16_t, uint8_t, __status_int32_t * const);
-    void (* send_tm_1_4_EvID_not_valid)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_PID_not_valid)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_PMON_undefined)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_PMON_defined)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_PMON_enabled)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_PMONID_invalid)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_PMON_definition_invalid)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_ev_action_enabled)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_ev_action_rejected)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_ev_action_undefined)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_PID_stats_undefined)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_PID_read_only_via_TC)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_4_error_in_acceptance)(void * const, uint16_t, uint16_t, __status_int32_t * const);
-    void (* notify_tm_1_7)(void * const, uint16_t, uint16_t, uint8_t, __status_int32_t * const);
-    void (* send_tm_1_8_max_ev_actions_defined)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_8_tm_exceed_limit_appdata)(void * const, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_8_device_command_exec_error)(void * const, uint16_t, uint16_t, uint32_t, __status_int32_t * const);
-    void (* send_tm_1_8_not_free_stats_config)(void * const, uint16_t, uint16_t, uint16_t, __status_int32_t * const);
-    void (* send_tm_1_8_mem_access_error)(void * const, uint16_t, uint16_t, uint8_t, __status_int32_t * const);
-} PUSService1Iface;
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;

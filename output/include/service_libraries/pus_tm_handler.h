@@ -4,10 +4,12 @@
 #include <termina.h>
 
 #include "resources/obt_manager.h"
+#include "service_libraries/errors.h"
 #include "service_libraries/serialize.h"
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     TMDescriptor tm_descriptor;

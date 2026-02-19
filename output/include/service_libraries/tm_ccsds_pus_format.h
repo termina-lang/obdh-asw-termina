@@ -3,10 +3,10 @@
 
 #include <termina.h>
 
-#include "resources/uart.h"
 #include "service_libraries/serialize.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     uint16_t packet_id;

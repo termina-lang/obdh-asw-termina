@@ -4,6 +4,7 @@
 #include <termina.h>
 
 #include "option.h"
+#include "result.h"
 
 extern const size_t num_params2;
 

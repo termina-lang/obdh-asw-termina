@@ -31,7 +31,7 @@ void TMChannel__send_tm(const __termina_event_t * const __ev, void * const __thi
     serialize_uint16((uint16_t)tm_descriptor.tm_num_bytes, &frame_header[4U]);
 
     #line 64 "src/resources/tm_channel.fin"
-    self->uart.send(__ev, self->uart.__that, 6U, frame_header, status);
+    self->char_dev.send(__ev, self->char_dev.__that, 6U, frame_header, status);
 
     #line 67 "src/resources/tm_channel.fin"
     for (size_t i = 0U; i < 256U && (i < tm_descriptor.tm_num_bytes && (*status).__variant == Success); i = i + 1U) {
@@ -40,7 +40,7 @@ void TMChannel__send_tm(const __termina_event_t * const __ev, void * const __thi
         size_t index = (size_t)i;
 
         #line 71 "src/resources/tm_channel.fin"
-        self->uart.send(__ev, self->uart.__that, 1U, &tm_descriptor.tm_bytes[__termina_array__slice(256U, 1U, index, index + 1U)], status);
+        self->char_dev.send(__ev, self->char_dev.__that, 1U, &tm_descriptor.tm_bytes[__termina_array__slice(256U, 1U, index, index + 1U)], status);
 
     }
 

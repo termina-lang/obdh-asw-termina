@@ -1,5 +1,4 @@
 import service_libraries.serialize;
-import resources.uart;
 
 /**
  * @brief Maximum allowed size for telemetry packet in bytes

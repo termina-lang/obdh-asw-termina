@@ -167,9 +167,24 @@ resource class PUSService19 provides PUSS19Iface {
 
                 case NoError => {
 
-                    var action_tc_handler : TCHandler = tc_handler_init;
-
-                    tc_handler_build_from_descriptor (&mut action_tc_handler, &(self->exec_tc_req_status_update.action_tc_packet));
+                    var action_tc_handler : TCHandler = {
+                        tc_descriptor = self->exec_tc_req_status_update.action_tc_packet,
+                        packet_header = {
+                            packet_id = 0,
+                            packet_seq_ctrl = 0,
+                            packet_length = 0
+                        },
+                        df_header = {
+                            flag_ver_ack = 0,
+                            type = 0,
+                            subtype = 0,
+                            sourceID = 0
+                        },
+                        packet_error_ctrl = 0,
+                        app_data_index = 0
+                    };
+                    
+                    tc_handler_build(&mut action_tc_handler);
                 
                     var tc_status : TCStatus = {
                         acceptation_status = TCAcceptationStatus::Undefined,

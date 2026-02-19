@@ -6,17 +6,12 @@
 #include "service_libraries/timeval.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     uint32_t seconds;
     uint16_t finetime;
 } MissionOBT;
-
-typedef struct {
-    void * __that;
-    void (* get_current_obt)(void * const, MissionOBT * const);
-    void (* set_obt)(void * const, MissionOBT);
-} OBTManagerIface;
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;

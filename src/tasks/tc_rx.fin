@@ -2,40 +2,19 @@ import service_libraries.tc_ccsds_pus_format;
 import service_libraries.serialize;
 import service_libraries.errors;
 import service_libraries.pus_tc_handler;
-import resources.uart;
+import resources.tc_channel;
 
 task class TCRXBottomHalfTask {
 
-    telecommand : TCDescriptor;
+    tc_channel : access ITCChannel;
 
-    uart : access CharDevRecv;
-
-    rx_frame : in usize triggers get_tc;
+    rx_frame : in unit triggers get_tc;
     tc_message_queue_output: out box TCHandler;
     a_tc_handler_pool : access Allocator<TCHandler>;
 
-    action get_tc (&priv self, frame_size : usize) -> Status<i32> {
+    action get_tc (&priv self) -> Status<i32> {
 
         var ret : Status<i32> = Success;
-
-        self->telecommand.tc_num_bytes = frame_size;
-
-        for i : usize in 0 .. max_tc_size while i < frame_size {
-
-            var byte : Option<u8> = None;
-            // TODO: Do not assume that the bytes are always extracted correctly
-            self->uart.receive(&mut byte);
-
-            match byte {
-                case Some(b) => {
-                    self->telecommand.tc_bytes[i] = b;
-                }
-                case None => {
-                    // TODO: Some FDIR shall be done here...
-                }
-            }
-
-        }
 
         var tc_handler : Option<box TCHandler> = None;
         self->a_tc_handler_pool.alloc(&mut tc_handler);
@@ -44,7 +23,9 @@ task class TCRXBottomHalfTask {
 
             case Some(tc_handler_b) => {
 
-                tc_handler_build_from_descriptor(&mut tc_handler_b, &self->telecommand);
+                self->tc_channel.receive_tc(&mut tc_handler_b.tc_descriptor, &mut ret);
+
+                tc_handler_build(&mut tc_handler_b);
 
                 self->tc_message_queue_output.send(tc_handler_b);
                 

@@ -8,6 +8,7 @@
 #include "service_libraries/pus_services/pus_service1.h"
 
 #include "option.h"
+#include "result.h"
 
 extern const uint16_t informative_Ev_IDs;
 

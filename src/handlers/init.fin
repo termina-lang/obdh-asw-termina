@@ -1,4 +1,4 @@
-import resources.uart;
+import drivers.char_dev.uart.apbuart;
 import resources.system_data_pool;
 import resources.gpio_driver;
 
@@ -22,7 +22,7 @@ const Dec : u32 = 20;
  */
 handler class Init {
 
-    uart : access CharDevInit;                         /**< UART driver access */
+    uart : access IAPBUARTInit;                         /**< UART driver access */
     gpio_driver : access GPIODrvIface;                /**< GPIO driver access */
     system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>; /**< Access to 32-bit system data pool atomic array */
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;   /**< Access to 8-bit system data pool atomic array */

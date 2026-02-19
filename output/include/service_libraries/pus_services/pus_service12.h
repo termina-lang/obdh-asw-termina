@@ -10,13 +10,7 @@
 #include "service_libraries/pus_services/pus_service5.h"
 
 #include "option.h"
-
-typedef struct {
-    void * __that;
-    void (* exec_tc)(void * const, TCHandler * const, __status_int32_t * const);
-    void (* do_monitoring)(void * const, uint16_t, uint16_t * const, FaultInfo * const, _Bool * const);
-    void (* is_PMON_enabled)(void * const, size_t, _Bool * const);
-} PUSS12Iface;
+#include "result.h"
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;

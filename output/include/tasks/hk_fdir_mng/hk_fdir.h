@@ -11,6 +11,7 @@
 #include "service_libraries/pus_services/pus_service5.h"
 
 #include "option.h"
+#include "result.h"
 
 extern const size_t num_actions_per_second;
 

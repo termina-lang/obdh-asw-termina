@@ -7,6 +7,7 @@
 #include "resources/tm_channel.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     uint16_t packet_id;

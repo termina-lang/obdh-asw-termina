@@ -1,0 +1,192 @@
+import drivers.char_dev;
+import service_libraries.queue_u8;
+import service_libraries.serialize;
+import service_libraries.tc_ccsds_pus_format;
+import service_libraries.errors;
+
+/**
+ * @enum TCRxStatus
+ * @brief State machine for the reception process.
+ *
+ * Enumerates the different states the receiver goes through to 
+ * identify, validate, and extract a complete transfer command.
+ */
+enum TCRxStatus {
+    SyncBytesRx,     /**< Receiving sync word. */
+    SyncLengthRx,    /**< Receiving TC length (2 bytes). */
+    TCBytesRx,       /**< Receiving TC payload. */
+    FinishedTCRx     /**< Reception of TC completed. */
+};
+
+
+interface ITCChannel {
+
+    procedure receive_tc(&mut self, 
+                         tc_descriptor : &mut TCDescriptor,
+                         status : &mut Status<i32>);
+
+};
+
+
+resource class CTCChannel provides ICharDevEnqueueRx, ITCChannel {
+
+    sync_word : [u8; 4]; //{0xBE, 0xBA, 0xBE, 0xEF}
+
+    aux_index : usize;
+    raw_rx_tc_length : [u8; 2];
+    tc_num_bytes : usize;
+
+    rx_status : TCRxStatus;
+
+    // RX queue
+    tc_rx_queue : QueueU8;
+
+    /**
+     * @brief Enqueues received bytes from the UART into the TC RX queue.
+     *
+     * @param[out] result Result indicating success or failure of the enqueue operation.
+     *                    On success, `Ok(true)` if a complete TC frame was received and enqueued.
+     *                    `Ok(false)` if bytes were enqueued but a complete frame is not yet received.
+     *                    On failure, `Err(error_code)` with the corresponding error code.
+     */
+    procedure enqueue_rx(&mut self, byte : u8, result : &mut Result<bool; i32>) {
+
+        *result = Ok(false);
+
+        for i : usize in 0 .. queue_max_noe while 
+                is_full(&self->tc_rx_queue) == false 
+                && (*result is Error) == false
+                && (self->rx_status is TCRxStatus::FinishedTCRx) == false {
+
+            match self->rx_status {
+
+                case SyncBytesRx => {
+
+                    if (byte == self->sync_word[self->aux_index]) {
+
+                        if (3 == self->aux_index){
+                            self->aux_index = 0;
+                            self->rx_status = TCRxStatus::SyncLengthRx;
+                        } else {
+                            self->aux_index = self->aux_index + 1;
+                        }
+
+                    } else {
+                        self->aux_index = 0;
+                    }  
+                }
+
+                case SyncLengthRx => {
+
+                    self->raw_rx_tc_length[self->aux_index] = byte;
+                    self->aux_index = self->aux_index + 1;
+                    
+                    if (2 == self->aux_index){
+
+                        self->tc_num_bytes = deserialize_uint16(&self->raw_rx_tc_length) as usize;
+
+                        if(self->tc_num_bytes < max_tc_size){
+
+                            self->rx_status = TCRxStatus::TCBytesRx;
+
+                        } else {
+
+                            self->rx_status = TCRxStatus::SyncBytesRx;
+                        }
+                        self->aux_index = 0;
+
+                    } 
+                }
+
+                case TCBytesRx => {
+
+                    var status : Status<i32> = enqueue(&mut(self->tc_rx_queue), byte);
+
+                    match status {
+                        case Success => {
+                            // Byte enqueued successfully, continue receiving TC bytes
+                            self->aux_index = self->aux_index + 1;
+
+                            if self->aux_index == self->tc_num_bytes {
+
+                                self->rx_status = TCRxStatus::FinishedTCRx;
+
+                            }
+                        }
+                        case Failure(error_code) => {
+                            *result = Error(error_code);
+                        }
+                    }
+                }
+                case FinishedTCRx => {
+                    // Do nothing. This should not happen
+                }
+            }
+            
+        }
+
+        if ((*result is Ok) && self->rx_status is TCRxStatus::FinishedTCRx) {
+
+            self->aux_index = 0;
+            *result = Ok(true);
+
+        }
+
+        return;
+
+    }
+
+    procedure receive_tc(&mut self, 
+                         tc_descriptor : &mut TCDescriptor,
+                         status : &mut Status<i32>) {
+
+        *status = Success;
+
+        if (self->rx_status is TCRxStatus::FinishedTCRx) {
+
+            var num_bytes : usize = 0;
+            get_num_enqueued_elems(&self->tc_rx_queue, &mut num_bytes);
+
+            if num_bytes >= self->tc_num_bytes {
+
+                for i : usize in 0 .. queue_max_noe while (*status is Success) {
+
+                    var obyte : Option<u8> = None;
+                    dequeue(&mut(self->tc_rx_queue), &mut obyte);
+
+                    match obyte {
+
+                        case Some(byte) => {
+                            if (*status is Success) {
+                                tc_descriptor->tc_bytes[i] = byte;
+                            }
+                        }
+                        case None => {
+                            *status = Failure(TC_RECEIVE_FAILURE);
+                        }
+
+                    }
+
+                }
+
+                if (*status is Success) {
+                    tc_descriptor->tc_num_bytes = self->tc_num_bytes;
+                }
+
+            } else {
+                *status = Failure(TC_RECEIVE_FAILURE);
+            }
+
+            // Reset state machine for next TC reception
+            self->rx_status = TCRxStatus::SyncBytesRx;
+            self->aux_index = 0;
+
+        } else {
+            *status = Failure(TC_RECEIVE_FAILURE);
+        }
+
+        return;
+
+     }
+
+};

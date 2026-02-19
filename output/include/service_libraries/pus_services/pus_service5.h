@@ -6,6 +6,7 @@
 #include "service_libraries/pus_services/pus_service5/internal.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef enum {
     FaultInfo__ParamOutOfLimit,
@@ -28,14 +29,6 @@ typedef struct {
         __enum_FaultInfo__ParamFaultValue_params_t ParamFaultValue;
     };
 } FaultInfo;
-
-typedef struct {
-    void * __that;
-    void (* exec_tc)(void * const, TCHandler * const, __status_int32_t * const);
-    void (* is_Ev_ID_enabled_ext)(void * const, uint16_t, _Bool * const);
-    void (* send_tm_5_x)(void * const, uint16_t, const FaultInfo * const, __status_int32_t * const);
-    void (* send_tm_5_2)(void * const, __status_int32_t * const);
-} PUSS5Iface;
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;

@@ -1,0 +1,33 @@
+
+
+/**
+ * @interface ICharDevSend
+ * @brief Interface for sending data through a character device.
+ */
+interface ICharDevSend {
+    procedure send(&mut self,
+                   nbytes : const usize,
+                   output_bytes : &[u8; nbytes], 
+                   status : &mut Status<i32>);
+};
+
+
+/**
+ * @interface CharDevRecv
+ * @brief Interface for receiving data from a character device.
+ */
+interface ICharDevEnqueueRx {
+    procedure enqueue_rx(&mut self,
+                         byte : u8,
+                         result : &mut Result<bool; i32>);
+};
+
+
+/**
+ * @interface CharDevRelayIrq
+ * @brief Interface for handling UART-related IRQ operations.
+ */
+interface ICharDevNotifyIrq {
+    procedure notify_irq(&mut self,
+                         result : &mut Result<bool; i32>);
+};

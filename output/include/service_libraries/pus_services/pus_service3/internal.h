@@ -10,6 +10,7 @@
 #include "service_libraries/rand.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     _Bool found;

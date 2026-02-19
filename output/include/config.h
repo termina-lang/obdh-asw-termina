@@ -16,10 +16,11 @@
 #define __system_init__emitter_id 2
 
 #define __obt_manager__mutex_id 0
-#define __tc_pool__mutex_id 1
-#define __telemetry_channel__mutex_id 2
-#define __telemetry_counter__mutex_id 3
-#define __tm_pool__mutex_id 4
+#define __pus_service_1__mutex_id 1
+#define __tc_pool__mutex_id 2
+#define __telemetry_channel__mutex_id 3
+#define __telemetry_counter__mutex_id 4
+#define __tm_pool__mutex_id 5
 
 #define __hk_fdir__task_id 0
 #define __icu_manager__task_id 1
@@ -51,7 +52,7 @@
 
 #define __TERMINA_APP_CONFIG_PERIODIC_TIMERS 1
 
-#define __TERMINA_APP_CONFIG_MUTEXES 5
+#define __TERMINA_APP_CONFIG_MUTEXES 6
 
 #define __TERMINA_APP_CONFIG_MESSAGE_QUEUES 10
 
@@ -86,10 +87,6 @@
             sizeof(__termina_box_t) \
         ) \
     + \
-        __TERMINA_APP_CONFIG_MESSAGE_QUEUE_BUFFER( \
-            10U, \
-            sizeof(size_t) \
-        ) \
     + \
         __TERMINA_APP_CONFIG_MESSAGE_QUEUE_BUFFER( \
             10U, \

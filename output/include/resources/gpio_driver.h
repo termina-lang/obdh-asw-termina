@@ -6,18 +6,13 @@
 #include "service_libraries/errors.h"
 
 #include "option.h"
+#include "result.h"
 
 typedef struct {
     uint32_t Data;
     uint32_t Output;
     uint32_t Direction;
 } GPIO_registers;
-
-typedef struct {
-    void * __that;
-    void (* init_gpio)(void * const);
-    void (* write_led)(void * const, uint8_t, uint8_t, __status_int32_t * const);
-} GPIODrvIface;
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;

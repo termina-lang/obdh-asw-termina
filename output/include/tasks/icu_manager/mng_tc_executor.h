@@ -12,13 +12,7 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 
 #include "option.h"
-
-typedef struct {
-    void * __that;
-    void (* PUS_prio_exec_tc)(void * const, TCHandler * const, __status_int32_t * const, _Bool * const);
-    void (* mng_tc_acceptation)(void * const, const TCHandler * const, __status_int32_t * const);
-    void (* mng_tc_rejection)(void * const, const TCHandler * const, const TCStatus * const, __status_int32_t * const);
-} MngTCExecIface;
+#include "result.h"
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;
