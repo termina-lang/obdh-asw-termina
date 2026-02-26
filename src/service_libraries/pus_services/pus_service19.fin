@@ -4,7 +4,7 @@ PUS SERVICE 19 : EVENT-ACTION
 
 import service_libraries.pus_services.pus_service19.types;
 
-interface PUSS19Iface {
+interface IPUSService19 {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>);
     procedure manage_event_action(&mut self, evID: u16);
@@ -13,7 +13,7 @@ interface PUSS19Iface {
     
 };
 
-resource class PUSService19 provides PUSS19Iface {
+resource class CPUSService19 provides IPUSService19 {
 
     exec_tc_req_status_update : PS19ExecTCReqStatusUpdate;
 
@@ -28,7 +28,7 @@ resource class PUSService19 provides PUSS19Iface {
     pending_action_number : [usize; 4];
     pending_action_head : [usize; 4];
 
-    pus_service_1 : access PUSService1Iface;
+    pus_service_1 : access IPUSService1;
 
     method disable_event_action (&priv self) -> Status<i32> {
 

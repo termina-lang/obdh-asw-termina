@@ -7,13 +7,13 @@ import service_libraries.pus_services.pus_service6.internal;
 
 
 
-interface PUSS6Iface {
+interface IPUSService6 {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>);
 
 };
 
-resource class PUSService6 provides PUSS6Iface {
+resource class CPUSService6 provides IPUSService6 {
 
     exec_tc_req_status_update : PS6ExecTCReqStatusUpdate;
 
@@ -26,7 +26,7 @@ resource class PUSService6 provides PUSS6Iface {
 
     obt_manager : access OBTManagerIface;
 
-    pus_service_1 : access PUSService1Iface;
+    pus_service_1 : access IPUSService1;
 
     method is_address_valid (&self) -> bool {
 

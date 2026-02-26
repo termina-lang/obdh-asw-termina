@@ -48,7 +48,7 @@ const TM_1_8_TC_11_X_SCHED_TC_POOL_EMPTY       : u8 = 5; ///< Schedule TC pool i
 const TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED    : u8 = 6; ///< Maximum event actions reached.
 /// @}
 
-interface PUSService1Iface {
+interface IPUSService1 {
 
     /**
     * @brief Sends TM[1,1] packet (TC acceptance report).
@@ -388,7 +388,7 @@ interface PUSService1Iface {
 
 };
 
-resource class PUSService1 provides PUSService1Iface {
+resource class CPUSService1 provides IPUSService1 {
 
     tm_channel : access TMChannelIface;   
     tm_handler_pool : access Allocator<TMHandler>;

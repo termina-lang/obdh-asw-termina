@@ -95,7 +95,7 @@ resource obt_manager : OBTManager = {
     system_port <-> system_entry
 };
 
-resource pus_service_1 : PUSService1 = {
+resource pus_service_1 : CPUSService1 = {
 
     tm_channel <-> telemetry_channel,
     tm_handler_pool <-> tm_pool,
@@ -104,13 +104,13 @@ resource pus_service_1 : PUSService1 = {
 
 };
 
-resource pus_service_9 : PUSService9 = {
+resource pus_service_9 : CPUSService9 = {
     exec_tc_req_status_update = ps9_init_tc_req_status_update,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
 };
 
-resource pus_service_5 : PUSService5 = {
+resource pus_service_5 : CPUSService5 = {
     Ev_ID_enable_config = {0x00000007, 0x00000000, 0x00000000, 0x00000007},
     exec_tc_req_status_update = ps5_init_tc_req_status_update,
     tm_channel <-> telemetry_channel,
@@ -120,7 +120,7 @@ resource pus_service_5 : PUSService5 = {
     pus_service_1 <-> pus_service_1
 };
 
-resource pus_service_3 : PUSService3 = {
+resource pus_service_3 : CPUSService3 = {
     hk_config_table =  {{enabled = true, SID = 0, interval = 2, interval_control = 0, num_params =5, params_def={0,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 10, interval = 30, interval_control = 0, num_params = 3, params_def = {5,6,7,0,0,0,0,0,0,0,0,0,0,0,0,0}},
                         {enabled = false, SID = 11, interval = 60, interval_control = 0, num_params = 3, params_def = {8,9,10,0,0,0,0,0,0,0,0,0,0,0,0,0}},
@@ -158,7 +158,7 @@ resource pus_service_12 : PUSService12 = {
     pus_service_1 <-> pus_service_1
 };
 
-resource pus_service_19 : PUSService19 = {
+resource pus_service_19 : CPUSService19 = {
     exec_tc_req_status_update = ps19_init_tc_req_status_update,
     event_action_config = [{enabled = false, event_ID = 0}; max_event_action_definitions],
     event_action_packets = [tc_handler_init; max_event_action_definitions],
@@ -171,7 +171,7 @@ resource pus_service_19 : PUSService19 = {
     pus_service_1 <-> pus_service_1
 };
 
-resource pus_service_20 : PUSService20 = {
+resource pus_service_20 : CPUSService20 = {
     exec_tc_req_status_update = ps20_init_tc_req_status_update,
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
@@ -182,7 +182,7 @@ resource pus_service_20 : PUSService20 = {
     pus_service_1 <-> pus_service_1
 };
 
-resource pus_service_17 : PUSService17 = {
+resource pus_service_17 : CPUSService17 = {
     exec_tc_req_status_update = ps17_init_tc_req_status_update,
     tm_channel <-> telemetry_channel,
     a_tm_handler_pool <-> tm_pool,
@@ -191,17 +191,17 @@ resource pus_service_17 : PUSService17 = {
     pus_service_1 <-> pus_service_1
 };
 
-resource pus_service_128 : PUSService128 = {
+resource pus_service_128 : CPUSService128 = {
     exec_tc_req_status_update = ps128_init_tc_req_status_update,
     pus_service_1 <-> pus_service_1
 };
 
-resource pus_service_2 : PUSService2 = {
+resource pus_service_2 : CPUSService2 = {
     gpio_driver <-> gpio_drv,
     pus_service_1 <-> pus_service_1
 };
 
-resource pus_service_6 : PUSService6 = {
+resource pus_service_6 : CPUSService6 = {
     exec_tc_req_status_update = ps6_init_tc_req_status_update,
     mem_id_write_permissions = {false, true, true, true, true, true, true, false},
     memory @ 0x40000000,
@@ -212,7 +212,7 @@ resource pus_service_6 : PUSService6 = {
     pus_service_1 <-> pus_service_1
 };
 
-resource pus_service_4 : PUSService4 = {
+resource pus_service_4 : CPUSService4 = {
     exec_tc_req_status_update = ps4_init_tc_req_status_update,
     param_stats = [{min = 0, min_obt = {seconds = 0, finetime = 0}, max = 0, max_obt = {seconds = 0, finetime = 0}, mean_value = 0, samples = 0}; max_num_of_stats],
     stats_config_table = {defined = [false; max_num_of_stats],  PID = [0; max_num_of_stats], start_time = [{seconds = 0, finetime = 0}; max_num_of_stats]},

@@ -32,19 +32,19 @@ task class HouseKeepingFDIR {
     pus_service_3 : access PUSS3Iface;
 
     /// @brief Interface to PUS service 12 (Monitoring service).
-    pus_service_12 : access PUSS12Iface;
+    pus_service_12 : access IPUSService12;
 
     /// @brief Interface to PUS service 5 (Event reporting service).
-    pus_service_5 : access PUSS5Iface;
+    pus_service_5 : access IPUSService5;
 
     /// @brief Interface to PUS service 19 (Action service).
-    pus_service_19 : access PUSS19Iface;
+    pus_service_19 : access IPUSService19;
 
     /// @brief Interface to PUS service 4 (Statistics service).
-    pus_service_4 : access PUSS4Iface;
+    pus_service_4 : access IPUSService4;
 
     /// @brief Interface to PUS service 1 (Telemetry service).
-    pus_service_1 : access PUSService1Iface;
+    pus_service_1 : access IPUSService1;
 
     /**
      * @brief Performs FDIR monitoring for all enabled PMON IDs and handles triggered events.
