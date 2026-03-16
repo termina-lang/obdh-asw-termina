@@ -1,0 +1,40 @@
+
+twcep TCRXBottomHalfTask::get_tc::path0() = [
+    block@(17:33,19:54),
+    alloc(a_tc_handler_pool)@(20:9,20:55),
+    case@(24:13,60:13)[
+        for(0..256)@(26:17,44:17)[
+            block@(28:46,28:50),
+            invoke(tc_channel.dequeue)@(29:21,29:57),
+            block@(31:21,42:17)
+        ],
+        if@(44:17,52:19)[
+            block@(46:63,48:55),
+            send(tc_message_queue_output)@(50:21,50:69)
+        ]
+    ],
+    return@(66:9,66:19)
+]
+
+twcep TCRXBottomHalfTask::get_tc::path1() = [
+    block@(17:33,19:54),
+    alloc(a_tc_handler_pool)@(20:9,20:55),
+    case@(24:13,60:13)[
+        for(0..256)@(26:17,44:17)[
+            block@(28:46,28:50),
+            invoke(tc_channel.dequeue)@(29:21,29:57),
+            block@(31:21,42:17)
+        ],
+        else@(52:19,59:13)[
+            free(a_tc_handler_pool)@(54:21,54:63)
+        ]
+    ],
+    return@(66:9,66:19)
+]
+
+twcep TCRXBottomHalfTask::get_tc::path2() = [
+    block@(17:33,19:54),
+    alloc(a_tc_handler_pool)@(20:9,20:55),
+    block@(22:9,66:9),
+    return@(66:9,66:19)
+]

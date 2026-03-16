@@ -4,7 +4,6 @@
 #include <termina.h>
 
 #include "option.h"
-#include "result.h"
 
 extern const size_t queue_max_noe;
 

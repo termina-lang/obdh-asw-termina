@@ -1,5 +1,11 @@
 
 
+enum CharDevIrqStatus {
+    RxComplete(usize),
+    IrqOk,
+    IrqError(i32)
+};
+
 /**
  * @interface ICharDevSend
  * @brief Interface for sending data through a character device.
@@ -16,18 +22,28 @@ interface ICharDevSend {
  * @interface CharDevRecv
  * @brief Interface for receiving data from a character device.
  */
-interface ICharDevEnqueueRx {
-    procedure enqueue_rx(&mut self,
-                         byte : u8,
-                         result : &mut Result<bool; i32>);
+interface ICharDevEnqueue {
+    procedure enqueue(&mut self,
+                      byte : u8,
+                      status : &mut CharDevIrqStatus);
 };
 
 
 /**
- * @interface CharDevRelayIrq
+ * @interface CharDevDequeue
+ * @brief Interface for dequeuing received data from a character device.
+ */
+interface ICharDevDequeue {
+    procedure dequeue(&mut self,
+                      byte : &mut Option<u8>);
+};
+
+
+/**
+ * @interface ICharDevNotifyIrq 
  * @brief Interface for handling UART-related IRQ operations.
  */
 interface ICharDevNotifyIrq {
     procedure notify_irq(&mut self,
-                         result : &mut Result<bool; i32>);
+                         result : &mut CharDevIrqStatus);
 };

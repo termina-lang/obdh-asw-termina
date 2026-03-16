@@ -19,16 +19,7 @@ enum TCRxStatus {
 };
 
 
-interface ITCChannel {
-
-    procedure receive_tc(&mut self, 
-                         tc_descriptor : &mut TCDescriptor,
-                         status : &mut Status<i32>);
-
-};
-
-
-resource class CTCChannel provides ICharDevEnqueueRx, ITCChannel {
+resource class CTCChannel provides ICharDevEnqueue, ICharDevDequeue {
 
     sync_word : [u8; 4]; //{0xBE, 0xBA, 0xBE, 0xEF}
 
@@ -49,86 +40,81 @@ resource class CTCChannel provides ICharDevEnqueueRx, ITCChannel {
      *                    `Ok(false)` if bytes were enqueued but a complete frame is not yet received.
      *                    On failure, `Err(error_code)` with the corresponding error code.
      */
-    procedure enqueue_rx(&mut self, byte : u8, result : &mut Result<bool; i32>) {
+    procedure enqueue(&mut self, byte : u8, status : &mut CharDevIrqStatus) {
 
-        *result = Ok(false);
+        *status = CharDevIrqStatus::IrqOk;
 
-        for i : usize in 0 .. queue_max_noe while 
-                is_full(&self->tc_rx_queue) == false 
-                && (*result is Error) == false
-                && (self->rx_status is TCRxStatus::FinishedTCRx) == false {
+        match self->rx_status {
 
-            match self->rx_status {
+            case SyncBytesRx => {
 
-                case SyncBytesRx => {
+                if (byte == self->sync_word[self->aux_index]) {
 
-                    if (byte == self->sync_word[self->aux_index]) {
+                    if (3 == self->aux_index){
+                        self->aux_index = 0;
+                        self->rx_status = TCRxStatus::SyncLengthRx;
+                    } else {
+                        self->aux_index = self->aux_index + 1;
+                    }
 
-                        if (3 == self->aux_index){
-                            self->aux_index = 0;
-                            self->rx_status = TCRxStatus::SyncLengthRx;
-                        } else {
-                            self->aux_index = self->aux_index + 1;
-                        }
+                } else {
+                    self->aux_index = 0;
+                }  
+            }
+
+            case SyncLengthRx => {
+
+                self->raw_rx_tc_length[self->aux_index] = byte;
+                self->aux_index = self->aux_index + 1;
+                
+                if (2 == self->aux_index){
+
+                    self->tc_num_bytes = deserialize_uint16(&self->raw_rx_tc_length) as usize;
+
+                    if(self->tc_num_bytes < max_tc_size){
+
+                        self->rx_status = TCRxStatus::TCBytesRx;
 
                     } else {
-                        self->aux_index = 0;
-                    }  
-                }
 
-                case SyncLengthRx => {
+                        self->rx_status = TCRxStatus::SyncBytesRx;
+                    }
+                    self->aux_index = 0;
 
-                    self->raw_rx_tc_length[self->aux_index] = byte;
-                    self->aux_index = self->aux_index + 1;
-                    
-                    if (2 == self->aux_index){
+                } 
+            }
 
-                        self->tc_num_bytes = deserialize_uint16(&self->raw_rx_tc_length) as usize;
+            case TCBytesRx => {
 
-                        if(self->tc_num_bytes < max_tc_size){
+                var result : Status<i32> = enqueue(&mut(self->tc_rx_queue), byte);
 
-                            self->rx_status = TCRxStatus::TCBytesRx;
+                match result {
+                    case Success => {
+                        // Byte enqueued successfully, continue receiving TC bytes
+                        self->aux_index = self->aux_index + 1;
 
-                        } else {
+                        if self->aux_index == self->tc_num_bytes {
 
-                            self->rx_status = TCRxStatus::SyncBytesRx;
-                        }
-                        self->aux_index = 0;
+                            self->rx_status = TCRxStatus::FinishedTCRx;
 
-                    } 
-                }
-
-                case TCBytesRx => {
-
-                    var status : Status<i32> = enqueue(&mut(self->tc_rx_queue), byte);
-
-                    match status {
-                        case Success => {
-                            // Byte enqueued successfully, continue receiving TC bytes
-                            self->aux_index = self->aux_index + 1;
-
-                            if self->aux_index == self->tc_num_bytes {
-
-                                self->rx_status = TCRxStatus::FinishedTCRx;
-
-                            }
-                        }
-                        case Failure(error_code) => {
-                            *result = Error(error_code);
                         }
                     }
-                }
-                case FinishedTCRx => {
-                    // Do nothing. This should not happen
+                    case Failure(error_code) => {
+                        *status = CharDevIrqStatus::IrqError(error_code);
+                    }
                 }
             }
-            
+            case FinishedTCRx => {
+                // Do nothing. This should not happen
+            }
         }
+            
+        if ((*status is CharDevIrqStatus::IrqOk) && self->rx_status is TCRxStatus::FinishedTCRx) {
 
-        if ((*result is Ok) && self->rx_status is TCRxStatus::FinishedTCRx) {
-
+            // Reset state machine for next TC reception
+            self->rx_status = TCRxStatus::SyncBytesRx;
             self->aux_index = 0;
-            *result = Ok(true);
+            *status = CharDevIrqStatus::RxComplete(self->tc_num_bytes);
 
         }
 
@@ -136,54 +122,10 @@ resource class CTCChannel provides ICharDevEnqueueRx, ITCChannel {
 
     }
 
-    procedure receive_tc(&mut self, 
-                         tc_descriptor : &mut TCDescriptor,
-                         status : &mut Status<i32>) {
+    procedure dequeue(&mut self, 
+                      obyte : &mut Option<u8>) {
 
-        *status = Success;
-
-        if (self->rx_status is TCRxStatus::FinishedTCRx) {
-
-            var num_bytes : usize = 0;
-            get_num_enqueued_elems(&self->tc_rx_queue, &mut num_bytes);
-
-            if num_bytes >= self->tc_num_bytes {
-
-                for i : usize in 0 .. queue_max_noe while (*status is Success) {
-
-                    var obyte : Option<u8> = None;
-                    dequeue(&mut(self->tc_rx_queue), &mut obyte);
-
-                    match obyte {
-
-                        case Some(byte) => {
-                            if (*status is Success) {
-                                tc_descriptor->tc_bytes[i] = byte;
-                            }
-                        }
-                        case None => {
-                            *status = Failure(TC_RECEIVE_FAILURE);
-                        }
-
-                    }
-
-                }
-
-                if (*status is Success) {
-                    tc_descriptor->tc_num_bytes = self->tc_num_bytes;
-                }
-
-            } else {
-                *status = Failure(TC_RECEIVE_FAILURE);
-            }
-
-            // Reset state machine for next TC reception
-            self->rx_status = TCRxStatus::SyncBytesRx;
-            self->aux_index = 0;
-
-        } else {
-            *status = Failure(TC_RECEIVE_FAILURE);
-        }
+        dequeue(&mut(self->tc_rx_queue), obyte);
 
         return;
 

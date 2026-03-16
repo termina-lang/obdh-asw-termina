@@ -6,14 +6,13 @@
 #include "drivers/char_dev.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     __termina_id_t __handler_id;
     __termina_out_port_t notify_rx;
     struct {
         void * __that;
-        void (* notify_irq)(const __termina_event_t * const, void * const, __result_bool__int32_t * const);
+        void (* notify_irq)(const __termina_event_t * const, void * const, CharDevIrqStatus * const);
     } uart_drv;
 } CCharDevIRQHandler;
 

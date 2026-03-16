@@ -62,7 +62,7 @@ resource class CAPBUARTDriver provides
     // TX queue
     uart_tx_queue : QueueU8;
 
-    rx_queue : access ICharDevEnqueueRx;
+    rx_queue : access ICharDevEnqueue;
 
     /**
      * @brief Checks if transmit FIFO is full.
@@ -164,10 +164,10 @@ resource class CAPBUARTDriver provides
     }
 
 
-    procedure notify_irq(&mut self, result : &mut Result<bool; i32>) {
+    procedure notify_irq(&mut self, status : &mut CharDevIrqStatus) {
 
         let uart_status : u32 = self->registers.status;
-        *result = Ok(false);
+        *status = CharDevIrqStatus::IrqOk;
        
         if ((uart_status & uart_te) != 0 : u32) {
 
@@ -178,7 +178,7 @@ resource class CAPBUARTDriver provides
         if ((uart_status & uart_dr) != 0 : u32) {
 
             var byte : u8 = self->registers.data as u8;
-            self->rx_queue.enqueue_rx(byte, result);
+            self->rx_queue.enqueue(byte, status);
 
         }
 

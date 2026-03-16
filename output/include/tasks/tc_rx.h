@@ -10,22 +10,21 @@
 #include "service_libraries/tc_ccsds_pus_format.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     __termina_id_t __task_id;
     __termina_id_t __task_msg_queue_id;
     __termina_allocator_t a_tc_handler_pool;
     __termina_out_port_t tc_message_queue_output;
-    __termina_id_t rx_frame;
+    __termina_id_t rx_tc;
     struct {
         void * __that;
-        void (* receive_tc)(const __termina_event_t * const, void * const, TCDescriptor * const, __status_int32_t * const);
+        void (* dequeue)(const __termina_event_t * const, void * const, __option_uint8_t * const);
     } tc_channel;
 } TCRXBottomHalfTask;
 
 void __TCRXBottomHalfTask__termina_task(void * const arg);
 
-__status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this);
+__status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this, size_t size);
 
 #endif

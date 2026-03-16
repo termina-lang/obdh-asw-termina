@@ -6,7 +6,6 @@
 #include "service_libraries/timeval.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     uint32_t seconds;

@@ -1,0 +1,8 @@
+
+twcep Init::init::path0() = [
+    block@(44:33,44:40),
+    invoke(uart.initialize)@(47:9,47:32),
+    invoke(gpio_driver.init_gpio)@(50:9,50:38),
+    block@(53:9,70:9),
+    return@(70:9,70:19)
+]

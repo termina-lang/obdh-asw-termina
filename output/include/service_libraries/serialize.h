@@ -4,7 +4,6 @@
 #include <termina.h>
 
 #include "option.h"
-#include "result.h"
 
 uint16_t deserialize_uint16(const uint8_t data_bytes[2U]);
 

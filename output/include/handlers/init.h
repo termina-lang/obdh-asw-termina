@@ -8,7 +8,6 @@
 #include "resources/system_data_pool.h"
 
 #include "option.h"
-#include "result.h"
 
 extern const uint32_t Zero;
 

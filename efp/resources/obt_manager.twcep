@@ -1,0 +1,13 @@
+
+twcep OBTManager::get_current_obt::path0() = [
+    block@(50:41,52:23),
+    syscall(clock_get_uptime)@(55:9,55:72),
+    block@(58:23,67:62),
+    return@(69:9,69:15)
+]
+
+twcep OBTManager::set_obt::path0() = [
+    block@(32:25,32:33),
+    syscall(clock_get_uptime)@(33:9,33:82),
+    return@(35:9,35:15)
+]

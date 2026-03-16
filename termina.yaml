@@ -2,6 +2,7 @@ app-file: app
 app-folder: app
 name: obdh-asw-termina 
 output-folder: output
+efp-folder: efp
 platform: rtems5-leon3-qemu
 source-modules: src
 profile: debug

@@ -10,7 +10,6 @@
 #include "service_libraries/tc_ccsds_pus_format.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef enum {
     TCRxStatus__SyncBytesRx,
@@ -33,8 +32,8 @@ typedef struct {
     uint8_t sync_word[4U];
 } CTCChannel;
 
-void CTCChannel__enqueue_rx(const __termina_event_t * const __ev, void * const __this, uint8_t byte, __result_bool__int32_t * const result);
+void CTCChannel__dequeue(const __termina_event_t * const __ev, void * const __this, __option_uint8_t * const obyte);
 
-void CTCChannel__receive_tc(const __termina_event_t * const __ev, void * const __this, TCDescriptor * const tc_descriptor, __status_int32_t * const status);
+void CTCChannel__enqueue(const __termina_event_t * const __ev, void * const __this, uint8_t byte, CharDevIrqStatus * const status);
 
 #endif

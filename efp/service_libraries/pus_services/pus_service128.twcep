@@ -1,0 +1,74 @@
+
+twcep PUSService128::exec128_1TC::path0() = [
+    block@(22:36,22:43),
+    invoke(pus_service_1.notify_tm_1_3)@(24:9,28:29),
+    if@(30:9,39:9)[
+        block@(31:59,31:63),
+        invoke(pus_service_1.notify_tm_1_7)@(32:13,36:33)
+    ],
+    return@(39:9,39:22)
+]
+
+twcep PUSService128::exec_tc::path0() = [
+    block@(45:36,50:87),
+    if@(52:9,56:11)[
+        call(exec128_1TC)@(54:22,54:41)
+    ],
+    block@(62:9,95:67),
+    return@(97:9,97:15)
+]
+
+twcep PUSService128::exec_tc::path1() = [
+    block@(45:36,50:87),
+    if@(52:9,56:11)[
+        call(exec128_1TC)@(54:22,54:41)
+    ],
+    case@(69:13,93:9)[
+        if@(72:17,79:19)[
+            invoke(pus_service_1.send_tm_1_4_error_in_acceptance)@(74:21,77:43)
+        ]
+    ],
+    block@(95:24,95:67),
+    return@(97:9,97:15)
+]
+
+twcep PUSService128::exec_tc::path2() = [
+    block@(45:36,50:87),
+    if@(52:9,56:11)[
+        call(exec128_1TC)@(54:22,54:41)
+    ],
+    case@(69:13,93:9)[
+        elif@(79:19,86:19)[
+            invoke(pus_service_1.send_tm_1_8_tm_exceed_limit_appdata)@(81:21,84:43)
+        ]
+    ],
+    block@(95:24,95:67),
+    return@(97:9,97:15)
+]
+
+twcep PUSService128::exec_tc::path3() = [
+    block@(45:36,95:67),
+    return@(97:9,97:15)
+]
+
+twcep PUSService128::exec_tc::path4() = [
+    block@(45:36,62:9),
+    case@(69:13,93:9)[
+        if@(72:17,79:19)[
+            invoke(pus_service_1.send_tm_1_4_error_in_acceptance)@(74:21,77:43)
+        ]
+    ],
+    block@(95:24,95:67),
+    return@(97:9,97:15)
+]
+
+twcep PUSService128::exec_tc::path5() = [
+    block@(45:36,62:9),
+    case@(69:13,93:9)[
+        elif@(79:19,86:19)[
+            invoke(pus_service_1.send_tm_1_8_tm_exceed_limit_appdata)@(81:21,84:43)
+        ]
+    ],
+    block@(95:24,95:67),
+    return@(97:9,97:15)
+]

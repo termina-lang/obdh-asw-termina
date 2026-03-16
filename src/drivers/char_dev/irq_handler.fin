@@ -9,23 +9,23 @@ handler class CCharDevIRQHandler {
 
     uart_drv : access ICharDevNotifyIrq;
 
-    notify_rx : out unit;
+    notify_rx : out usize;
 
     action irq_handler(&priv self, _vector : u32) -> Status<i32> {
 
         var status : Status<i32> = Success;
-        var result : Result<bool; i32> = Ok(false);
+        var result : CharDevIrqStatus = CharDevIrqStatus::IrqOk;
 
         self->uart_drv.notify_irq(&mut result);
 
         match result {
-            case Ok(notify) => {
-                // If a complete frame was received, trigger the upper layer notification
-                if notify {
-                    self->notify_rx.send(null);
-                }
+            case RxComplete(size) => {
+                self->notify_rx.send(size);
             }
-            case Error(error_code) => {
+            case IrqOk => {
+                // Do nothing, wait for the next interrupt
+            }
+            case IrqError(error_code) => {
                 status = Failure(error_code);
             }
         }

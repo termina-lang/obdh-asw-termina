@@ -8,7 +8,6 @@
 #include "service_libraries/queue_u8.h"
 
 #include "option.h"
-#include "result.h"
 
 extern const size_t hw_fifo_size;
 
@@ -23,7 +22,7 @@ typedef struct {
     __termina_resource_lock_type_t __lock_type;
     struct {
         void * __that;
-        void (* enqueue_rx)(const __termina_event_t * const, void * const, uint8_t, __result_bool__int32_t * const);
+        void (* enqueue)(const __termina_event_t * const, void * const, uint8_t, CharDevIrqStatus * const);
     } rx_queue;
     QueueU8 uart_tx_queue;
     _Bool rem_bytes;
@@ -48,7 +47,7 @@ void CAPBUARTDriver__initialize(const __termina_event_t * const __ev, void * con
 
 void CAPBUARTDriver__release_tx(const __termina_event_t * const __ev, CAPBUARTDriver * const self);
 
-void CAPBUARTDriver__notify_irq(const __termina_event_t * const __ev, void * const __this, __result_bool__int32_t * const result);
+void CAPBUARTDriver__notify_irq(const __termina_event_t * const __ev, void * const __this, CharDevIrqStatus * const status);
 
 _Bool CAPBUARTDriver__rf_data_ready(const __termina_event_t * const __ev, const CAPBUARTDriver * const self);
 

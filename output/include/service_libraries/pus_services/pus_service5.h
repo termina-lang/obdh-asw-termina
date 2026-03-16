@@ -6,7 +6,6 @@
 #include "service_libraries/pus_services/pus_service5/internal.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef enum {
     FaultInfo__ParamOutOfLimit,

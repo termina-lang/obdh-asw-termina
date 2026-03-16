@@ -1,0 +1,547 @@
+
+twcep PUSService6::check_data::path0() = [
+    block@(86:34,94:38),
+    return@(96:9,96:24)
+]
+
+twcep PUSService6::is_address_valid::path0() = [
+    block@(33:31,47:9),
+    return@(47:9,47:24)
+]
+
+twcep PUSService6::is_mem_id_write_enabled::path0() = [
+    return@(53:9,53:105)
+]
+
+twcep PUSService6::write_data::path0() = [
+    block@(59:36,68:9),
+    return@(68:9,68:22)
+]
+
+twcep PUSService6::exec6_2TC::path0() = [
+    block@(101:36,101:43),
+    if@(103:9,111:11)[
+        invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(105:13,109:33)
+    ],
+    return@(160:9,160:22)
+]
+
+twcep PUSService6::exec6_2TC::path1() = [
+    block@(101:36,101:43),
+    elif@(111:11,120:11)[
+        invoke(pus_service_1.send_tm_1_4_mem_address_not_valid)@(113:13,118:33)
+    ],
+    return@(160:9,160:22)
+]
+
+twcep PUSService6::exec6_2TC::path2() = [
+    block@(101:36,101:43),
+    elif@(120:11,128:11)[
+        invoke(pus_service_1.send_tm_1_4_mem_id_read_only)@(122:13,126:33)
+    ],
+    return@(160:9,160:22)
+]
+
+twcep PUSService6::exec6_2TC::path3() = [
+    block@(101:36,101:43),
+    else@(128:11,160:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(130:13,134:33),
+        if@(136:13,140:13)[
+            call(write_data)@(137:26,137:44)
+        ],
+        if@(140:13,148:15)[
+            invoke(pus_service_1.notify_tm_1_7)@(142:17,146:37)
+        ]
+    ],
+    return@(160:9,160:22)
+]
+
+twcep PUSService6::exec6_2TC::path4() = [
+    block@(101:36,101:43),
+    else@(128:11,160:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(130:13,134:33),
+        if@(136:13,140:13)[
+            call(write_data)@(137:26,137:44)
+        ],
+        else@(148:15,158:9)[
+            invoke(pus_service_1.send_tm_1_8_mem_access_error)@(150:17,154:41)
+        ]
+    ],
+    return@(160:9,160:22)
+]
+
+twcep PUSService6::read_data::path0() = [
+    block@(73:36,81:9),
+    return@(81:9,81:22)
+]
+
+twcep PUSService6::exec6_5TC::path0() = [
+    block@(166:36,166:43),
+    if@(168:9,176:11)[
+        invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(170:13,174:37)
+    ],
+    return@(251:9,251:22)
+]
+
+twcep PUSService6::exec6_5TC::path1() = [
+    block@(166:36,166:43),
+    elif@(176:11,185:11)[
+        invoke(pus_service_1.send_tm_1_4_mem_address_not_valid)@(178:13,183:37)
+    ],
+    return@(251:9,251:22)
+]
+
+twcep PUSService6::exec6_5TC::path2() = [
+    block@(166:36,166:43),
+    else@(185:11,251:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(187:13,191:37),
+        if@(193:13,199:13)[
+            call(read_data)@(195:26,195:43)
+        ],
+        if@(199:13,239:15)[
+            block@(201:58,201:62),
+            alloc(a_tm_handler_pool)@(202:17,202:63),
+            case@(206:21,233:21)[
+                block@(208:67,209:53),
+                invoke(tm_counter.get_next_tm_count)@(211:25,211:74),
+                invoke(obt_manager.get_current_obt)@(212:25,212:76),
+                block@(214:89,214:64),
+                if@(216:25,218:27)[
+                    invoke(tm_channel.send_tm)@(217:29,217:80)
+                ],
+                if@(222:25,232:21)[
+                    invoke(pus_service_1.notify_tm_1_7)@(224:29,228:49)
+                ]
+            ]
+        ]
+    ],
+    return@(251:9,251:22)
+]
+
+twcep PUSService6::exec6_5TC::path3() = [
+    block@(166:36,166:43),
+    else@(185:11,251:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(187:13,191:37),
+        if@(193:13,199:13)[
+            call(read_data)@(195:26,195:43)
+        ],
+        if@(199:13,239:15)[
+            block@(201:58,201:62),
+            alloc(a_tm_handler_pool)@(202:17,202:63),
+            case@(206:21,233:21)[
+                block@(208:67,209:53),
+                invoke(tm_counter.get_next_tm_count)@(211:25,211:74),
+                invoke(obt_manager.get_current_obt)@(212:25,212:76),
+                block@(214:89,214:64),
+                else@(218:27,222:25)[
+                    free(a_tm_handler_pool)@(219:29,219:71)
+                ],
+                if@(222:25,232:21)[
+                    invoke(pus_service_1.notify_tm_1_7)@(224:29,228:49)
+                ]
+            ]
+        ]
+    ],
+    return@(251:9,251:22)
+]
+
+twcep PUSService6::exec6_5TC::path4() = [
+    block@(166:36,166:43),
+    else@(185:11,251:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(187:13,191:37),
+        if@(193:13,199:13)[
+            call(read_data)@(195:26,195:43)
+        ],
+        if@(199:13,239:15)[
+            block@(201:58,201:62),
+            alloc(a_tm_handler_pool)@(202:17,202:63),
+            block@(204:17,239:13)
+        ]
+    ],
+    return@(251:9,251:22)
+]
+
+twcep PUSService6::exec6_5TC::path5() = [
+    block@(166:36,166:43),
+    else@(185:11,251:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(187:13,191:37),
+        if@(193:13,199:13)[
+            call(read_data)@(195:26,195:43)
+        ],
+        else@(239:15,249:9)[
+            invoke(pus_service_1.send_tm_1_8_mem_access_error)@(241:17,245:37)
+        ]
+    ],
+    return@(251:9,251:22)
+]
+
+twcep PUSService6::exec6_9TC::path0() = [
+    block@(257:36,257:43),
+    if@(259:9,267:11)[
+        invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(261:13,265:37)
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec6_9TC::path1() = [
+    block@(257:36,257:43),
+    elif@(267:11,276:11)[
+        invoke(pus_service_1.send_tm_1_4_mem_address_not_valid)@(269:13,274:33)
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec6_9TC::path2() = [
+    block@(257:36,257:43),
+    else@(276:11,341:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
+        call(check_data)@(284:31,284:49),
+        case@(288:17,327:17)[
+            block@(290:62,290:66),
+            alloc(a_tm_handler_pool)@(291:21,291:67),
+            case@(295:25,321:25)[
+                block@(297:71,298:57),
+                invoke(tm_counter.get_next_tm_count)@(299:29,299:78),
+                invoke(obt_manager.get_current_obt)@(300:29,300:80),
+                block@(302:130,302:69),
+                if@(304:29,306:31)[
+                    invoke(tm_channel.send_tm)@(305:33,305:84)
+                ],
+                if@(310:29,320:25)[
+                    invoke(pus_service_1.notify_tm_1_7)@(312:33,316:53)
+                ]
+            ]
+        ]
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec6_9TC::path3() = [
+    block@(257:36,257:43),
+    else@(276:11,341:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
+        call(check_data)@(284:31,284:49),
+        case@(288:17,327:17)[
+            block@(290:62,290:66),
+            alloc(a_tm_handler_pool)@(291:21,291:67),
+            case@(295:25,321:25)[
+                block@(297:71,298:57),
+                invoke(tm_counter.get_next_tm_count)@(299:29,299:78),
+                invoke(obt_manager.get_current_obt)@(300:29,300:80),
+                block@(302:130,302:69),
+                else@(306:31,310:29)[
+                    free(a_tm_handler_pool)@(307:33,307:75)
+                ],
+                if@(310:29,320:25)[
+                    invoke(pus_service_1.notify_tm_1_7)@(312:33,316:53)
+                ]
+            ]
+        ]
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec6_9TC::path4() = [
+    block@(257:36,257:43),
+    else@(276:11,341:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
+        call(check_data)@(284:31,284:49),
+        case@(288:17,327:17)[
+            block@(290:62,290:66),
+            alloc(a_tm_handler_pool)@(291:21,291:67),
+            block@(293:21,326:17)
+        ]
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec6_9TC::path5() = [
+    block@(257:36,257:43),
+    else@(276:11,341:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
+        call(check_data)@(284:31,284:49),
+        case@(327:17,337:13)[
+            invoke(pus_service_1.send_tm_1_8_mem_access_error)@(329:21,333:41)
+        ]
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec6_9TC::path6() = [
+    block@(257:36,257:43),
+    else@(276:11,341:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
+        block@(283:49,283:53),
+        case@(288:17,327:17)[
+            block@(290:62,290:66),
+            alloc(a_tm_handler_pool)@(291:21,291:67),
+            case@(295:25,321:25)[
+                block@(297:71,298:57),
+                invoke(tm_counter.get_next_tm_count)@(299:29,299:78),
+                invoke(obt_manager.get_current_obt)@(300:29,300:80),
+                block@(302:130,302:69),
+                if@(304:29,306:31)[
+                    invoke(tm_channel.send_tm)@(305:33,305:84)
+                ],
+                if@(310:29,320:25)[
+                    invoke(pus_service_1.notify_tm_1_7)@(312:33,316:53)
+                ]
+            ]
+        ]
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec6_9TC::path7() = [
+    block@(257:36,257:43),
+    else@(276:11,341:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
+        block@(283:49,283:53),
+        case@(288:17,327:17)[
+            block@(290:62,290:66),
+            alloc(a_tm_handler_pool)@(291:21,291:67),
+            case@(295:25,321:25)[
+                block@(297:71,298:57),
+                invoke(tm_counter.get_next_tm_count)@(299:29,299:78),
+                invoke(obt_manager.get_current_obt)@(300:29,300:80),
+                block@(302:130,302:69),
+                else@(306:31,310:29)[
+                    free(a_tm_handler_pool)@(307:33,307:75)
+                ],
+                if@(310:29,320:25)[
+                    invoke(pus_service_1.notify_tm_1_7)@(312:33,316:53)
+                ]
+            ]
+        ]
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec6_9TC::path8() = [
+    block@(257:36,257:43),
+    else@(276:11,341:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
+        block@(283:49,283:53),
+        case@(288:17,327:17)[
+            block@(290:62,290:66),
+            alloc(a_tm_handler_pool)@(291:21,291:67),
+            block@(293:21,326:17)
+        ]
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec6_9TC::path9() = [
+    block@(257:36,257:43),
+    else@(276:11,341:9)[
+        invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
+        block@(283:49,283:53),
+        case@(327:17,337:13)[
+            invoke(pus_service_1.send_tm_1_8_mem_access_error)@(329:21,333:41)
+        ]
+    ],
+    return@(341:9,341:22)
+]
+
+twcep PUSService6::exec_tc::path0() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        if@(377:13,381:15)[
+            call(exec6_2TC)@(379:26,379:43)
+        ]
+    ],
+    block@(396:9,436:9),
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path1() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        if@(377:13,381:15)[
+            call(exec6_2TC)@(379:26,379:43)
+        ]
+    ],
+    case@(403:13,434:9)[
+        if@(405:17,412:19)[
+            invoke(pus_service_1.send_tm_1_4_error_in_acceptance)@(407:21,410:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path2() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        if@(377:13,381:15)[
+            call(exec6_2TC)@(379:26,379:43)
+        ]
+    ],
+    case@(403:13,434:9)[
+        elif@(412:19,419:19)[
+            invoke(pus_service_1.send_tm_1_8_tm_exceed_limit_appdata)@(414:21,417:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path3() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        if@(377:13,381:15)[
+            call(exec6_2TC)@(379:26,379:43)
+        ]
+    ],
+    case@(403:13,434:9)[
+        elif@(419:19,427:19)[
+            invoke(pus_service_1.send_tm_1_4_short_pack_length)@(421:21,425:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path4() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        elif@(381:15,385:15)[
+            call(exec6_5TC)@(383:26,383:43)
+        ]
+    ],
+    block@(396:9,436:9),
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path5() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        elif@(381:15,385:15)[
+            call(exec6_5TC)@(383:26,383:43)
+        ]
+    ],
+    case@(403:13,434:9)[
+        if@(405:17,412:19)[
+            invoke(pus_service_1.send_tm_1_4_error_in_acceptance)@(407:21,410:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path6() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        elif@(381:15,385:15)[
+            call(exec6_5TC)@(383:26,383:43)
+        ]
+    ],
+    case@(403:13,434:9)[
+        elif@(412:19,419:19)[
+            invoke(pus_service_1.send_tm_1_8_tm_exceed_limit_appdata)@(414:21,417:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path7() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        elif@(381:15,385:15)[
+            call(exec6_5TC)@(383:26,383:43)
+        ]
+    ],
+    case@(403:13,434:9)[
+        elif@(419:19,427:19)[
+            invoke(pus_service_1.send_tm_1_4_short_pack_length)@(421:21,425:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path8() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        elif@(385:15,389:15)[
+            call(exec6_9TC)@(387:26,387:43)
+        ]
+    ],
+    block@(396:9,436:9),
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path9() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        elif@(385:15,389:15)[
+            call(exec6_9TC)@(387:26,387:43)
+        ]
+    ],
+    case@(403:13,434:9)[
+        if@(405:17,412:19)[
+            invoke(pus_service_1.send_tm_1_4_error_in_acceptance)@(407:21,410:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path10() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        elif@(385:15,389:15)[
+            call(exec6_9TC)@(387:26,387:43)
+        ]
+    ],
+    case@(403:13,434:9)[
+        elif@(412:19,419:19)[
+            invoke(pus_service_1.send_tm_1_8_tm_exceed_limit_appdata)@(414:21,417:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path11() = [
+    block@(347:36,375:9),
+    if@(375:9,396:9)[
+        elif@(385:15,389:15)[
+            call(exec6_9TC)@(387:26,387:43)
+        ]
+    ],
+    case@(403:13,434:9)[
+        elif@(419:19,427:19)[
+            invoke(pus_service_1.send_tm_1_4_short_pack_length)@(421:21,425:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path12() = [
+    block@(347:36,436:9),
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path13() = [
+    block@(347:36,396:9),
+    case@(403:13,434:9)[
+        if@(405:17,412:19)[
+            invoke(pus_service_1.send_tm_1_4_error_in_acceptance)@(407:21,410:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path14() = [
+    block@(347:36,396:9),
+    case@(403:13,434:9)[
+        elif@(412:19,419:19)[
+            invoke(pus_service_1.send_tm_1_8_tm_exceed_limit_appdata)@(414:21,417:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]
+
+twcep PUSService6::exec_tc::path15() = [
+    block@(347:36,396:9),
+    case@(403:13,434:9)[
+        elif@(419:19,427:19)[
+            invoke(pus_service_1.send_tm_1_4_short_pack_length)@(421:21,425:43)
+        ]
+    ],
+    return@(436:9,436:15)
+]

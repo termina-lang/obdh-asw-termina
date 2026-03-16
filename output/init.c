@@ -58,7 +58,7 @@ void __termina_app__init_globals() {
     uart_drv.registers = (volatile APBUARTRegs *)0x80000100U;
     uart_drv.rem_bytes = 0;
     uart_drv.rx_queue.__that = &tc_channel;
-    uart_drv.rx_queue.enqueue_rx = CTCChannel__enqueue_rx;
+    uart_drv.rx_queue.enqueue = CTCChannel__enqueue;
     for (size_t __i0 = 0U; __i0 < queue_max_noe; __i0 = __i0 + 1U) {
         uart_drv.uart_tx_queue.elements[__i0] = 0U;
     }
@@ -700,7 +700,7 @@ void __termina_app__init_globals() {
     tc_rx_bottom_half_task.a_tc_handler_pool.alloc = __termina_pool__alloc;
     tc_rx_bottom_half_task.a_tc_handler_pool.free = __termina_pool__free;
     tc_rx_bottom_half_task.tc_channel.__that = &tc_channel;
-    tc_rx_bottom_half_task.tc_channel.receive_tc = CTCChannel__receive_tc;
+    tc_rx_bottom_half_task.tc_channel.dequeue = CTCChannel__dequeue;
     tc_rx_bottom_half_task.tc_message_queue_output = &tc_message_queue;
     icu_manager.a_tc_handler_pool.__that = &tc_pool;
     icu_manager.a_tc_handler_pool.alloc = __termina_pool__alloc;

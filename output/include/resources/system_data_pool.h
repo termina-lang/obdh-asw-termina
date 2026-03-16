@@ -4,7 +4,6 @@
 #include <termina.h>
 
 #include "option.h"
-#include "result.h"
 
 typedef enum {
     DataPoolItemType__u8_t,

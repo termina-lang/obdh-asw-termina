@@ -1,0 +1,11 @@
+
+twcep TMChannel::send_tm::path0() = [
+    block@(54:44,61:53),
+    invoke(char_dev.send)(6)@(64:9,64:54),
+    for(0..256)@(67:9,76:9)[
+        block@(69:33,69:34),
+        invoke(char_dev.send)(1)@(71:13,71:88)
+    ],
+    free(a_tm_handler_pool)@(76:9,76:49),
+    return@(78:9,78:15)
+]

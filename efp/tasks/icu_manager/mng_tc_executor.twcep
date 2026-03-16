@@ -1,0 +1,50 @@
+
+twcep ManagerTCExecutor::PUS_prio_exec_tc::path0() = [
+    block@(61:28,61:54),
+    if@(63:9,67:11)[
+        invoke(pus_service_17.exec_tc)@(65:13,65:61)
+    ],
+    return@(88:9,88:15)
+]
+
+twcep ManagerTCExecutor::PUS_prio_exec_tc::path1() = [
+    block@(61:28,61:54),
+    elif@(67:11,71:11)[
+        invoke(pus_service_2.exec_tc)@(69:13,69:60)
+    ],
+    return@(88:9,88:15)
+]
+
+twcep ManagerTCExecutor::PUS_prio_exec_tc::path2() = [
+    block@(61:28,61:54),
+    elif@(71:11,75:11)[
+        invoke(pus_service_9.exec_tc)@(73:13,73:60)
+    ],
+    return@(88:9,88:15)
+]
+
+twcep ManagerTCExecutor::PUS_prio_exec_tc::path3() = [
+    block@(61:28,61:54),
+    elif@(75:11,79:11)[
+        invoke(pus_service_128.exec_tc)@(77:13,77:75)
+    ],
+    return@(88:9,88:15)
+]
+
+twcep ManagerTCExecutor::PUS_prio_exec_tc::path4() = [
+    block@(61:28,61:54),
+    else@(79:11,88:9)[
+        invoke(pus_service_1.send_tm_1_4_error_in_acceptance)@(81:13,84:28)
+    ],
+    return@(88:9,88:15)
+]
+
+twcep ManagerTCExecutor::mng_tc_acceptation::path0() = [
+    invoke(pus_service_1.notify_tm_1_1)@(103:9,107:24),
+    return@(109:9,109:15)
+]
+
+twcep ManagerTCExecutor::mng_tc_rejection::path0() = [
+    invoke(pus_service_1.send_tm_1_2)@(124:9,124:71),
+    return@(126:9,126:15)
+]

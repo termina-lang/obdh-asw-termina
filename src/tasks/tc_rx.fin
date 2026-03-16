@@ -6,13 +6,13 @@ import resources.tc_channel;
 
 task class TCRXBottomHalfTask {
 
-    tc_channel : access ITCChannel;
+    tc_channel : access ICharDevDequeue;
 
-    rx_frame : in unit triggers get_tc;
+    rx_tc : in usize triggers get_tc;
     tc_message_queue_output: out box TCHandler;
     a_tc_handler_pool : access Allocator<TCHandler>;
 
-    action get_tc (&priv self) -> Status<i32> {
+    action get_tc (&priv self, size : usize) -> Status<i32> {
 
         var ret : Status<i32> = Success;
 
@@ -23,19 +23,45 @@ task class TCRXBottomHalfTask {
 
             case Some(tc_handler_b) => {
 
-                self->tc_channel.receive_tc(&mut tc_handler_b.tc_descriptor, &mut ret);
+                for i : usize in 0 .. max_tc_size while (i < size && (ret is Success)) {
 
-                tc_handler_build(&mut tc_handler_b);
+                    var obyte : Option<u8> = None;
+                    self->tc_channel.dequeue(&mut obyte);
 
-                self->tc_message_queue_output.send(tc_handler_b);
-                
+                    match obyte {
+
+                        case Some(byte) => {
+                            tc_handler_b.tc_descriptor.tc_bytes[i] = byte;
+                        }
+                        case None => {
+                            ret = Failure(TC_RECEIVE_FAILURE);
+                        }
+
+                    }
+
+                }
+
+                if (ret is Success) {
+
+                    tc_handler_b.tc_descriptor.tc_num_bytes = size;
+
+                    tc_handler_build(&mut tc_handler_b);
+
+                    self->tc_message_queue_output.send(tc_handler_b);
+
+                } else {
+
+                    self->a_tc_handler_pool.free(tc_handler_b);
+
+                }
+
+
             }
             case None => {
                 ret = Failure(TM_POOL_ALLOC_FAILURE);
             }
 
         }
-
 
         return ret;
 

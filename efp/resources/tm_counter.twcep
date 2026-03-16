@@ -1,0 +1,5 @@
+
+twcep TMCounter::get_next_tm_count::path0() = [
+    block@(41:18,42:67),
+    return@(44:9,44:15)
+]

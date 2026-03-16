@@ -1,0 +1,16 @@
+
+twcep CCharDevIRQHandler::irq_handler::path0() = [
+    block@(16:36,16:43),
+    invoke(uart_drv.notify_irq)@(19:9,19:47),
+    case@(22:13,25:13)[
+        send(notify_rx)@(23:17,23:43)
+    ],
+    return@(33:9,33:22)
+]
+
+twcep CCharDevIRQHandler::irq_handler::path1() = [
+    block@(16:36,16:43),
+    invoke(uart_drv.notify_irq)@(19:9,19:47),
+    block@(21:9,33:9),
+    return@(33:9,33:22)
+]

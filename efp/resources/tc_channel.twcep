@@ -1,0 +1,10 @@
+
+twcep CTCChannel::dequeue::path0() = [
+    block@(128:42,128:40),
+    return@(130:9,130:15)
+]
+
+twcep CTCChannel::enqueue::path0() = [
+    block@(47:9,121:9),
+    return@(121:9,121:15)
+]

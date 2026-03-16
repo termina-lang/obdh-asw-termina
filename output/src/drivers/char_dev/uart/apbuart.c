@@ -194,7 +194,7 @@ void CAPBUARTDriver__release_tx(const __termina_event_t * const __ev, CAPBUARTDr
 
 }
 
-void CAPBUARTDriver__notify_irq(const __termina_event_t * const __ev, void * const __this, __result_bool__int32_t * const result) {
+void CAPBUARTDriver__notify_irq(const __termina_event_t * const __ev, void * const __this, CharDevIrqStatus * const status) {
     
     #line 167 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver * self = (CAPBUARTDriver *)__this;
@@ -206,9 +206,7 @@ void CAPBUARTDriver__notify_irq(const __termina_event_t * const __ev, void * con
     uint32_t uart_status = self->registers->status;
 
     #line 170 "src/drivers/char_dev/uart/apbuart.fin"
-    (*result).__variant = Ok;
-    #line 170 "src/drivers/char_dev/uart/apbuart.fin"
-    (*result).Ok.__0 = 0;
+    (*status).__variant = CharDevIrqStatus__IrqOk;
 
     #line 172 "src/drivers/char_dev/uart/apbuart.fin"
     if ((uint32_t)(uart_status & 0x4U) != 0U) {
@@ -225,7 +223,7 @@ void CAPBUARTDriver__notify_irq(const __termina_event_t * const __ev, void * con
         uint8_t byte = (uint8_t)self->registers->data;
 
         #line 181 "src/drivers/char_dev/uart/apbuart.fin"
-        self->rx_queue.enqueue_rx(__ev, self->rx_queue.__that, byte, result);
+        self->rx_queue.enqueue(__ev, self->rx_queue.__that, byte, status);
 
     }
 

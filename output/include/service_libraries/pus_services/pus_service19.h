@@ -6,7 +6,6 @@
 #include "service_libraries/pus_services/pus_service19/types.h"
 
 #include "option.h"
-#include "result.h"
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;

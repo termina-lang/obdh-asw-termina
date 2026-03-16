@@ -10,7 +10,6 @@
 #include "service_libraries/pus_tc_handler.h"
 
 #include "option.h"
-#include "result.h"
 
 extern const uint8_t TM_1_4_TC_X_Y_TC_SHORT_PACK_LENGTH;
 

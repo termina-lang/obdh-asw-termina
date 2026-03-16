@@ -9,7 +9,6 @@
 #include "service_libraries/pus_tm_handler.h"
 
 #include "option.h"
-#include "result.h"
 
 extern const size_t max_num_of_bytes_memory_load;
 

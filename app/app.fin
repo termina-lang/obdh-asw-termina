@@ -29,9 +29,7 @@ emitter hk_fdir_timer : PeriodicTimer = {
     period = {tv_sec = 1 : u32, tv_usec = 0 : u32} : TimeVal
 } : PeriodicTimer;
 
-
-
-channel rx_task_message_queue : MsgQueue<unit; 10>;
+channel rx_task_message_queue : MsgQueue<usize; 10>;
 channel tc_message_queue : MsgQueue<box TCHandler;10>;
 channel hkfdir_message_queue : MsgQueue<box TCHandler;10>;
 channel bkg_message_queue : MsgQueue<box TCHandler;10>;
@@ -95,6 +93,7 @@ resource obt_manager : OBTManager = {
     system_port <-> system_entry
 };
 
+#[unprotected]
 resource pus_service_1 : PUSService1 = {
 
     tm_channel <-> telemetry_channel,
@@ -252,7 +251,7 @@ handler uart_hdlr : CCharDevIRQHandler = {
 #[priority(4)]
 task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
     tc_channel <-> tc_channel,
-    rx_frame <- rx_task_message_queue,
+    rx_tc <- rx_task_message_queue,
     tc_message_queue_output -> tc_message_queue,
     a_tc_handler_pool <-> tc_pool
 };

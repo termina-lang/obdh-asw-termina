@@ -26,7 +26,6 @@
 #include "tasks/tc_rx.h"
 
 #include "option.h"
-#include "result.h"
 
 extern PeriodicTimer hk_fdir_timer;
 
