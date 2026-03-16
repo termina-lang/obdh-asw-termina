@@ -38,9 +38,9 @@
  *
  * Resources exercised:
  *   Mutex-protected (IPCP): tm_pool, tm_channel,
- *     telemetry_counter, obt_manager, tc_pool
+ *     tm_counter, obt_manager, tc_pool
  *     Two transactions competing for: tm_pool, tm_channel,
- *     telemetry_counter, obt_manager, tc_pool.
+ *     tm_counter, obt_manager, tc_pool.
  *     Different contention pattern from S3: background services write to SDP
  *     (pus_service_20) and access memory banks (pus_service_6), whereas S3's
  *     HK/FDIR path primarily reads from SDP.

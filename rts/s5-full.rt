@@ -54,7 +54,7 @@
  *
  * Resources exercised (union of all previous scenarios):
  *   Mutex-protected (IPCP): tm_pool, tm_channel,
- *     telemetry_counter, obt_manager, tc_pool
+ *     tm_counter, obt_manager, tc_pool
  *   IRQ-protected: tc_channel, uart_drv
  *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
  *   Unprotected: pus_service_1, pus_service_2, pus_service_3,

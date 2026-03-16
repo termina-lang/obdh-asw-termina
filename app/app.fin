@@ -82,7 +82,7 @@ resource tm_channel : TMChannel = {
 };
 
 
-resource telemetry_counter : TMCounter = {
+resource tm_counter : TMCounter = {
     tm_count = 0
 };
 
@@ -98,7 +98,7 @@ resource pus_service_1 : CPUSService1 = {
 
     tm_channel <-> tm_channel,
     tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
+    tm_counter <-> tm_counter,
     obt_manager <-> obt_manager
 
 };
@@ -114,7 +114,7 @@ resource pus_service_5 : CPUSService5 = {
     exec_tc_req_status_update = ps5_init_tc_req_status_update,
     tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
+    tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
 };
@@ -132,7 +132,7 @@ resource pus_service_3 : CPUSService3 = {
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> tm_channel,   
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
+    tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1,
     pus_service_5 <-> pus_service_5,
@@ -152,7 +152,7 @@ resource pus_service_12 : PUSService12 = {
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
+    tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
 };
@@ -176,7 +176,7 @@ resource pus_service_20 : CPUSService20 = {
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
+    tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
 };
@@ -185,7 +185,7 @@ resource pus_service_17 : CPUSService17 = {
     exec_tc_req_status_update = ps17_init_tc_req_status_update,
     tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
+    tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
 };
@@ -206,7 +206,7 @@ resource pus_service_6 : CPUSService6 = {
     memory @ 0x40000000,
     tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
+    tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
 };
@@ -219,7 +219,7 @@ resource pus_service_4 : CPUSService4 = {
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
-    tm_counter <-> telemetry_counter,
+    tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
 };

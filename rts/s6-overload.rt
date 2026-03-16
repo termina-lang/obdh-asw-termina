@@ -42,8 +42,8 @@
  *
  * Resources exercised:
  *   Mutex-protected (IPCP): tm_pool, tm_channel,
- *     telemetry_counter, obt_manager, tc_pool
- *     High contention on: tm_pool, telemetry_counter, obt_manager
+ *     tm_counter, obt_manager, tc_pool
+ *     High contention on: tm_pool, tm_counter, obt_manager
  *     (shared between HK TM generation and priority TC TM responses).
  *   IRQ-protected: tc_channel, uart_drv
  *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
