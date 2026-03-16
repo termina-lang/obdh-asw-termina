@@ -15,7 +15,7 @@ import resources.tm_counter;
  * PUS service handler based on the telecommand type. Manages resource allocation and freeing
  * of TC handler objects.
  */
-task class PUSBKGTCExecutor {
+task class CBKGTCExecutorTask {
 
     /**
      * @brief Input message queue for background telecommands.

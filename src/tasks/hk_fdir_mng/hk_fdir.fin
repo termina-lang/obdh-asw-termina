@@ -14,7 +14,7 @@ const num_actions_per_second : usize = 2;
 * 
 */
 
-task class HouseKeepingFDIR {
+task class CHousekeepingFDIRTask {
 
 /// @brief Timer event to trigger periodic HK and FDIR actions.
     hk_fdir_timer_ev : sink TimeVal triggers do_hk_fdir;

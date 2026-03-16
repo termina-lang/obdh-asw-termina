@@ -13,7 +13,7 @@ interface OBTManagerIface {
 
 };
 
-resource class OBTManager provides OBTManagerIface {
+resource class COBTManager provides OBTManagerIface {
 
     ref_obt : MissionOBT; /**< Reference onboard time at last update */
     ref_time_val_from_power_on : TimeVal; /**< System uptime reference from power on */

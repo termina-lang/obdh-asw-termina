@@ -16,7 +16,7 @@ interface IPUSService12 {
     procedure is_PMON_enabled(&mut self, PMONID : usize, is_enabled : &mut bool);
 };
 
-resource class PUSService12 provides IPUSService12 {
+resource class CPUSService12 provides IPUSService12 {
 
     do_monitoring_req_status : DoMonitoringReqStatus;
     do_monitoring_req_status_update : DoMonitoringReqStatusUpdate;

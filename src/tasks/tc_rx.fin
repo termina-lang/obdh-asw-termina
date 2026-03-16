@@ -4,7 +4,7 @@ import service_libraries.errors;
 import service_libraries.pus_tc_handler;
 import resources.tc_channel;
 
-task class TCRXBottomHalfTask {
+task class CTXRxBottomHalfTask {
 
     tc_channel : access ICharDevDequeue;
 

@@ -22,13 +22,13 @@ interface MngTCExecIface {
 
 
 /**
- * @class ManagerTCExecutor
+ * @class CManagerTExecutor
  * @brief Resource class that implements the telecommand management interface.
  * 
  * Manages the execution of priority telecommands and generates telemetry packets for
  * acceptance and rejection. Supports error reporting in case of unhandled telecommands.
  */
-resource class ManagerTCExecutor provides MngTCExecIface {
+resource class CManagerTExecutor provides MngTCExecIface {
 
     /// @brief Interface to PUS Service 17 (Alive check service).
     pus_service_17 : access IPUSService17;

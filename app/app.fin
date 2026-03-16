@@ -71,22 +71,22 @@ resource uart_drv : CAPBUARTDriver = {
 
 };
 
-resource gpio_drv : GPIODriver = {
+resource gpio_drv : CGPIODriver = {
     registers @ 0x80000A00
 };
 
 
-resource tm_channel : TMChannel = {
+resource tm_channel : CTMChannel = {
     char_dev <-> uart_drv,
     a_tm_handler_pool <-> tm_pool
 };
 
 
-resource tm_counter : TMCounter = {
+resource tm_counter : CTMCounter = {
     tm_count = 0
 };
 
-resource obt_manager : OBTManager = {
+resource obt_manager : COBTManager = {
 
     ref_obt = {seconds = 0, finetime = 0},
     ref_time_val_from_power_on = {tv_sec = 0, tv_usec = 0},
@@ -139,7 +139,7 @@ resource pus_service_3 : CPUSService3 = {
     random_seed = 42
 };
 
-resource pus_service_12 : PUSService12 = {
+resource pus_service_12 : CPUSService12 = {
     do_monitoring_req_status = DoMonitoringReqStatus::Init,
     do_monitoring_req_status_update = ps12_init_do_monitoring_req_status_update,
     exec_tc_req_status_update = ps12_init_tc_req_status_update,
@@ -224,7 +224,7 @@ resource pus_service_4 : CPUSService4 = {
     pus_service_1 <-> pus_service_1
 };
 
-resource mng_tc_executor : ManagerTCExecutor = {
+resource mng_tc_executor : CManagerTExecutor = {
     pus_service_17 <-> pus_service_17,
     pus_service_2 <-> pus_service_2,
     pus_service_9 <-> pus_service_9,
@@ -233,7 +233,7 @@ resource mng_tc_executor : ManagerTCExecutor = {
 };
 
 
-handler init_hdlr : Init = {
+handler init_hdlr : CInitHandler = {
     uart <-> uart_drv,
     gpio_driver <-> gpio_drv,
     system_data_pool_u32 <-> u32_system_data_pool,
@@ -249,7 +249,7 @@ handler uart_hdlr : CCharDevIRQHandler = {
 };
 
 #[priority(4)]
-task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
+task tc_rx_bottom_half_task : CTXRxBottomHalfTask = {
     tc_channel <-> tc_channel,
     rx_tc <- rx_task_message_queue,
     tc_message_queue_output -> tc_message_queue,
@@ -258,7 +258,7 @@ task tc_rx_bottom_half_task : TCRXBottomHalfTask = {
 
 
 #[priority(5)]
-task icu_manager : ICUManager = {
+task icu_manager : CICUManagerTask = {
     tc_message_queue_input <- tc_message_queue,
     action_tc_message_queue_input <- action_tc_message_queue,
     a_tc_handler_pool <-> tc_pool,
@@ -268,7 +268,7 @@ task icu_manager : ICUManager = {
 };
 
 #[priority(6)]
-task hk_fdir : HouseKeepingFDIR = {
+task hk_fdir : CHousekeepingFDIRTask = {
     hk_fdir_timer_ev <- hk_fdir_timer,
     hkfdir_message_queue_input <- hkfdir_message_queue,
     action_tc_message_queue_output -> action_tc_message_queue,
@@ -282,7 +282,7 @@ task hk_fdir : HouseKeepingFDIR = {
 };
 
 #[priority(8)]
-task bkg_tc_executor : PUSBKGTCExecutor = {
+task bkg_tc_executor : CBKGTCExecutorTask = {
     bkg_message_queue_input <- bkg_message_queue,
     a_tc_handler_pool  <-> tc_pool,
     pus_service_20 <-> pus_service_20,

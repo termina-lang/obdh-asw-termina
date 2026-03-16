@@ -20,7 +20,7 @@ const Dec : u32 = 20;
 /**
  * @brief Initialization handler class responsible for system startup tasks
  */
-handler class Init {
+handler class CInitHandler {
 
     uart : access IAPBUARTInit;                         /**< UART driver access */
     gpio_driver : access GPIODrvIface;                /**< GPIO driver access */

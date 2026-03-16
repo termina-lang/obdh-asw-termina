@@ -20,13 +20,13 @@ interface TMChannelIface {
 
 
 /**
- * @class TMChannel
+ * @class CTMChannel
  * @brief Concrete implementation of a telemetry channel using UART.
  * 
  * This class uses a UART driver to send CCSDS-PUS TM packets and handles memory management
  * via an allocator.
  */
-resource class TMChannel provides TMChannelIface {
+resource class CTMChannel provides TMChannelIface {
 
     /**
      * @brief Device driver interface used to transmit telemetry data.

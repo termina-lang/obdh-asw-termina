@@ -2,14 +2,14 @@ import tasks.icu_manager.mng_tc_executor;
 
 
 /**
- * @class ICUManager
+ * @class CICUManagerTask
  * @brief Manages the execution flow of Telecommands (TCs) in the ICU.
  *
  * This task class handles the reception and classification of TCs. It determines whether the TC
  * should be executed as a housekeeping/FDIR, background, or priority command, and forwards it accordingly.
  * It also processes action-type TCs and handles TC rejection and reboot logic when necessary.
  */
-task class ICUManager {
+task class CICUManagerTask {
 
     /// @var tc_message_queue_input
     /// @brief Input message queue for receiving regular telecommands.
@@ -45,7 +45,7 @@ task class ICUManager {
      * the corresponding execution path. If rejection or undefined status is returned, it performs
      * the corresponding management logic.
      * 
-     * @param[in] self Reference to the ICUManager instance.
+     * @param[in] self Reference to the CICUManagerTask instance.
      * @param[in] tc_handler Boxed TCHandler instance containing the telecommand to process.
      * @return Status<i32> Success or failure code of the operation.
      */
@@ -117,7 +117,7 @@ task class ICUManager {
      * classification logic as standard TCs (HK/FDIR, background, or priority).
      * Priority TCs are executed immediately and may trigger a system reboot if needed.
      * 
-     * @param[in] self Reference to the ICUManager instance.
+     * @param[in] self Reference to the CICUManagerTask instance.
      * @param[in] tc_handler Boxed TCHandler instance representing the action TC.
      * @return Status<i32> Success or failure code of the operation.
      */
