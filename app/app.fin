@@ -233,7 +233,7 @@ resource mng_tc_executor : ManagerTCExecutor = {
 };
 
 
-handler init : Init = {
+handler init_hdlr : Init = {
     uart <-> uart_drv,
     gpio_driver <-> gpio_drv,
     system_data_pool_u32 <-> u32_system_data_pool,
