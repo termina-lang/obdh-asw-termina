@@ -693,7 +693,7 @@ void __termina_app__init_globals() {
     init_hdlr.system_data_pool_u8 = u8_system_data_pool;
     init_hdlr.uart.__that = &uart_drv;
     init_hdlr.uart.initialize = CAPBUARTDriver__initialize;
-    uart_hdlr.notify_rx = &rx_task_message_queue;
+    uart_hdlr.frame_ready_output = &rx_task_message_queue;
     uart_hdlr.uart_drv.__that = &uart_drv;
     uart_hdlr.uart_drv.notify_irq = CAPBUARTDriver__notify_irq;
     tc_rx_bottom_half_task.a_tc_handler_pool.__that = &tc_pool;

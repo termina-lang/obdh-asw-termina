@@ -271,9 +271,9 @@ static void __termina_app__init_channel_connections(int32_t * const status) {
     rx_task_message_queue.task_id = __tc_rx_bottom_half_task__task_id;
     rx_task_message_queue.task_msg_queue_id = __tc_rx_bottom_half_task__task_msg_queue_id;
     rx_task_message_queue.channel_msg_queue_id = __rx_task_message_queue__channel_msg_queue_id;
-    rx_task_message_queue.port_id = __CTXRxBottomHalfTask__rx_tc;
+    rx_task_message_queue.port_id = __CTXRxBottomHalfTask__frame_ready_input;
 
-    tc_rx_bottom_half_task.rx_tc = __rx_task_message_queue__channel_msg_queue_id;
+    tc_rx_bottom_half_task.frame_ready_input = __rx_task_message_queue__channel_msg_queue_id;
 
     tc_message_queue.task_id = __icu_manager__task_id;
     tc_message_queue.task_msg_queue_id = __icu_manager__task_msg_queue_id;

@@ -26,7 +26,7 @@ __status_int32_t CCharDevIRQHandler__irq_handler(const __termina_event_t * const
         size_t size = result.RxComplete.__0;
 
         #line 23 "src/drivers/char_dev/irq_handler.fin"
-        __termina_out_port__send(__ev, self->notify_rx, (void *)&size);
+        __termina_out_port__send(__ev, self->frame_ready_output, (void *)&size);
 
     } else
     #line 25 "src/drivers/char_dev/irq_handler.fin"

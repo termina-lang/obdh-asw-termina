@@ -115,12 +115,12 @@ void __CTXRxBottomHalfTask__termina_task(void * arg) {
 
         switch (event.port_id) {
             
-            case __CTXRxBottomHalfTask__rx_tc:
+            case __CTXRxBottomHalfTask__frame_ready_input:
 
-                __termina_msg_queue__recv(self->rx_tc, (void *)&get_tc__msg_data, &status);
+                __termina_msg_queue__recv(self->frame_ready_input, (void *)&get_tc__msg_data, &status);
 
                 if (status != 0L) {
-                    __termina_except__msg_queue_recv_error(self->rx_tc, status);
+                    __termina_except__msg_queue_recv_error(self->frame_ready_input, status);
                 }
 
                 result = CTXRxBottomHalfTask__get_tc(&event, self, get_tc__msg_data);
@@ -131,7 +131,7 @@ void __CTXRxBottomHalfTask__termina_task(void * arg) {
                     source.__variant = ExceptSource__Handler;
                     source.Task.__0 = self->__task_id;
 
-                    __termina_except__action_failure(source, __CTXRxBottomHalfTask__rx_tc, result.Failure.__0);
+                    __termina_except__action_failure(source, __CTXRxBottomHalfTask__frame_ready_input, result.Failure.__0);
 
                 }
 

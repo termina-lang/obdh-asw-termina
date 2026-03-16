@@ -8,7 +8,7 @@ task class CTXRxBottomHalfTask {
 
     tc_channel : access ICharDevDequeue;
 
-    rx_tc : in usize triggers get_tc;
+    frame_ready_input : in usize triggers get_tc;
     tc_message_queue_output: out box TCHandler;
     a_tc_handler_pool : access Allocator<TCHandler>;
 

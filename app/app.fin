@@ -245,13 +245,13 @@ handler init_hdlr : CInitHandler = {
 handler uart_hdlr : CCharDevIRQHandler = {
     irq_entry <- irq_2,
     uart_drv <-> uart_drv,
-    notify_rx -> rx_task_message_queue
+    frame_ready_output -> rx_task_message_queue
 };
 
 #[priority(4)]
 task tc_rx_bottom_half_task : CTXRxBottomHalfTask = {
     tc_channel <-> tc_channel,
-    rx_tc <- rx_task_message_queue,
+    frame_ready_input <- rx_task_message_queue,
     tc_message_queue_output -> tc_message_queue,
     a_tc_handler_pool <-> tc_pool
 };

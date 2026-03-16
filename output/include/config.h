@@ -9,7 +9,7 @@
 #define __CICUManagerTask__action_tc_message_queue_input 0
 #define __CICUManagerTask__tc_message_queue_input 1
 
-#define __CTXRxBottomHalfTask__rx_tc 0
+#define __CTXRxBottomHalfTask__frame_ready_input 0
 
 #define __hk_fdir_timer__emitter_id 0
 #define __irq_2__emitter_id 1

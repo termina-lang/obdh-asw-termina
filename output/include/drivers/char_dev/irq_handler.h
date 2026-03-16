@@ -9,7 +9,7 @@
 
 typedef struct {
     __termina_id_t __handler_id;
-    __termina_out_port_t notify_rx;
+    __termina_out_port_t frame_ready_output;
     struct {
         void * __that;
         void (* notify_irq)(const __termina_event_t * const, void * const, CharDevIrqStatus * const);

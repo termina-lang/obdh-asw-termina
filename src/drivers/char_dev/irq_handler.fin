@@ -9,7 +9,7 @@ handler class CCharDevIRQHandler {
 
     uart_drv : access ICharDevNotifyIrq;
 
-    notify_rx : out usize;
+    frame_ready_output : out usize;
 
     action irq_handler(&priv self, _vector : u32) -> Status<i32> {
 
@@ -20,7 +20,7 @@ handler class CCharDevIRQHandler {
 
         match result {
             case RxComplete(size) => {
-                self->notify_rx.send(size);
+                self->frame_ready_output.send(size);
             }
             case IrqOk => {
                 // Do nothing, wait for the next interrupt
