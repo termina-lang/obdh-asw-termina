@@ -35,8 +35,8 @@ channel hkfdir_message_queue : MsgQueue<box TCHandler;10>;
 channel bkg_message_queue : MsgQueue<box TCHandler;10>;
 channel action_tc_message_queue : MsgQueue<box TCHandler;5>;
 
-resource tm_pool : Pool<TMHandler; 20>;
-resource tc_pool : Pool<TCHandler; 20>;
+resource tm_pool : Pool<TMHandler; 10>;
+resource tc_pool : Pool<TCHandler; 10>;
 
 resource u32_system_data_pool : AtomicArray<u32; sdp_num_u32_params> = {
     values = [0; sdp_num_u32_params]
