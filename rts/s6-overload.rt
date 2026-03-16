@@ -1,0 +1,103 @@
+/*
+ * Scenario 6 — High-priority TC overload (unschedulable)
+ *
+ * Stress scenario designed to demonstrate that the analysis pipeline
+ * can detect an unschedulable configuration. The regular HK/FDIR chain
+ * runs alongside a high-rate burst of priority telecommands with tight
+ * end-to-end deadlines.
+ *
+ * Transaction tr_hk_fdir: identical to S1/S3/S4/S5 — regular HK + FDIR
+ * monitoring, no recovery actions (see s1-hk-fdir.rt).
+ *
+ * Transaction tr_tc_prio activation chain:
+ *   irq_2 (bursty, max 50 arrivals within a 0.1 s interval — aggressive
+ *   burst: up to 50 TCs in 100 ms, i.e., one every 2 ms)
+ *     -> uart_hdlr.irq_handler::path0
+ *        (ISR: UART read, frame complete notification)
+ *
+ *     -> tc_rx_bottom_half_task.get_tc::path0
+ *        (assembles TC, sends to tc_message_queue)
+ *
+ *     -> icu_manager.process_tc::path2
+ *        TC classified as priority type. Executed inline by icu_manager
+ *        (no message passing — the TC executor runs in icu_manager's
+ *        context at priority 5). Invokes:
+ *          - tc_executor.mng_tc_acceptation (pus_service_1, unprotected)
+ *          - tc_executor.PUS_prio_exec_tc (5 internal paths):
+ *              path0: pus_service_17.exec_tc (alive test)
+ *                     -> tm_pool, tm_counter, obt_manager, tm_channel
+ *              path1: pus_service_2.exec_tc (device access / LEDs)
+ *                     -> gpio_drv.write_led
+ *              path2: pus_service_9.exec_tc (time management)
+ *                     -> obt_manager.set_obt
+ *              path3: pus_service_128.exec_tc (reboot command)
+ *              path4: unknown type -> pus_service_1 error report
+ *          - tc_pool.free (inline deallocation)
+ *
+ * The combination of high burst arrival rate, tight deadlines, and
+ * resource contention with the periodic HK/FDIR chain (which holds
+ * locks on tm_pool, tm_counter, obt_manager during TM generation)
+ * is designed to produce a configuration where MAST reports deadline
+ * misses.
+ *
+ * Protected resources exercised:
+ *   Same as S1, plus: tc_channel, tc_pool, mng_tc_executor,
+ *   pus_service_17, pus_service_2, pus_service_9, pus_service_128,
+ *   gpio_drv.
+ *   High contention on: tm_pool, tm_counter, obt_manager (shared
+ *   between HK TM generation and priority TC TM responses).
+ *
+ * Unprotected resources: pus_service_1
+ *
+ * Expected cross-product: medium — single step after tc_rx (path2
+ * executes inline), but PUS_prio_exec_tc has 5 internal paths with
+ * different resource access patterns. The interest is not in the
+ * cross-product size but in the schedulability result.
+ *
+ * Purpose: demonstrates the analysis pipeline detecting an unschedulable
+ * configuration. Validates that the approach is useful not only for
+ * confirming schedulability but also for identifying overload conditions.
+ */
+
+// Transaction 1: Regular HK + FDIR chain (same as S1/S3/S4/S5)
+//
+// do_hk_fdir::path0 = HK collection, continues to do_fdir
+// do_fdir::path1    = FDIR monitoring loop, returns (no pending actions)
+transaction tr_hk_fdir = step0#hk_fdir.do_hk_fdir::path0
+    -> step1#hk_fdir.do_fdir::path1 -> step2#end;
+
+// Transaction 2: High-rate priority TC reception (inline execution)
+//
+// irq_handler::path0 = frame complete
+// get_tc::path0      = TC assembled
+// process_tc::path2  = priority TC, inline exec via mng_tc_executor
+//                      (no message passing, ends after inline execution)
+transaction tr_tc_prio = step0#uart_hdlr.irq_handler::path0
+    -> step1#tc_rx_bottom_half_task.get_tc::path0
+    -> step2#icu_manager.process_tc::path2 -> step3#end;
+
+rts sit0 = {
+
+    // Period: 1 s. Deadline: 1 s (implicit deadline = period)
+    periodic ev_hk_fdir_timer = {
+        emitter = hk_fdir_timer,
+        transaction = tr_hk_fdir,
+        deadlines = {
+            step2 = 1
+        }
+    },
+
+    // Overload burst: 50 arrivals within 100 ms (one TC every 2 ms).
+    // Deadline: 100 ms end-to-end — same as other scenarios, but the
+    // aggressive arrival rate makes it unschedulable.
+    bursty ev_irq_2 = {
+        emitter = irq_2,
+        arrivals = 50,
+        interval = 0.1,
+        transaction = tr_tc_prio,
+        deadlines = {
+            step3 = 0.1
+        }
+    }
+
+};

@@ -1,0 +1,79 @@
+/*
+ * Scenario 2 — FDIR with recovery action execution
+ *
+ * Exercises the full FDIR recovery path: HK collection, FDIR monitoring,
+ * pending action extraction, re-injection into ICU manager, and TC
+ * execution by the HK/FDIR task. This is a linear transaction (no
+ * conditional) representing the worst-case periodic activation where
+ * a recovery action is found and must be processed.
+ *
+ * Activation chain:
+ *   hk_fdir_timer (periodic, 1 s)
+ *     -> hk_fdir.do_hk_fdir::path0
+ *        HK collection (same as S1): update_params, update_all_stats,
+ *        do_hk. Continues to do_fdir.
+ *
+ *     -> hk_fdir.do_fdir::path0
+ *        FDIR monitoring loop (same as S1), but path0 takes the if branch:
+ *        pending actions exist, continues to check_pending_actions.
+ *
+ *     -> hk_fdir.check_pending_actions::path0
+ *        Invokes:
+ *          - pus_service_19.get_pending_action_number (check queues)
+ *          - pus_service_19.extract_action (dequeue highest-priority action)
+ *          - tc_pool.alloc (allocate TC handler for the action)
+ *        Sends the action TC to action_tc_message_queue.
+ *
+ *     -> icu_manager.process_action_tc::path0
+ *        Task context (priority 5). Classifies the action TC and routes it.
+ *        path0: classified as HK/FDIR type, sends to hkfdir_message_queue.
+ *
+ *     -> hk_fdir.exec_tc::path0
+ *        Task context (priority 6). Dispatches by TC service type.
+ *        path0: Service 3 TC (HK reconfiguration). Invokes:
+ *          - pus_service_3.exec_tc (enable/disable SIDs, modify intervals)
+ *          - pus_service_1.notify_tm_1_3 / notify_tm_1_7 (unprotected)
+ *          - tc_pool.free (release TC handler)
+ *
+ * Protected resources exercised:
+ *   All from S1, plus: tc_pool (action TC allocation/deallocation)
+ *
+ * Unprotected resources: pus_service_1 (acceptance/completion reports)
+ *
+ * Expected cross-product: medium — longer chain (5 steps) with resource
+ * procedure paths at each step. The do_fdir step contributes the most
+ * alternatives due to its nested invocation structure.
+ * Filtering should collapse paths that differ only in WCET across the
+ * pus_service_1 invocations. Merging may further reduce comparable
+ * lock sets across the exec_tc resource procedure paths.
+ *
+ * Purpose: shows the pipeline cost of the full recovery chain; provides
+ * a single-transaction scenario with more steps than S1 to demonstrate
+ * how chain length affects the cross-product.
+ */
+
+// Full FDIR recovery chain: HK -> FDIR -> extract action -> route -> execute
+//
+// do_hk_fdir::path0            = HK collection, continues to do_fdir
+// do_fdir::path0               = FDIR loop, continues to check_pending_actions
+// check_pending_actions::path0 = action found, extracted, sent to ICU manager
+// process_action_tc::path0     = routed to HK/FDIR task
+// exec_tc::path0               = dispatched to pus_service_3.exec_tc
+transaction tr_recovery = step0#hk_fdir.do_hk_fdir::path0
+    -> step1#hk_fdir.do_fdir::path0
+    -> step2#hk_fdir.check_pending_actions::path0
+    -> step3#icu_manager.process_action_tc::path0
+    -> step4#hk_fdir.exec_tc::path0 -> step5#end;
+
+rts sit0 = {
+
+    // Period: 1 s. Deadline: 1 s (implicit deadline = period)
+    periodic ev_hk_fdir_timer = {
+        emitter = hk_fdir_timer,
+        transaction = tr_recovery,
+        deadlines = {
+            step5 = 1
+        }
+    }
+
+};

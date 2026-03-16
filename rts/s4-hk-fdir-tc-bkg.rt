@@ -1,0 +1,100 @@
+/*
+ * Scenario 4 — HK/FDIR + TC reception routed to background task
+ *
+ * Two concurrent transactions, same structure as S3 but with TCs routed
+ * to the background executor instead of the HK/FDIR task. This exercises
+ * a different set of PUS services and resource access patterns.
+ *
+ * Transaction tr_hk_fdir: identical to S1/S3 — regular HK + FDIR
+ * monitoring, no recovery actions (see s1-hk-fdir.rt).
+ *
+ * Transaction tr_tc_bkg activation chain:
+ *   irq_2 (bursty, max 10 arrivals within a 1 s interval)
+ *     -> uart_hdlr.irq_handler::path0
+ *        (same as S3: ISR reads UART, frame complete notification)
+ *
+ *     -> tc_rx_bottom_half_task.get_tc::path0
+ *        (same as S3: assembles TC, sends to tc_message_queue)
+ *
+ *     -> icu_manager.process_tc::path1
+ *        Task context (priority 5). Invokes:
+ *          - tc_executor.mng_tc_acceptation (via pus_service_1.notify_tm_1_1,
+ *            unprotected)
+ *        path1: TC classified as background type, sent to bkg_message_queue.
+ *        Background TCs are: Service 20 (parameter management) and
+ *        Service 6 (memory management).
+ *
+ *     -> pus_bkg_tc_executor.exec_tc::path0
+ *        Task context (priority 8, lowest among application tasks).
+ *        Dispatches by TC service type:
+ *          path0: Service 20 (parameter management). Invokes:
+ *            - pus_service_20.exec_tc -> validates PID, reads/writes SDP
+ *              -> system_data_pool_u32.store_index or load_index
+ *              -> pus_service_1.notify_tm_1_3/1_7 (verification, unprotected)
+ *          path1: Service 6 (memory management). Invokes:
+ *            - pus_service_6.exec_tc -> read/write/checksum memory banks
+ *              -> tm_channel.send_tm (for read-back TM)
+ *          path2: Unknown service type -> pus_service_1.send_tm_1_4 (error)
+ *
+ * Protected resources exercised:
+ *   All from S1, plus: tc_channel, tc_pool, pus_service_20
+ *   (SDP write access), pus_service_6 (memory bank access).
+ *   Different contention pattern from S3: background services write to SDP
+ *   (pus_service_20) and access memory banks (pus_service_6), whereas S3's
+ *   HK/FDIR path primarily reads from SDP.
+ *
+ * Unprotected resources: pus_service_1
+ *
+ * Expected cross-product: medium-large — fewer exec_tc paths than S3
+ * (3 vs 6), but pus_service_20 and pus_service_6 have their own internal
+ * resource access chains (SDP stores, memory bank reads/writes, TM
+ * generation). Comparison with S3 shows how different TC routing affects
+ * model space size and reduction ratios.
+ *
+ * Purpose: paired with S3 to contrast how different resource access
+ * patterns in the same architectural slot (TC execution) produce different
+ * cross-product sizes and reduction effectiveness.
+ */
+
+// Transaction 1: Regular HK + FDIR chain (same as S1/S3)
+//
+// do_hk_fdir::path0 = HK collection, continues to do_fdir
+// do_fdir::path1    = FDIR monitoring loop, returns (no pending actions)
+transaction tr_hk_fdir = step0#hk_fdir.do_hk_fdir::path0
+    -> step1#hk_fdir.do_fdir::path1 -> step2#end;
+
+// Transaction 2: TC reception -> classification -> route to background exec
+//
+// irq_handler::path0 = frame complete (sends notification)
+// get_tc::path0      = TC assembled successfully (sends to tc_message_queue)
+// process_tc::path1  = TC classified as background type (sends to bkg queue)
+// exec_tc::path0     = dispatch to pus_service_20.exec_tc (parameter mgmt)
+transaction tr_tc_bkg = step0#uart_hdlr.irq_handler::path0
+    -> step1#tc_rx_bottom_half_task.get_tc::path0
+    -> step2#icu_manager.process_tc::path1
+    -> step3#pus_bkg_tc_executor.exec_tc::path0 -> step4#end;
+
+rts sit0 = {
+
+    // Period: 1 s. Deadline: 1 s (implicit deadline = period)
+    periodic ev_hk_fdir_timer = {
+        emitter = hk_fdir_timer,
+        transaction = tr_hk_fdir,
+        deadlines = {
+            step2 = 1
+        }
+    },
+
+    // Bursty: max 10 TC arrivals within a 1 s interval.
+    // Deadline: 100 ms end-to-end (from IRQ to TC execution completion)
+    bursty ev_irq_2 = {
+        emitter = irq_2,
+        arrivals = 10,
+        interval = 1,
+        transaction = tr_tc_bkg,
+        deadlines = {
+            step4 = 0.1
+        }
+    }
+
+};

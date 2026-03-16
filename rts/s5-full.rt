@@ -1,0 +1,127 @@
+/*
+ * Scenario 5 — Full operational scenario (all TC types)
+ *
+ * Most complex schedulable scenario: the regular HK/FDIR chain plus
+ * TC reception with probabilistic routing to all three destinations.
+ * Exercises the full resource set of the OBDH application.
+ *
+ * Transaction tr_hk_fdir: identical to S1/S3/S4 — regular HK + FDIR
+ * monitoring, no recovery actions (see s1-hk-fdir.rt).
+ *
+ * Transaction tr_tc_all activation chain:
+ *   irq_2 (bursty, max 10 arrivals within a 1 s interval)
+ *     -> uart_hdlr.irq_handler::path0
+ *        (ISR: UART read, frame complete notification)
+ *
+ *     -> tc_rx_bottom_half_task.get_tc::path0
+ *        (assembles TC, sends to tc_message_queue)
+ *
+ *     -> Conditional branch on TC classification:
+ *
+ *        30%: icu_manager.process_tc::path0
+ *             TC classified as HK/FDIR type.
+ *             Invokes tc_executor.mng_tc_acceptation, sends to hkfdir queue.
+ *             -> hk_fdir.exec_tc::path0
+ *                Dispatch to pus_service_3.exec_tc (HK TC).
+ *                Accesses: pus_service_3, SDP, tm_pool, tm_counter,
+ *                obt_manager, tm_channel.
+ *
+ *        20%: icu_manager.process_tc::path1
+ *             TC classified as background type.
+ *             Invokes tc_executor.mng_tc_acceptation, sends to bkg queue.
+ *             -> pus_bkg_tc_executor.exec_tc::path0
+ *                Dispatch to pus_service_20.exec_tc (parameter management).
+ *                Accesses: pus_service_20, SDP (write), tm_pool, tm_counter,
+ *                obt_manager, tm_channel.
+ *
+ *        50%: icu_manager.process_tc::path2
+ *             TC classified as priority type. Executed inline (no message
+ *             passing). Invokes:
+ *               - tc_executor.PUS_prio_exec_tc (5 internal paths):
+ *                   path0: pus_service_17.exec_tc (alive test)
+ *                   path1: pus_service_2.exec_tc  (device access / LEDs)
+ *                          -> gpio_drv.write_led
+ *                   path2: pus_service_9.exec_tc  (time management)
+ *                          -> obt_manager.set_obt
+ *                   path3: pus_service_128.exec_tc (reboot command)
+ *                   path4: unknown type -> pus_service_1 error report
+ *               - tc_pool.free (inline deallocation)
+ *             Ends after inline execution (no downstream step).
+ *
+ * The conditional in tr_tc_all flattens into 3 sub-transactions. The
+ * inter-transaction cross-product across all steps of both transactions
+ * is the largest across all schedulable scenarios.
+ *
+ * Protected resources exercised (union of all previous scenarios):
+ *   pus_service_3, pus_service_4, pus_service_5, pus_service_12,
+ *   pus_service_19, pus_service_20, pus_service_17, pus_service_2,
+ *   pus_service_9, pus_service_128, mng_tc_executor,
+ *   system_data_pool_u32, system_data_pool_u8,
+ *   tm_channel, tm_pool, tm_counter, obt_manager, uart_drv,
+ *   tc_channel, tc_pool, gpio_drv
+ *
+ * Unprotected resources: pus_service_1 (verification reports — invoked
+ *   throughout all paths but contributes no lock sets)
+ *
+ * Reduction effectiveness:
+ *   - Filtering: many priority TC paths share empty/small lock sets (since
+ *     pus_service_1 is unprotected, error paths and simple services like
+ *     pus_service_17 and pus_service_128 produce identical lock profiles)
+ *   - Merging: paths with comparable lock sets (e.g., service_17 with no
+ *     protected access vs service_2 with gpio_drv) collapse further.
+ *     Expected to produce the largest reduction ratio across all scenarios.
+ *
+ * Purpose: most complex schedulable scenario; largest cross-product and
+ * largest reduction ratios; demonstrates that the approach scales to
+ * realistic multi-transaction operational modes.
+ */
+
+// Transaction 1: Regular HK + FDIR chain (same as S1/S3/S4)
+//
+// do_hk_fdir::path0 = HK collection, continues to do_fdir
+// do_fdir::path1    = FDIR monitoring loop, returns (no pending actions)
+transaction tr_hk_fdir = step0#hk_fdir.do_hk_fdir::path0
+    -> step1#hk_fdir.do_fdir::path1 -> step2#end;
+
+// Transaction 2: TC reception with probabilistic routing to all destinations
+//
+// irq_handler::path0 = frame complete
+// get_tc::path0      = TC assembled
+// Conditional on TC type classification:
+//   30%: process_tc::path0 -> hk_fdir.exec_tc::path0 (service 3 HK TC)
+//   20%: process_tc::path1 -> bkg_tc_executor.exec_tc::path0 (service 20)
+//   50%: process_tc::path2 (priority TC, inline exec via mng_tc_executor)
+transaction tr_tc_all = step0#uart_hdlr.irq_handler::path0
+    -> step1#tc_rx_bottom_half_task.get_tc::path0
+    -> <30!step2#icu_manager.process_tc::path0
+            -> step3#hk_fdir.exec_tc::path0 -> step4#end,
+        20!step5#icu_manager.process_tc::path1
+            -> step6#pus_bkg_tc_executor.exec_tc::path0 -> step7#end,
+        50!step8#icu_manager.process_tc::path2 -> step9#end>;
+
+rts sit0 = {
+
+    // Period: 1 s. Deadline: 1 s (implicit deadline = period)
+    periodic ev_hk_fdir_timer = {
+        emitter = hk_fdir_timer,
+        transaction = tr_hk_fdir,
+        deadlines = {
+            step2 = 1
+        }
+    },
+
+    // Bursty: max 10 TC arrivals within a 1 s interval.
+    // Deadline: 100 ms end-to-end for each branch
+    bursty ev_irq_2 = {
+        emitter = irq_2,
+        arrivals = 10,
+        interval = 1,
+        transaction = tr_tc_all,
+        deadlines = {
+            step4 = 0.1,
+            step7 = 0.1,
+            step9 = 0.1
+        }
+    }
+
+};

@@ -1,0 +1,64 @@
+/*
+ * Scenario 1 — Housekeeping + FDIR baseline
+ *
+ * Simplest operational scenario: a single periodic transaction triggered
+ * by the 1-second HK/FDIR timer. Both housekeeping collection and FDIR
+ * monitoring are exercised, but no pending recovery actions are found.
+ *
+ * Activation chain:
+ *   hk_fdir_timer (periodic, 1 s)
+ *     -> hk_fdir.do_hk_fdir::path0
+ *        Invokes:
+ *          - pus_service_3.update_params  (writes noise to SDP u32 PIDs 0-4)
+ *          - pus_service_4.update_all_stats (reads SDP, updates min/max/mean)
+ *          - pus_service_3.do_hk (reads SDP u32/u8, generates HK TM packets)
+ *              -> tm_pool.alloc, obt_manager.get_current_obt,
+ *                 tm_counter.get_next_tm_count, tm_channel.send_tm
+ *                   -> uart_drv.send, tm_pool.free
+ *        path0 takes the if branch: continues to do_fdir.
+ *
+ *     -> hk_fdir.do_fdir::path1
+ *        For each of 16 PMONIDs:
+ *          - pus_service_12.is_PMON_enabled (check if monitor is active)
+ *          - pus_service_12.do_monitoring   (evaluate parameter against limits)
+ *          - pus_service_5.is_Ev_ID_enabled_ext (check if event reporting on)
+ *          - pus_service_5.send_tm_5_x     (generate event TM packet)
+ *          - pus_service_19.manage_event_action (queue recovery action)
+ *        path1 takes the else branch: no pending actions found, returns
+ *        without continuing to check_pending_actions.
+ *
+ * Protected resources exercised:
+ *   pus_service_3, pus_service_4, pus_service_5, pus_service_12,
+ *   pus_service_19, system_data_pool_u32, system_data_pool_u8,
+ *   tm_channel, tm_pool, tm_counter, obt_manager, uart_drv
+ *
+ * Unprotected resources: pus_service_1 (event TM reports)
+ *
+ * Expected cross-product: small — single transaction, two steps, but
+ * do_fdir has deeply nested resource invocations (loop over 16 PMONIDs,
+ * nested calls to services 12, 5, 19). The resource procedure path
+ * combinations within these calls drive the cross-product.
+ *
+ * Purpose: baseline for the evaluation table; establishes the cost of the
+ * regular periodic monitoring chain that is present in all operational modes.
+ */
+
+// Regular HK + FDIR chain: monitoring runs, no pending recovery actions
+//
+// do_hk_fdir::path0 = HK collection, continues to do_fdir
+// do_fdir::path1    = FDIR monitoring loop, returns (no pending actions)
+transaction tr_hk_fdir = step0#hk_fdir.do_hk_fdir::path0
+    -> step1#hk_fdir.do_fdir::path1 -> step2#end;
+
+rts sit0 = {
+
+    // Period: 1 s. Deadline: 1 s (implicit deadline = period)
+    periodic ev_hk_fdir_timer = {
+        emitter = hk_fdir_timer,
+        transaction = tr_hk_fdir,
+        deadlines = {
+            step2 = 1
+        }
+    }
+
+};
