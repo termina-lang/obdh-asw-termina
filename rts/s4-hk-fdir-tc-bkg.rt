@@ -36,14 +36,19 @@
  *              -> tm_channel.send_tm (for read-back TM)
  *          path2: Unknown service type -> pus_service_1.send_tm_1_4 (error)
  *
- * Protected resources exercised:
- *   All from S1, plus: tc_channel, tc_pool, pus_service_20
- *   (SDP write access), pus_service_6 (memory bank access).
- *   Different contention pattern from S3: background services write to SDP
- *   (pus_service_20) and access memory banks (pus_service_6), whereas S3's
- *   HK/FDIR path primarily reads from SDP.
- *
- * Unprotected resources: pus_service_1
+ * Resources exercised:
+ *   Mutex-protected (IPCP): tm_pool, telemetry_channel,
+ *     telemetry_counter, obt_manager, tc_pool
+ *     Two transactions competing for: tm_pool, telemetry_channel,
+ *     telemetry_counter, obt_manager, tc_pool.
+ *     Different contention pattern from S3: background services write to SDP
+ *     (pus_service_20) and access memory banks (pus_service_6), whereas S3's
+ *     HK/FDIR path primarily reads from SDP.
+ *   IRQ-protected: tc_channel, uart_drv
+ *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
+ *   Unprotected: pus_service_1, pus_service_3, pus_service_4,
+ *     pus_service_5, pus_service_6, pus_service_12, pus_service_19,
+ *     pus_service_20, mng_tc_executor
  *
  * Expected cross-product: medium-large — fewer exec_tc paths than S3
  * (3 vs 6), but pus_service_20 and pus_service_6 have their own internal

@@ -39,17 +39,20 @@
  *        path0 is selected here, but the resource procedure paths within
  *        pus_service_3.exec_tc expand the cross-product.
  *
- * Protected resources exercised:
- *   All from S1, plus: tc_channel, uart_drv (IRQ handler context),
- *   tc_pool (TC handler allocation in tc_rx and deallocation in exec_tc).
- *   Two transactions competing for: tm_pool, tm_counter, obt_manager.
- *
- * Unprotected resources: pus_service_1 (TC acceptance and completion
- *   reports from both transactions)
+ * Resources exercised:
+ *   Mutex-protected (IPCP): tm_pool, telemetry_channel,
+ *     telemetry_counter, obt_manager, tc_pool
+ *     Two transactions competing for: tm_pool, telemetry_channel,
+ *     telemetry_counter, obt_manager, tc_pool.
+ *   IRQ-protected: tc_channel, uart_drv
+ *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
+ *   Unprotected: pus_service_1, pus_service_3, pus_service_4,
+ *     pus_service_5, pus_service_12, pus_service_19, mng_tc_executor
  *
  * Expected cross-product: large — the exec_tc step invokes
- * pus_service_3.exec_tc, which calls several protected resources with
- * multiple procedure paths. Inter-transaction cross-product multiplies
+ * pus_service_3.exec_tc, which calls several resources (both protected
+ * and unprotected) with multiple procedure paths. Inter-transaction
+ * cross-product multiplies
  * the per-step alternatives of both transactions.
  * Filtering should be effective on paths sharing lock sets.
  * Merging should improve further by collapsing comparable lock sets.

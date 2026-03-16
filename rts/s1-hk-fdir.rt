@@ -27,12 +27,13 @@
  *        path1 takes the else branch: no pending actions found, returns
  *        without continuing to check_pending_actions.
  *
- * Protected resources exercised:
- *   pus_service_3, pus_service_4, pus_service_5, pus_service_12,
- *   pus_service_19, system_data_pool_u32, system_data_pool_u8,
- *   tm_channel, tm_pool, tm_counter, obt_manager, uart_drv
- *
- * Unprotected resources: pus_service_1 (event TM reports)
+ * Resources exercised:
+ *   Mutex-protected (IPCP): tm_pool, telemetry_channel,
+ *     telemetry_counter, obt_manager
+ *   IRQ-protected: uart_drv (via telemetry_channel)
+ *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
+ *   Unprotected: pus_service_1, pus_service_3, pus_service_4,
+ *     pus_service_5, pus_service_12, pus_service_19
  *
  * Expected cross-product: small — single transaction, two steps, but
  * do_fdir has deeply nested resource invocations (loop over 16 PMONIDs,

@@ -40,14 +40,17 @@
  * is designed to produce a configuration where MAST reports deadline
  * misses.
  *
- * Protected resources exercised:
- *   Same as S1, plus: tc_channel, tc_pool, mng_tc_executor,
- *   pus_service_17, pus_service_2, pus_service_9, pus_service_128,
- *   gpio_drv.
- *   High contention on: tm_pool, tm_counter, obt_manager (shared
- *   between HK TM generation and priority TC TM responses).
- *
- * Unprotected resources: pus_service_1
+ * Resources exercised:
+ *   Mutex-protected (IPCP): tm_pool, telemetry_channel,
+ *     telemetry_counter, obt_manager, tc_pool
+ *     High contention on: tm_pool, telemetry_counter, obt_manager
+ *     (shared between HK TM generation and priority TC TM responses).
+ *   IRQ-protected: tc_channel, uart_drv
+ *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
+ *   Unprotected: pus_service_1, pus_service_2, pus_service_3,
+ *     pus_service_4, pus_service_5, pus_service_9, pus_service_12,
+ *     pus_service_17, pus_service_19, pus_service_128,
+ *     mng_tc_executor, gpio_drv
  *
  * Expected cross-product: medium — single step after tc_rx (path2
  * executes inline), but PUS_prio_exec_tc has 5 internal paths with

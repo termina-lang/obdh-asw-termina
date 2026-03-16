@@ -52,23 +52,24 @@
  * inter-transaction cross-product across all steps of both transactions
  * is the largest across all schedulable scenarios.
  *
- * Protected resources exercised (union of all previous scenarios):
- *   pus_service_3, pus_service_4, pus_service_5, pus_service_12,
- *   pus_service_19, pus_service_20, pus_service_17, pus_service_2,
- *   pus_service_9, pus_service_128, mng_tc_executor,
- *   system_data_pool_u32, system_data_pool_u8,
- *   tm_channel, tm_pool, tm_counter, obt_manager, uart_drv,
- *   tc_channel, tc_pool, gpio_drv
- *
- * Unprotected resources: pus_service_1 (verification reports — invoked
- *   throughout all paths but contributes no lock sets)
+ * Resources exercised (union of all previous scenarios):
+ *   Mutex-protected (IPCP): tm_pool, telemetry_channel,
+ *     telemetry_counter, obt_manager, tc_pool
+ *   IRQ-protected: tc_channel, uart_drv
+ *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
+ *   Unprotected: pus_service_1, pus_service_2, pus_service_3,
+ *     pus_service_4, pus_service_5, pus_service_9, pus_service_12,
+ *     pus_service_17, pus_service_19, pus_service_20, pus_service_128,
+ *     mng_tc_executor, gpio_drv
  *
  * Reduction effectiveness:
- *   - Filtering: many priority TC paths share empty/small lock sets (since
- *     pus_service_1 is unprotected, error paths and simple services like
- *     pus_service_17 and pus_service_128 produce identical lock profiles)
- *   - Merging: paths with comparable lock sets (e.g., service_17 with no
- *     protected access vs service_2 with gpio_drv) collapse further.
+ *   - Filtering: many priority TC paths share empty lock sets (since
+ *     pus_service_1, pus_service_17, pus_service_128, pus_service_2,
+ *     gpio_drv, and mng_tc_executor are all unprotected, error paths and
+ *     simple services produce identical empty lock profiles)
+ *   - Merging: paths with comparable lock sets (e.g., paths touching only
+ *     unprotected resources vs paths that additionally lock obt_manager
+ *     via pus_service_9) collapse further.
  *     Expected to produce the largest reduction ratio across all scenarios.
  *
  * Purpose: most complex schedulable scenario; largest cross-product and

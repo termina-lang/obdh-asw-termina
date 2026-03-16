@@ -35,10 +35,13 @@
  *          - pus_service_1.notify_tm_1_3 / notify_tm_1_7 (unprotected)
  *          - tc_pool.free (release TC handler)
  *
- * Protected resources exercised:
- *   All from S1, plus: tc_pool (action TC allocation/deallocation)
- *
- * Unprotected resources: pus_service_1 (acceptance/completion reports)
+ * Resources exercised:
+ *   Mutex-protected (IPCP): tm_pool, telemetry_channel,
+ *     telemetry_counter, obt_manager, tc_pool
+ *   IRQ-protected: uart_drv (via telemetry_channel)
+ *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
+ *   Unprotected: pus_service_1, pus_service_3, pus_service_4,
+ *     pus_service_5, pus_service_12, pus_service_19
  *
  * Expected cross-product: medium — longer chain (5 steps) with resource
  * procedure paths at each step. The do_fdir step contributes the most
