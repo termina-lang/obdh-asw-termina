@@ -41,7 +41,7 @@
  * misses.
  *
  * Resources exercised:
- *   Mutex-protected (IPCP): tm_pool, telemetry_channel,
+ *   Mutex-protected (IPCP): tm_pool, tm_channel,
  *     telemetry_counter, obt_manager, tc_pool
  *     High contention on: tm_pool, telemetry_counter, obt_manager
  *     (shared between HK TM generation and priority TC TM responses).

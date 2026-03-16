@@ -76,7 +76,7 @@ resource gpio_drv : GPIODriver = {
 };
 
 
-resource telemetry_channel : TMChannel = {
+resource tm_channel : TMChannel = {
     char_dev <-> uart_drv,
     a_tm_handler_pool <-> tm_pool
 };
@@ -96,7 +96,7 @@ resource obt_manager : OBTManager = {
 #[unprotected]
 resource pus_service_1 : CPUSService1 = {
 
-    tm_channel <-> telemetry_channel,
+    tm_channel <-> tm_channel,
     tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
     obt_manager <-> obt_manager
@@ -112,7 +112,7 @@ resource pus_service_9 : CPUSService9 = {
 resource pus_service_5 : CPUSService5 = {
     Ev_ID_enable_config = {0x00000007, 0x00000000, 0x00000000, 0x00000007},
     exec_tc_req_status_update = ps5_init_tc_req_status_update,
-    tm_channel <-> telemetry_channel,
+    tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
     obt_manager <-> obt_manager,
@@ -130,7 +130,7 @@ resource pus_service_3 : CPUSService3 = {
                         {enabled = false, SID = 0, interval = 0, interval_control = 0, num_params = 0, params_def = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}},
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
-    tm_channel <-> telemetry_channel,   
+    tm_channel <-> tm_channel,   
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
     obt_manager <-> obt_manager,
@@ -150,7 +150,7 @@ resource pus_service_12 : PUSService12 = {
     prev_status = CheckState::Unselected, new_status = CheckState::Unselected, trans_obt = {seconds = 0, finetime = 0}}; max_num_transitions],
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
-    tm_channel <-> telemetry_channel,
+    tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
     obt_manager <-> obt_manager,
@@ -174,7 +174,7 @@ resource pus_service_20 : CPUSService20 = {
     exec_tc_req_status_update = ps20_init_tc_req_status_update,
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
-    tm_channel <-> telemetry_channel,
+    tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
     obt_manager <-> obt_manager,
@@ -183,7 +183,7 @@ resource pus_service_20 : CPUSService20 = {
 
 resource pus_service_17 : CPUSService17 = {
     exec_tc_req_status_update = ps17_init_tc_req_status_update,
-    tm_channel <-> telemetry_channel,
+    tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
     obt_manager <-> obt_manager,
@@ -204,7 +204,7 @@ resource pus_service_6 : CPUSService6 = {
     exec_tc_req_status_update = ps6_init_tc_req_status_update,
     mem_id_write_permissions = {false, true, true, true, true, true, true, false},
     memory @ 0x40000000,
-    tm_channel <-> telemetry_channel,
+    tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
     obt_manager <-> obt_manager,
@@ -217,7 +217,7 @@ resource pus_service_4 : CPUSService4 = {
     stats_config_table = {defined = [false; max_num_of_stats],  PID = [0; max_num_of_stats], start_time = [{seconds = 0, finetime = 0}; max_num_of_stats]},
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
-    tm_channel <-> telemetry_channel,
+    tm_channel <-> tm_channel,
     a_tm_handler_pool <-> tm_pool,
     tm_counter <-> telemetry_counter,
     obt_manager <-> obt_manager,

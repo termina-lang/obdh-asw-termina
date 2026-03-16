@@ -36,9 +36,9 @@
  *          - tc_pool.free (release TC handler)
  *
  * Resources exercised:
- *   Mutex-protected (IPCP): tm_pool, telemetry_channel,
+ *   Mutex-protected (IPCP): tm_pool, tm_channel,
  *     telemetry_counter, obt_manager, tc_pool
- *   IRQ-protected: uart_drv (via telemetry_channel)
+ *   IRQ-protected: uart_drv (via tm_channel)
  *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
  *   Unprotected: pus_service_1, pus_service_3, pus_service_4,
  *     pus_service_5, pus_service_12, pus_service_19

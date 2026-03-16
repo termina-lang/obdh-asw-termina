@@ -40,9 +40,9 @@
  *        pus_service_3.exec_tc expand the cross-product.
  *
  * Resources exercised:
- *   Mutex-protected (IPCP): tm_pool, telemetry_channel,
+ *   Mutex-protected (IPCP): tm_pool, tm_channel,
  *     telemetry_counter, obt_manager, tc_pool
- *     Two transactions competing for: tm_pool, telemetry_channel,
+ *     Two transactions competing for: tm_pool, tm_channel,
  *     telemetry_counter, obt_manager, tc_pool.
  *   IRQ-protected: tc_channel, uart_drv
  *   Atomic (lock-free): u32_system_data_pool, u8_system_data_pool
