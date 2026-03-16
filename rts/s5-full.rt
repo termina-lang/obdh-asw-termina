@@ -29,7 +29,7 @@
  *        20%: icu_manager.process_tc::path1
  *             TC classified as background type.
  *             Invokes tc_executor.mng_tc_acceptation, sends to bkg queue.
- *             -> pus_bkg_tc_executor.exec_tc::path0
+ *             -> bkg_tc_executor.exec_tc::path0
  *                Dispatch to pus_service_20.exec_tc (parameter management).
  *                Accesses: pus_service_20, SDP (write), tm_pool, tm_counter,
  *                obt_manager, tm_channel.
@@ -97,7 +97,7 @@ transaction tr_tc_all = step0#uart_hdlr.irq_handler::path0
     -> <30!step2#icu_manager.process_tc::path0
             -> step3#hk_fdir.exec_tc::path0 -> step4#end,
         20!step5#icu_manager.process_tc::path1
-            -> step6#pus_bkg_tc_executor.exec_tc::path0 -> step7#end,
+            -> step6#bkg_tc_executor.exec_tc::path0 -> step7#end,
         50!step8#icu_manager.process_tc::path2 -> step9#end>;
 
 rts sit0 = {

@@ -282,7 +282,7 @@ task hk_fdir : HouseKeepingFDIR = {
 };
 
 #[priority(8)]
-task pus_bkg_tc_executor : PUSBKGTCExecutor = {
+task bkg_tc_executor : PUSBKGTCExecutor = {
     bkg_message_queue_input <- bkg_message_queue,
     a_tc_handler_pool  <-> tc_pool,
     pus_service_20 <-> pus_service_20,

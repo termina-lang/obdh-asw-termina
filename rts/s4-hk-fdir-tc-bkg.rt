@@ -24,7 +24,7 @@
  *        Background TCs are: Service 20 (parameter management) and
  *        Service 6 (memory management).
  *
- *     -> pus_bkg_tc_executor.exec_tc::path0
+ *     -> bkg_tc_executor.exec_tc::path0
  *        Task context (priority 8, lowest among application tasks).
  *        Dispatches by TC service type:
  *          path0: Service 20 (parameter management). Invokes:
@@ -77,7 +77,7 @@ transaction tr_hk_fdir = step0#hk_fdir.do_hk_fdir::path0
 transaction tr_tc_bkg = step0#uart_hdlr.irq_handler::path0
     -> step1#tc_rx_bottom_half_task.get_tc::path0
     -> step2#icu_manager.process_tc::path1
-    -> step3#pus_bkg_tc_executor.exec_tc::path0 -> step4#end;
+    -> step3#bkg_tc_executor.exec_tc::path0 -> step4#end;
 
 rts sit0 = {
 
