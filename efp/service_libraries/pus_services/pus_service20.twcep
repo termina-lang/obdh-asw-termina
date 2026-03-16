@@ -1,5 +1,5 @@
 
-twcep PUSService20::exec20_1TC::path0() = [
+twcep CPUSService20::exec20_1TC::path0() = [
     block@(28:36,28:43),
     if@(30:9,38:11)[
         invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(32:13,36:37)
@@ -7,7 +7,7 @@ twcep PUSService20::exec20_1TC::path0() = [
     return@(119:9,119:22)
 ]
 
-twcep PUSService20::exec20_1TC::path1() = [
+twcep CPUSService20::exec20_1TC::path1() = [
     block@(28:36,28:43),
     elif@(38:11,46:11)[
         invoke(pus_service_1.send_tm_1_4_PID_not_valid)@(40:13,44:37)
@@ -15,7 +15,7 @@ twcep PUSService20::exec20_1TC::path1() = [
     return@(119:9,119:22)
 ]
 
-twcep PUSService20::exec20_1TC::path2() = [
+twcep CPUSService20::exec20_1TC::path2() = [
     block@(28:36,28:43),
     else@(46:11,119:9)[
         invoke(pus_service_1.notify_tm_1_3)@(48:13,52:33),
@@ -36,7 +36,7 @@ twcep PUSService20::exec20_1TC::path2() = [
     return@(119:9,119:22)
 ]
 
-twcep PUSService20::exec20_1TC::path3() = [
+twcep CPUSService20::exec20_1TC::path3() = [
     block@(28:36,28:43),
     else@(46:11,119:9)[
         invoke(pus_service_1.notify_tm_1_3)@(48:13,52:33),
@@ -56,7 +56,7 @@ twcep PUSService20::exec20_1TC::path3() = [
     return@(119:9,119:22)
 ]
 
-twcep PUSService20::exec20_1TC::path4() = [
+twcep CPUSService20::exec20_1TC::path4() = [
     block@(28:36,28:43),
     else@(46:11,119:9)[
         invoke(pus_service_1.notify_tm_1_3)@(48:13,52:33),
@@ -68,7 +68,7 @@ twcep PUSService20::exec20_1TC::path4() = [
     return@(119:9,119:22)
 ]
 
-twcep PUSService20::exec20_3TC::path0() = [
+twcep CPUSService20::exec20_3TC::path0() = [
     block@(126:36,126:43),
     if@(128:9,136:11)[
         invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(130:13,134:37)
@@ -76,7 +76,7 @@ twcep PUSService20::exec20_3TC::path0() = [
     return@(190:9,190:22)
 ]
 
-twcep PUSService20::exec20_3TC::path1() = [
+twcep CPUSService20::exec20_3TC::path1() = [
     block@(126:36,126:43),
     elif@(136:11,144:11)[
         invoke(pus_service_1.send_tm_1_4_PID_not_valid)@(138:13,142:37)
@@ -84,7 +84,7 @@ twcep PUSService20::exec20_3TC::path1() = [
     return@(190:9,190:22)
 ]
 
-twcep PUSService20::exec20_3TC::path2() = [
+twcep CPUSService20::exec20_3TC::path2() = [
     block@(126:36,126:43),
     elif@(144:11,152:11)[
         invoke(pus_service_1.send_tm_1_4_PID_read_only_via_TC)@(146:13,150:37)
@@ -92,7 +92,7 @@ twcep PUSService20::exec20_3TC::path2() = [
     return@(190:9,190:22)
 ]
 
-twcep PUSService20::exec20_3TC::path3() = [
+twcep CPUSService20::exec20_3TC::path3() = [
     block@(126:36,126:43),
     else@(152:11,190:9)[
         invoke(pus_service_1.notify_tm_1_3)@(154:13,158:37),
@@ -104,7 +104,7 @@ twcep PUSService20::exec20_3TC::path3() = [
     return@(190:9,190:22)
 ]
 
-twcep PUSService20::exec_tc::path0() = [
+twcep CPUSService20::exec_tc::path0() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         if@(230:13,234:15)[
@@ -115,7 +115,7 @@ twcep PUSService20::exec_tc::path0() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path1() = [
+twcep CPUSService20::exec_tc::path1() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         if@(230:13,234:15)[
@@ -130,7 +130,7 @@ twcep PUSService20::exec_tc::path1() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path2() = [
+twcep CPUSService20::exec_tc::path2() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         if@(230:13,234:15)[
@@ -145,7 +145,7 @@ twcep PUSService20::exec_tc::path2() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path3() = [
+twcep CPUSService20::exec_tc::path3() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         if@(230:13,234:15)[
@@ -160,7 +160,7 @@ twcep PUSService20::exec_tc::path3() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path4() = [
+twcep CPUSService20::exec_tc::path4() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         if@(230:13,234:15)[
@@ -175,7 +175,7 @@ twcep PUSService20::exec_tc::path4() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path5() = [
+twcep CPUSService20::exec_tc::path5() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         elif@(234:15,238:15)[
@@ -186,7 +186,7 @@ twcep PUSService20::exec_tc::path5() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path6() = [
+twcep CPUSService20::exec_tc::path6() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         elif@(234:15,238:15)[
@@ -201,7 +201,7 @@ twcep PUSService20::exec_tc::path6() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path7() = [
+twcep CPUSService20::exec_tc::path7() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         elif@(234:15,238:15)[
@@ -216,7 +216,7 @@ twcep PUSService20::exec_tc::path7() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path8() = [
+twcep CPUSService20::exec_tc::path8() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         elif@(234:15,238:15)[
@@ -231,7 +231,7 @@ twcep PUSService20::exec_tc::path8() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path9() = [
+twcep CPUSService20::exec_tc::path9() = [
     block@(196:36,228:9),
     if@(228:9,246:9)[
         elif@(234:15,238:15)[
@@ -246,12 +246,12 @@ twcep PUSService20::exec_tc::path9() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path10() = [
+twcep CPUSService20::exec_tc::path10() = [
     block@(196:36,292:9),
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path11() = [
+twcep CPUSService20::exec_tc::path11() = [
     block@(196:36,246:9),
     case@(253:13,290:9)[
         if@(255:17,262:19)[
@@ -261,7 +261,7 @@ twcep PUSService20::exec_tc::path11() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path12() = [
+twcep CPUSService20::exec_tc::path12() = [
     block@(196:36,246:9),
     case@(253:13,290:9)[
         elif@(262:19,269:19)[
@@ -271,7 +271,7 @@ twcep PUSService20::exec_tc::path12() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path13() = [
+twcep CPUSService20::exec_tc::path13() = [
     block@(196:36,246:9),
     case@(253:13,290:9)[
         elif@(269:19,277:19)[
@@ -281,7 +281,7 @@ twcep PUSService20::exec_tc::path13() = [
     return@(292:9,292:15)
 ]
 
-twcep PUSService20::exec_tc::path14() = [
+twcep CPUSService20::exec_tc::path14() = [
     block@(196:36,246:9),
     case@(253:13,290:9)[
         elif@(277:19,285:19)[

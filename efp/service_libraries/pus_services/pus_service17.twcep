@@ -1,5 +1,5 @@
 
-twcep PUSService17::exec17_1TC::path0() = [
+twcep CPUSService17::exec17_1TC::path0() = [
     block@(76:36,76:43),
     invoke(pus_service_1.notify_tm_1_3)@(78:9,82:33),
     if@(85:9,113:9)[
@@ -18,7 +18,7 @@ twcep PUSService17::exec17_1TC::path0() = [
     return@(123:9,123:22)
 ]
 
-twcep PUSService17::exec17_1TC::path1() = [
+twcep CPUSService17::exec17_1TC::path1() = [
     block@(76:36,76:43),
     invoke(pus_service_1.notify_tm_1_3)@(78:9,82:33),
     if@(85:9,113:9)[
@@ -32,7 +32,7 @@ twcep PUSService17::exec17_1TC::path1() = [
     return@(123:9,123:22)
 ]
 
-twcep PUSService17::exec_tc::path0() = [
+twcep CPUSService17::exec_tc::path0() = [
     block@(137:36,142:87),
     if@(145:9,149:11)[
         call(exec17_1TC)@(147:22,147:40)
@@ -41,7 +41,7 @@ twcep PUSService17::exec_tc::path0() = [
     return@(188:9,188:15)
 ]
 
-twcep PUSService17::exec_tc::path1() = [
+twcep CPUSService17::exec_tc::path1() = [
     block@(137:36,142:87),
     if@(145:9,149:11)[
         call(exec17_1TC)@(147:22,147:40)
@@ -54,7 +54,7 @@ twcep PUSService17::exec_tc::path1() = [
     return@(188:9,188:15)
 ]
 
-twcep PUSService17::exec_tc::path2() = [
+twcep CPUSService17::exec_tc::path2() = [
     block@(137:36,142:87),
     if@(145:9,149:11)[
         call(exec17_1TC)@(147:22,147:40)
@@ -67,12 +67,12 @@ twcep PUSService17::exec_tc::path2() = [
     return@(188:9,188:15)
 ]
 
-twcep PUSService17::exec_tc::path3() = [
+twcep CPUSService17::exec_tc::path3() = [
     block@(137:36,188:9),
     return@(188:9,188:15)
 ]
 
-twcep PUSService17::exec_tc::path4() = [
+twcep CPUSService17::exec_tc::path4() = [
     block@(137:36,155:10),
     case@(162:13,186:9)[
         if@(165:17,172:19)[
@@ -82,7 +82,7 @@ twcep PUSService17::exec_tc::path4() = [
     return@(188:9,188:15)
 ]
 
-twcep PUSService17::exec_tc::path5() = [
+twcep CPUSService17::exec_tc::path5() = [
     block@(137:36,155:10),
     case@(162:13,186:9)[
         elif@(172:19,179:19)[

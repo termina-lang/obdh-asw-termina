@@ -19,10 +19,10 @@ typedef struct {
         void (* send_tm_1_8_tm_exceed_limit_appdata)(const __termina_event_t * const, void * const, uint16_t, uint16_t, __status_int32_t * const);
     } pus_service_1;
     PS128ExecTCReqStatusUpdate exec_tc_req_status_update;
-} PUSService128;
+} CPUSService128;
 
-__status_int32_t PUSService128__exec128_1TC(const __termina_event_t * const __ev, PUSService128 * const self);
+__status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * const __ev, CPUSService128 * const self);
 
-void PUSService128__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status, _Bool * const reebot_flag);
+void CPUSService128__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status, _Bool * const reebot_flag);
 
 #endif

@@ -1,24 +1,24 @@
 
-twcep PUSService6::check_data::path0() = [
+twcep CPUSService6::check_data::path0() = [
     block@(86:34,94:38),
     return@(96:9,96:24)
 ]
 
-twcep PUSService6::is_address_valid::path0() = [
+twcep CPUSService6::is_address_valid::path0() = [
     block@(33:31,47:9),
     return@(47:9,47:24)
 ]
 
-twcep PUSService6::is_mem_id_write_enabled::path0() = [
+twcep CPUSService6::is_mem_id_write_enabled::path0() = [
     return@(53:9,53:105)
 ]
 
-twcep PUSService6::write_data::path0() = [
+twcep CPUSService6::write_data::path0() = [
     block@(59:36,68:9),
     return@(68:9,68:22)
 ]
 
-twcep PUSService6::exec6_2TC::path0() = [
+twcep CPUSService6::exec6_2TC::path0() = [
     block@(101:36,101:43),
     if@(103:9,111:11)[
         invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(105:13,109:33)
@@ -26,7 +26,7 @@ twcep PUSService6::exec6_2TC::path0() = [
     return@(160:9,160:22)
 ]
 
-twcep PUSService6::exec6_2TC::path1() = [
+twcep CPUSService6::exec6_2TC::path1() = [
     block@(101:36,101:43),
     elif@(111:11,120:11)[
         invoke(pus_service_1.send_tm_1_4_mem_address_not_valid)@(113:13,118:33)
@@ -34,7 +34,7 @@ twcep PUSService6::exec6_2TC::path1() = [
     return@(160:9,160:22)
 ]
 
-twcep PUSService6::exec6_2TC::path2() = [
+twcep CPUSService6::exec6_2TC::path2() = [
     block@(101:36,101:43),
     elif@(120:11,128:11)[
         invoke(pus_service_1.send_tm_1_4_mem_id_read_only)@(122:13,126:33)
@@ -42,7 +42,7 @@ twcep PUSService6::exec6_2TC::path2() = [
     return@(160:9,160:22)
 ]
 
-twcep PUSService6::exec6_2TC::path3() = [
+twcep CPUSService6::exec6_2TC::path3() = [
     block@(101:36,101:43),
     else@(128:11,160:9)[
         invoke(pus_service_1.notify_tm_1_3)@(130:13,134:33),
@@ -56,7 +56,7 @@ twcep PUSService6::exec6_2TC::path3() = [
     return@(160:9,160:22)
 ]
 
-twcep PUSService6::exec6_2TC::path4() = [
+twcep CPUSService6::exec6_2TC::path4() = [
     block@(101:36,101:43),
     else@(128:11,160:9)[
         invoke(pus_service_1.notify_tm_1_3)@(130:13,134:33),
@@ -70,12 +70,12 @@ twcep PUSService6::exec6_2TC::path4() = [
     return@(160:9,160:22)
 ]
 
-twcep PUSService6::read_data::path0() = [
+twcep CPUSService6::read_data::path0() = [
     block@(73:36,81:9),
     return@(81:9,81:22)
 ]
 
-twcep PUSService6::exec6_5TC::path0() = [
+twcep CPUSService6::exec6_5TC::path0() = [
     block@(166:36,166:43),
     if@(168:9,176:11)[
         invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(170:13,174:37)
@@ -83,7 +83,7 @@ twcep PUSService6::exec6_5TC::path0() = [
     return@(251:9,251:22)
 ]
 
-twcep PUSService6::exec6_5TC::path1() = [
+twcep CPUSService6::exec6_5TC::path1() = [
     block@(166:36,166:43),
     elif@(176:11,185:11)[
         invoke(pus_service_1.send_tm_1_4_mem_address_not_valid)@(178:13,183:37)
@@ -91,7 +91,7 @@ twcep PUSService6::exec6_5TC::path1() = [
     return@(251:9,251:22)
 ]
 
-twcep PUSService6::exec6_5TC::path2() = [
+twcep CPUSService6::exec6_5TC::path2() = [
     block@(166:36,166:43),
     else@(185:11,251:9)[
         invoke(pus_service_1.notify_tm_1_3)@(187:13,191:37),
@@ -118,7 +118,7 @@ twcep PUSService6::exec6_5TC::path2() = [
     return@(251:9,251:22)
 ]
 
-twcep PUSService6::exec6_5TC::path3() = [
+twcep CPUSService6::exec6_5TC::path3() = [
     block@(166:36,166:43),
     else@(185:11,251:9)[
         invoke(pus_service_1.notify_tm_1_3)@(187:13,191:37),
@@ -145,7 +145,7 @@ twcep PUSService6::exec6_5TC::path3() = [
     return@(251:9,251:22)
 ]
 
-twcep PUSService6::exec6_5TC::path4() = [
+twcep CPUSService6::exec6_5TC::path4() = [
     block@(166:36,166:43),
     else@(185:11,251:9)[
         invoke(pus_service_1.notify_tm_1_3)@(187:13,191:37),
@@ -161,7 +161,7 @@ twcep PUSService6::exec6_5TC::path4() = [
     return@(251:9,251:22)
 ]
 
-twcep PUSService6::exec6_5TC::path5() = [
+twcep CPUSService6::exec6_5TC::path5() = [
     block@(166:36,166:43),
     else@(185:11,251:9)[
         invoke(pus_service_1.notify_tm_1_3)@(187:13,191:37),
@@ -175,7 +175,7 @@ twcep PUSService6::exec6_5TC::path5() = [
     return@(251:9,251:22)
 ]
 
-twcep PUSService6::exec6_9TC::path0() = [
+twcep CPUSService6::exec6_9TC::path0() = [
     block@(257:36,257:43),
     if@(259:9,267:11)[
         invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(261:13,265:37)
@@ -183,7 +183,7 @@ twcep PUSService6::exec6_9TC::path0() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec6_9TC::path1() = [
+twcep CPUSService6::exec6_9TC::path1() = [
     block@(257:36,257:43),
     elif@(267:11,276:11)[
         invoke(pus_service_1.send_tm_1_4_mem_address_not_valid)@(269:13,274:33)
@@ -191,7 +191,7 @@ twcep PUSService6::exec6_9TC::path1() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec6_9TC::path2() = [
+twcep CPUSService6::exec6_9TC::path2() = [
     block@(257:36,257:43),
     else@(276:11,341:9)[
         invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
@@ -216,7 +216,7 @@ twcep PUSService6::exec6_9TC::path2() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec6_9TC::path3() = [
+twcep CPUSService6::exec6_9TC::path3() = [
     block@(257:36,257:43),
     else@(276:11,341:9)[
         invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
@@ -241,7 +241,7 @@ twcep PUSService6::exec6_9TC::path3() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec6_9TC::path4() = [
+twcep CPUSService6::exec6_9TC::path4() = [
     block@(257:36,257:43),
     else@(276:11,341:9)[
         invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
@@ -255,7 +255,7 @@ twcep PUSService6::exec6_9TC::path4() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec6_9TC::path5() = [
+twcep CPUSService6::exec6_9TC::path5() = [
     block@(257:36,257:43),
     else@(276:11,341:9)[
         invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
@@ -267,7 +267,7 @@ twcep PUSService6::exec6_9TC::path5() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec6_9TC::path6() = [
+twcep CPUSService6::exec6_9TC::path6() = [
     block@(257:36,257:43),
     else@(276:11,341:9)[
         invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
@@ -292,7 +292,7 @@ twcep PUSService6::exec6_9TC::path6() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec6_9TC::path7() = [
+twcep CPUSService6::exec6_9TC::path7() = [
     block@(257:36,257:43),
     else@(276:11,341:9)[
         invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
@@ -317,7 +317,7 @@ twcep PUSService6::exec6_9TC::path7() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec6_9TC::path8() = [
+twcep CPUSService6::exec6_9TC::path8() = [
     block@(257:36,257:43),
     else@(276:11,341:9)[
         invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
@@ -331,7 +331,7 @@ twcep PUSService6::exec6_9TC::path8() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec6_9TC::path9() = [
+twcep CPUSService6::exec6_9TC::path9() = [
     block@(257:36,257:43),
     else@(276:11,341:9)[
         invoke(pus_service_1.notify_tm_1_3)@(278:13,281:33),
@@ -343,7 +343,7 @@ twcep PUSService6::exec6_9TC::path9() = [
     return@(341:9,341:22)
 ]
 
-twcep PUSService6::exec_tc::path0() = [
+twcep CPUSService6::exec_tc::path0() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         if@(377:13,381:15)[
@@ -354,7 +354,7 @@ twcep PUSService6::exec_tc::path0() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path1() = [
+twcep CPUSService6::exec_tc::path1() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         if@(377:13,381:15)[
@@ -369,7 +369,7 @@ twcep PUSService6::exec_tc::path1() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path2() = [
+twcep CPUSService6::exec_tc::path2() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         if@(377:13,381:15)[
@@ -384,7 +384,7 @@ twcep PUSService6::exec_tc::path2() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path3() = [
+twcep CPUSService6::exec_tc::path3() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         if@(377:13,381:15)[
@@ -399,7 +399,7 @@ twcep PUSService6::exec_tc::path3() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path4() = [
+twcep CPUSService6::exec_tc::path4() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         elif@(381:15,385:15)[
@@ -410,7 +410,7 @@ twcep PUSService6::exec_tc::path4() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path5() = [
+twcep CPUSService6::exec_tc::path5() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         elif@(381:15,385:15)[
@@ -425,7 +425,7 @@ twcep PUSService6::exec_tc::path5() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path6() = [
+twcep CPUSService6::exec_tc::path6() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         elif@(381:15,385:15)[
@@ -440,7 +440,7 @@ twcep PUSService6::exec_tc::path6() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path7() = [
+twcep CPUSService6::exec_tc::path7() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         elif@(381:15,385:15)[
@@ -455,7 +455,7 @@ twcep PUSService6::exec_tc::path7() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path8() = [
+twcep CPUSService6::exec_tc::path8() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         elif@(385:15,389:15)[
@@ -466,7 +466,7 @@ twcep PUSService6::exec_tc::path8() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path9() = [
+twcep CPUSService6::exec_tc::path9() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         elif@(385:15,389:15)[
@@ -481,7 +481,7 @@ twcep PUSService6::exec_tc::path9() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path10() = [
+twcep CPUSService6::exec_tc::path10() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         elif@(385:15,389:15)[
@@ -496,7 +496,7 @@ twcep PUSService6::exec_tc::path10() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path11() = [
+twcep CPUSService6::exec_tc::path11() = [
     block@(347:36,375:9),
     if@(375:9,396:9)[
         elif@(385:15,389:15)[
@@ -511,12 +511,12 @@ twcep PUSService6::exec_tc::path11() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path12() = [
+twcep CPUSService6::exec_tc::path12() = [
     block@(347:36,436:9),
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path13() = [
+twcep CPUSService6::exec_tc::path13() = [
     block@(347:36,396:9),
     case@(403:13,434:9)[
         if@(405:17,412:19)[
@@ -526,7 +526,7 @@ twcep PUSService6::exec_tc::path13() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path14() = [
+twcep CPUSService6::exec_tc::path14() = [
     block@(347:36,396:9),
     case@(403:13,434:9)[
         elif@(412:19,419:19)[
@@ -536,7 +536,7 @@ twcep PUSService6::exec_tc::path14() = [
     return@(436:9,436:15)
 ]
 
-twcep PUSService6::exec_tc::path15() = [
+twcep CPUSService6::exec_tc::path15() = [
     block@(347:36,396:9),
     case@(403:13,434:9)[
         elif@(419:19,427:19)[

@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service4.h"
 
-uint32_t PUSService4__SDP_get_mean(const __termina_event_t * const __ev, const PUSService4 * const self, size_t pid_index) {
+uint32_t CPUSService4__SDP_get_mean(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t pid_index) {
     
     #line 503 "src/service_libraries/pus_services/pus_service4.fin"
     uint16_t PID = self->stats_config_table.PID[__termina_array__index(4U, pid_index)];
@@ -48,7 +48,7 @@ uint32_t PUSService4__SDP_get_mean(const __termina_event_t * const __ev, const P
 
 }
 
-_Bool PUSService4__SDP_param_higher_than_limit(const __termina_event_t * const __ev, const PUSService4 * const self, size_t pid_index) {
+_Bool CPUSService4__SDP_param_higher_than_limit(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t pid_index) {
     
     #line 419 "src/service_libraries/pus_services/pus_service4.fin"
     _Bool is_higher = 0;
@@ -105,7 +105,7 @@ _Bool PUSService4__SDP_param_higher_than_limit(const __termina_event_t * const _
 
 }
 
-_Bool PUSService4__SDP_param_lower_than_limit(const __termina_event_t * const __ev, const PUSService4 * const self, size_t pid_index) {
+_Bool CPUSService4__SDP_param_lower_than_limit(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t pid_index) {
     
     #line 450 "src/service_libraries/pus_services/pus_service4.fin"
     _Bool is_lower = 0;
@@ -162,7 +162,7 @@ _Bool PUSService4__SDP_param_lower_than_limit(const __termina_event_t * const __
 
 }
 
-__status_int32_t PUSService4__get_PID_defined_stats_index(const __termina_event_t * const __ev, PUSService4 * const self) {
+__status_int32_t CPUSService4__get_PID_defined_stats_index(const __termina_event_t * const __ev, CPUSService4 * const self) {
     
     #line 36 "src/service_libraries/pus_services/pus_service4.fin"
     __status_int32_t status;
@@ -208,7 +208,7 @@ __status_int32_t PUSService4__get_PID_defined_stats_index(const __termina_event_
 
 }
 
-IndexStatus PUSService4__get_free_index(const __termina_event_t * const __ev, const PUSService4 * const self) {
+IndexStatus CPUSService4__get_free_index(const __termina_event_t * const __ev, const CPUSService4 * const self) {
     
     #line 62 "src/service_libraries/pus_services/pus_service4.fin"
     IndexStatus id_status;
@@ -240,7 +240,7 @@ IndexStatus PUSService4__get_free_index(const __termina_event_t * const __ev, co
 
 }
 
-__status_int32_t PUSService4__add_PID_stats(const __termina_event_t * const __ev, PUSService4 * const self) {
+__status_int32_t CPUSService4__add_PID_stats(const __termina_event_t * const __ev, CPUSService4 * const self) {
     
     #line 98 "src/service_libraries/pus_services/pus_service4.fin"
     __status_int32_t status;
@@ -255,13 +255,13 @@ __status_int32_t PUSService4__add_PID_stats(const __termina_event_t * const __ev
     index_status.status.__variant = Success;
 
     #line 100 "src/service_libraries/pus_services/pus_service4.fin"
-    status = PUSService4__get_PID_defined_stats_index(__ev, self);
+    status = CPUSService4__get_PID_defined_stats_index(__ev, self);
 
     #line 102 "src/service_libraries/pus_services/pus_service4.fin"
     if (status.__variant == Failure) {
         
         #line 104 "src/service_libraries/pus_services/pus_service4.fin"
-        index_status = PUSService4__get_free_index(__ev, self);
+        index_status = CPUSService4__get_free_index(__ev, self);
 
         #line 105 "src/service_libraries/pus_services/pus_service4.fin"
         self->exec_tc_req_status_update.valid_index = index_status.index;
@@ -314,7 +314,7 @@ __status_int32_t PUSService4__add_PID_stats(const __termina_event_t * const __ev
 
 }
 
-__status_int32_t PUSService4__delete_PID_stats(const __termina_event_t * const __ev, PUSService4 * const self) {
+__status_int32_t CPUSService4__delete_PID_stats(const __termina_event_t * const __ev, CPUSService4 * const self) {
     
     #line 131 "src/service_libraries/pus_services/pus_service4.fin"
     __status_int32_t status;
@@ -322,7 +322,7 @@ __status_int32_t PUSService4__delete_PID_stats(const __termina_event_t * const _
     status.__variant = Success;
 
     #line 132 "src/service_libraries/pus_services/pus_service4.fin"
-    status = PUSService4__get_PID_defined_stats_index(__ev, self);
+    status = CPUSService4__get_PID_defined_stats_index(__ev, self);
 
     #line 134 "src/service_libraries/pus_services/pus_service4.fin"
     if (status.__variant == Success) {
@@ -337,7 +337,7 @@ __status_int32_t PUSService4__delete_PID_stats(const __termina_event_t * const _
 
 }
 
-void PUSService4__delete_all_stats(const __termina_event_t * const __ev, PUSService4 * const self) {
+void CPUSService4__delete_all_stats(const __termina_event_t * const __ev, CPUSService4 * const self) {
     
     #line 144 "src/service_libraries/pus_services/pus_service4.fin"
     for (size_t i = 0U; i < 4U; i = i + 1U) {
@@ -352,7 +352,7 @@ void PUSService4__delete_all_stats(const __termina_event_t * const __ev, PUSServ
 
 }
 
-__status_int32_t PUSService4__exec4_1TC(const __termina_event_t * const __ev, PUSService4 * const self) {
+__status_int32_t CPUSService4__exec4_1TC(const __termina_event_t * const __ev, CPUSService4 * const self) {
     
     #line 155 "src/service_libraries/pus_services/pus_service4.fin"
     __status_int32_t status;
@@ -462,7 +462,7 @@ __status_int32_t PUSService4__exec4_1TC(const __termina_event_t * const __ev, PU
 
 }
 
-__status_int32_t PUSService4__exec4_6TC(const __termina_event_t * const __ev, PUSService4 * const self) {
+__status_int32_t CPUSService4__exec4_6TC(const __termina_event_t * const __ev, CPUSService4 * const self) {
     
     #line 226 "src/service_libraries/pus_services/pus_service4.fin"
     __status_int32_t status;
@@ -492,7 +492,7 @@ __status_int32_t PUSService4__exec4_6TC(const __termina_event_t * const __ev, PU
         if (status.__variant == Success) {
             
             #line 253 "src/service_libraries/pus_services/pus_service4.fin"
-            status = PUSService4__add_PID_stats(__ev, self);
+            status = CPUSService4__add_PID_stats(__ev, self);
 
         }
 
@@ -517,7 +517,7 @@ __status_int32_t PUSService4__exec4_6TC(const __termina_event_t * const __ev, PU
 
 }
 
-__status_int32_t PUSService4__exec4_7TC(const __termina_event_t * const __ev, PUSService4 * const self) {
+__status_int32_t CPUSService4__exec4_7TC(const __termina_event_t * const __ev, CPUSService4 * const self) {
     
     #line 282 "src/service_libraries/pus_services/pus_service4.fin"
     __status_int32_t status;
@@ -547,7 +547,7 @@ __status_int32_t PUSService4__exec4_7TC(const __termina_event_t * const __ev, PU
         if (status.__variant == Success) {
             
             #line 309 "src/service_libraries/pus_services/pus_service4.fin"
-            status = PUSService4__delete_PID_stats(__ev, self);
+            status = CPUSService4__delete_PID_stats(__ev, self);
 
         }
 
@@ -572,10 +572,10 @@ __status_int32_t PUSService4__exec4_7TC(const __termina_event_t * const __ev, PU
 
 }
 
-void PUSService4__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService4__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 334 "src/service_libraries/pus_services/pus_service4.fin"
-    PUSService4 * self = (PUSService4 *)__this;
+    CPUSService4 * self = (CPUSService4 *)__this;
 
     #line 334 "src/service_libraries/pus_services/pus_service4.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -623,21 +623,21 @@ void PUSService4__exec_tc(const __termina_event_t * const __ev, void * const __t
         if (subtype == 1U) {
             
             #line 357 "src/service_libraries/pus_services/pus_service4.fin"
-            status = PUSService4__exec4_1TC(__ev, self);
+            status = CPUSService4__exec4_1TC(__ev, self);
 
         } else
         #line 359 "src/service_libraries/pus_services/pus_service4.fin"
         if (subtype == 6U) {
             
             #line 361 "src/service_libraries/pus_services/pus_service4.fin"
-            status = PUSService4__exec4_6TC(__ev, self);
+            status = CPUSService4__exec4_6TC(__ev, self);
 
         } else
         #line 363 "src/service_libraries/pus_services/pus_service4.fin"
         if (subtype == 7U) {
             
             #line 365 "src/service_libraries/pus_services/pus_service4.fin"
-            status = PUSService4__exec4_7TC(__ev, self);
+            status = CPUSService4__exec4_7TC(__ev, self);
 
         } else
         {
@@ -703,7 +703,7 @@ void PUSService4__exec_tc(const __termina_event_t * const __ev, void * const __t
 
 }
 
-uint32_t PUSService4__get_data_pool_item(const __termina_event_t * const __ev, const PUSService4 * const self, uint16_t PID) {
+uint32_t CPUSService4__get_data_pool_item(const __termina_event_t * const __ev, const CPUSService4 * const self, uint16_t PID) {
     
     #line 480 "src/service_libraries/pus_services/pus_service4.fin"
     DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
@@ -741,7 +741,7 @@ uint32_t PUSService4__get_data_pool_item(const __termina_event_t * const __ev, c
 
 }
 
-_Bool PUSService4__is_stats_index_defined(const __termina_event_t * const __ev, const PUSService4 * const self, size_t index) {
+_Bool CPUSService4__is_stats_index_defined(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t index) {
     
     #line 77 "src/service_libraries/pus_services/pus_service4.fin"
     _Bool is_defined = 0;
@@ -773,10 +773,10 @@ _Bool PUSService4__is_stats_index_defined(const __termina_event_t * const __ev, 
 
 }
 
-void PUSService4__startup(const __termina_event_t * const __ev, void * const __this) {
+void CPUSService4__startup(const __termina_event_t * const __ev, void * const __this) {
     
     #line 600 "src/service_libraries/pus_services/pus_service4.fin"
-    PUSService4 * self = (PUSService4 *)__this;
+    CPUSService4 * self = (CPUSService4 *)__this;
 
     #line 600 "src/service_libraries/pus_services/pus_service4.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -785,7 +785,7 @@ void PUSService4__startup(const __termina_event_t * const __ev, void * const __t
     for (size_t i = 0U; i < 4U; i = i + 1U) {
         
         #line 604 "src/service_libraries/pus_services/pus_service4.fin"
-        if (PUSService4__is_stats_index_defined(__ev, self, i) == 1) {
+        if (CPUSService4__is_stats_index_defined(__ev, self, i) == 1) {
             
             #line 606 "src/service_libraries/pus_services/pus_service4.fin"
             self->param_stats[__termina_array__index(4U, i)].samples = 0U;
@@ -821,10 +821,10 @@ void PUSService4__startup(const __termina_event_t * const __ev, void * const __t
 
 }
 
-void PUSService4__update_all_stats(const __termina_event_t * const __ev, void * const __this) {
+void CPUSService4__update_all_stats(const __termina_event_t * const __ev, void * const __this) {
     
     #line 527 "src/service_libraries/pus_services/pus_service4.fin"
-    PUSService4 * self = (PUSService4 *)__this;
+    CPUSService4 * self = (CPUSService4 *)__this;
 
     #line 527 "src/service_libraries/pus_services/pus_service4.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -833,7 +833,7 @@ void PUSService4__update_all_stats(const __termina_event_t * const __ev, void * 
     for (size_t i = 0U; i < 4U; i = i + 1U) {
         
         #line 531 "src/service_libraries/pus_services/pus_service4.fin"
-        if (PUSService4__is_stats_index_defined(__ev, self, i) == 1) {
+        if (CPUSService4__is_stats_index_defined(__ev, self, i) == 1) {
             
             #line 533 "src/service_libraries/pus_services/pus_service4.fin"
             uint16_t PID = self->stats_config_table.PID[__termina_array__index(4U, i)];
@@ -842,10 +842,10 @@ void PUSService4__update_all_stats(const __termina_event_t * const __ev, void * 
             if (self->param_stats[__termina_array__index(4U, i)].samples > 0U) {
                 
                 #line 537 "src/service_libraries/pus_services/pus_service4.fin"
-                if (PUSService4__SDP_param_higher_than_limit(__ev, self, i) == 1) {
+                if (CPUSService4__SDP_param_higher_than_limit(__ev, self, i) == 1) {
                     
                     #line 539 "src/service_libraries/pus_services/pus_service4.fin"
-                    uint32_t system_data_pool_item = PUSService4__get_data_pool_item(__ev, self, PID);
+                    uint32_t system_data_pool_item = CPUSService4__get_data_pool_item(__ev, self, PID);
 
                     #line 540 "src/service_libraries/pus_services/pus_service4.fin"
                     self->param_stats[__termina_array__index(4U, i)].max = system_data_pool_item;
@@ -865,10 +865,10 @@ void PUSService4__update_all_stats(const __termina_event_t * const __ev, void * 
 
                 } else
                 #line 549 "src/service_libraries/pus_services/pus_service4.fin"
-                if (PUSService4__SDP_param_lower_than_limit(__ev, self, i) == 1) {
+                if (CPUSService4__SDP_param_lower_than_limit(__ev, self, i) == 1) {
                     
                     #line 551 "src/service_libraries/pus_services/pus_service4.fin"
-                    uint32_t system_data_pool_item = PUSService4__get_data_pool_item(__ev, self, PID);
+                    uint32_t system_data_pool_item = CPUSService4__get_data_pool_item(__ev, self, PID);
 
                     #line 552 "src/service_libraries/pus_services/pus_service4.fin"
                     self->param_stats[__termina_array__index(4U, i)].min = system_data_pool_item;
@@ -893,13 +893,13 @@ void PUSService4__update_all_stats(const __termina_event_t * const __ev, void * 
                 }
 
                 #line 564 "src/service_libraries/pus_services/pus_service4.fin"
-                self->param_stats[__termina_array__index(4U, i)].mean_value = PUSService4__SDP_get_mean(__ev, self, i);
+                self->param_stats[__termina_array__index(4U, i)].mean_value = CPUSService4__SDP_get_mean(__ev, self, i);
 
             } else
             {
                 
                 #line 569 "src/service_libraries/pus_services/pus_service4.fin"
-                uint32_t system_data_pool_item = PUSService4__get_data_pool_item(__ev, self, PID);
+                uint32_t system_data_pool_item = CPUSService4__get_data_pool_item(__ev, self, PID);
 
                 #line 570 "src/service_libraries/pus_services/pus_service4.fin"
                 self->param_stats[__termina_array__index(4U, i)].max = system_data_pool_item;

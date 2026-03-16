@@ -28,12 +28,12 @@ task class PUSBKGTCExecutor {
     a_tc_handler_pool : access Allocator<TCHandler>;
 
     /// Pointer to the interface of PUS Service 20.
-    pus_service_20 : access PUSS20Iface;
+    pus_service_20 : access IPUSService20;
 
     /// Pointer to the interface of PUS Service 20.
-    pus_service_6 : access PUSS6Iface;
+    pus_service_6 : access IPUSService6;
 
-    pus_service_1 : access PUSService1Iface;
+    pus_service_1 : access IPUSService1;
 
     /**
      * @brief Executes an incoming telecommand.

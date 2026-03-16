@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service9.h"
 
-__status_int32_t PUSService9__exec9_129TC(const __termina_event_t * const __ev, PUSService9 * const self) {
+__status_int32_t CPUSService9__exec9_129TC(const __termina_event_t * const __ev, CPUSService9 * const self) {
     
     #line 52 "src/service_libraries/pus_services/pus_service9.fin"
     __status_int32_t status;
@@ -27,10 +27,10 @@ __status_int32_t PUSService9__exec9_129TC(const __termina_event_t * const __ev, 
 
 }
 
-void PUSService9__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService9__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 85 "src/service_libraries/pus_services/pus_service9.fin"
-    PUSService9 * self = (PUSService9 *)__this;
+    CPUSService9 * self = (CPUSService9 *)__this;
 
     #line 85 "src/service_libraries/pus_services/pus_service9.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -73,7 +73,7 @@ void PUSService9__exec_tc(const __termina_event_t * const __ev, void * const __t
         if (subtype == 129U) {
             
             #line 105 "src/service_libraries/pus_services/pus_service9.fin"
-            status = PUSService9__exec9_129TC(__ev, self);
+            status = CPUSService9__exec9_129TC(__ev, self);
 
         } else
         {

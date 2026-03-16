@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service20.h"
 
-__status_int32_t PUSService20__exec20_1TC(const __termina_event_t * const __ev, PUSService20 * const self) {
+__status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev, CPUSService20 * const self) {
     
     #line 28 "src/service_libraries/pus_services/pus_service20.fin"
     __status_int32_t status;
@@ -151,7 +151,7 @@ __status_int32_t PUSService20__exec20_1TC(const __termina_event_t * const __ev, 
 
 }
 
-__status_int32_t PUSService20__exec20_3TC(const __termina_event_t * const __ev, PUSService20 * const self) {
+__status_int32_t CPUSService20__exec20_3TC(const __termina_event_t * const __ev, CPUSService20 * const self) {
     
     #line 126 "src/service_libraries/pus_services/pus_service20.fin"
     __status_int32_t status;
@@ -230,10 +230,10 @@ __status_int32_t PUSService20__exec20_3TC(const __termina_event_t * const __ev, 
 
 }
 
-void PUSService20__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService20__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 194 "src/service_libraries/pus_services/pus_service20.fin"
-    PUSService20 * self = (PUSService20 *)__this;
+    CPUSService20 * self = (CPUSService20 *)__this;
 
     #line 194 "src/service_libraries/pus_services/pus_service20.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -307,14 +307,14 @@ void PUSService20__exec_tc(const __termina_event_t * const __ev, void * const __
         if (subtype == 1U) {
             
             #line 232 "src/service_libraries/pus_services/pus_service20.fin"
-            status = PUSService20__exec20_1TC(__ev, self);
+            status = CPUSService20__exec20_1TC(__ev, self);
 
         } else
         #line 234 "src/service_libraries/pus_services/pus_service20.fin"
         if (subtype == 3U) {
             
             #line 236 "src/service_libraries/pus_services/pus_service20.fin"
-            status = PUSService20__exec20_3TC(__ev, self);
+            status = CPUSService20__exec20_3TC(__ev, self);
 
         } else
         {

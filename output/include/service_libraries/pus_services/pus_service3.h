@@ -41,20 +41,20 @@ typedef struct {
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
     HKConfiguration hk_config_table[8U];
-} PUSService3;
+} CPUSService3;
 
-void PUSService3__do_hk(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const action_status);
+void CPUSService3__do_hk(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const action_status);
 
-__option_size_t PUSService3__get_SIDindex(const __termina_event_t * const __ev, const PUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
+__option_size_t CPUSService3__get_SIDindex(const __termina_event_t * const __ev, const CPUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-__status_int32_t PUSService3__exec3_31TC(const __termina_event_t * const __ev, PUSService3 * const self, PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
+__status_int32_t CPUSService3__exec3_31TC(const __termina_event_t * const __ev, CPUSService3 * const self, PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-__status_int32_t PUSService3__exec3_5TC(const __termina_event_t * const __ev, PUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
+__status_int32_t CPUSService3__exec3_5TC(const __termina_event_t * const __ev, CPUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-__status_int32_t PUSService3__exec3_6TC(const __termina_event_t * const __ev, PUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
+__status_int32_t CPUSService3__exec3_6TC(const __termina_event_t * const __ev, CPUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-void PUSService3__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
+void CPUSService3__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 
-void PUSService3__update_params(const __termina_event_t * const __ev, void * const __this);
+void CPUSService3__update_params(const __termina_event_t * const __ev, void * const __this);
 
 #endif

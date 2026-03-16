@@ -1,5 +1,5 @@
 
-twcep PUSService3::do_hk::path0() = [
+twcep CPUSService3::do_hk::path0() = [
     block@(318:42,318:49),
     for(0..8)@(320:9,392:9)[
         if@(322:13,390:9)[
@@ -23,7 +23,7 @@ twcep PUSService3::do_hk::path0() = [
     return@(392:9,392:15)
 ]
 
-twcep PUSService3::do_hk::path1() = [
+twcep CPUSService3::do_hk::path1() = [
     block@(318:42,318:49),
     for(0..8)@(320:9,392:9)[
         if@(322:13,390:9)[
@@ -47,7 +47,7 @@ twcep PUSService3::do_hk::path1() = [
     return@(392:9,392:15)
 ]
 
-twcep PUSService3::do_hk::path2() = [
+twcep CPUSService3::do_hk::path2() = [
     block@(318:42,318:49),
     for(0..8)@(320:9,392:9)[
         if@(322:13,390:9)[
@@ -62,12 +62,12 @@ twcep PUSService3::do_hk::path2() = [
     return@(392:9,392:15)
 ]
 
-twcep PUSService3::get_SIDindex::path0() = [
+twcep CPUSService3::get_SIDindex::path0() = [
     block@(37:42,47:9),
     return@(47:9,47:27)
 ]
 
-twcep PUSService3::exec3_31TC::path0() = [
+twcep CPUSService3::exec3_31TC::path0() = [
     block@(170:36,171:45),
     if@(173:9,181:11)[
         invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(175:13,179:37)
@@ -75,7 +75,7 @@ twcep PUSService3::exec3_31TC::path0() = [
     return@(223:9,223:22)
 ]
 
-twcep PUSService3::exec3_31TC::path1() = [
+twcep CPUSService3::exec3_31TC::path1() = [
     block@(170:36,171:45),
     else@(181:11,223:9)[
         call(get_SIDindex)@(183:25,183:74),
@@ -90,7 +90,7 @@ twcep PUSService3::exec3_31TC::path1() = [
     return@(223:9,223:22)
 ]
 
-twcep PUSService3::exec3_31TC::path2() = [
+twcep CPUSService3::exec3_31TC::path2() = [
     block@(170:36,171:45),
     else@(181:11,223:9)[
         call(get_SIDindex)@(183:25,183:74),
@@ -101,7 +101,7 @@ twcep PUSService3::exec3_31TC::path2() = [
     return@(223:9,223:22)
 ]
 
-twcep PUSService3::exec3_5TC::path0() = [
+twcep CPUSService3::exec3_5TC::path0() = [
     block@(52:36,53:45),
     if@(55:9,63:11)[
         invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(57:13,61:37)
@@ -109,7 +109,7 @@ twcep PUSService3::exec3_5TC::path0() = [
     return@(106:9,106:22)
 ]
 
-twcep PUSService3::exec3_5TC::path1() = [
+twcep CPUSService3::exec3_5TC::path1() = [
     block@(52:36,53:45),
     else@(63:11,106:9)[
         call(get_SIDindex)@(65:25,65:70),
@@ -124,7 +124,7 @@ twcep PUSService3::exec3_5TC::path1() = [
     return@(106:9,106:22)
 ]
 
-twcep PUSService3::exec3_5TC::path2() = [
+twcep CPUSService3::exec3_5TC::path2() = [
     block@(52:36,53:45),
     else@(63:11,106:9)[
         call(get_SIDindex)@(65:25,65:70),
@@ -135,7 +135,7 @@ twcep PUSService3::exec3_5TC::path2() = [
     return@(106:9,106:22)
 ]
 
-twcep PUSService3::exec3_6TC::path0() = [
+twcep CPUSService3::exec3_6TC::path0() = [
     block@(111:36,112:45),
     if@(114:9,122:11)[
         invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(116:13,120:37)
@@ -143,7 +143,7 @@ twcep PUSService3::exec3_6TC::path0() = [
     return@(164:9,164:22)
 ]
 
-twcep PUSService3::exec3_6TC::path1() = [
+twcep CPUSService3::exec3_6TC::path1() = [
     block@(111:36,112:45),
     else@(122:11,164:9)[
         call(get_SIDindex)@(124:25,124:70),
@@ -158,7 +158,7 @@ twcep PUSService3::exec3_6TC::path1() = [
     return@(164:9,164:22)
 ]
 
-twcep PUSService3::exec3_6TC::path2() = [
+twcep CPUSService3::exec3_6TC::path2() = [
     block@(111:36,112:45),
     else@(122:11,164:9)[
         call(get_SIDindex)@(124:25,124:70),
@@ -169,7 +169,7 @@ twcep PUSService3::exec3_6TC::path2() = [
     return@(164:9,164:22)
 ]
 
-twcep PUSService3::exec_tc::path0() = [
+twcep CPUSService3::exec_tc::path0() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         if@(251:13,255:15)[
@@ -180,7 +180,7 @@ twcep PUSService3::exec_tc::path0() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path1() = [
+twcep CPUSService3::exec_tc::path1() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         if@(251:13,255:15)[
@@ -195,7 +195,7 @@ twcep PUSService3::exec_tc::path1() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path2() = [
+twcep CPUSService3::exec_tc::path2() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         if@(251:13,255:15)[
@@ -210,7 +210,7 @@ twcep PUSService3::exec_tc::path2() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path3() = [
+twcep CPUSService3::exec_tc::path3() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         if@(251:13,255:15)[
@@ -225,7 +225,7 @@ twcep PUSService3::exec_tc::path3() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path4() = [
+twcep CPUSService3::exec_tc::path4() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         elif@(255:15,259:15)[
@@ -236,7 +236,7 @@ twcep PUSService3::exec_tc::path4() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path5() = [
+twcep CPUSService3::exec_tc::path5() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         elif@(255:15,259:15)[
@@ -251,7 +251,7 @@ twcep PUSService3::exec_tc::path5() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path6() = [
+twcep CPUSService3::exec_tc::path6() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         elif@(255:15,259:15)[
@@ -266,7 +266,7 @@ twcep PUSService3::exec_tc::path6() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path7() = [
+twcep CPUSService3::exec_tc::path7() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         elif@(255:15,259:15)[
@@ -281,7 +281,7 @@ twcep PUSService3::exec_tc::path7() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path8() = [
+twcep CPUSService3::exec_tc::path8() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         elif@(259:15,263:15)[
@@ -292,7 +292,7 @@ twcep PUSService3::exec_tc::path8() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path9() = [
+twcep CPUSService3::exec_tc::path9() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         elif@(259:15,263:15)[
@@ -307,7 +307,7 @@ twcep PUSService3::exec_tc::path9() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path10() = [
+twcep CPUSService3::exec_tc::path10() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         elif@(259:15,263:15)[
@@ -322,7 +322,7 @@ twcep PUSService3::exec_tc::path10() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path11() = [
+twcep CPUSService3::exec_tc::path11() = [
     block@(230:36,249:9),
     if@(249:9,271:9)[
         elif@(259:15,263:15)[
@@ -337,12 +337,12 @@ twcep PUSService3::exec_tc::path11() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path12() = [
+twcep CPUSService3::exec_tc::path12() = [
     block@(230:36,312:9),
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path13() = [
+twcep CPUSService3::exec_tc::path13() = [
     block@(230:36,271:9),
     case@(278:13,310:9)[
         if@(281:17,288:19)[
@@ -352,7 +352,7 @@ twcep PUSService3::exec_tc::path13() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path14() = [
+twcep CPUSService3::exec_tc::path14() = [
     block@(230:36,271:9),
     case@(278:13,310:9)[
         elif@(288:19,295:19)[
@@ -362,7 +362,7 @@ twcep PUSService3::exec_tc::path14() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::exec_tc::path15() = [
+twcep CPUSService3::exec_tc::path15() = [
     block@(230:36,271:9),
     case@(278:13,310:9)[
         elif@(295:19,303:19)[
@@ -372,7 +372,7 @@ twcep PUSService3::exec_tc::path15() = [
     return@(312:9,312:15)
 ]
 
-twcep PUSService3::update_params::path0() = [
+twcep CPUSService3::update_params::path0() = [
     block@(397:9,408:9),
     return@(408:9,408:15)
 ]

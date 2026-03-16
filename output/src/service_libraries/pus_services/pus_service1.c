@@ -61,10 +61,10 @@ const uint8_t TM_1_8_TC_11_X_SCHED_TC_POOL_EMPTY = 5U;
 
 const uint8_t TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED = 6U;
 
-void PUSService1__notify_tm_1_1(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t flags_ack, __status_int32_t * const status) {
+void CPUSService1__notify_tm_1_1(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t flags_ack, __status_int32_t * const status) {
     
     #line 398 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 398 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -156,10 +156,10 @@ void PUSService1__notify_tm_1_1(const __termina_event_t * const __ev, void * con
 
 }
 
-void PUSService1__notify_tm_1_3(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t flags_ack, __status_int32_t * const status) {
+void CPUSService1__notify_tm_1_3(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t flags_ack, __status_int32_t * const status) {
     
     #line 565 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 565 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -251,10 +251,10 @@ void PUSService1__notify_tm_1_3(const __termina_event_t * const __ev, void * con
 
 }
 
-void PUSService1__notify_tm_1_7(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t flags_ack, __status_int32_t * const status) {
+void CPUSService1__notify_tm_1_7(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t flags_ack, __status_int32_t * const status) {
     
     #line 1517 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1517 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -346,10 +346,10 @@ void PUSService1__notify_tm_1_7(const __termina_event_t * const __ev, void * con
 
 }
 
-void PUSService1__send_tm_1_2(const __termina_event_t * const __ev, void * const __this, const TCStatus * const tc_status, const TCHandler * const tc_handler, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_2(const __termina_event_t * const __ev, void * const __this, const TCStatus * const tc_status, const TCHandler * const tc_handler, __status_int32_t * const status) {
     
     #line 451 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 451 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -542,10 +542,10 @@ void PUSService1__send_tm_1_2(const __termina_event_t * const __ev, void * const
 
 }
 
-void PUSService1__send_tm_1_4_EvID_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t EvID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_EvID_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t EvID, __status_int32_t * const status) {
     
     #line 905 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 905 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -623,10 +623,10 @@ void PUSService1__send_tm_1_4_EvID_not_valid(const __termina_event_t * const __e
 
 }
 
-void PUSService1__send_tm_1_4_PID_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_PID_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PID, __status_int32_t * const status) {
     
     #line 953 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 953 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -704,10 +704,10 @@ void PUSService1__send_tm_1_4_PID_not_valid(const __termina_event_t * const __ev
 
 }
 
-void PUSService1__send_tm_1_4_PID_read_only_via_TC(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_PID_read_only_via_TC(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PID, __status_int32_t * const status) {
     
     #line 1423 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1423 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -785,10 +785,10 @@ void PUSService1__send_tm_1_4_PID_read_only_via_TC(const __termina_event_t * con
 
 }
 
-void PUSService1__send_tm_1_4_PID_stats_undefined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_PID_stats_undefined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PID, __status_int32_t * const status) {
     
     #line 1376 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1376 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -866,10 +866,10 @@ void PUSService1__send_tm_1_4_PID_stats_undefined(const __termina_event_t * cons
 
 }
 
-void PUSService1__send_tm_1_4_PMONID_invalid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_PMONID_invalid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
     
     #line 1141 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1141 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -947,10 +947,10 @@ void PUSService1__send_tm_1_4_PMONID_invalid(const __termina_event_t * const __e
 
 }
 
-void PUSService1__send_tm_1_4_PMON_defined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_PMON_defined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
     
     #line 1047 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1047 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1028,10 +1028,10 @@ void PUSService1__send_tm_1_4_PMON_defined(const __termina_event_t * const __ev,
 
 }
 
-void PUSService1__send_tm_1_4_PMON_definition_invalid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_PMON_definition_invalid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
     
     #line 1187 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1187 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1109,10 +1109,10 @@ void PUSService1__send_tm_1_4_PMON_definition_invalid(const __termina_event_t * 
 
 }
 
-void PUSService1__send_tm_1_4_PMON_enabled(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_PMON_enabled(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
     
     #line 1094 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1094 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1190,10 +1190,10 @@ void PUSService1__send_tm_1_4_PMON_enabled(const __termina_event_t * const __ev,
 
 }
 
-void PUSService1__send_tm_1_4_PMON_undefined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_PMON_undefined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PMONID, __status_int32_t * const status) {
     
     #line 1000 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1000 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1271,10 +1271,10 @@ void PUSService1__send_tm_1_4_PMON_undefined(const __termina_event_t * const __e
 
 }
 
-void PUSService1__send_tm_1_4_SID_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t SID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_SID_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t SID, __status_int32_t * const status) {
     
     #line 761 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 761 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1352,10 +1352,10 @@ void PUSService1__send_tm_1_4_SID_not_valid(const __termina_event_t * const __ev
 
 }
 
-void PUSService1__send_tm_1_4_device_address_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint32_t device_address, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_device_address_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint32_t device_address, __status_int32_t * const status) {
     
     #line 713 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 713 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1433,10 +1433,10 @@ void PUSService1__send_tm_1_4_device_address_not_valid(const __termina_event_t *
 
 }
 
-void PUSService1__send_tm_1_4_error_in_acceptance(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_error_in_acceptance(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, __status_int32_t * const status) {
     
     #line 1470 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1470 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1514,10 +1514,10 @@ void PUSService1__send_tm_1_4_error_in_acceptance(const __termina_event_t * cons
 
 }
 
-void PUSService1__send_tm_1_4_ev_action_enabled(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t event_ID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_ev_action_enabled(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t event_ID, __status_int32_t * const status) {
     
     #line 1234 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1234 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1595,10 +1595,10 @@ void PUSService1__send_tm_1_4_ev_action_enabled(const __termina_event_t * const 
 
 }
 
-void PUSService1__send_tm_1_4_ev_action_rejected(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t event_ID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_ev_action_rejected(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t event_ID, __status_int32_t * const status) {
     
     #line 1281 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1281 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1676,10 +1676,10 @@ void PUSService1__send_tm_1_4_ev_action_rejected(const __termina_event_t * const
 
 }
 
-void PUSService1__send_tm_1_4_ev_action_undefined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t event_ID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_ev_action_undefined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t event_ID, __status_int32_t * const status) {
     
     #line 1329 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1329 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1757,10 +1757,10 @@ void PUSService1__send_tm_1_4_ev_action_undefined(const __termina_event_t * cons
 
 }
 
-void PUSService1__send_tm_1_4_mem_address_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t mem_id, uint32_t mem_address, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_mem_address_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t mem_id, uint32_t mem_address, __status_int32_t * const status) {
     
     #line 807 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 807 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1838,10 +1838,10 @@ void PUSService1__send_tm_1_4_mem_address_not_valid(const __termina_event_t * co
 
 }
 
-void PUSService1__send_tm_1_4_mem_id_read_only(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t mem_id, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_mem_id_read_only(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t mem_id, __status_int32_t * const status) {
     
     #line 856 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 856 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1919,10 +1919,10 @@ void PUSService1__send_tm_1_4_mem_id_read_only(const __termina_event_t * const _
 
 }
 
-void PUSService1__send_tm_1_4_num_of_instr_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t N, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_num_of_instr_not_valid(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t N, __status_int32_t * const status) {
     
     #line 667 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 667 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -2000,10 +2000,10 @@ void PUSService1__send_tm_1_4_num_of_instr_not_valid(const __termina_event_t * c
 
 }
 
-void PUSService1__send_tm_1_4_short_pack_length(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, size_t tc_bytes, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_4_short_pack_length(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, size_t tc_bytes, __status_int32_t * const status) {
     
     #line 617 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 617 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -2084,10 +2084,10 @@ void PUSService1__send_tm_1_4_short_pack_length(const __termina_event_t * const 
 
 }
 
-void PUSService1__send_tm_1_8_device_command_exec_error(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint32_t on_off_command, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_8_device_command_exec_error(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint32_t on_off_command, __status_int32_t * const status) {
     
     #line 1665 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1665 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -2165,10 +2165,10 @@ void PUSService1__send_tm_1_8_device_command_exec_error(const __termina_event_t 
 
 }
 
-void PUSService1__send_tm_1_8_max_ev_actions_defined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t evID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_8_max_ev_actions_defined(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t evID, __status_int32_t * const status) {
     
     #line 1569 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1569 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -2246,10 +2246,10 @@ void PUSService1__send_tm_1_8_max_ev_actions_defined(const __termina_event_t * c
 
 }
 
-void PUSService1__send_tm_1_8_mem_access_error(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t mem_ID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_8_mem_access_error(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t mem_ID, __status_int32_t * const status) {
     
     #line 1761 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1761 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -2327,10 +2327,10 @@ void PUSService1__send_tm_1_8_mem_access_error(const __termina_event_t * const _
 
 }
 
-void PUSService1__send_tm_1_8_not_free_stats_config(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PID, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_8_not_free_stats_config(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint16_t PID, __status_int32_t * const status) {
     
     #line 1713 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1713 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -2408,10 +2408,10 @@ void PUSService1__send_tm_1_8_not_free_stats_config(const __termina_event_t * co
 
 }
 
-void PUSService1__send_tm_1_8_tm_exceed_limit_appdata(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, __status_int32_t * const status) {
+void CPUSService1__send_tm_1_8_tm_exceed_limit_appdata(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, __status_int32_t * const status) {
     
     #line 1618 "src/service_libraries/pus_services/pus_service1.fin"
-    PUSService1 * self = (PUSService1 *)__this;
+    CPUSService1 * self = (CPUSService1 *)__this;
 
     #line 1618 "src/service_libraries/pus_services/pus_service1.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);

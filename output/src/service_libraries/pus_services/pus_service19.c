@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service19.h"
 
-__status_int32_t PUSService19__delete_event_action(const __termina_event_t * const __ev, PUSService19 * const self) {
+__status_int32_t CPUSService19__delete_event_action(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 67 "src/service_libraries/pus_services/pus_service19.fin"
     __status_int32_t status;
@@ -32,7 +32,7 @@ __status_int32_t PUSService19__delete_event_action(const __termina_event_t * con
 
 }
 
-__status_int32_t PUSService19__disable_event_action(const __termina_event_t * const __ev, PUSService19 * const self) {
+__status_int32_t CPUSService19__disable_event_action(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 35 "src/service_libraries/pus_services/pus_service19.fin"
     __status_int32_t status;
@@ -60,7 +60,7 @@ __status_int32_t PUSService19__disable_event_action(const __termina_event_t * co
 
 }
 
-__status_int32_t PUSService19__enable_event_action(const __termina_event_t * const __ev, PUSService19 * const self) {
+__status_int32_t CPUSService19__enable_event_action(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 51 "src/service_libraries/pus_services/pus_service19.fin"
     __status_int32_t status;
@@ -88,7 +88,7 @@ __status_int32_t PUSService19__enable_event_action(const __termina_event_t * con
 
 }
 
-FoundID PUSService19__get_free_event_action_index(const __termina_event_t * const __ev, const PUSService19 * const self) {
+FoundID CPUSService19__get_free_event_action_index(const __termina_event_t * const __ev, const CPUSService19 * const self) {
     
     #line 85 "src/service_libraries/pus_services/pus_service19.fin"
     FoundID found_and_id;
@@ -120,7 +120,7 @@ FoundID PUSService19__get_free_event_action_index(const __termina_event_t * cons
 
 }
 
-FoundID PUSService19__is_ev_action_defined(const __termina_event_t * const __ev, const PUSService19 * const self, uint16_t evID) {
+FoundID CPUSService19__is_ev_action_defined(const __termina_event_t * const __ev, const CPUSService19 * const self, uint16_t evID) {
     
     #line 100 "src/service_libraries/pus_services/pus_service19.fin"
     FoundID found_and_id;
@@ -155,7 +155,7 @@ FoundID PUSService19__is_ev_action_defined(const __termina_event_t * const __ev,
 
 }
 
-__status_int32_t PUSService19__exec19_1TC(const __termina_event_t * const __ev, PUSService19 * const self) {
+__status_int32_t CPUSService19__exec19_1TC(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 119 "src/service_libraries/pus_services/pus_service19.fin"
     __status_int32_t status;
@@ -187,7 +187,7 @@ __status_int32_t PUSService19__exec19_1TC(const __termina_event_t * const __ev, 
         error.__variant = TC19_1_Error__NoError;
 
         #line 141 "src/service_libraries/pus_services/pus_service19.fin"
-        self->exec_tc_req_status_update.ev_action_ID = PUSService19__is_ev_action_defined(__ev, self, self->exec_tc_req_status_update.tc_data.EvID);
+        self->exec_tc_req_status_update.ev_action_ID = CPUSService19__is_ev_action_defined(__ev, self, self->exec_tc_req_status_update.tc_data.EvID);
 
         #line 143 "src/service_libraries/pus_services/pus_service19.fin"
         if (self->exec_tc_req_status_update.ev_action_ID.found) {
@@ -210,7 +210,7 @@ __status_int32_t PUSService19__exec19_1TC(const __termina_event_t * const __ev, 
         {
             
             #line 156 "src/service_libraries/pus_services/pus_service19.fin"
-            self->exec_tc_req_status_update.ev_action_ID = PUSService19__get_free_event_action_index(__ev, self);
+            self->exec_tc_req_status_update.ev_action_ID = CPUSService19__get_free_event_action_index(__ev, self);
 
             #line 158 "src/service_libraries/pus_services/pus_service19.fin"
             if (self->exec_tc_req_status_update.ev_action_ID.found) {
@@ -322,7 +322,7 @@ __status_int32_t PUSService19__exec19_1TC(const __termina_event_t * const __ev, 
 
 }
 
-__status_int32_t PUSService19__exec19_2TC(const __termina_event_t * const __ev, PUSService19 * const self) {
+__status_int32_t CPUSService19__exec19_2TC(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 256 "src/service_libraries/pus_services/pus_service19.fin"
     __status_int32_t status;
@@ -349,7 +349,7 @@ __status_int32_t PUSService19__exec19_2TC(const __termina_event_t * const __ev, 
         _Bool is_enabled = 0;
 
         #line 278 "src/service_libraries/pus_services/pus_service19.fin"
-        self->exec_tc_req_status_update.ev_action_ID = PUSService19__is_ev_action_defined(__ev, self, self->exec_tc_req_status_update.tc_data.EvID);
+        self->exec_tc_req_status_update.ev_action_ID = CPUSService19__is_ev_action_defined(__ev, self, self->exec_tc_req_status_update.tc_data.EvID);
 
         #line 281 "src/service_libraries/pus_services/pus_service19.fin"
         if (self->exec_tc_req_status_update.ev_action_ID.found) {
@@ -370,7 +370,7 @@ __status_int32_t PUSService19__exec19_2TC(const __termina_event_t * const __ev, 
                 if (status.__variant == Success) {
                     
                     #line 301 "src/service_libraries/pus_services/pus_service19.fin"
-                    status = PUSService19__delete_event_action(__ev, self);
+                    status = CPUSService19__delete_event_action(__ev, self);
 
                 }
 
@@ -399,7 +399,7 @@ __status_int32_t PUSService19__exec19_2TC(const __termina_event_t * const __ev, 
 
 }
 
-__status_int32_t PUSService19__exec19_4TC(const __termina_event_t * const __ev, PUSService19 * const self) {
+__status_int32_t CPUSService19__exec19_4TC(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 335 "src/service_libraries/pus_services/pus_service19.fin"
     __status_int32_t status;
@@ -423,7 +423,7 @@ __status_int32_t PUSService19__exec19_4TC(const __termina_event_t * const __ev, 
     {
         
         #line 355 "src/service_libraries/pus_services/pus_service19.fin"
-        self->exec_tc_req_status_update.ev_action_ID = PUSService19__is_ev_action_defined(__ev, self, self->exec_tc_req_status_update.tc_data.EvID);
+        self->exec_tc_req_status_update.ev_action_ID = CPUSService19__is_ev_action_defined(__ev, self, self->exec_tc_req_status_update.tc_data.EvID);
 
         #line 357 "src/service_libraries/pus_services/pus_service19.fin"
         if (self->exec_tc_req_status_update.ev_action_ID.found) {
@@ -435,7 +435,7 @@ __status_int32_t PUSService19__exec19_4TC(const __termina_event_t * const __ev, 
             if (status.__variant == Success) {
                 
                 #line 367 "src/service_libraries/pus_services/pus_service19.fin"
-                status = PUSService19__enable_event_action(__ev, self);
+                status = CPUSService19__enable_event_action(__ev, self);
 
             }
 
@@ -462,7 +462,7 @@ __status_int32_t PUSService19__exec19_4TC(const __termina_event_t * const __ev, 
 
 }
 
-__status_int32_t PUSService19__exec19_5TC(const __termina_event_t * const __ev, PUSService19 * const self) {
+__status_int32_t CPUSService19__exec19_5TC(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 398 "src/service_libraries/pus_services/pus_service19.fin"
     __status_int32_t status;
@@ -486,7 +486,7 @@ __status_int32_t PUSService19__exec19_5TC(const __termina_event_t * const __ev, 
     {
         
         #line 420 "src/service_libraries/pus_services/pus_service19.fin"
-        self->exec_tc_req_status_update.ev_action_ID = PUSService19__is_ev_action_defined(__ev, self, self->exec_tc_req_status_update.tc_data.EvID);
+        self->exec_tc_req_status_update.ev_action_ID = CPUSService19__is_ev_action_defined(__ev, self, self->exec_tc_req_status_update.tc_data.EvID);
 
         #line 423 "src/service_libraries/pus_services/pus_service19.fin"
         if (self->exec_tc_req_status_update.ev_action_ID.found) {
@@ -498,7 +498,7 @@ __status_int32_t PUSService19__exec19_5TC(const __termina_event_t * const __ev, 
             if (status.__variant == Success) {
                 
                 #line 433 "src/service_libraries/pus_services/pus_service19.fin"
-                status = PUSService19__disable_event_action(__ev, self);
+                status = CPUSService19__disable_event_action(__ev, self);
 
             }
 
@@ -525,10 +525,10 @@ __status_int32_t PUSService19__exec19_5TC(const __termina_event_t * const __ev, 
 
 }
 
-void PUSService19__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService19__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 462 "src/service_libraries/pus_services/pus_service19.fin"
-    PUSService19 * self = (PUSService19 *)__this;
+    CPUSService19 * self = (CPUSService19 *)__this;
 
     #line 462 "src/service_libraries/pus_services/pus_service19.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -587,28 +587,28 @@ void PUSService19__exec_tc(const __termina_event_t * const __ev, void * const __
         if (subtype == 1U) {
             
             #line 494 "src/service_libraries/pus_services/pus_service19.fin"
-            status = PUSService19__exec19_1TC(__ev, self);
+            status = CPUSService19__exec19_1TC(__ev, self);
 
         } else
         #line 496 "src/service_libraries/pus_services/pus_service19.fin"
         if (subtype == 2U) {
             
             #line 498 "src/service_libraries/pus_services/pus_service19.fin"
-            status = PUSService19__exec19_2TC(__ev, self);
+            status = CPUSService19__exec19_2TC(__ev, self);
 
         } else
         #line 500 "src/service_libraries/pus_services/pus_service19.fin"
         if (subtype == 4U) {
             
             #line 502 "src/service_libraries/pus_services/pus_service19.fin"
-            status = PUSService19__exec19_4TC(__ev, self);
+            status = CPUSService19__exec19_4TC(__ev, self);
 
         } else
         #line 504 "src/service_libraries/pus_services/pus_service19.fin"
         if (subtype == 5U) {
             
             #line 506 "src/service_libraries/pus_services/pus_service19.fin"
-            status = PUSService19__exec19_5TC(__ev, self);
+            status = CPUSService19__exec19_5TC(__ev, self);
 
         } else
         {
@@ -674,10 +674,10 @@ void PUSService19__exec_tc(const __termina_event_t * const __ev, void * const __
 
 }
 
-void PUSService19__extract_action(const __termina_event_t * const __ev, void * const __this, size_t index, TCHandler * const action_packet) {
+void CPUSService19__extract_action(const __termina_event_t * const __ev, void * const __this, size_t index, TCHandler * const action_packet) {
     
     #line 659 "src/service_libraries/pus_services/pus_service19.fin"
-    PUSService19 * self = (PUSService19 *)__this;
+    CPUSService19 * self = (CPUSService19 *)__this;
 
     #line 659 "src/service_libraries/pus_services/pus_service19.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -747,10 +747,10 @@ void PUSService19__extract_action(const __termina_event_t * const __ev, void * c
 
 }
 
-void PUSService19__get_pending_action_number(const __termina_event_t * const __ev, void * const __this, size_t paction_num[4U]) {
+void CPUSService19__get_pending_action_number(const __termina_event_t * const __ev, void * const __this, size_t paction_num[4U]) {
     
     #line 648 "src/service_libraries/pus_services/pus_service19.fin"
-    PUSService19 * self = (PUSService19 *)__this;
+    CPUSService19 * self = (CPUSService19 *)__this;
 
     #line 648 "src/service_libraries/pus_services/pus_service19.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -771,10 +771,10 @@ void PUSService19__get_pending_action_number(const __termina_event_t * const __e
 
 }
 
-void PUSService19__manage_event_action(const __termina_event_t * const __ev, void * const __this, uint16_t evID) {
+void CPUSService19__manage_event_action(const __termina_event_t * const __ev, void * const __this, uint16_t evID) {
     
     #line 560 "src/service_libraries/pus_services/pus_service19.fin"
-    PUSService19 * self = (PUSService19 *)__this;
+    CPUSService19 * self = (CPUSService19 *)__this;
 
     #line 560 "src/service_libraries/pus_services/pus_service19.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -789,7 +789,7 @@ void PUSService19__manage_event_action(const __termina_event_t * const __ev, voi
     found_and_id.found = 0;
 
     #line 563 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id = PUSService19__is_ev_action_defined(__ev, self, evID);
+    found_and_id = CPUSService19__is_ev_action_defined(__ev, self, evID);
 
     #line 565 "src/service_libraries/pus_services/pus_service19.fin"
     if (found_and_id.found && found_and_id.enabled) {

@@ -10,19 +10,19 @@ import resources.obt_manager;
 import service_libraries.pus_services.pus_service17.internal;
 
 /**
- * @interface PUSS17Iface
+ * @interface IPUSService17
  * @brief Interface for PUS Service 17 resource.
  */
-interface PUSS17Iface {
+interface IPUSService17 {
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>);
 };
 
 
 /**
- * @class PUSService17
+ * @class CPUSService17
  * @brief Resource class implementing the PUS Service 17 Test functionality.
 */
-resource class PUSService17 provides PUSS17Iface {
+resource class CPUSService17 provides IPUSService17 {
 
     /**
      * @brief Structure holding updated status information for the TC execution request.
@@ -61,7 +61,7 @@ resource class PUSService17 provides PUSS17Iface {
     */
     obt_manager : access OBTManagerIface;
 
-    pus_service_1 : access PUSService1Iface;
+    pus_service_1 : access IPUSService1;
 
     /**
      * @brief Executes the processing logic for TC[17,1].

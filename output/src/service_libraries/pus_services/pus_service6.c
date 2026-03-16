@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service6.h"
 
-__option_uint16_t PUSService6__check_data(const __termina_event_t * const __ev, PUSService6 * const self) {
+__option_uint16_t CPUSService6__check_data(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 86 "src/service_libraries/pus_services/pus_service6.fin"
     size_t bank_index = (size_t)self->exec_tc_req_status_update.mem_id;
@@ -37,7 +37,7 @@ __option_uint16_t PUSService6__check_data(const __termina_event_t * const __ev, 
 
 }
 
-_Bool PUSService6__is_address_valid(const __termina_event_t * const __ev, const PUSService6 * const self) {
+_Bool CPUSService6__is_address_valid(const __termina_event_t * const __ev, const CPUSService6 * const self) {
     
     #line 33 "src/service_libraries/pus_services/pus_service6.fin"
     _Bool is_valid = 1;
@@ -80,14 +80,14 @@ _Bool PUSService6__is_address_valid(const __termina_event_t * const __ev, const 
 
 }
 
-_Bool PUSService6__is_mem_id_write_enabled(const __termina_event_t * const __ev, const PUSService6 * const self) {
+_Bool CPUSService6__is_mem_id_write_enabled(const __termina_event_t * const __ev, const CPUSService6 * const self) {
     
     #line 53 "src/service_libraries/pus_services/pus_service6.fin"
     return self->mem_id_write_permissions[__termina_array__index(banks_number, (size_t)self->exec_tc_req_status_update.mem_id)] == 1;
 
 }
 
-__status_int32_t PUSService6__write_data(const __termina_event_t * const __ev, PUSService6 * const self) {
+__status_int32_t CPUSService6__write_data(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 59 "src/service_libraries/pus_services/pus_service6.fin"
     __status_int32_t status;
@@ -113,7 +113,7 @@ __status_int32_t PUSService6__write_data(const __termina_event_t * const __ev, P
 
 }
 
-__status_int32_t PUSService6__exec6_2TC(const __termina_event_t * const __ev, PUSService6 * const self) {
+__status_int32_t CPUSService6__exec6_2TC(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 101 "src/service_libraries/pus_services/pus_service6.fin"
     __status_int32_t status;
@@ -128,14 +128,14 @@ __status_int32_t PUSService6__exec6_2TC(const __termina_event_t * const __ev, PU
 
     } else
     #line 111 "src/service_libraries/pus_services/pus_service6.fin"
-    if (PUSService6__is_address_valid(__ev, self) == 0) {
+    if (CPUSService6__is_address_valid(__ev, self) == 0) {
         
         #line 113 "src/service_libraries/pus_services/pus_service6.fin"
         self->pus_service_1.send_tm_1_4_mem_address_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.mem_id, self->exec_tc_req_status_update.address, &status);
 
     } else
     #line 120 "src/service_libraries/pus_services/pus_service6.fin"
-    if (PUSService6__is_mem_id_write_enabled(__ev, self) == 0) {
+    if (CPUSService6__is_mem_id_write_enabled(__ev, self) == 0) {
         
         #line 122 "src/service_libraries/pus_services/pus_service6.fin"
         self->pus_service_1.send_tm_1_4_mem_id_read_only(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.mem_id, &status);
@@ -150,7 +150,7 @@ __status_int32_t PUSService6__exec6_2TC(const __termina_event_t * const __ev, PU
         if (status.__variant == Success) {
             
             #line 137 "src/service_libraries/pus_services/pus_service6.fin"
-            status = PUSService6__write_data(__ev, self);
+            status = CPUSService6__write_data(__ev, self);
 
         }
 
@@ -175,7 +175,7 @@ __status_int32_t PUSService6__exec6_2TC(const __termina_event_t * const __ev, PU
 
 }
 
-__status_int32_t PUSService6__read_data(const __termina_event_t * const __ev, PUSService6 * const self) {
+__status_int32_t CPUSService6__read_data(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 73 "src/service_libraries/pus_services/pus_service6.fin"
     __status_int32_t status;
@@ -201,7 +201,7 @@ __status_int32_t PUSService6__read_data(const __termina_event_t * const __ev, PU
 
 }
 
-__status_int32_t PUSService6__exec6_5TC(const __termina_event_t * const __ev, PUSService6 * const self) {
+__status_int32_t CPUSService6__exec6_5TC(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 166 "src/service_libraries/pus_services/pus_service6.fin"
     __status_int32_t status;
@@ -216,7 +216,7 @@ __status_int32_t PUSService6__exec6_5TC(const __termina_event_t * const __ev, PU
 
     } else
     #line 176 "src/service_libraries/pus_services/pus_service6.fin"
-    if (PUSService6__is_address_valid(__ev, self) == 0) {
+    if (CPUSService6__is_address_valid(__ev, self) == 0) {
         
         #line 178 "src/service_libraries/pus_services/pus_service6.fin"
         self->pus_service_1.send_tm_1_4_mem_address_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.mem_id, self->exec_tc_req_status_update.address, &status);
@@ -231,7 +231,7 @@ __status_int32_t PUSService6__exec6_5TC(const __termina_event_t * const __ev, PU
         if (status.__variant == Success) {
             
             #line 195 "src/service_libraries/pus_services/pus_service6.fin"
-            status = PUSService6__read_data(__ev, self);
+            status = CPUSService6__read_data(__ev, self);
 
         }
 
@@ -318,7 +318,7 @@ __status_int32_t PUSService6__exec6_5TC(const __termina_event_t * const __ev, PU
 
 }
 
-__status_int32_t PUSService6__exec6_9TC(const __termina_event_t * const __ev, PUSService6 * const self) {
+__status_int32_t CPUSService6__exec6_9TC(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 257 "src/service_libraries/pus_services/pus_service6.fin"
     __status_int32_t status;
@@ -333,7 +333,7 @@ __status_int32_t PUSService6__exec6_9TC(const __termina_event_t * const __ev, PU
 
     } else
     #line 267 "src/service_libraries/pus_services/pus_service6.fin"
-    if (PUSService6__is_address_valid(__ev, self) == 0) {
+    if (CPUSService6__is_address_valid(__ev, self) == 0) {
         
         #line 269 "src/service_libraries/pus_services/pus_service6.fin"
         self->pus_service_1.send_tm_1_4_mem_address_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.mem_id, self->exec_tc_req_status_update.address, &status);
@@ -350,7 +350,7 @@ __status_int32_t PUSService6__exec6_9TC(const __termina_event_t * const __ev, PU
         option_checksum.__variant = None;
 
         #line 284 "src/service_libraries/pus_services/pus_service6.fin"
-        option_checksum = PUSService6__check_data(__ev, self);
+        option_checksum = CPUSService6__check_data(__ev, self);
 
         #line 288 "src/service_libraries/pus_services/pus_service6.fin"
         if (option_checksum.__variant == Some) {
@@ -438,10 +438,10 @@ __status_int32_t PUSService6__exec6_9TC(const __termina_event_t * const __ev, PU
 
 }
 
-void PUSService6__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService6__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 345 "src/service_libraries/pus_services/pus_service6.fin"
-    PUSService6 * self = (PUSService6 *)__this;
+    CPUSService6 * self = (CPUSService6 *)__this;
 
     #line 345 "src/service_libraries/pus_services/pus_service6.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -513,21 +513,21 @@ void PUSService6__exec_tc(const __termina_event_t * const __ev, void * const __t
         if (subtype == 2U) {
             
             #line 379 "src/service_libraries/pus_services/pus_service6.fin"
-            status = PUSService6__exec6_2TC(__ev, self);
+            status = CPUSService6__exec6_2TC(__ev, self);
 
         } else
         #line 381 "src/service_libraries/pus_services/pus_service6.fin"
         if (subtype == 5U) {
             
             #line 383 "src/service_libraries/pus_services/pus_service6.fin"
-            status = PUSService6__exec6_5TC(__ev, self);
+            status = CPUSService6__exec6_5TC(__ev, self);
 
         } else
         #line 385 "src/service_libraries/pus_services/pus_service6.fin"
         if (subtype == 9U) {
             
             #line 387 "src/service_libraries/pus_services/pus_service6.fin"
-            status = PUSService6__exec6_9TC(__ev, self);
+            status = CPUSService6__exec6_9TC(__ev, self);
 
         } else
         {

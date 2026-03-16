@@ -14,7 +14,7 @@ interface PUSS3Iface {
 
 };
 
-resource class PUSService3 provides PUSS3Iface {
+resource class CPUSService3 provides PUSS3Iface {
 
     hk_config_table : [HKConfiguration; max_num_of_SIDs];
 
@@ -27,8 +27,8 @@ resource class PUSService3 provides PUSS3Iface {
 
     obt_manager : access OBTManagerIface;
     
-    pus_service_1 : access PUSService1Iface;
-    pus_service_5 : access PUSS5Iface;
+    pus_service_1 : access IPUSService1;
+    pus_service_5 : access IPUSService5;
 
     random_seed : u32;
 

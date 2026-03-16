@@ -59,29 +59,29 @@ extern TMCounter telemetry_counter;
 
 extern OBTManager obt_manager;
 
-extern PUSService1 pus_service_1;
+extern CPUSService1 pus_service_1;
 
-extern PUSService9 pus_service_9;
+extern CPUSService9 pus_service_9;
 
-extern PUSService5 pus_service_5;
+extern CPUSService5 pus_service_5;
 
-extern PUSService3 pus_service_3;
+extern CPUSService3 pus_service_3;
 
 extern PUSService12 pus_service_12;
 
-extern PUSService19 pus_service_19;
+extern CPUSService19 pus_service_19;
 
-extern PUSService20 pus_service_20;
+extern CPUSService20 pus_service_20;
 
-extern PUSService17 pus_service_17;
+extern CPUSService17 pus_service_17;
 
-extern PUSService128 pus_service_128;
+extern CPUSService128 pus_service_128;
 
-extern PUSService2 pus_service_2;
+extern CPUSService2 pus_service_2;
 
-extern PUSService6 pus_service_6;
+extern CPUSService6 pus_service_6;
 
-extern PUSService4 pus_service_4;
+extern CPUSService4 pus_service_4;
 
 extern ManagerTCExecutor mng_tc_executor;
 

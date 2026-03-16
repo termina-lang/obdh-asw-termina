@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service17.h"
 
-__status_int32_t PUSService17__exec17_1TC(const __termina_event_t * const __ev, PUSService17 * const self) {
+__status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * const __ev, CPUSService17 * const self) {
     
     #line 76 "src/service_libraries/pus_services/pus_service17.fin"
     __status_int32_t status;
@@ -75,10 +75,10 @@ __status_int32_t PUSService17__exec17_1TC(const __termina_event_t * const __ev, 
 
 }
 
-void PUSService17__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService17__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 135 "src/service_libraries/pus_services/pus_service17.fin"
-    PUSService17 * self = (PUSService17 *)__this;
+    CPUSService17 * self = (CPUSService17 *)__this;
 
     #line 135 "src/service_libraries/pus_services/pus_service17.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -104,7 +104,7 @@ void PUSService17__exec_tc(const __termina_event_t * const __ev, void * const __
     if (subtype == 1U) {
         
         #line 147 "src/service_libraries/pus_services/pus_service17.fin"
-        status = PUSService17__exec17_1TC(__ev, self);
+        status = CPUSService17__exec17_1TC(__ev, self);
 
     } else
     {

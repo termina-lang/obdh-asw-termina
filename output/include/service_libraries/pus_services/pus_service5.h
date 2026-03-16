@@ -56,20 +56,20 @@ typedef struct {
     } tm_channel;
     PS5ExecTCReqStatusUpdate exec_tc_req_status_update;
     uint32_t Ev_ID_enable_config[4U];
-} PUSService5;
+} CPUSService5;
 
-__status_int32_t PUSService5__exec5_5TC(const __termina_event_t * const __ev, PUSService5 * const self);
+__status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, CPUSService5 * const self);
 
-__status_int32_t PUSService5__exec5_6TC(const __termina_event_t * const __ev, PUSService5 * const self);
+__status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const __ev, CPUSService5 * const self);
 
-void PUSService5__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
+void CPUSService5__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 
-_Bool PUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const PUSService5 * const self, uint16_t Ev_ID);
+_Bool CPUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const CPUSService5 * const self, uint16_t Ev_ID);
 
-void PUSService5__is_Ev_ID_enabled_ext(const __termina_event_t * const __ev, void * const __this, uint16_t Ev_ID, _Bool * const p_enabled);
+void CPUSService5__is_Ev_ID_enabled_ext(const __termina_event_t * const __ev, void * const __this, uint16_t Ev_ID, _Bool * const p_enabled);
 
-void PUSService5__send_tm_5_2(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const status);
+void CPUSService5__send_tm_5_2(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const status);
 
-void PUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * const __this, uint16_t evID, const FaultInfo * const fault_info, __status_int32_t * const status);
+void CPUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * const __this, uint16_t evID, const FaultInfo * const fault_info, __status_int32_t * const status);
 
 #endif

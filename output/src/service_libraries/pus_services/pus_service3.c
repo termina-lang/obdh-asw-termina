@@ -1,10 +1,10 @@
 
 #include "service_libraries/pus_services/pus_service3.h"
 
-void PUSService3__do_hk(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const action_status) {
+void CPUSService3__do_hk(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const action_status) {
     
     #line 316 "src/service_libraries/pus_services/pus_service3.fin"
-    PUSService3 * self = (PUSService3 *)__this;
+    CPUSService3 * self = (CPUSService3 *)__this;
 
     #line 316 "src/service_libraries/pus_services/pus_service3.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -158,7 +158,7 @@ void PUSService3__do_hk(const __termina_event_t * const __ev, void * const __thi
 
 }
 
-__option_size_t PUSService3__get_SIDindex(const __termina_event_t * const __ev, const PUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
+__option_size_t CPUSService3__get_SIDindex(const __termina_event_t * const __ev, const CPUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 37 "src/service_libraries/pus_services/pus_service3.fin"
     __option_size_t index_found;
@@ -185,7 +185,7 @@ __option_size_t PUSService3__get_SIDindex(const __termina_event_t * const __ev, 
 
 }
 
-__status_int32_t PUSService3__exec3_31TC(const __termina_event_t * const __ev, PUSService3 * const self, PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
+__status_int32_t CPUSService3__exec3_31TC(const __termina_event_t * const __ev, CPUSService3 * const self, PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 170 "src/service_libraries/pus_services/pus_service3.fin"
     __status_int32_t status;
@@ -207,7 +207,7 @@ __status_int32_t PUSService3__exec3_31TC(const __termina_event_t * const __ev, P
     {
         
         #line 183 "src/service_libraries/pus_services/pus_service3.fin"
-        opt_index = PUSService3__get_SIDindex(__ev, self, &*exec_tc_req_status_update);
+        opt_index = CPUSService3__get_SIDindex(__ev, self, &*exec_tc_req_status_update);
 
         #line 187 "src/service_libraries/pus_services/pus_service3.fin"
         if (opt_index.__variant == Some) {
@@ -247,7 +247,7 @@ __status_int32_t PUSService3__exec3_31TC(const __termina_event_t * const __ev, P
 
 }
 
-__status_int32_t PUSService3__exec3_5TC(const __termina_event_t * const __ev, PUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
+__status_int32_t CPUSService3__exec3_5TC(const __termina_event_t * const __ev, CPUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 52 "src/service_libraries/pus_services/pus_service3.fin"
     __status_int32_t status;
@@ -269,7 +269,7 @@ __status_int32_t PUSService3__exec3_5TC(const __termina_event_t * const __ev, PU
     {
         
         #line 65 "src/service_libraries/pus_services/pus_service3.fin"
-        opt_index = PUSService3__get_SIDindex(__ev, self, exec_tc_req_status_update);
+        opt_index = CPUSService3__get_SIDindex(__ev, self, exec_tc_req_status_update);
 
         #line 69 "src/service_libraries/pus_services/pus_service3.fin"
         if (opt_index.__variant == Some) {
@@ -309,7 +309,7 @@ __status_int32_t PUSService3__exec3_5TC(const __termina_event_t * const __ev, PU
 
 }
 
-__status_int32_t PUSService3__exec3_6TC(const __termina_event_t * const __ev, PUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
+__status_int32_t CPUSService3__exec3_6TC(const __termina_event_t * const __ev, CPUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 111 "src/service_libraries/pus_services/pus_service3.fin"
     __status_int32_t status;
@@ -331,7 +331,7 @@ __status_int32_t PUSService3__exec3_6TC(const __termina_event_t * const __ev, PU
     {
         
         #line 124 "src/service_libraries/pus_services/pus_service3.fin"
-        opt_index = PUSService3__get_SIDindex(__ev, self, exec_tc_req_status_update);
+        opt_index = CPUSService3__get_SIDindex(__ev, self, exec_tc_req_status_update);
 
         #line 128 "src/service_libraries/pus_services/pus_service3.fin"
         if (opt_index.__variant == Some) {
@@ -371,10 +371,10 @@ __status_int32_t PUSService3__exec3_6TC(const __termina_event_t * const __ev, PU
 
 }
 
-void PUSService3__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService3__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 228 "src/service_libraries/pus_services/pus_service3.fin"
-    PUSService3 * self = (PUSService3 *)__this;
+    CPUSService3 * self = (CPUSService3 *)__this;
 
     #line 228 "src/service_libraries/pus_services/pus_service3.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -442,21 +442,21 @@ void PUSService3__exec_tc(const __termina_event_t * const __ev, void * const __t
         if (subtype == 5U) {
             
             #line 253 "src/service_libraries/pus_services/pus_service3.fin"
-            status = PUSService3__exec3_5TC(__ev, self, &exec_tc_req_status_update);
+            status = CPUSService3__exec3_5TC(__ev, self, &exec_tc_req_status_update);
 
         } else
         #line 255 "src/service_libraries/pus_services/pus_service3.fin"
         if (subtype == 6U) {
             
             #line 257 "src/service_libraries/pus_services/pus_service3.fin"
-            status = PUSService3__exec3_6TC(__ev, self, &exec_tc_req_status_update);
+            status = CPUSService3__exec3_6TC(__ev, self, &exec_tc_req_status_update);
 
         } else
         #line 259 "src/service_libraries/pus_services/pus_service3.fin"
         if (subtype == 31U) {
             
             #line 261 "src/service_libraries/pus_services/pus_service3.fin"
-            status = PUSService3__exec3_31TC(__ev, self, &exec_tc_req_status_update);
+            status = CPUSService3__exec3_31TC(__ev, self, &exec_tc_req_status_update);
 
         } else
         {
@@ -522,10 +522,10 @@ void PUSService3__exec_tc(const __termina_event_t * const __ev, void * const __t
 
 }
 
-void PUSService3__update_params(const __termina_event_t * const __ev, void * const __this) {
+void CPUSService3__update_params(const __termina_event_t * const __ev, void * const __this) {
     
     #line 395 "src/service_libraries/pus_services/pus_service3.fin"
-    PUSService3 * self = (PUSService3 *)__this;
+    CPUSService3 * self = (CPUSService3 *)__this;
 
     #line 395 "src/service_libraries/pus_services/pus_service3.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);

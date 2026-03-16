@@ -32,32 +32,32 @@ typedef struct {
     TCHandler event_action_packets[16U];
     EventActionConfig event_action_config[16U];
     PS19ExecTCReqStatusUpdate exec_tc_req_status_update;
-} PUSService19;
+} CPUSService19;
 
-__status_int32_t PUSService19__delete_event_action(const __termina_event_t * const __ev, PUSService19 * const self);
+__status_int32_t CPUSService19__delete_event_action(const __termina_event_t * const __ev, CPUSService19 * const self);
 
-__status_int32_t PUSService19__disable_event_action(const __termina_event_t * const __ev, PUSService19 * const self);
+__status_int32_t CPUSService19__disable_event_action(const __termina_event_t * const __ev, CPUSService19 * const self);
 
-__status_int32_t PUSService19__enable_event_action(const __termina_event_t * const __ev, PUSService19 * const self);
+__status_int32_t CPUSService19__enable_event_action(const __termina_event_t * const __ev, CPUSService19 * const self);
 
-FoundID PUSService19__get_free_event_action_index(const __termina_event_t * const __ev, const PUSService19 * const self);
+FoundID CPUSService19__get_free_event_action_index(const __termina_event_t * const __ev, const CPUSService19 * const self);
 
-FoundID PUSService19__is_ev_action_defined(const __termina_event_t * const __ev, const PUSService19 * const self, uint16_t evID);
+FoundID CPUSService19__is_ev_action_defined(const __termina_event_t * const __ev, const CPUSService19 * const self, uint16_t evID);
 
-__status_int32_t PUSService19__exec19_1TC(const __termina_event_t * const __ev, PUSService19 * const self);
+__status_int32_t CPUSService19__exec19_1TC(const __termina_event_t * const __ev, CPUSService19 * const self);
 
-__status_int32_t PUSService19__exec19_2TC(const __termina_event_t * const __ev, PUSService19 * const self);
+__status_int32_t CPUSService19__exec19_2TC(const __termina_event_t * const __ev, CPUSService19 * const self);
 
-__status_int32_t PUSService19__exec19_4TC(const __termina_event_t * const __ev, PUSService19 * const self);
+__status_int32_t CPUSService19__exec19_4TC(const __termina_event_t * const __ev, CPUSService19 * const self);
 
-__status_int32_t PUSService19__exec19_5TC(const __termina_event_t * const __ev, PUSService19 * const self);
+__status_int32_t CPUSService19__exec19_5TC(const __termina_event_t * const __ev, CPUSService19 * const self);
 
-void PUSService19__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
+void CPUSService19__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 
-void PUSService19__extract_action(const __termina_event_t * const __ev, void * const __this, size_t index, TCHandler * const action_packet);
+void CPUSService19__extract_action(const __termina_event_t * const __ev, void * const __this, size_t index, TCHandler * const action_packet);
 
-void PUSService19__get_pending_action_number(const __termina_event_t * const __ev, void * const __this, size_t paction_num[4U]);
+void CPUSService19__get_pending_action_number(const __termina_event_t * const __ev, void * const __this, size_t paction_num[4U]);
 
-void PUSService19__manage_event_action(const __termina_event_t * const __ev, void * const __this, uint16_t evID);
+void CPUSService19__manage_event_action(const __termina_event_t * const __ev, void * const __this, uint16_t evID);
 
 #endif

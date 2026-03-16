@@ -33,10 +33,10 @@ typedef struct {
         void (* send_tm)(const __termina_event_t * const, void * const, __termina_box_t, __status_int32_t * const);
     } tm_channel;
     PS17ExecTCReqStatusUpdate exec_tc_req_status_update;
-} PUSService17;
+} CPUSService17;
 
-__status_int32_t PUSService17__exec17_1TC(const __termina_event_t * const __ev, PUSService17 * const self);
+__status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * const __ev, CPUSService17 * const self);
 
-void PUSService17__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
+void CPUSService17__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 
 #endif

@@ -1,16 +1,16 @@
 
-twcep PUSService2::dev_drv_on_off::path0() = [
+twcep CPUSService2::dev_drv_on_off::path0() = [
     block@(110:36,113:79),
     invoke(gpio_driver.write_led)@(115:9,115:62),
     return@(117:9,117:22)
 ]
 
-twcep PUSService2::device_drv_is_on_off_address_valid::path0() = [
+twcep CPUSService2::device_drv_is_on_off_address_valid::path0() = [
     block@(90:31,104:9),
     return@(104:9,104:24)
 ]
 
-twcep PUSService2::exec2_1TC::path0() = [
+twcep CPUSService2::exec2_1TC::path0() = [
     block@(35:36,35:43),
     if@(37:9,44:11)[
         invoke(pus_service_1.send_tm_1_4_num_of_instr_not_valid)@(39:13,42:63)
@@ -18,7 +18,7 @@ twcep PUSService2::exec2_1TC::path0() = [
     return@(85:9,85:22)
 ]
 
-twcep PUSService2::exec2_1TC::path1() = [
+twcep CPUSService2::exec2_1TC::path1() = [
     block@(35:36,35:43),
     elif@(44:11,51:11)[
         invoke(pus_service_1.send_tm_1_4_device_address_not_valid)@(46:13,49:73)
@@ -26,7 +26,7 @@ twcep PUSService2::exec2_1TC::path1() = [
     return@(85:9,85:22)
 ]
 
-twcep PUSService2::exec2_1TC::path2() = [
+twcep CPUSService2::exec2_1TC::path2() = [
     block@(35:36,35:43),
     else@(51:11,85:9)[
         invoke(pus_service_1.notify_tm_1_3)@(53:13,57:37),
@@ -40,7 +40,7 @@ twcep PUSService2::exec2_1TC::path2() = [
     return@(85:9,85:22)
 ]
 
-twcep PUSService2::exec2_1TC::path3() = [
+twcep CPUSService2::exec2_1TC::path3() = [
     block@(35:36,35:43),
     else@(51:11,85:9)[
         invoke(pus_service_1.notify_tm_1_3)@(53:13,57:37),
@@ -54,7 +54,7 @@ twcep PUSService2::exec2_1TC::path3() = [
     return@(85:9,85:22)
 ]
 
-twcep PUSService2::exec_tc::path0() = [
+twcep CPUSService2::exec_tc::path0() = [
     block@(122:36,137:9),
     if@(137:9,150:9)[
         if@(139:13,143:15)[
@@ -65,7 +65,7 @@ twcep PUSService2::exec_tc::path0() = [
     return@(190:9,190:15)
 ]
 
-twcep PUSService2::exec_tc::path1() = [
+twcep CPUSService2::exec_tc::path1() = [
     block@(122:36,137:9),
     if@(137:9,150:9)[
         if@(139:13,143:15)[
@@ -80,7 +80,7 @@ twcep PUSService2::exec_tc::path1() = [
     return@(190:9,190:15)
 ]
 
-twcep PUSService2::exec_tc::path2() = [
+twcep CPUSService2::exec_tc::path2() = [
     block@(122:36,137:9),
     if@(137:9,150:9)[
         if@(139:13,143:15)[
@@ -95,7 +95,7 @@ twcep PUSService2::exec_tc::path2() = [
     return@(190:9,190:15)
 ]
 
-twcep PUSService2::exec_tc::path3() = [
+twcep CPUSService2::exec_tc::path3() = [
     block@(122:36,137:9),
     if@(137:9,150:9)[
         if@(139:13,143:15)[
@@ -110,12 +110,12 @@ twcep PUSService2::exec_tc::path3() = [
     return@(190:9,190:15)
 ]
 
-twcep PUSService2::exec_tc::path4() = [
+twcep CPUSService2::exec_tc::path4() = [
     block@(122:36,190:9),
     return@(190:9,190:15)
 ]
 
-twcep PUSService2::exec_tc::path5() = [
+twcep CPUSService2::exec_tc::path5() = [
     block@(122:36,150:9),
     case@(157:13,188:9)[
         if@(159:17,166:19)[
@@ -125,7 +125,7 @@ twcep PUSService2::exec_tc::path5() = [
     return@(190:9,190:15)
 ]
 
-twcep PUSService2::exec_tc::path6() = [
+twcep CPUSService2::exec_tc::path6() = [
     block@(122:36,150:9),
     case@(157:13,188:9)[
         elif@(166:19,173:19)[
@@ -135,7 +135,7 @@ twcep PUSService2::exec_tc::path6() = [
     return@(190:9,190:15)
 ]
 
-twcep PUSService2::exec_tc::path7() = [
+twcep CPUSService2::exec_tc::path7() = [
     block@(122:36,150:9),
     case@(157:13,188:9)[
         elif@(173:19,181:19)[

@@ -13,7 +13,7 @@ enum FaultInfo {
 };
 
 
-interface PUSS5Iface {
+interface IPUSService5 {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>);
     procedure is_Ev_ID_enabled_ext(&mut self, Ev_ID: u16, p_enabled: &mut bool); 
@@ -22,7 +22,7 @@ interface PUSS5Iface {
 
 };
 
-resource class PUSService5 provides PUSS5Iface {
+resource class CPUSService5 provides IPUSService5 {
 
     Ev_ID_enable_config : [u32; 4];
 
@@ -57,7 +57,7 @@ resource class PUSService5 provides PUSS5Iface {
     */
     obt_manager : access OBTManagerIface;
 
-    pus_service_1 : access PUSService1Iface;
+    pus_service_1 : access IPUSService1;
 
     method is_Ev_ID_enabled(&self, Ev_ID : u16) -> bool {
 

@@ -7,15 +7,15 @@ import service_libraries.pus_services.pus_service1;
 
 import service_libraries.pus_services.pus_service128.types;
 
-interface PUSS128Iface {
+interface IPUSService128 {
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>, reebot_flag : &mut bool);
 };
 
-resource class PUSService128 provides PUSS128Iface {
+resource class CPUSService128 provides IPUSService128 {
 
     exec_tc_req_status_update : PS128ExecTCReqStatusUpdate;
 
-    pus_service_1 : access PUSService1Iface;
+    pus_service_1 : access IPUSService1;
 
     method exec128_1TC(&priv self) -> Status<i32> {
 

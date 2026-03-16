@@ -10,33 +10,33 @@ import service_libraries.pus_services.pus_service9.types;
 
 
 /**
- * @interface PUSS9Iface
+ * @interface IPUSService9
  * @brief Interface for PUS Service 9 Time Management.
  *
  * Defines the methods required to get the current on-board time (OBT) and
  * to execute telecommands related to time managemen service.
  */
-interface PUSS9Iface {
+interface IPUSService9 {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>);
 
 };
 
 /**
- * @resourceclass PUSService9
+ * @resourceclass CPUSService9
  * @brief Resource class implementing PUS Service 9: Time Management.
  *
  * Provides on-board time tracking, telecommand execution, and telemetry generation
  * for time management telecommands according to PUS specifications. It implements
- * the PUSS9Iface interface.
+ * the IPUSService9 interface.
  */
-resource class PUSService9 provides PUSS9Iface {
+resource class CPUSService9 provides IPUSService9 {
 
     exec_tc_req_status_update : PS9ExecTCReqStatusUpdate; /**< Data extracted from the telecommand */
 
     obt_manager : access OBTManagerIface;
 
-    pus_service_1 : access PUSService1Iface;
+    pus_service_1 : access IPUSService1;
 
     /**
      * @brief Execute TC subtype 129 (specific time management TC - set current OBT).

@@ -1,5 +1,5 @@
 
-twcep PUSService128::exec128_1TC::path0() = [
+twcep CPUSService128::exec128_1TC::path0() = [
     block@(22:36,22:43),
     invoke(pus_service_1.notify_tm_1_3)@(24:9,28:29),
     if@(30:9,39:9)[
@@ -9,7 +9,7 @@ twcep PUSService128::exec128_1TC::path0() = [
     return@(39:9,39:22)
 ]
 
-twcep PUSService128::exec_tc::path0() = [
+twcep CPUSService128::exec_tc::path0() = [
     block@(45:36,50:87),
     if@(52:9,56:11)[
         call(exec128_1TC)@(54:22,54:41)
@@ -18,7 +18,7 @@ twcep PUSService128::exec_tc::path0() = [
     return@(97:9,97:15)
 ]
 
-twcep PUSService128::exec_tc::path1() = [
+twcep CPUSService128::exec_tc::path1() = [
     block@(45:36,50:87),
     if@(52:9,56:11)[
         call(exec128_1TC)@(54:22,54:41)
@@ -32,7 +32,7 @@ twcep PUSService128::exec_tc::path1() = [
     return@(97:9,97:15)
 ]
 
-twcep PUSService128::exec_tc::path2() = [
+twcep CPUSService128::exec_tc::path2() = [
     block@(45:36,50:87),
     if@(52:9,56:11)[
         call(exec128_1TC)@(54:22,54:41)
@@ -46,12 +46,12 @@ twcep PUSService128::exec_tc::path2() = [
     return@(97:9,97:15)
 ]
 
-twcep PUSService128::exec_tc::path3() = [
+twcep CPUSService128::exec_tc::path3() = [
     block@(45:36,95:67),
     return@(97:9,97:15)
 ]
 
-twcep PUSService128::exec_tc::path4() = [
+twcep CPUSService128::exec_tc::path4() = [
     block@(45:36,62:9),
     case@(69:13,93:9)[
         if@(72:17,79:19)[
@@ -62,7 +62,7 @@ twcep PUSService128::exec_tc::path4() = [
     return@(97:9,97:15)
 ]
 
-twcep PUSService128::exec_tc::path5() = [
+twcep CPUSService128::exec_tc::path5() = [
     block@(45:36,62:9),
     case@(69:13,93:9)[
         elif@(79:19,86:19)[

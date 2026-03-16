@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service128.h"
 
-__status_int32_t PUSService128__exec128_1TC(const __termina_event_t * const __ev, PUSService128 * const self) {
+__status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * const __ev, CPUSService128 * const self) {
     
     #line 22 "src/service_libraries/pus_services/pus_service128.fin"
     __status_int32_t status;
@@ -27,10 +27,10 @@ __status_int32_t PUSService128__exec128_1TC(const __termina_event_t * const __ev
 
 }
 
-void PUSService128__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status, _Bool * const reebot_flag) {
+void CPUSService128__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status, _Bool * const reebot_flag) {
     
     #line 43 "src/service_libraries/pus_services/pus_service128.fin"
-    PUSService128 * self = (PUSService128 *)__this;
+    CPUSService128 * self = (CPUSService128 *)__this;
 
     #line 43 "src/service_libraries/pus_services/pus_service128.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -56,7 +56,7 @@ void PUSService128__exec_tc(const __termina_event_t * const __ev, void * const _
     if (subtype == 1U) {
         
         #line 54 "src/service_libraries/pus_services/pus_service128.fin"
-        status = PUSService128__exec128_1TC(__ev, self);
+        status = CPUSService128__exec128_1TC(__ev, self);
 
     } else
     {

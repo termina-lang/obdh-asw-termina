@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service2.h"
 
-__status_int32_t PUSService2__dev_drv_on_off(const __termina_event_t * const __ev, PUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
+__status_int32_t CPUSService2__dev_drv_on_off(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 110 "src/service_libraries/pus_services/pus_service2.fin"
     __status_int32_t status;
@@ -22,7 +22,7 @@ __status_int32_t PUSService2__dev_drv_on_off(const __termina_event_t * const __e
 
 }
 
-_Bool PUSService2__device_drv_is_on_off_address_valid(const __termina_event_t * const __ev, const PUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
+_Bool CPUSService2__device_drv_is_on_off_address_valid(const __termina_event_t * const __ev, const CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 90 "src/service_libraries/pus_services/pus_service2.fin"
     _Bool is_valid = 0;
@@ -43,7 +43,7 @@ _Bool PUSService2__device_drv_is_on_off_address_valid(const __termina_event_t * 
 
 }
 
-__status_int32_t PUSService2__exec2_1TC(const __termina_event_t * const __ev, PUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
+__status_int32_t CPUSService2__exec2_1TC(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 35 "src/service_libraries/pus_services/pus_service2.fin"
     __status_int32_t status;
@@ -58,7 +58,7 @@ __status_int32_t PUSService2__exec2_1TC(const __termina_event_t * const __ev, PU
 
     } else
     #line 44 "src/service_libraries/pus_services/pus_service2.fin"
-    if (PUSService2__device_drv_is_on_off_address_valid(__ev, self, exec_tc_req_status_update) == 0) {
+    if (CPUSService2__device_drv_is_on_off_address_valid(__ev, self, exec_tc_req_status_update) == 0) {
         
         #line 46 "src/service_libraries/pus_services/pus_service2.fin"
         self->pus_service_1.send_tm_1_4_device_address_not_valid(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->dev_address, &status);
@@ -73,7 +73,7 @@ __status_int32_t PUSService2__exec2_1TC(const __termina_event_t * const __ev, PU
         if (status.__variant == Success) {
             
             #line 61 "src/service_libraries/pus_services/pus_service2.fin"
-            status = PUSService2__dev_drv_on_off(__ev, self, exec_tc_req_status_update);
+            status = CPUSService2__dev_drv_on_off(__ev, self, exec_tc_req_status_update);
 
             #line 63 "src/service_libraries/pus_services/pus_service2.fin"
             if (status.__variant == Success) {
@@ -98,10 +98,10 @@ __status_int32_t PUSService2__exec2_1TC(const __termina_event_t * const __ev, PU
 
 }
 
-void PUSService2__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService2__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 120 "src/service_libraries/pus_services/pus_service2.fin"
-    PUSService2 * self = (PUSService2 *)__this;
+    CPUSService2 * self = (CPUSService2 *)__this;
 
     #line 120 "src/service_libraries/pus_services/pus_service2.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -159,7 +159,7 @@ void PUSService2__exec_tc(const __termina_event_t * const __ev, void * const __t
         if (subtype == 1U) {
             
             #line 141 "src/service_libraries/pus_services/pus_service2.fin"
-            status = PUSService2__exec2_1TC(__ev, self, &exec_tc_req_status_update);
+            status = CPUSService2__exec2_1TC(__ev, self, &exec_tc_req_status_update);
 
         } else
         {

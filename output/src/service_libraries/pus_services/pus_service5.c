@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service5.h"
 
-__status_int32_t PUSService5__exec5_5TC(const __termina_event_t * const __ev, PUSService5 * const self) {
+__status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, CPUSService5 * const self) {
     
     #line 88 "src/service_libraries/pus_services/pus_service5.fin"
     __status_int32_t status;
@@ -54,7 +54,7 @@ __status_int32_t PUSService5__exec5_5TC(const __termina_event_t * const __ev, PU
 
 }
 
-__status_int32_t PUSService5__exec5_6TC(const __termina_event_t * const __ev, PUSService5 * const self) {
+__status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const __ev, CPUSService5 * const self) {
     
     #line 136 "src/service_libraries/pus_services/pus_service5.fin"
     __status_int32_t status;
@@ -107,10 +107,10 @@ __status_int32_t PUSService5__exec5_6TC(const __termina_event_t * const __ev, PU
 
 }
 
-void PUSService5__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService5__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 262 "src/service_libraries/pus_services/pus_service5.fin"
-    PUSService5 * self = (PUSService5 *)__this;
+    CPUSService5 * self = (CPUSService5 *)__this;
 
     #line 262 "src/service_libraries/pus_services/pus_service5.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -153,14 +153,14 @@ void PUSService5__exec_tc(const __termina_event_t * const __ev, void * const __t
         if (subtype == 5U) {
             
             #line 281 "src/service_libraries/pus_services/pus_service5.fin"
-            status = PUSService5__exec5_5TC(__ev, self);
+            status = CPUSService5__exec5_5TC(__ev, self);
 
         } else
         #line 283 "src/service_libraries/pus_services/pus_service5.fin"
         if (subtype == 6U) {
             
             #line 285 "src/service_libraries/pus_services/pus_service5.fin"
-            status = PUSService5__exec5_6TC(__ev, self);
+            status = CPUSService5__exec5_6TC(__ev, self);
 
         } else
         {
@@ -226,7 +226,7 @@ void PUSService5__exec_tc(const __termina_event_t * const __ev, void * const __t
 
 }
 
-_Bool PUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const PUSService5 * const self, uint16_t Ev_ID) {
+_Bool CPUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const CPUSService5 * const self, uint16_t Ev_ID) {
     
     #line 64 "src/service_libraries/pus_services/pus_service5.fin"
     _Bool enabled = 0;
@@ -258,16 +258,16 @@ _Bool PUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const 
 
 }
 
-void PUSService5__is_Ev_ID_enabled_ext(const __termina_event_t * const __ev, void * const __this, uint16_t Ev_ID, _Bool * const p_enabled) {
+void CPUSService5__is_Ev_ID_enabled_ext(const __termina_event_t * const __ev, void * const __this, uint16_t Ev_ID, _Bool * const p_enabled) {
     
     #line 79 "src/service_libraries/pus_services/pus_service5.fin"
-    PUSService5 * self = (PUSService5 *)__this;
+    CPUSService5 * self = (CPUSService5 *)__this;
 
     #line 79 "src/service_libraries/pus_services/pus_service5.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 81 "src/service_libraries/pus_services/pus_service5.fin"
-    *p_enabled = PUSService5__is_Ev_ID_enabled(__ev, self, Ev_ID);
+    *p_enabled = CPUSService5__is_Ev_ID_enabled(__ev, self, Ev_ID);
 
     #line 83 "src/service_libraries/pus_services/pus_service5.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
@@ -277,10 +277,10 @@ void PUSService5__is_Ev_ID_enabled_ext(const __termina_event_t * const __ev, voi
 
 }
 
-void PUSService5__send_tm_5_2(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const status) {
+void CPUSService5__send_tm_5_2(const __termina_event_t * const __ev, void * const __this, __status_int32_t * const status) {
     
     #line 182 "src/service_libraries/pus_services/pus_service5.fin"
-    PUSService5 * self = (PUSService5 *)__this;
+    CPUSService5 * self = (CPUSService5 *)__this;
 
     #line 182 "src/service_libraries/pus_services/pus_service5.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -356,10 +356,10 @@ void PUSService5__send_tm_5_2(const __termina_event_t * const __ev, void * const
 
 }
 
-void PUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * const __this, uint16_t evID, const FaultInfo * const fault_info, __status_int32_t * const status) {
+void CPUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * const __this, uint16_t evID, const FaultInfo * const fault_info, __status_int32_t * const status) {
     
     #line 220 "src/service_libraries/pus_services/pus_service5.fin"
-    PUSService5 * self = (PUSService5 *)__this;
+    CPUSService5 * self = (CPUSService5 *)__this;
 
     #line 220 "src/service_libraries/pus_services/pus_service5.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);

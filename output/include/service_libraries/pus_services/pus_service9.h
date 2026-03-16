@@ -25,10 +25,10 @@ typedef struct {
         void (* set_obt)(const __termina_event_t * const, void * const, MissionOBT);
     } obt_manager;
     PS9ExecTCReqStatusUpdate exec_tc_req_status_update;
-} PUSService9;
+} CPUSService9;
 
-__status_int32_t PUSService9__exec9_129TC(const __termina_event_t * const __ev, PUSService9 * const self);
+__status_int32_t CPUSService9__exec9_129TC(const __termina_event_t * const __ev, CPUSService9 * const self);
 
-void PUSService9__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
+void CPUSService9__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 
 #endif

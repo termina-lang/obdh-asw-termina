@@ -33,29 +33,29 @@ TMCounter telemetry_counter;
 
 OBTManager obt_manager;
 
-PUSService1 pus_service_1;
+CPUSService1 pus_service_1;
 
-PUSService9 pus_service_9;
+CPUSService9 pus_service_9;
 
-PUSService5 pus_service_5;
+CPUSService5 pus_service_5;
 
-PUSService3 pus_service_3;
+CPUSService3 pus_service_3;
 
 PUSService12 pus_service_12;
 
-PUSService19 pus_service_19;
+CPUSService19 pus_service_19;
 
-PUSService20 pus_service_20;
+CPUSService20 pus_service_20;
 
-PUSService17 pus_service_17;
+CPUSService17 pus_service_17;
 
-PUSService128 pus_service_128;
+CPUSService128 pus_service_128;
 
-PUSService2 pus_service_2;
+CPUSService2 pus_service_2;
 
-PUSService6 pus_service_6;
+CPUSService6 pus_service_6;
 
-PUSService4 pus_service_4;
+CPUSService4 pus_service_4;
 
 ManagerTCExecutor mng_tc_executor;
 
