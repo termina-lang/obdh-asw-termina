@@ -25,13 +25,13 @@ CTCChannel tc_channel;
 
 CAPBUARTDriver uart_drv;
 
-GPIODriver gpio_drv;
+CGPIODriver gpio_drv;
 
-TMChannel telemetry_channel;
+CTMChannel tm_channel;
 
-TMCounter telemetry_counter;
+CTMCounter tm_counter;
 
-OBTManager obt_manager;
+COBTManager obt_manager;
 
 CPUSService1 pus_service_1;
 
@@ -41,7 +41,7 @@ CPUSService5 pus_service_5;
 
 CPUSService3 pus_service_3;
 
-PUSService12 pus_service_12;
+CPUSService12 pus_service_12;
 
 CPUSService19 pus_service_19;
 
@@ -57,16 +57,16 @@ CPUSService6 pus_service_6;
 
 CPUSService4 pus_service_4;
 
-ManagerTCExecutor mng_tc_executor;
+CManagerTExecutor mng_tc_executor;
 
-Init init;
+CInitHandler init_hdlr;
 
 CCharDevIRQHandler uart_hdlr;
 
-TCRXBottomHalfTask tc_rx_bottom_half_task;
+CTXRxBottomHalfTask tc_rx_bottom_half_task;
 
-ICUManager icu_manager;
+CICUManagerTask icu_manager;
 
-HouseKeepingFDIR hk_fdir;
+CHousekeepingFDIRTask hk_fdir;
 
-PUSBKGTCExecutor pus_bkg_tc_executor;
+CBKGTCExecutorTask bkg_tc_executor;

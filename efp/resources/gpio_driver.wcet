@@ -1,0 +1,6 @@
+wcet rtems5-leon3-qemu = {
+
+    GPIODriver::init_gpio::path0() = 3e-05,
+    GPIODriver::write_led::path0() = 3e-05
+
+};

@@ -21,7 +21,7 @@ struct GPIO_registers {
  * 
  * Provides procedures to initialize GPIO and control LED states.
  */
-interface GPIODrvIface {
+interface IGPIODriver {
     procedure init_gpio (&mut self);
     procedure write_led (&mut self, led : u8, value : u8, status : &mut Status<i32>);
 };
@@ -33,7 +33,7 @@ interface GPIODrvIface {
  * Manages GPIO registers and provides functionality to initialize GPIO pins
  * and control LEDs connected to specific GPIO outputs.
  */
-resource class CGPIODriver provides GPIODrvIface {
+resource class CGPIODriver provides IGPIODriver {
 
     /// Memory-mapped access to GPIO registers (e.g., 0xfc083000)
     registers: loc GPIO_registers;

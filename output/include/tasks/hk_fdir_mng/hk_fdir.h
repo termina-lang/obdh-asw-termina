@@ -55,16 +55,16 @@ typedef struct {
     __termina_out_port_t action_tc_message_queue_output;
     __termina_id_t hkfdir_message_queue_input;
     __termina_id_t hk_fdir_timer_ev;
-} HouseKeepingFDIR;
+} CHousekeepingFDIRTask;
 
-void __HouseKeepingFDIR__termina_task(void * const arg);
+void __CHousekeepingFDIRTask__termina_task(void * const arg);
 
-__status_int32_t HouseKeepingFDIR__check_pending_actions(const __termina_event_t * const __ev, void * const __this);
+__status_int32_t CHousekeepingFDIRTask__check_pending_actions(const __termina_event_t * const __ev, void * const __this);
 
-__status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev, void * const __this);
+__status_int32_t CHousekeepingFDIRTask__do_fdir(const __termina_event_t * const __ev, void * const __this);
 
-__status_int32_t HouseKeepingFDIR__do_hk_fdir(const __termina_event_t * const __ev, void * const __this, TimeVal _current_time);
+__status_int32_t CHousekeepingFDIRTask__do_hk_fdir(const __termina_event_t * const __ev, void * const __this, TimeVal _current_time);
 
-__status_int32_t HouseKeepingFDIR__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
+__status_int32_t CHousekeepingFDIRTask__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
 
 #endif

@@ -1,10 +1,10 @@
 
 #include "resources/tm_channel.h"
 
-void TMChannel__send_tm(const __termina_event_t * const __ev, void * const __this, __termina_box_t tm_handler, __status_int32_t * const status) {
+void CTMChannel__send_tm(const __termina_event_t * const __ev, void * const __this, __termina_box_t tm_handler, __status_int32_t * const status) {
     
     #line 52 "src/resources/tm_channel.fin"
-    TMChannel * self = (TMChannel *)__this;
+    CTMChannel * self = (CTMChannel *)__this;
 
     #line 52 "src/resources/tm_channel.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);

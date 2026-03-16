@@ -9,10 +9,10 @@ import service_libraries.pus_tm_handler;
 
 
 /**
- * @interface TMChannelIface
+ * @interface ITMChannel
  * @brief Interface for sending telemetry data.
  */
-interface TMChannelIface {
+interface ITMChannel {
 
     procedure send_tm(&mut self, tm_handler : box TMHandler, status : &mut Status<i32>);
 
@@ -26,7 +26,7 @@ interface TMChannelIface {
  * This class uses a UART driver to send CCSDS-PUS TM packets and handles memory management
  * via an allocator.
  */
-resource class CTMChannel provides TMChannelIface {
+resource class CTMChannel provides ITMChannel {
 
     /**
      * @brief Device driver interface used to transmit telemetry data.

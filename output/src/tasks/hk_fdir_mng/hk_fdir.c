@@ -3,10 +3,10 @@
 
 const size_t num_actions_per_second = 2U;
 
-__status_int32_t HouseKeepingFDIR__check_pending_actions(const __termina_event_t * const __ev, void * const __this) {
+__status_int32_t CHousekeepingFDIRTask__check_pending_actions(const __termina_event_t * const __ev, void * const __this) {
     
     #line 96 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
+    CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)__this;
 
     #line 98 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     __status_int32_t result;
@@ -100,10 +100,10 @@ __status_int32_t HouseKeepingFDIR__check_pending_actions(const __termina_event_t
 
 }
 
-__status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev, void * const __this) {
+__status_int32_t CHousekeepingFDIRTask__do_fdir(const __termina_event_t * const __ev, void * const __this) {
     
     #line 53 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
+    CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)__this;
 
     #line 55 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     __status_int32_t result;
@@ -166,7 +166,7 @@ __status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev,
     if (result.__variant == Success) {
         
         #line 89 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        return HouseKeepingFDIR__check_pending_actions(__ev, self);
+        return CHousekeepingFDIRTask__check_pending_actions(__ev, self);
 
     } else
     {
@@ -178,10 +178,10 @@ __status_int32_t HouseKeepingFDIR__do_fdir(const __termina_event_t * const __ev,
 
 }
 
-__status_int32_t HouseKeepingFDIR__do_hk_fdir(const __termina_event_t * const __ev, void * const __this, TimeVal _current_time) {
+__status_int32_t CHousekeepingFDIRTask__do_hk_fdir(const __termina_event_t * const __ev, void * const __this, TimeVal _current_time) {
     
     #line 156 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
+    CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)__this;
 
     #line 158 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     __status_int32_t result;
@@ -201,7 +201,7 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(const __termina_event_t * const __
     if (result.__variant == Success) {
         
         #line 165 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        return HouseKeepingFDIR__do_fdir(__ev, self);
+        return CHousekeepingFDIRTask__do_fdir(__ev, self);
 
     } else
     {
@@ -213,10 +213,10 @@ __status_int32_t HouseKeepingFDIR__do_hk_fdir(const __termina_event_t * const __
 
 }
 
-__status_int32_t HouseKeepingFDIR__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
+__status_int32_t CHousekeepingFDIRTask__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
     
     #line 179 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    HouseKeepingFDIR * self = (HouseKeepingFDIR *)__this;
+    CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)__this;
 
     #line 181 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     __status_int32_t status;
@@ -276,9 +276,9 @@ __status_int32_t HouseKeepingFDIR__exec_tc(const __termina_event_t * const __ev,
 
 }
 
-void __HouseKeepingFDIR__termina_task(void * arg) {
+void __CHousekeepingFDIRTask__termina_task(void * arg) {
     
-    HouseKeepingFDIR * self = (HouseKeepingFDIR *)arg;
+    CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)arg;
 
     int32_t status = 0L;
 
@@ -300,7 +300,7 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
 
         switch (event.port_id) {
             
-            case __HouseKeepingFDIR__hk_fdir_timer_ev:
+            case __CHousekeepingFDIRTask__hk_fdir_timer_ev:
 
                 __termina_msg_queue__recv(self->hk_fdir_timer_ev, (void *)&do_hk_fdir__msg_data, &status);
 
@@ -308,7 +308,7 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
                     __termina_except__msg_queue_recv_error(self->hk_fdir_timer_ev, status);
                 }
 
-                result = HouseKeepingFDIR__do_hk_fdir(&event, self, do_hk_fdir__msg_data);
+                result = CHousekeepingFDIRTask__do_hk_fdir(&event, self, do_hk_fdir__msg_data);
 
                 if (result.__variant != Success) {
                     
@@ -316,13 +316,13 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
                     source.__variant = ExceptSource__Handler;
                     source.Task.__0 = self->__task_id;
 
-                    __termina_except__action_failure(source, __HouseKeepingFDIR__hk_fdir_timer_ev, result.Failure.__0);
+                    __termina_except__action_failure(source, __CHousekeepingFDIRTask__hk_fdir_timer_ev, result.Failure.__0);
 
                 }
 
                 break;
 
-            case __HouseKeepingFDIR__hkfdir_message_queue_input:
+            case __CHousekeepingFDIRTask__hkfdir_message_queue_input:
 
                 __termina_msg_queue__recv(self->hkfdir_message_queue_input, (void *)&exec_tc__msg_data, &status);
 
@@ -330,7 +330,7 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
                     __termina_except__msg_queue_recv_error(self->hkfdir_message_queue_input, status);
                 }
 
-                result = HouseKeepingFDIR__exec_tc(&event, self, exec_tc__msg_data);
+                result = CHousekeepingFDIRTask__exec_tc(&event, self, exec_tc__msg_data);
 
                 if (result.__variant != Success) {
                     
@@ -338,7 +338,7 @@ void __HouseKeepingFDIR__termina_task(void * arg) {
                     source.__variant = ExceptSource__Handler;
                     source.Task.__0 = self->__task_id;
 
-                    __termina_except__action_failure(source, __HouseKeepingFDIR__hkfdir_message_queue_input, result.Failure.__0);
+                    __termina_except__action_failure(source, __CHousekeepingFDIRTask__hkfdir_message_queue_input, result.Failure.__0);
 
                 }
 

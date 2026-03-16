@@ -1,10 +1,10 @@
 
 #include "tasks/tc_rx.h"
 
-__status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this, size_t size) {
+__status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this, size_t size) {
     
     #line 15 "src/tasks/tc_rx.fin"
-    TCRXBottomHalfTask * self = (TCRXBottomHalfTask *)__this;
+    CTXRxBottomHalfTask * self = (CTXRxBottomHalfTask *)__this;
 
     #line 17 "src/tasks/tc_rx.fin"
     __status_int32_t ret;
@@ -92,9 +92,9 @@ __status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev
 
 }
 
-void __TCRXBottomHalfTask__termina_task(void * arg) {
+void __CTXRxBottomHalfTask__termina_task(void * arg) {
     
-    TCRXBottomHalfTask * self = (TCRXBottomHalfTask *)arg;
+    CTXRxBottomHalfTask * self = (CTXRxBottomHalfTask *)arg;
 
     int32_t status = 0L;
 
@@ -115,7 +115,7 @@ void __TCRXBottomHalfTask__termina_task(void * arg) {
 
         switch (event.port_id) {
             
-            case __TCRXBottomHalfTask__rx_tc:
+            case __CTXRxBottomHalfTask__rx_tc:
 
                 __termina_msg_queue__recv(self->rx_tc, (void *)&get_tc__msg_data, &status);
 
@@ -123,7 +123,7 @@ void __TCRXBottomHalfTask__termina_task(void * arg) {
                     __termina_except__msg_queue_recv_error(self->rx_tc, status);
                 }
 
-                result = TCRXBottomHalfTask__get_tc(&event, self, get_tc__msg_data);
+                result = CTXRxBottomHalfTask__get_tc(&event, self, get_tc__msg_data);
 
                 if (result.__variant != Success) {
                     
@@ -131,7 +131,7 @@ void __TCRXBottomHalfTask__termina_task(void * arg) {
                     source.__variant = ExceptSource__Handler;
                     source.Task.__0 = self->__task_id;
 
-                    __termina_except__action_failure(source, __TCRXBottomHalfTask__rx_tc, result.Failure.__0);
+                    __termina_except__action_failure(source, __CTXRxBottomHalfTask__rx_tc, result.Failure.__0);
 
                 }
 

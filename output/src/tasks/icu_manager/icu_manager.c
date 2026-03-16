@@ -1,10 +1,10 @@
 
 #include "tasks/icu_manager/icu_manager.h"
 
-__status_int32_t ICUManager__process_action_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
+__status_int32_t CICUManagerTask__process_action_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
     
     #line 124 "src/tasks/icu_manager/icu_manager.fin"
-    ICUManager * self = (ICUManager *)__this;
+    CICUManagerTask * self = (CICUManagerTask *)__this;
 
     #line 126 "src/tasks/icu_manager/icu_manager.fin"
     __status_int32_t ret;
@@ -63,10 +63,10 @@ __status_int32_t ICUManager__process_action_tc(const __termina_event_t * const _
 
 }
 
-__status_int32_t ICUManager__process_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
+__status_int32_t CICUManagerTask__process_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
     
     #line 52 "src/tasks/icu_manager/icu_manager.fin"
-    ICUManager * self = (ICUManager *)__this;
+    CICUManagerTask * self = (CICUManagerTask *)__this;
 
     #line 54 "src/tasks/icu_manager/icu_manager.fin"
     __status_int32_t ret;
@@ -149,9 +149,9 @@ __status_int32_t ICUManager__process_tc(const __termina_event_t * const __ev, vo
 
 }
 
-void __ICUManager__termina_task(void * arg) {
+void __CICUManagerTask__termina_task(void * arg) {
     
-    ICUManager * self = (ICUManager *)arg;
+    CICUManagerTask * self = (CICUManagerTask *)arg;
 
     int32_t status = 0L;
 
@@ -173,7 +173,7 @@ void __ICUManager__termina_task(void * arg) {
 
         switch (event.port_id) {
             
-            case __ICUManager__tc_message_queue_input:
+            case __CICUManagerTask__tc_message_queue_input:
 
                 __termina_msg_queue__recv(self->tc_message_queue_input, (void *)&process_tc__msg_data, &status);
 
@@ -181,7 +181,7 @@ void __ICUManager__termina_task(void * arg) {
                     __termina_except__msg_queue_recv_error(self->tc_message_queue_input, status);
                 }
 
-                result = ICUManager__process_tc(&event, self, process_tc__msg_data);
+                result = CICUManagerTask__process_tc(&event, self, process_tc__msg_data);
 
                 if (result.__variant != Success) {
                     
@@ -189,13 +189,13 @@ void __ICUManager__termina_task(void * arg) {
                     source.__variant = ExceptSource__Handler;
                     source.Task.__0 = self->__task_id;
 
-                    __termina_except__action_failure(source, __ICUManager__tc_message_queue_input, result.Failure.__0);
+                    __termina_except__action_failure(source, __CICUManagerTask__tc_message_queue_input, result.Failure.__0);
 
                 }
 
                 break;
 
-            case __ICUManager__action_tc_message_queue_input:
+            case __CICUManagerTask__action_tc_message_queue_input:
 
                 __termina_msg_queue__recv(self->action_tc_message_queue_input, (void *)&process_action_tc__msg_data, &status);
 
@@ -203,7 +203,7 @@ void __ICUManager__termina_task(void * arg) {
                     __termina_except__msg_queue_recv_error(self->action_tc_message_queue_input, status);
                 }
 
-                result = ICUManager__process_action_tc(&event, self, process_action_tc__msg_data);
+                result = CICUManagerTask__process_action_tc(&event, self, process_action_tc__msg_data);
 
                 if (result.__variant != Success) {
                     
@@ -211,7 +211,7 @@ void __ICUManager__termina_task(void * arg) {
                     source.__variant = ExceptSource__Handler;
                     source.Task.__0 = self->__task_id;
 
-                    __termina_except__action_failure(source, __ICUManager__action_tc_message_queue_input, result.Failure.__0);
+                    __termina_except__action_failure(source, __CICUManagerTask__action_tc_message_queue_input, result.Failure.__0);
 
                 }
 

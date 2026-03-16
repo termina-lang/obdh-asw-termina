@@ -1,10 +1,10 @@
 
 #include "tasks/icu_manager/mng_tc_executor.h"
 
-void ManagerTCExecutor__PUS_prio_exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const status, _Bool * const reebot_flag) {
+void CManagerTExecutor__PUS_prio_exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const status, _Bool * const reebot_flag) {
     
     #line 59 "src/tasks/icu_manager/mng_tc_executor.fin"
-    ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
+    CManagerTExecutor * self = (CManagerTExecutor *)__this;
 
     #line 59 "src/tasks/icu_manager/mng_tc_executor.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -55,10 +55,10 @@ void ManagerTCExecutor__PUS_prio_exec_tc(const __termina_event_t * const __ev, v
 
 }
 
-void ManagerTCExecutor__mng_tc_acceptation(const __termina_event_t * const __ev, void * const __this, const TCHandler * const tc_handler, __status_int32_t * const status) {
+void CManagerTExecutor__mng_tc_acceptation(const __termina_event_t * const __ev, void * const __this, const TCHandler * const tc_handler, __status_int32_t * const status) {
     
     #line 101 "src/tasks/icu_manager/mng_tc_executor.fin"
-    ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
+    CManagerTExecutor * self = (CManagerTExecutor *)__this;
 
     #line 101 "src/tasks/icu_manager/mng_tc_executor.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -74,10 +74,10 @@ void ManagerTCExecutor__mng_tc_acceptation(const __termina_event_t * const __ev,
 
 }
 
-void ManagerTCExecutor__mng_tc_rejection(const __termina_event_t * const __ev, void * const __this, const TCHandler * const tc_handler, const TCStatus * const tc_status, __status_int32_t * const status) {
+void CManagerTExecutor__mng_tc_rejection(const __termina_event_t * const __ev, void * const __this, const TCHandler * const tc_handler, const TCStatus * const tc_status, __status_int32_t * const status) {
     
     #line 122 "src/tasks/icu_manager/mng_tc_executor.fin"
-    ManagerTCExecutor * self = (ManagerTCExecutor *)__this;
+    CManagerTExecutor * self = (CManagerTExecutor *)__this;
 
     #line 122 "src/tasks/icu_manager/mng_tc_executor.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);

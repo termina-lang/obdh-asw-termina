@@ -1,0 +1,28 @@
+@startuml
+skinparam ranksep 60
+skinparam nodesep 35
+
+package "Producers" {
+  component A
+  component B
+}
+
+package "Handlers" {
+  component H1
+  component H2
+}
+
+package "Consumers" {
+  component C
+}
+
+' Invisible layout constraints (optional but powerful)
+A -[hidden]down-> H1
+H1 -[hidden]down-> C
+
+' Real links
+A ..> H1 : event
+B ..> H2 : event
+H1 --> C : notify
+@enduml
+

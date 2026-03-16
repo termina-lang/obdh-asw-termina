@@ -1,10 +1,10 @@
 
 #include "resources/obt_manager.h"
 
-void OBTManager__get_current_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT * const current_obt) {
+void COBTManager__get_current_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT * const current_obt) {
     
     #line 48 "src/resources/obt_manager.fin"
-    OBTManager * self = (OBTManager *)__this;
+    COBTManager * self = (COBTManager *)__this;
 
     #line 48 "src/resources/obt_manager.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -52,10 +52,10 @@ void OBTManager__get_current_obt(const __termina_event_t * const __ev, void * co
 
 }
 
-void OBTManager__set_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT next_obt) {
+void COBTManager__set_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT next_obt) {
     
     #line 30 "src/resources/obt_manager.fin"
-    OBTManager * self = (OBTManager *)__this;
+    COBTManager * self = (COBTManager *)__this;
 
     #line 30 "src/resources/obt_manager.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);

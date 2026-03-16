@@ -390,10 +390,10 @@ interface IPUSService1 {
 
 resource class CPUSService1 provides IPUSService1 {
 
-    tm_channel : access TMChannelIface;   
+    tm_channel : access ITMChannel;   
     tm_handler_pool : access Allocator<TMHandler>;
-    tm_counter : access TMCounterIface;
-    obt_manager : access OBTManagerIface;
+    tm_counter : access ITMCounter;
+    obt_manager : access IOBTManager;
 
     procedure notify_tm_1_1(&mut self, tc_packet_id: u16, 
                 tc_packet_seq_ctrl: u16, flags_ack : u8, 

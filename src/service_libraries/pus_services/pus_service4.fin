@@ -23,11 +23,11 @@ resource class CPUSService4 provides IPUSService4 {
     system_data_pool_u32 : access AtomicArrayAccess<u32; sdp_num_u32_params>;
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
-    tm_channel: access TMChannelIface;   
+    tm_channel: access ITMChannel;   
     a_tm_handler_pool : access Allocator<TMHandler>;
-    tm_counter : access TMCounterIface;
+    tm_counter : access ITMCounter;
 
-    obt_manager : access OBTManagerIface;
+    obt_manager : access IOBTManager;
 
     pus_service_1 : access IPUSService1;
 

@@ -1,0 +1,5 @@
+wcet rtems5-leon3-qemu = {
+
+    TMChannel::send_tm::path0() = 3e-05
+
+};

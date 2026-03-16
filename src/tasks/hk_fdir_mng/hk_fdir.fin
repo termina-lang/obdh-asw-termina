@@ -29,7 +29,7 @@ task class CHousekeepingFDIRTask {
     a_tc_handler_pool : access Allocator<TCHandler>;
 
     /// @brief Interface to PUS service 3 (Housekeeping service).
-    pus_service_3 : access PUSS3Iface;
+    pus_service_3 : access IPUSService3;
 
     /// @brief Interface to PUS service 12 (Monitoring service).
     pus_service_12 : access IPUSService12;

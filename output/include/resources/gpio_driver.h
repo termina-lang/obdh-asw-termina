@@ -16,10 +16,10 @@ typedef struct {
 typedef struct {
     __termina_resource_lock_type_t __lock_type;
     volatile GPIO_registers * registers;
-} GPIODriver;
+} CGPIODriver;
 
-void GPIODriver__init_gpio(const __termina_event_t * const __ev, void * const __this);
+void CGPIODriver__init_gpio(const __termina_event_t * const __ev, void * const __this);
 
-void GPIODriver__write_led(const __termina_event_t * const __ev, void * const __this, uint8_t led, uint8_t value, __status_int32_t * const status);
+void CGPIODriver__write_led(const __termina_event_t * const __ev, void * const __this, uint8_t led, uint8_t value, __status_int32_t * const status);
 
 #endif

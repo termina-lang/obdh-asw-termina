@@ -16,8 +16,8 @@ typedef struct {
         void * __that;
         void (* send)(const __termina_event_t * const, void * const, const size_t, const uint8_t *, __status_int32_t * const);
     } char_dev;
-} TMChannel;
+} CTMChannel;
 
-void TMChannel__send_tm(const __termina_event_t * const __ev, void * const __this, __termina_box_t tm_handler, __status_int32_t * const status);
+void CTMChannel__send_tm(const __termina_event_t * const __ev, void * const __this, __termina_box_t tm_handler, __status_int32_t * const status);
 
 #endif

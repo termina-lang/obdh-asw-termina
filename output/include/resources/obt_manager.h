@@ -19,10 +19,10 @@ typedef struct {
     } system_port;
     TimeVal ref_time_val_from_power_on;
     MissionOBT ref_obt;
-} OBTManager;
+} COBTManager;
 
-void OBTManager__get_current_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT * const current_obt);
+void COBTManager__get_current_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT * const current_obt);
 
-void OBTManager__set_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT next_obt);
+void COBTManager__set_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT next_obt);
 
 #endif

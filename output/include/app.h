@@ -51,13 +51,13 @@ extern CTCChannel tc_channel;
 
 extern CAPBUARTDriver uart_drv;
 
-extern GPIODriver gpio_drv;
+extern CGPIODriver gpio_drv;
 
-extern TMChannel telemetry_channel;
+extern CTMChannel tm_channel;
 
-extern TMCounter telemetry_counter;
+extern CTMCounter tm_counter;
 
-extern OBTManager obt_manager;
+extern COBTManager obt_manager;
 
 extern CPUSService1 pus_service_1;
 
@@ -67,7 +67,7 @@ extern CPUSService5 pus_service_5;
 
 extern CPUSService3 pus_service_3;
 
-extern PUSService12 pus_service_12;
+extern CPUSService12 pus_service_12;
 
 extern CPUSService19 pus_service_19;
 
@@ -83,18 +83,18 @@ extern CPUSService6 pus_service_6;
 
 extern CPUSService4 pus_service_4;
 
-extern ManagerTCExecutor mng_tc_executor;
+extern CManagerTExecutor mng_tc_executor;
 
-extern Init init;
+extern CInitHandler init_hdlr;
 
 extern CCharDevIRQHandler uart_hdlr;
 
-extern TCRXBottomHalfTask tc_rx_bottom_half_task;
+extern CTXRxBottomHalfTask tc_rx_bottom_half_task;
 
-extern ICUManager icu_manager;
+extern CICUManagerTask icu_manager;
 
-extern HouseKeepingFDIR hk_fdir;
+extern CHousekeepingFDIRTask hk_fdir;
 
-extern PUSBKGTCExecutor pus_bkg_tc_executor;
+extern CBKGTCExecutorTask bkg_tc_executor;
 
 #endif

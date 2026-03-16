@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service12.h"
 
-_Bool PUSService12__PID_has_expected_masked_value(const __termina_event_t * const __ev, const PUSService12 * const self, const ParamValueCheckDefinition * const expected_value_check_definition) {
+_Bool CPUSService12__PID_has_expected_masked_value(const __termina_event_t * const __ev, const CPUSService12 * const self, const ParamValueCheckDefinition * const expected_value_check_definition) {
     
     #line 264 "src/service_libraries/pus_services/pus_service12.fin"
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
@@ -56,7 +56,7 @@ _Bool PUSService12__PID_has_expected_masked_value(const __termina_event_t * cons
 
 }
 
-_Bool PUSService12__PID_is_above_upper_limit(const __termina_event_t * const __ev, const PUSService12 * const self, const ParamLimitCheckDefinition * const limit_check_def) {
+_Bool CPUSService12__PID_is_above_upper_limit(const __termina_event_t * const __ev, const CPUSService12 * const self, const ParamLimitCheckDefinition * const limit_check_def) {
     
     #line 198 "src/service_libraries/pus_services/pus_service12.fin"
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
@@ -114,7 +114,7 @@ _Bool PUSService12__PID_is_above_upper_limit(const __termina_event_t * const __e
 
 }
 
-_Bool PUSService12__PID_is_below_lower_limit(const __termina_event_t * const __ev, const PUSService12 * const self, const ParamLimitCheckDefinition * const limit_check_def) {
+_Bool CPUSService12__PID_is_below_lower_limit(const __termina_event_t * const __ev, const CPUSService12 * const self, const ParamLimitCheckDefinition * const limit_check_def) {
     
     #line 231 "src/service_libraries/pus_services/pus_service12.fin"
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
@@ -172,7 +172,7 @@ _Bool PUSService12__PID_is_below_lower_limit(const __termina_event_t * const __e
 
 }
 
-void PUSService12__add_monitoring_transition(const __termina_event_t * const __ev, PUSService12 * const self) {
+void CPUSService12__add_monitoring_transition(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 548 "src/service_libraries/pus_services/pus_service12.fin"
     __status_int32_t monitoring_status;
@@ -324,7 +324,7 @@ void PUSService12__add_monitoring_transition(const __termina_event_t * const __e
 
 }
 
-void PUSService12__add_valid_mng_mon_def(const __termina_event_t * const __ev, PUSService12 * const self) {
+void CPUSService12__add_valid_mng_mon_def(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 929 "src/service_libraries/pus_services/pus_service12.fin"
     size_t PMONID = (size_t)self->exec_tc_req_status_update.tc_data_5.PMONID;
@@ -392,7 +392,7 @@ void PUSService12__add_valid_mng_mon_def(const __termina_event_t * const __ev, P
 
 }
 
-_Bool PUSService12__are_status_equal(const __termina_event_t * const __ev, const PUSService12 * const self, CheckState status1, CheckState status2) {
+_Bool CPUSService12__are_status_equal(const __termina_event_t * const __ev, const CPUSService12 * const self, CheckState status1, CheckState status2) {
     
     #line 498 "src/service_libraries/pus_services/pus_service12.fin"
     _Bool equal = get_check_status_index(status1) == get_check_status_index(status2);
@@ -402,7 +402,7 @@ _Bool PUSService12__are_status_equal(const __termina_event_t * const __ev, const
 
 }
 
-ParamValueCheckDefinition PUSService12__get_expected_value_monitoring_definition(const __termina_event_t * const __ev, const PUSService12 * const self) {
+ParamValueCheckDefinition CPUSService12__get_expected_value_monitoring_definition(const __termina_event_t * const __ev, const CPUSService12 * const self) {
     
     #line 108 "src/service_libraries/pus_services/pus_service12.fin"
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
@@ -436,10 +436,10 @@ ParamValueCheckDefinition PUSService12__get_expected_value_monitoring_definition
 
 }
 
-CheckValueStatus PUSService12__check_PID_status_exp_val_monitoring(const __termina_event_t * const __ev, const PUSService12 * const self) {
+CheckValueStatus CPUSService12__check_PID_status_exp_val_monitoring(const __termina_event_t * const __ev, const CPUSService12 * const self) {
     
     #line 179 "src/service_libraries/pus_services/pus_service12.fin"
-    ParamValueCheckDefinition current_monitor_definition = PUSService12__get_expected_value_monitoring_definition(__ev, self);
+    ParamValueCheckDefinition current_monitor_definition = CPUSService12__get_expected_value_monitoring_definition(__ev, self);
 
     #line 180 "src/service_libraries/pus_services/pus_service12.fin"
     CheckValueStatus check_status;
@@ -447,7 +447,7 @@ CheckValueStatus PUSService12__check_PID_status_exp_val_monitoring(const __termi
     check_status.__variant = CheckValueStatus__MonitorUnchecked;
 
     #line 182 "src/service_libraries/pus_services/pus_service12.fin"
-    if (PUSService12__PID_has_expected_masked_value(__ev, self, &current_monitor_definition)) {
+    if (CPUSService12__PID_has_expected_masked_value(__ev, self, &current_monitor_definition)) {
         
         #line 184 "src/service_libraries/pus_services/pus_service12.fin"
         check_status.__variant = CheckValueStatus__MonitorValueExpected;
@@ -465,7 +465,7 @@ CheckValueStatus PUSService12__check_PID_status_exp_val_monitoring(const __termi
 
 }
 
-ParamLimitCheckDefinition PUSService12__get_limits_monitoring_definition(const __termina_event_t * const __ev, const PUSService12 * const self) {
+ParamLimitCheckDefinition CPUSService12__get_limits_monitoring_definition(const __termina_event_t * const __ev, const CPUSService12 * const self) {
     
     #line 82 "src/service_libraries/pus_services/pus_service12.fin"
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
@@ -501,10 +501,10 @@ ParamLimitCheckDefinition PUSService12__get_limits_monitoring_definition(const _
 
 }
 
-CheckLimitsStatus PUSService12__check_PID_status_limits_monitoring(const __termina_event_t * const __ev, const PUSService12 * const self) {
+CheckLimitsStatus CPUSService12__check_PID_status_limits_monitoring(const __termina_event_t * const __ev, const CPUSService12 * const self) {
     
     #line 154 "src/service_libraries/pus_services/pus_service12.fin"
-    ParamLimitCheckDefinition current_monitor_definition = PUSService12__get_limits_monitoring_definition(__ev, self);
+    ParamLimitCheckDefinition current_monitor_definition = CPUSService12__get_limits_monitoring_definition(__ev, self);
 
     #line 155 "src/service_libraries/pus_services/pus_service12.fin"
     CheckLimitsStatus check_status;
@@ -512,14 +512,14 @@ CheckLimitsStatus PUSService12__check_PID_status_limits_monitoring(const __termi
     check_status.__variant = CheckLimitsStatus__MonitorUnchecked;
 
     #line 157 "src/service_libraries/pus_services/pus_service12.fin"
-    if (PUSService12__PID_is_above_upper_limit(__ev, self, &current_monitor_definition)) {
+    if (CPUSService12__PID_is_above_upper_limit(__ev, self, &current_monitor_definition)) {
         
         #line 159 "src/service_libraries/pus_services/pus_service12.fin"
         check_status.__variant = CheckLimitsStatus__MonitorAboveHighLimit;
 
     } else
     #line 162 "src/service_libraries/pus_services/pus_service12.fin"
-    if (PUSService12__PID_is_below_lower_limit(__ev, self, &current_monitor_definition)) {
+    if (CPUSService12__PID_is_below_lower_limit(__ev, self, &current_monitor_definition)) {
         
         #line 164 "src/service_libraries/pus_services/pus_service12.fin"
         check_status.__variant = CheckLimitsStatus__MonitorBelowLowLimit;
@@ -537,7 +537,7 @@ CheckLimitsStatus PUSService12__check_PID_status_limits_monitoring(const __termi
 
 }
 
-_Bool PUSService12__is_expected_value_monitoring(const __termina_event_t * const __ev, const PUSService12 * const self) {
+_Bool CPUSService12__is_expected_value_monitoring(const __termina_event_t * const __ev, const CPUSService12 * const self) {
     
     #line 69 "src/service_libraries/pus_services/pus_service12.fin"
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
@@ -558,7 +558,7 @@ _Bool PUSService12__is_expected_value_monitoring(const __termina_event_t * const
 
 }
 
-_Bool PUSService12__is_limits_monitoring(const __termina_event_t * const __ev, const PUSService12 * const self) {
+_Bool CPUSService12__is_limits_monitoring(const __termina_event_t * const __ev, const CPUSService12 * const self) {
     
     #line 55 "src/service_libraries/pus_services/pus_service12.fin"
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
@@ -579,7 +579,7 @@ _Bool PUSService12__is_limits_monitoring(const __termina_event_t * const __ev, c
 
 }
 
-_Bool PUSService12__is_valid_PMONID(const __termina_event_t * const __ev, const PUSService12 * const self) {
+_Bool CPUSService12__is_valid_PMONID(const __termina_event_t * const __ev, const CPUSService12 * const self) {
     
     #line 43 "src/service_libraries/pus_services/pus_service12.fin"
     _Bool is_valid = 0;
@@ -597,7 +597,7 @@ _Bool PUSService12__is_valid_PMONID(const __termina_event_t * const __ev, const 
 
 }
 
-_Bool PUSService12__manage_new_status(const __termina_event_t * const __ev, PUSService12 * const self) {
+_Bool CPUSService12__manage_new_status(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 504 "src/service_libraries/pus_services/pus_service12.fin"
     _Bool transition = 0;
@@ -615,7 +615,7 @@ _Bool PUSService12__manage_new_status(const __termina_event_t * const __ev, PUSS
     CheckState temp_state = self->param_mon_config_table[__termina_array__index(16U, current_PMON_ID)].temp_state;
 
     #line 511 "src/service_libraries/pus_services/pus_service12.fin"
-    if (PUSService12__are_status_equal(__ev, self, new_state, current_state) == 0) {
+    if (CPUSService12__are_status_equal(__ev, self, new_state, current_state) == 0) {
         
         #line 513 "src/service_libraries/pus_services/pus_service12.fin"
         if (are_status_equal(new_state, temp_state)) {
@@ -680,7 +680,7 @@ _Bool PUSService12__manage_new_status(const __termina_event_t * const __ev, PUSS
 
 }
 
-DoMonitoringReqStatus PUSService12__manage_expected_value(const __termina_event_t * const __ev, PUSService12 * const self) {
+DoMonitoringReqStatus CPUSService12__manage_expected_value(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 353 "src/service_libraries/pus_services/pus_service12.fin"
     DoMonitoringReqStatus next_status;
@@ -698,10 +698,10 @@ DoMonitoringReqStatus PUSService12__manage_expected_value(const __termina_event_
     self->do_monitoring_req_status_update.new_status.ParamValueStatus.__0 = check_status;
 
     #line 358 "src/service_libraries/pus_services/pus_service12.fin"
-    if (PUSService12__manage_new_status(__ev, self)) {
+    if (CPUSService12__manage_new_status(__ev, self)) {
         
         #line 360 "src/service_libraries/pus_services/pus_service12.fin"
-        PUSService12__add_monitoring_transition(__ev, self);
+        CPUSService12__add_monitoring_transition(__ev, self);
 
     }
 
@@ -710,7 +710,7 @@ DoMonitoringReqStatus PUSService12__manage_expected_value(const __termina_event_
 
 }
 
-DoMonitoringReqStatus PUSService12__manage_interval_control(const __termina_event_t * const __ev, PUSService12 * const self) {
+DoMonitoringReqStatus CPUSService12__manage_interval_control(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 133 "src/service_libraries/pus_services/pus_service12.fin"
     size_t current_PMON_ID = (size_t)self->do_monitoring_req_status_update.PMONID;
@@ -745,7 +745,7 @@ DoMonitoringReqStatus PUSService12__manage_interval_control(const __termina_even
 
 }
 
-DoMonitoringReqStatus PUSService12__manage_param_above_upper_limit(const __termina_event_t * const __ev, PUSService12 * const self) {
+DoMonitoringReqStatus CPUSService12__manage_param_above_upper_limit(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 368 "src/service_libraries/pus_services/pus_service12.fin"
     DoMonitoringReqStatus next_status;
@@ -817,7 +817,7 @@ DoMonitoringReqStatus PUSService12__manage_param_above_upper_limit(const __termi
         }
 
         #line 403 "src/service_libraries/pus_services/pus_service12.fin"
-        if (PUSService12__manage_new_status(__ev, self)) {
+        if (CPUSService12__manage_new_status(__ev, self)) {
             
             #line 405 "src/service_libraries/pus_services/pus_service12.fin"
             self->do_monitoring_req_status_update.event_triggered = 1;
@@ -828,7 +828,7 @@ DoMonitoringReqStatus PUSService12__manage_param_above_upper_limit(const __termi
             self->do_monitoring_req_status_update.fault_info.ParamOutOfLimit.__0 = fault_info;
 
             #line 407 "src/service_libraries/pus_services/pus_service12.fin"
-            PUSService12__add_monitoring_transition(__ev, self);
+            CPUSService12__add_monitoring_transition(__ev, self);
 
             #line 408 "src/service_libraries/pus_services/pus_service12.fin"
             self->do_monitoring_req_status_update.EvID = check_definition.high_limit_evID;
@@ -848,7 +848,7 @@ DoMonitoringReqStatus PUSService12__manage_param_above_upper_limit(const __termi
 
 }
 
-DoMonitoringReqStatus PUSService12__manage_param_below_lower_limit(const __termina_event_t * const __ev, PUSService12 * const self) {
+DoMonitoringReqStatus CPUSService12__manage_param_below_lower_limit(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 423 "src/service_libraries/pus_services/pus_service12.fin"
     DoMonitoringReqStatus next_status;
@@ -920,7 +920,7 @@ DoMonitoringReqStatus PUSService12__manage_param_below_lower_limit(const __termi
         }
 
         #line 458 "src/service_libraries/pus_services/pus_service12.fin"
-        if (PUSService12__manage_new_status(__ev, self)) {
+        if (CPUSService12__manage_new_status(__ev, self)) {
             
             #line 460 "src/service_libraries/pus_services/pus_service12.fin"
             self->do_monitoring_req_status_update.event_triggered = 1;
@@ -931,7 +931,7 @@ DoMonitoringReqStatus PUSService12__manage_param_below_lower_limit(const __termi
             self->do_monitoring_req_status_update.fault_info.ParamOutOfLimit.__0 = fault_info;
 
             #line 462 "src/service_libraries/pus_services/pus_service12.fin"
-            PUSService12__add_monitoring_transition(__ev, self);
+            CPUSService12__add_monitoring_transition(__ev, self);
 
             #line 463 "src/service_libraries/pus_services/pus_service12.fin"
             self->do_monitoring_req_status_update.EvID = check_definition.low_limit_evID;
@@ -951,7 +951,7 @@ DoMonitoringReqStatus PUSService12__manage_param_below_lower_limit(const __termi
 
 }
 
-DoMonitoringReqStatus PUSService12__manage_param_within_limits(const __termina_event_t * const __ev, PUSService12 * const self) {
+DoMonitoringReqStatus CPUSService12__manage_param_within_limits(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 477 "src/service_libraries/pus_services/pus_service12.fin"
     DoMonitoringReqStatus next_status;
@@ -980,13 +980,13 @@ DoMonitoringReqStatus PUSService12__manage_param_within_limits(const __termina_e
     CheckState current_status = self->param_mon_config_table[__termina_array__index(16U, current_PMON_ID)].current_state;
 
     #line 485 "src/service_libraries/pus_services/pus_service12.fin"
-    if (PUSService12__are_status_equal(__ev, self, new_status, current_status) == 0) {
+    if (CPUSService12__are_status_equal(__ev, self, new_status, current_status) == 0) {
         
         #line 487 "src/service_libraries/pus_services/pus_service12.fin"
-        if (PUSService12__manage_new_status(__ev, self)) {
+        if (CPUSService12__manage_new_status(__ev, self)) {
             
             #line 489 "src/service_libraries/pus_services/pus_service12.fin"
-            PUSService12__add_monitoring_transition(__ev, self);
+            CPUSService12__add_monitoring_transition(__ev, self);
 
         }
 
@@ -997,7 +997,7 @@ DoMonitoringReqStatus PUSService12__manage_param_within_limits(const __termina_e
 
 }
 
-DoMonitoringReqStatus PUSService12__manage_unexpected_value(const __termina_event_t * const __ev, PUSService12 * const self) {
+DoMonitoringReqStatus CPUSService12__manage_unexpected_value(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 296 "src/service_libraries/pus_services/pus_service12.fin"
     DoMonitoringReqStatus next_status;
@@ -1074,7 +1074,7 @@ DoMonitoringReqStatus PUSService12__manage_unexpected_value(const __termina_even
         }
 
         #line 333 "src/service_libraries/pus_services/pus_service12.fin"
-        if (PUSService12__manage_new_status(__ev, self)) {
+        if (CPUSService12__manage_new_status(__ev, self)) {
             
             #line 335 "src/service_libraries/pus_services/pus_service12.fin"
             self->do_monitoring_req_status_update.event_triggered = 1;
@@ -1085,7 +1085,7 @@ DoMonitoringReqStatus PUSService12__manage_unexpected_value(const __termina_even
             self->do_monitoring_req_status_update.fault_info.ParamFaultValue.__0 = fault_info;
 
             #line 337 "src/service_libraries/pus_services/pus_service12.fin"
-            PUSService12__add_monitoring_transition(__ev, self);
+            CPUSService12__add_monitoring_transition(__ev, self);
 
             #line 338 "src/service_libraries/pus_services/pus_service12.fin"
             self->do_monitoring_req_status_update.EvID = check_definition.EvID;
@@ -1105,10 +1105,10 @@ DoMonitoringReqStatus PUSService12__manage_unexpected_value(const __termina_even
 
 }
 
-void PUSService12__do_monitoring(const __termina_event_t * const __ev, void * const __this, uint16_t PMONID, uint16_t * const evID, FaultInfo * const fault_info, _Bool * const event_triggered) {
+void CPUSService12__do_monitoring(const __termina_event_t * const __ev, void * const __this, uint16_t PMONID, uint16_t * const evID, FaultInfo * const fault_info, _Bool * const event_triggered) {
     
     #line 629 "src/service_libraries/pus_services/pus_service12.fin"
-    PUSService12 * self = (PUSService12 *)__this;
+    CPUSService12 * self = (CPUSService12 *)__this;
 
     #line 629 "src/service_libraries/pus_services/pus_service12.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1139,10 +1139,10 @@ void PUSService12__do_monitoring(const __termina_event_t * const __ev, void * co
         if (self->do_monitoring_req_status.__variant == DoMonitoringReqStatus__CheckPMONID) {
             
             #line 646 "src/service_libraries/pus_services/pus_service12.fin"
-            if (PUSService12__is_valid_PMONID(__ev, self) && self->param_mon_config_table[__termina_array__index(16U, (size_t)PMONID)].enabled == 1) {
+            if (CPUSService12__is_valid_PMONID(__ev, self) && self->param_mon_config_table[__termina_array__index(16U, (size_t)PMONID)].enabled == 1) {
                 
                 #line 647 "src/service_libraries/pus_services/pus_service12.fin"
-                self->do_monitoring_req_status = PUSService12__manage_interval_control(__ev, self);
+                self->do_monitoring_req_status = CPUSService12__manage_interval_control(__ev, self);
 
             } else
             {
@@ -1160,14 +1160,14 @@ void PUSService12__do_monitoring(const __termina_event_t * const __ev, void * co
             if (self->param_mon_config_table[__termina_array__index(16U, (size_t)PMONID)].enabled == 1) {
                 
                 #line 658 "src/service_libraries/pus_services/pus_service12.fin"
-                if (PUSService12__is_limits_monitoring(__ev, self)) {
+                if (CPUSService12__is_limits_monitoring(__ev, self)) {
                     
                     #line 660 "src/service_libraries/pus_services/pus_service12.fin"
                     self->do_monitoring_req_status.__variant = DoMonitoringReqStatus__DoLimitsMonitoring;
 
                 } else
                 #line 663 "src/service_libraries/pus_services/pus_service12.fin"
-                if (PUSService12__is_expected_value_monitoring(__ev, self)) {
+                if (CPUSService12__is_expected_value_monitoring(__ev, self)) {
                     
                     #line 665 "src/service_libraries/pus_services/pus_service12.fin"
                     self->do_monitoring_req_status.__variant = DoMonitoringReqStatus__DoExpectedValueMonitoring;
@@ -1193,27 +1193,27 @@ void PUSService12__do_monitoring(const __termina_event_t * const __ev, void * co
         if (self->do_monitoring_req_status.__variant == DoMonitoringReqStatus__DoLimitsMonitoring) {
             
             #line 680 "src/service_libraries/pus_services/pus_service12.fin"
-            CheckLimitsStatus limits_monitoring_status = PUSService12__check_PID_status_limits_monitoring(__ev, self);
+            CheckLimitsStatus limits_monitoring_status = CPUSService12__check_PID_status_limits_monitoring(__ev, self);
 
             #line 683 "src/service_libraries/pus_services/pus_service12.fin"
             if (limits_monitoring_status.__variant == CheckLimitsStatus__MonitorAboveHighLimit) {
                 
                 #line 685 "src/service_libraries/pus_services/pus_service12.fin"
-                self->do_monitoring_req_status = PUSService12__manage_param_above_upper_limit(__ev, self);
+                self->do_monitoring_req_status = CPUSService12__manage_param_above_upper_limit(__ev, self);
 
             } else
             #line 687 "src/service_libraries/pus_services/pus_service12.fin"
             if (limits_monitoring_status.__variant == CheckLimitsStatus__MonitorBelowLowLimit) {
                 
                 #line 689 "src/service_libraries/pus_services/pus_service12.fin"
-                self->do_monitoring_req_status = PUSService12__manage_param_below_lower_limit(__ev, self);
+                self->do_monitoring_req_status = CPUSService12__manage_param_below_lower_limit(__ev, self);
 
             } else
             #line 692 "src/service_libraries/pus_services/pus_service12.fin"
             if (limits_monitoring_status.__variant == CheckLimitsStatus__MonitorWithinLimits) {
                 
                 #line 694 "src/service_libraries/pus_services/pus_service12.fin"
-                self->do_monitoring_req_status = PUSService12__manage_param_within_limits(__ev, self);
+                self->do_monitoring_req_status = CPUSService12__manage_param_within_limits(__ev, self);
 
             } else
             {
@@ -1226,20 +1226,20 @@ void PUSService12__do_monitoring(const __termina_event_t * const __ev, void * co
         if (self->do_monitoring_req_status.__variant == DoMonitoringReqStatus__DoExpectedValueMonitoring) {
             
             #line 705 "src/service_libraries/pus_services/pus_service12.fin"
-            CheckValueStatus exp_value_monitoring_status = PUSService12__check_PID_status_exp_val_monitoring(__ev, self);
+            CheckValueStatus exp_value_monitoring_status = CPUSService12__check_PID_status_exp_val_monitoring(__ev, self);
 
             #line 708 "src/service_libraries/pus_services/pus_service12.fin"
             if (exp_value_monitoring_status.__variant == CheckValueStatus__MonitorValueUnexpected) {
                 
                 #line 709 "src/service_libraries/pus_services/pus_service12.fin"
-                self->do_monitoring_req_status = PUSService12__manage_unexpected_value(__ev, self);
+                self->do_monitoring_req_status = CPUSService12__manage_unexpected_value(__ev, self);
 
             } else
             #line 711 "src/service_libraries/pus_services/pus_service12.fin"
             if (exp_value_monitoring_status.__variant == CheckValueStatus__MonitorValueExpected) {
                 
                 #line 713 "src/service_libraries/pus_services/pus_service12.fin"
-                self->do_monitoring_req_status = PUSService12__manage_expected_value(__ev, self);
+                self->do_monitoring_req_status = CPUSService12__manage_expected_value(__ev, self);
 
             } else
             {
@@ -1287,7 +1287,7 @@ void PUSService12__do_monitoring(const __termina_event_t * const __ev, void * co
 
 }
 
-__status_int32_t PUSService12__exec12_1TC(const __termina_event_t * const __ev, PUSService12 * const self) {
+__status_int32_t CPUSService12__exec12_1TC(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 801 "src/service_libraries/pus_services/pus_service12.fin"
     __status_int32_t status;
@@ -1358,7 +1358,7 @@ __status_int32_t PUSService12__exec12_1TC(const __termina_event_t * const __ev, 
 
 }
 
-void PUSService12__set_unchecked(const __termina_event_t * const __ev, PUSService12 * const self) {
+void CPUSService12__set_unchecked(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 773 "src/service_libraries/pus_services/pus_service12.fin"
     size_t valid_PMONID = (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID;
@@ -1418,7 +1418,7 @@ void PUSService12__set_unchecked(const __termina_event_t * const __ev, PUSServic
 
 }
 
-__status_int32_t PUSService12__exec12_2TC(const __termina_event_t * const __ev, PUSService12 * const self) {
+__status_int32_t CPUSService12__exec12_2TC(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 864 "src/service_libraries/pus_services/pus_service12.fin"
     __status_int32_t status;
@@ -1453,7 +1453,7 @@ __status_int32_t PUSService12__exec12_2TC(const __termina_event_t * const __ev, 
                     self->param_mon_config_table[__termina_array__index(16U, (size_t)self->exec_tc_req_status_update.tc_data_1_2_6.PMONID)].enabled = 0;
 
                     #line 892 "src/service_libraries/pus_services/pus_service12.fin"
-                    PUSService12__set_unchecked(__ev, self);
+                    CPUSService12__set_unchecked(__ev, self);
 
                     #line 894 "src/service_libraries/pus_services/pus_service12.fin"
                     self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -1483,7 +1483,7 @@ __status_int32_t PUSService12__exec12_2TC(const __termina_event_t * const __ev, 
 
 }
 
-__status_int32_t PUSService12__exec12_5TC(const __termina_event_t * const __ev, PUSService12 * const self) {
+__status_int32_t CPUSService12__exec12_5TC(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 972 "src/service_libraries/pus_services/pus_service12.fin"
     __status_int32_t status;
@@ -1517,7 +1517,7 @@ __status_int32_t PUSService12__exec12_5TC(const __termina_event_t * const __ev, 
             if (status.__variant == Success) {
                 
                 #line 1003 "src/service_libraries/pus_services/pus_service12.fin"
-                PUSService12__add_valid_mng_mon_def(__ev, self);
+                CPUSService12__add_valid_mng_mon_def(__ev, self);
 
                 #line 1005 "src/service_libraries/pus_services/pus_service12.fin"
                 self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -1543,7 +1543,7 @@ __status_int32_t PUSService12__exec12_5TC(const __termina_event_t * const __ev, 
         if (status.__variant == Success) {
             
             #line 1032 "src/service_libraries/pus_services/pus_service12.fin"
-            PUSService12__add_valid_mng_mon_def(__ev, self);
+            CPUSService12__add_valid_mng_mon_def(__ev, self);
 
             #line 1034 "src/service_libraries/pus_services/pus_service12.fin"
             self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -1563,7 +1563,7 @@ __status_int32_t PUSService12__exec12_5TC(const __termina_event_t * const __ev, 
 
 }
 
-__status_int32_t PUSService12__exec12_6TC(const __termina_event_t * const __ev, PUSService12 * const self) {
+__status_int32_t CPUSService12__exec12_6TC(const __termina_event_t * const __ev, CPUSService12 * const self) {
     
     #line 1057 "src/service_libraries/pus_services/pus_service12.fin"
     __status_int32_t status;
@@ -1616,10 +1616,10 @@ __status_int32_t PUSService12__exec12_6TC(const __termina_event_t * const __ev, 
 
 }
 
-void PUSService12__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService12__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
     #line 1113 "src/service_libraries/pus_services/pus_service12.fin"
-    PUSService12 * self = (PUSService12 *)__this;
+    CPUSService12 * self = (CPUSService12 *)__this;
 
     #line 1113 "src/service_libraries/pus_services/pus_service12.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -1938,28 +1938,28 @@ void PUSService12__exec_tc(const __termina_event_t * const __ev, void * const __
         if (subtype == 1U) {
             
             #line 1300 "src/service_libraries/pus_services/pus_service12.fin"
-            status = PUSService12__exec12_1TC(__ev, self);
+            status = CPUSService12__exec12_1TC(__ev, self);
 
         } else
         #line 1302 "src/service_libraries/pus_services/pus_service12.fin"
         if (subtype == 2U) {
             
             #line 1304 "src/service_libraries/pus_services/pus_service12.fin"
-            status = PUSService12__exec12_2TC(__ev, self);
+            status = CPUSService12__exec12_2TC(__ev, self);
 
         } else
         #line 1306 "src/service_libraries/pus_services/pus_service12.fin"
         if (subtype == 5U) {
             
             #line 1308 "src/service_libraries/pus_services/pus_service12.fin"
-            status = PUSService12__exec12_5TC(__ev, self);
+            status = CPUSService12__exec12_5TC(__ev, self);
 
         } else
         #line 1310 "src/service_libraries/pus_services/pus_service12.fin"
         if (subtype == 6U) {
             
             #line 1312 "src/service_libraries/pus_services/pus_service12.fin"
-            status = PUSService12__exec12_6TC(__ev, self);
+            status = CPUSService12__exec12_6TC(__ev, self);
 
         } else
         {
@@ -2032,7 +2032,7 @@ void PUSService12__exec_tc(const __termina_event_t * const __ev, void * const __
 
 }
 
-MonitorCheckType PUSService12__get_PMON_type(const __termina_event_t * const __ev, const PUSService12 * const self, size_t PMONID) {
+MonitorCheckType CPUSService12__get_PMON_type(const __termina_event_t * const __ev, const CPUSService12 * const self, size_t PMONID) {
     
     #line 761 "src/service_libraries/pus_services/pus_service12.fin"
     MonitorCheckType mon_type;
@@ -2052,10 +2052,10 @@ MonitorCheckType PUSService12__get_PMON_type(const __termina_event_t * const __e
 
 }
 
-void PUSService12__is_PMON_enabled(const __termina_event_t * const __ev, void * const __this, size_t PMONID, _Bool * const is_enabled) {
+void CPUSService12__is_PMON_enabled(const __termina_event_t * const __ev, void * const __this, size_t PMONID, _Bool * const is_enabled) {
     
     #line 744 "src/service_libraries/pus_services/pus_service12.fin"
-    PUSService12 * self = (PUSService12 *)__this;
+    CPUSService12 * self = (CPUSService12 *)__this;
 
     #line 744 "src/service_libraries/pus_services/pus_service12.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);

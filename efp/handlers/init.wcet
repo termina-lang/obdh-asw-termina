@@ -1,0 +1,5 @@
+wcet rtems5-leon3-qemu = {
+
+    Init::init::path0() = 3e-05
+
+};

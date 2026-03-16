@@ -1,10 +1,10 @@
 
 #include "resources/gpio_driver.h"
 
-void GPIODriver__init_gpio(const __termina_event_t * const __ev, void * const __this) {
+void CGPIODriver__init_gpio(const __termina_event_t * const __ev, void * const __this) {
     
     #line 46 "src/resources/gpio_driver.fin"
-    GPIODriver * self = (GPIODriver *)__this;
+    CGPIODriver * self = (CGPIODriver *)__this;
 
     #line 46 "src/resources/gpio_driver.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
@@ -20,10 +20,10 @@ void GPIODriver__init_gpio(const __termina_event_t * const __ev, void * const __
 
 }
 
-void GPIODriver__write_led(const __termina_event_t * const __ev, void * const __this, uint8_t led, uint8_t value, __status_int32_t * const status) {
+void CGPIODriver__write_led(const __termina_event_t * const __ev, void * const __this, uint8_t led, uint8_t value, __status_int32_t * const status) {
     
     #line 63 "src/resources/gpio_driver.fin"
-    GPIODriver * self = (GPIODriver *)__this;
+    CGPIODriver * self = (CGPIODriver *)__this;
 
     #line 63 "src/resources/gpio_driver.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);

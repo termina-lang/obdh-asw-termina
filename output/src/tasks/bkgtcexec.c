@@ -1,10 +1,10 @@
 
 #include "tasks/bkgtcexec.h"
 
-__status_int32_t PUSBKGTCExecutor__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
+__status_int32_t CBKGTCExecutorTask__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
     
     #line 48 "src/tasks/bkgtcexec.fin"
-    PUSBKGTCExecutor * self = (PUSBKGTCExecutor *)__this;
+    CBKGTCExecutorTask * self = (CBKGTCExecutorTask *)__this;
 
     #line 50 "src/tasks/bkgtcexec.fin"
     __status_int32_t res;
@@ -43,9 +43,9 @@ __status_int32_t PUSBKGTCExecutor__exec_tc(const __termina_event_t * const __ev,
 
 }
 
-void __PUSBKGTCExecutor__termina_task(void * arg) {
+void __CBKGTCExecutorTask__termina_task(void * arg) {
     
-    PUSBKGTCExecutor * self = (PUSBKGTCExecutor *)arg;
+    CBKGTCExecutorTask * self = (CBKGTCExecutorTask *)arg;
 
     int32_t status = 0L;
 
@@ -66,7 +66,7 @@ void __PUSBKGTCExecutor__termina_task(void * arg) {
 
         switch (event.port_id) {
             
-            case __PUSBKGTCExecutor__bkg_message_queue_input:
+            case __CBKGTCExecutorTask__bkg_message_queue_input:
 
                 __termina_msg_queue__recv(self->bkg_message_queue_input, (void *)&exec_tc__msg_data, &status);
 
@@ -74,7 +74,7 @@ void __PUSBKGTCExecutor__termina_task(void * arg) {
                     __termina_except__msg_queue_recv_error(self->bkg_message_queue_input, status);
                 }
 
-                result = PUSBKGTCExecutor__exec_tc(&event, self, exec_tc__msg_data);
+                result = CBKGTCExecutorTask__exec_tc(&event, self, exec_tc__msg_data);
 
                 if (result.__variant != Success) {
                     
@@ -82,7 +82,7 @@ void __PUSBKGTCExecutor__termina_task(void * arg) {
                     source.__variant = ExceptSource__Handler;
                     source.Task.__0 = self->__task_id;
 
-                    __termina_except__action_failure(source, __PUSBKGTCExecutor__bkg_message_queue_input, result.Failure.__0);
+                    __termina_except__action_failure(source, __CBKGTCExecutorTask__bkg_message_queue_input, result.Failure.__0);
 
                 }
 

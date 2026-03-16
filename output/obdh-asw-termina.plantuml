@@ -1,0 +1,272 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 10
+skinparam ranksep 100
+queue action_tc_message_queue #AliceBlue
+queue bkg_message_queue #AliceBlue
+rectangle gpio_drv <<GPIODriver>> #LightYellow
+interface " " as gpio_drv__GPIODrvIface
+action hk_fdir <<HouseKeepingFDIR>> #PeachPuff
+rectangle hk_fdir_service_1 <<PUSService1>> #LightYellow
+interface " " as hk_fdir_service_1__PUSService1Iface
+boundary hk_fdir_timer <<PeriodicTimer>> #Red
+queue hkfdir_message_queue #AliceBlue
+action icu_manager <<ICUManager>> #PeachPuff
+action init <<Init>> #PaleGreen
+boundary irq_2 <<Interrupt>> #Red
+rectangle mng_tc_executor <<ManagerTCExecutor>> #LightYellow
+interface " " as mng_tc_executor__MngTCExecIface
+rectangle mng_tc_executor_service_1 <<PUSService1>> #LightYellow
+interface " " as mng_tc_executor_service_1__PUSService1Iface
+rectangle obt_manager <<OBTManager>> #LightYellow
+interface " " as obt_manager__OBTManagerIface
+action pus_bkg_tc_executor <<PUSBKGTCExecutor>> #PeachPuff
+rectangle pus_bkg_tc_executor_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_bkg_tc_executor_service_1__PUSService1Iface
+rectangle pus_service_12 <<PUSService12>> #LightYellow
+rectangle pus_service_128 <<PUSService128>> #LightYellow
+interface " " as pus_service_128__PUSS128Iface
+rectangle pus_service_128_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_128_service_1__PUSService1Iface
+interface " " as pus_service_12__PUSS12Iface
+rectangle pus_service_12_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_12_service_1__PUSService1Iface
+rectangle pus_service_17 <<PUSService17>> #LightYellow
+interface " " as pus_service_17__PUSS17Iface
+rectangle pus_service_17_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_17_service_1__PUSService1Iface
+rectangle pus_service_19 <<PUSService19>> #LightYellow
+interface " " as pus_service_19__PUSS19Iface
+rectangle pus_service_19_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_19_service_1__PUSService1Iface
+rectangle pus_service_2 <<PUSService2>> #LightYellow
+rectangle pus_service_20 <<PUSService20>> #LightYellow
+interface " " as pus_service_20__PUSS20Iface
+rectangle pus_service_20_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_20_service_1__PUSService1Iface
+interface " " as pus_service_2__PUSS2Iface
+rectangle pus_service_2_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_2_service_1__PUSService1Iface
+rectangle pus_service_3 <<PUSService3>> #LightYellow
+interface " " as pus_service_3__PUSS3Iface
+rectangle pus_service_3_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_3_service_1__PUSService1Iface
+rectangle pus_service_4 <<PUSService4>> #LightYellow
+interface " " as pus_service_4__PUSS4Iface
+rectangle pus_service_4_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_4_service_1__PUSService1Iface
+rectangle pus_service_5 <<PUSService5>> #LightYellow
+interface " " as pus_service_5__PUSS5Iface
+rectangle pus_service_5_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_5_service_1__PUSService1Iface
+rectangle pus_service_6 <<PUSService6>> #LightYellow
+interface " " as pus_service_6__PUSS6Iface
+rectangle pus_service_6_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_6_service_1__PUSService1Iface
+rectangle pus_service_9 <<PUSService9>> #LightYellow
+interface " " as pus_service_9__PUSS9Iface
+rectangle pus_service_9_service_1 <<PUSService1>> #LightYellow
+interface " " as pus_service_9_service_1__PUSService1Iface
+queue rx_task_message_queue #AliceBlue
+rectangle system_entry <<SystemEntry>> #LightYellow
+interface " " as system_entry__SystemEntryInterface
+boundary system_init <<SystemInit>> #Red
+queue tc_message_queue #AliceBlue
+rectangle tc_pool <<Pool&#60;TCHandler; 20&#62;>> #Plum
+action tc_rx_bottom_half_task <<TCRXBottomHalfTask>> #PeachPuff
+rectangle telemetry_channel <<TMChannel>> #LightYellow
+interface " " as telemetry_channel__TMChannelIface
+rectangle telemetry_counter <<TMCounter>> #LightYellow
+interface " " as telemetry_counter__TMCounterIface
+rectangle tm_pool <<Pool&#60;TMHandler; 20&#62;>> #Plum
+rectangle u32_system_data_pool <<AtomicArray&#60;u32,12&#62;>> #Coral
+rectangle u8_system_data_pool <<AtomicArray&#60;u8,18&#62;>> #Coral
+rectangle uart_drv <<UARTDriver>> #LightYellow
+interface " " as uart_drv__CharDevInit
+interface " " as uart_drv__CharDevRecv
+interface " " as uart_drv__CharDevRelayIrq
+interface " " as uart_drv__CharDevSend
+action uart_hdlr <<UARTIrqHandler>> #PaleGreen
+action_tc_message_queue ==> icu_manager
+bkg_message_queue ==> pus_bkg_tc_executor
+gpio_drv -- gpio_drv__GPIODrvIface
+hk_fdir ==> action_tc_message_queue
+hk_fdir_service_1__PUSService1Iface )-- hk_fdir
+pus_service_12__PUSS12Iface )-- hk_fdir
+pus_service_19__PUSS19Iface )-- hk_fdir
+pus_service_3__PUSS3Iface )-- hk_fdir
+pus_service_4__PUSS4Iface )-- hk_fdir
+pus_service_5__PUSS5Iface )-- hk_fdir
+tc_pool__Allocator )-- hk_fdir
+hk_fdir_service_1 -- hk_fdir_service_1__PUSService1Iface
+obt_manager__OBTManagerIface )-- hk_fdir_service_1
+telemetry_channel__TMChannelIface )-- hk_fdir_service_1
+telemetry_counter__TMCounterIface )-- hk_fdir_service_1
+tm_pool__Allocator )-- hk_fdir_service_1
+hk_fdir_timer ==> hk_fdir
+hkfdir_message_queue ==> hk_fdir
+icu_manager ==> bkg_message_queue
+icu_manager ==> hkfdir_message_queue
+mng_tc_executor__MngTCExecIface )-- icu_manager
+tc_pool__Allocator )-- icu_manager
+gpio_drv__GPIODrvIface )-- init
+u32_system_data_pool__AtomicArrayAccess )-- init
+u8_system_data_pool__AtomicArrayAccess )-- init
+uart_drv__CharDevInit )-- init
+irq_2 ==> uart_hdlr
+mng_tc_executor -- mng_tc_executor__MngTCExecIface
+mng_tc_executor_service_1__PUSService1Iface )-- mng_tc_executor
+pus_service_128__PUSS128Iface )-- mng_tc_executor
+pus_service_17__PUSS17Iface )-- mng_tc_executor
+pus_service_2__PUSS2Iface )-- mng_tc_executor
+pus_service_9__PUSS9Iface )-- mng_tc_executor
+mng_tc_executor_service_1 -- mng_tc_executor_service_1__PUSService1Iface
+obt_manager__OBTManagerIface )-- mng_tc_executor_service_1
+telemetry_channel__TMChannelIface )-- mng_tc_executor_service_1
+telemetry_counter__TMCounterIface )-- mng_tc_executor_service_1
+tm_pool__Allocator )-- mng_tc_executor_service_1
+obt_manager -- obt_manager__OBTManagerIface
+system_entry__SystemAPI )-- obt_manager
+pus_bkg_tc_executor_service_1__PUSService1Iface )-- pus_bkg_tc_executor
+pus_service_20__PUSS20Iface )-- pus_bkg_tc_executor
+pus_service_6__PUSS6Iface )-- pus_bkg_tc_executor
+tc_pool__Allocator )-- pus_bkg_tc_executor
+obt_manager__OBTManagerIface )-- pus_bkg_tc_executor_service_1
+pus_bkg_tc_executor_service_1 -- pus_bkg_tc_executor_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_bkg_tc_executor_service_1
+telemetry_counter__TMCounterIface )-- pus_bkg_tc_executor_service_1
+tm_pool__Allocator )-- pus_bkg_tc_executor_service_1
+obt_manager__OBTManagerIface )-- pus_service_12
+pus_service_12 -- pus_service_12__PUSS12Iface
+pus_service_12_service_1__PUSService1Iface )-- pus_service_12
+telemetry_channel__TMChannelIface )-- pus_service_12
+telemetry_counter__TMCounterIface )-- pus_service_12
+tm_pool__Allocator )-- pus_service_12
+u32_system_data_pool__AtomicArrayAccess )-- pus_service_12
+u8_system_data_pool__AtomicArrayAccess )-- pus_service_12
+pus_service_128 -- pus_service_128__PUSS128Iface
+pus_service_128_service_1__PUSService1Iface )-- pus_service_128
+obt_manager__OBTManagerIface )-- pus_service_128_service_1
+pus_service_128_service_1 -- pus_service_128_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_128_service_1
+telemetry_counter__TMCounterIface )-- pus_service_128_service_1
+tm_pool__Allocator )-- pus_service_128_service_1
+obt_manager__OBTManagerIface )-- pus_service_12_service_1
+pus_service_12_service_1 -- pus_service_12_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_12_service_1
+telemetry_counter__TMCounterIface )-- pus_service_12_service_1
+tm_pool__Allocator )-- pus_service_12_service_1
+obt_manager__OBTManagerIface )-- pus_service_17
+pus_service_17 -- pus_service_17__PUSS17Iface
+pus_service_17_service_1__PUSService1Iface )-- pus_service_17
+telemetry_channel__TMChannelIface )-- pus_service_17
+telemetry_counter__TMCounterIface )-- pus_service_17
+tm_pool__Allocator )-- pus_service_17
+obt_manager__OBTManagerIface )-- pus_service_17_service_1
+pus_service_17_service_1 -- pus_service_17_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_17_service_1
+telemetry_counter__TMCounterIface )-- pus_service_17_service_1
+tm_pool__Allocator )-- pus_service_17_service_1
+pus_service_19 -- pus_service_19__PUSS19Iface
+pus_service_19_service_1__PUSService1Iface )-- pus_service_19
+obt_manager__OBTManagerIface )-- pus_service_19_service_1
+pus_service_19_service_1 -- pus_service_19_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_19_service_1
+telemetry_counter__TMCounterIface )-- pus_service_19_service_1
+tm_pool__Allocator )-- pus_service_19_service_1
+gpio_drv__GPIODrvIface )-- pus_service_2
+pus_service_2 -- pus_service_2__PUSS2Iface
+pus_service_2_service_1__PUSService1Iface )-- pus_service_2
+obt_manager__OBTManagerIface )-- pus_service_20
+pus_service_20 -- pus_service_20__PUSS20Iface
+pus_service_20_service_1__PUSService1Iface )-- pus_service_20
+telemetry_channel__TMChannelIface )-- pus_service_20
+telemetry_counter__TMCounterIface )-- pus_service_20
+tm_pool__Allocator )-- pus_service_20
+u32_system_data_pool__AtomicArrayAccess )-- pus_service_20
+u8_system_data_pool__AtomicArrayAccess )-- pus_service_20
+obt_manager__OBTManagerIface )-- pus_service_20_service_1
+pus_service_20_service_1 -- pus_service_20_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_20_service_1
+telemetry_counter__TMCounterIface )-- pus_service_20_service_1
+tm_pool__Allocator )-- pus_service_20_service_1
+obt_manager__OBTManagerIface )-- pus_service_2_service_1
+pus_service_2_service_1 -- pus_service_2_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_2_service_1
+telemetry_counter__TMCounterIface )-- pus_service_2_service_1
+tm_pool__Allocator )-- pus_service_2_service_1
+obt_manager__OBTManagerIface )-- pus_service_3
+pus_service_3 -- pus_service_3__PUSS3Iface
+pus_service_3_service_1__PUSService1Iface )-- pus_service_3
+pus_service_5__PUSS5Iface )-- pus_service_3
+telemetry_channel__TMChannelIface )-- pus_service_3
+telemetry_counter__TMCounterIface )-- pus_service_3
+tm_pool__Allocator )-- pus_service_3
+u32_system_data_pool__AtomicArrayAccess )-- pus_service_3
+u8_system_data_pool__AtomicArrayAccess )-- pus_service_3
+obt_manager__OBTManagerIface )-- pus_service_3_service_1
+pus_service_3_service_1 -- pus_service_3_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_3_service_1
+telemetry_counter__TMCounterIface )-- pus_service_3_service_1
+tm_pool__Allocator )-- pus_service_3_service_1
+obt_manager__OBTManagerIface )-- pus_service_4
+pus_service_4 -- pus_service_4__PUSS4Iface
+pus_service_4_service_1__PUSService1Iface )-- pus_service_4
+telemetry_channel__TMChannelIface )-- pus_service_4
+telemetry_counter__TMCounterIface )-- pus_service_4
+tm_pool__Allocator )-- pus_service_4
+u32_system_data_pool__AtomicArrayAccess )-- pus_service_4
+u8_system_data_pool__AtomicArrayAccess )-- pus_service_4
+obt_manager__OBTManagerIface )-- pus_service_4_service_1
+pus_service_4_service_1 -- pus_service_4_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_4_service_1
+telemetry_counter__TMCounterIface )-- pus_service_4_service_1
+tm_pool__Allocator )-- pus_service_4_service_1
+obt_manager__OBTManagerIface )-- pus_service_5
+pus_service_5 -- pus_service_5__PUSS5Iface
+pus_service_5_service_1__PUSService1Iface )-- pus_service_5
+telemetry_channel__TMChannelIface )-- pus_service_5
+telemetry_counter__TMCounterIface )-- pus_service_5
+tm_pool__Allocator )-- pus_service_5
+obt_manager__OBTManagerIface )-- pus_service_5_service_1
+pus_service_5_service_1 -- pus_service_5_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_5_service_1
+telemetry_counter__TMCounterIface )-- pus_service_5_service_1
+tm_pool__Allocator )-- pus_service_5_service_1
+obt_manager__OBTManagerIface )-- pus_service_6
+pus_service_6 -- pus_service_6__PUSS6Iface
+pus_service_6_service_1__PUSService1Iface )-- pus_service_6
+telemetry_channel__TMChannelIface )-- pus_service_6
+telemetry_counter__TMCounterIface )-- pus_service_6
+tm_pool__Allocator )-- pus_service_6
+obt_manager__OBTManagerIface )-- pus_service_6_service_1
+pus_service_6_service_1 -- pus_service_6_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_6_service_1
+telemetry_counter__TMCounterIface )-- pus_service_6_service_1
+tm_pool__Allocator )-- pus_service_6_service_1
+obt_manager__OBTManagerIface )-- pus_service_9
+pus_service_9 -- pus_service_9__PUSS9Iface
+pus_service_9_service_1__PUSService1Iface )-- pus_service_9
+obt_manager__OBTManagerIface )-- pus_service_9_service_1
+pus_service_9_service_1 -- pus_service_9_service_1__PUSService1Iface
+telemetry_channel__TMChannelIface )-- pus_service_9_service_1
+telemetry_counter__TMCounterIface )-- pus_service_9_service_1
+tm_pool__Allocator )-- pus_service_9_service_1
+rx_task_message_queue ==> tc_rx_bottom_half_task
+system_entry -- system_entry__SystemEntryInterface
+system_init ==> init
+tc_message_queue ==> icu_manager
+tc_rx_bottom_half_task ==> tc_message_queue
+tc_pool__Allocator )-- tc_rx_bottom_half_task
+uart_drv__CharDevRecv )-- tc_rx_bottom_half_task
+telemetry_channel -- telemetry_channel__TMChannelIface
+tm_pool__Allocator )-- telemetry_channel
+uart_drv__CharDevSend )-- telemetry_channel
+telemetry_counter -- telemetry_counter__TMCounterIface
+uart_drv -- uart_drv__CharDevInit
+uart_drv -- uart_drv__CharDevRecv
+uart_drv -- uart_drv__CharDevRelayIrq
+uart_drv -- uart_drv__CharDevSend
+uart_hdlr ==> rx_task_message_queue
+uart_drv__CharDevRelayIrq )-- uart_hdlr
+@enduml

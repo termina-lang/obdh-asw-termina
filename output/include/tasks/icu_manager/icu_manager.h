@@ -21,12 +21,12 @@ typedef struct {
     __termina_allocator_t a_tc_handler_pool;
     __termina_id_t action_tc_message_queue_input;
     __termina_id_t tc_message_queue_input;
-} ICUManager;
+} CICUManagerTask;
 
-void __ICUManager__termina_task(void * const arg);
+void __CICUManagerTask__termina_task(void * const arg);
 
-__status_int32_t ICUManager__process_action_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
+__status_int32_t CICUManagerTask__process_action_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
 
-__status_int32_t ICUManager__process_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
+__status_int32_t CICUManagerTask__process_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
 
 #endif

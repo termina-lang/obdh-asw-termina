@@ -1,0 +1,23 @@
+[32m[debug][0m Reading project configuration from "termina.yaml"
+[32m[debug][0m Selected platform: "rtems5-leon3-qemu"
+[32m[debug][0m Creating output source folder (if missing): "output/src"
+[32m[debug][0m Creating output include folder (if missing): "output/include"
+[32m[debug][0m Loading application's main module: "app/app.fin"
+[32m[debug][0m Loading project modules
+[32m[debug][0m Ordering project modules
+[32m[debug][0m Type checking project modules
+[32m[debug][0m Obtaining the basic blocks
+[32m[debug][0m Checking basic blocks paths
+[32m[debug][0m Usage checking project modules
+[32m[debug][0m Performing constant simplification
+[32m[debug][0m Checking the architecture of the program
+[32m[debug][0m Performing depth constant folding
+[32m[debug][0m Loading transactional worst-case execution paths
+[32m[debug][0m Transactional worst-case execution paths type checked successfully
+[32m[debug][0m Loading transactional worst-case execution times
+[32m[debug][0m Transactional worst-case execution times type checked successfully
+[32m[debug][0m Loading RT model
+[32m[debug][0m RT model type checked successfully
+[32m[debug][0m Flattening RT model transactions
+[RTTransaction "tr0" (RTTransStepConditional [(ConstInt (TInteger 70 DecRepr) (RTExprTy TConstInt (Position "model.rt" "model.rt" (line 2, column 9) "model.rt" (line 2, column 11))),RTTransStepAction "step0" "hk_fdir" "do_hk_fdir" "path0" (Just (RTTransStepAction "step1" "hk_fdir" "do_fdir" "path0" (Just (RTTransStepAction "step2" "hk_fdir" "check_pending_actions" "path0" (Just (RTTransStepAction "step3" "icu_manager" "process_action_tc" "path0" (Just (RTTransStepAction "step4" "hk_fdir" "exec_tc" "path0" Nothing (RTStepTy (Position "model.rt" "model.rt" (line 4, column 16) "model.rt" (line 4, column 44))))) (RTTransTy (Position "model.rt" "model.rt" (line 1, column 1) "model.rt" (line 7, column 1))))) (RTTransTy (Position "model.rt" "model.rt" (line 1, column 1) "model.rt" (line 7, column 1))))) (RTStepTy (Position "model.rt" "model.rt" (line 1, column 54) "model.rt" (line 5, column 55))))) (RTStepTy (Position "model.rt" "model.rt" (line 1, column 19) "model.rt" (line 5, column 55)))),(ConstInt (TInteger 30 DecRepr) (RTExprTy TConstInt (Position "model.rt" "model.rt" (line 5, column 9) "model.rt" (line 5, column 11))),RTTransStepAction "step0" "hk_fdir" "do_hk_fdir" "path0" (Just (RTTransStepAction "step1" "hk_fdir" "do_fdir" "path0" (Just (RTTransStepAction "step5" "hk_fdir" "check_pending_actions" "path1" Nothing (RTStepTy (Position "model.rt" "model.rt" (line 5, column 12) "model.rt" (line 5, column 54))))) (RTStepTy (Position "model.rt" "model.rt" (line 1, column 54) "model.rt" (line 5, column 55))))) (RTStepTy (Position "model.rt" "model.rt" (line 1, column 19) "model.rt" (line 5, column 55))))] (RTStepTy (Position "model.rt" "model.rt" (line 1, column 19) "model.rt" (line 5, column 55)))) (RTTransTy (Position "model.rt" "model.rt" (line 1, column 1) "model.rt" (line 7, column 1)))]
+[32m[debug][0m Scheduling models generated successfully

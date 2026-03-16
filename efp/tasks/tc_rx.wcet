@@ -1,0 +1,7 @@
+wcet rtems5-leon3-qemu = {
+
+    TCRXBottomHalfTask::get_tc::path0() = 3e-05,
+    TCRXBottomHalfTask::get_tc::path1() = 3e-05,
+    TCRXBottomHalfTask::get_tc::path2() = 3e-05
+
+};

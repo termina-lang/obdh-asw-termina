@@ -28,7 +28,7 @@ resource class CPUSService2 provides IPUSService2 {
 
     pus_service_1 : access IPUSService1;
 
-    gpio_driver : access GPIODrvIface;
+    gpio_driver : access IGPIODriver;
 
     method exec2_1TC(&mut self, exec_tc_req_status_update : &PS2ExecTCReqStatusUpdate) -> Status<i32> {
 

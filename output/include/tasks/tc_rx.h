@@ -21,10 +21,10 @@ typedef struct {
         void * __that;
         void (* dequeue)(const __termina_event_t * const, void * const, __option_uint8_t * const);
     } tc_channel;
-} TCRXBottomHalfTask;
+} CTXRxBottomHalfTask;
 
-void __TCRXBottomHalfTask__termina_task(void * const arg);
+void __CTXRxBottomHalfTask__termina_task(void * const arg);
 
-__status_int32_t TCRXBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this, size_t size);
+__status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this, size_t size);
 
 #endif

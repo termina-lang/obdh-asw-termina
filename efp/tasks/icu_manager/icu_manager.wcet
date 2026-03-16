@@ -1,0 +1,14 @@
+wcet rtems5-leon3-qemu = {
+
+    ICUManager::process_action_tc::path0() = 3e-05,
+    ICUManager::process_action_tc::path1() = 3e-05,
+    ICUManager::process_action_tc::path2() = 3e-05,
+    ICUManager::process_action_tc::path3() = 3e-05,
+    ICUManager::process_tc::path0() = 3e-05,
+    ICUManager::process_tc::path1() = 3e-05,
+    ICUManager::process_tc::path2() = 3e-05,
+    ICUManager::process_tc::path3() = 3e-05,
+    ICUManager::process_tc::path4() = 3e-05,
+    ICUManager::process_tc::path5() = 3e-05
+
+};

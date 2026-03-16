@@ -6,14 +6,14 @@ struct MissionOBT {
     finetime: u16;
 };
 
-interface OBTManagerIface {
+interface IOBTManager {
 
     procedure get_current_obt(&mut self, current_obt: &mut MissionOBT);
     procedure set_obt(&mut self, next_obt : MissionOBT);
 
 };
 
-resource class COBTManager provides OBTManagerIface {
+resource class COBTManager provides IOBTManager {
 
     ref_obt : MissionOBT; /**< Reference onboard time at last update */
     ref_time_val_from_power_on : TimeVal; /**< System uptime reference from power on */

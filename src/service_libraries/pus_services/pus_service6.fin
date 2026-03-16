@@ -20,11 +20,11 @@ resource class CPUSService6 provides IPUSService6 {
     mem_id_write_permissions : [bool; banks_number];
     memory : loc [[u8; bank_size] ; banks_number];
 
-    tm_channel : access TMChannelIface;
+    tm_channel : access ITMChannel;
     a_tm_handler_pool : access Allocator<TMHandler>;
-    tm_counter : access TMCounterIface;
+    tm_counter : access ITMCounter;
 
-    obt_manager : access OBTManagerIface;
+    obt_manager : access IOBTManager;
 
     pus_service_1 : access IPUSService1;
 

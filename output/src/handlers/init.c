@@ -7,10 +7,10 @@ const uint32_t Unit = 204U;
 
 const uint32_t Dec = 20U;
 
-__status_int32_t Init__init(const __termina_event_t * const __ev, void * const __this, TimeVal _boot_time) {
+__status_int32_t CInitHandler__init(const __termina_event_t * const __ev, void * const __this, TimeVal _boot_time) {
     
     #line 42 "src/handlers/init.fin"
-    Init * self = (Init *)__this;
+    CInitHandler * self = (CInitHandler *)__this;
 
     #line 44 "src/handlers/init.fin"
     __status_int32_t ret;

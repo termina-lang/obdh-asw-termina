@@ -1,0 +1,30 @@
+wcet rtems5-leon3-qemu = {
+
+    CPUSService5::exec5_5TC::path0() = 3e-05,
+    CPUSService5::exec5_5TC::path1() = 3e-05,
+    CPUSService5::exec5_5TC::path2() = 3e-05,
+    CPUSService5::exec5_6TC::path0() = 3e-05,
+    CPUSService5::exec5_6TC::path1() = 3e-05,
+    CPUSService5::exec5_6TC::path2() = 3e-05,
+    CPUSService5::exec_tc::path0() = 3e-05,
+    CPUSService5::exec_tc::path1() = 3e-05,
+    CPUSService5::exec_tc::path2() = 3e-05,
+    CPUSService5::exec_tc::path3() = 3e-05,
+    CPUSService5::exec_tc::path4() = 3e-05,
+    CPUSService5::exec_tc::path5() = 3e-05,
+    CPUSService5::exec_tc::path6() = 3e-05,
+    CPUSService5::exec_tc::path7() = 3e-05,
+    CPUSService5::exec_tc::path8() = 3e-05,
+    CPUSService5::exec_tc::path9() = 3e-05,
+    CPUSService5::exec_tc::path10() = 3e-05,
+    CPUSService5::exec_tc::path11() = 3e-05,
+    CPUSService5::is_Ev_ID_enabled::path0() = 3e-05,
+    CPUSService5::is_Ev_ID_enabled_ext::path0() = 3e-05,
+    CPUSService5::send_tm_5_2::path0() = 3e-05,
+    CPUSService5::send_tm_5_2::path1() = 3e-05,
+    CPUSService5::send_tm_5_2::path2() = 3e-05,
+    CPUSService5::send_tm_5_x::path0() = 3e-05,
+    CPUSService5::send_tm_5_x::path1() = 3e-05,
+    CPUSService5::send_tm_5_x::path2() = 3e-05
+
+};

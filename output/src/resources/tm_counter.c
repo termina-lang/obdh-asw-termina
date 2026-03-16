@@ -1,10 +1,10 @@
 
 #include "resources/tm_counter.h"
 
-void TMCounter__get_next_tm_count(const __termina_event_t * const __ev, void * const __this, uint16_t * const count) {
+void CTMCounter__get_next_tm_count(const __termina_event_t * const __ev, void * const __this, uint16_t * const count) {
     
     #line 39 "src/resources/tm_counter.fin"
-    TMCounter * self = (TMCounter *)__this;
+    CTMCounter * self = (CTMCounter *)__this;
 
     #line 39 "src/resources/tm_counter.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);

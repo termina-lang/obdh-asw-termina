@@ -1,0 +1,11 @@
+wcet rtems5-leon3-qemu = {
+
+    ManagerTCExecutor::PUS_prio_exec_tc::path0() = 3e-05,
+    ManagerTCExecutor::PUS_prio_exec_tc::path1() = 3e-05,
+    ManagerTCExecutor::PUS_prio_exec_tc::path2() = 3e-05,
+    ManagerTCExecutor::PUS_prio_exec_tc::path3() = 3e-05,
+    ManagerTCExecutor::PUS_prio_exec_tc::path4() = 3e-05,
+    ManagerTCExecutor::mng_tc_acceptation::path0() = 3e-05,
+    ManagerTCExecutor::mng_tc_rejection::path0() = 3e-05
+
+};

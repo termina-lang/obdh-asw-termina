@@ -37,12 +37,12 @@ typedef struct {
         void * __that;
         void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const);
     } pus_service_17;
-} ManagerTCExecutor;
+} CManagerTExecutor;
 
-void ManagerTCExecutor__PUS_prio_exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const status, _Bool * const reebot_flag);
+void CManagerTExecutor__PUS_prio_exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const status, _Bool * const reebot_flag);
 
-void ManagerTCExecutor__mng_tc_acceptation(const __termina_event_t * const __ev, void * const __this, const TCHandler * const tc_handler, __status_int32_t * const status);
+void CManagerTExecutor__mng_tc_acceptation(const __termina_event_t * const __ev, void * const __this, const TCHandler * const tc_handler, __status_int32_t * const status);
 
-void ManagerTCExecutor__mng_tc_rejection(const __termina_event_t * const __ev, void * const __this, const TCHandler * const tc_handler, const TCStatus * const tc_status, __status_int32_t * const status);
+void CManagerTExecutor__mng_tc_rejection(const __termina_event_t * const __ev, void * const __this, const TCHandler * const tc_handler, const TCStatus * const tc_status, __status_int32_t * const status);
 
 #endif

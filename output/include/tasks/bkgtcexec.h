@@ -31,10 +31,10 @@ typedef struct {
     } pus_service_20;
     __termina_allocator_t a_tc_handler_pool;
     __termina_id_t bkg_message_queue_input;
-} PUSBKGTCExecutor;
+} CBKGTCExecutorTask;
 
-void __PUSBKGTCExecutor__termina_task(void * const arg);
+void __CBKGTCExecutorTask__termina_task(void * const arg);
 
-__status_int32_t PUSBKGTCExecutor__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
+__status_int32_t CBKGTCExecutorTask__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
 
 #endif

@@ -33,7 +33,7 @@ task class CICUManagerTask {
 
     /// @var tc_executor
     /// @brief Interface for TC execution and rejection management logic.
-    tc_executor: access MngTCExecIface;
+    tc_executor: access IMngTCExecutor;
 
 
 

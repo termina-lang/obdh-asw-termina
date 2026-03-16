@@ -1,0 +1,23 @@
+wcet rtems5-leon3-qemu = {
+
+    CAPBUARTDriver::disable_RF::path0() = 3e-05,
+    CAPBUARTDriver::disable_TF::path0() = 3e-05,
+    CAPBUARTDriver::disable_TI::path0() = 3e-05,
+    CAPBUARTDriver::enable_RI::path0() = 3e-05,
+    CAPBUARTDriver::enable_RX::path0() = 3e-05,
+    CAPBUARTDriver::enable_TI::path0() = 3e-05,
+    CAPBUARTDriver::enable_TX::path0() = 3e-05,
+    CAPBUARTDriver::initialize::path0() = 3e-05,
+    CAPBUARTDriver::initialize::path1() = 3e-05,
+    CAPBUARTDriver::initialize::path2() = 3e-05,
+    CAPBUARTDriver::initialize::path3() = 3e-05,
+    CAPBUARTDriver::initialize::path4() = 3e-05,
+    CAPBUARTDriver::initialize::path5() = 3e-05,
+    CAPBUARTDriver::release_tx::path0() = 3e-05,
+    CAPBUARTDriver::notify_irq::path0() = 3e-05,
+    CAPBUARTDriver::rf_data_ready::path0() = 3e-05,
+    CAPBUARTDriver::tf_is_empty::path0() = 3e-05,
+    CAPBUARTDriver::send::path0(nbytes) = 3e-05,
+    CAPBUARTDriver::tf_is_full::path0() = 3e-05
+
+};
