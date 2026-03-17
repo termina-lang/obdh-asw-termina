@@ -16,7 +16,7 @@ typedef struct {
     __termina_resource_lock_type_t __lock_type;
     struct {
         void (* clock_get_uptime)(const __termina_event_t * const, TimeVal * const);
-    } system_port;
+    } system_api;
     TimeVal ref_time_val_from_power_on;
     MissionOBT ref_obt;
 } COBTManager;

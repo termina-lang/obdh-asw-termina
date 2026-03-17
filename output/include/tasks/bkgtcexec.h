@@ -29,7 +29,7 @@ typedef struct {
         void * __that;
         void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const);
     } pus_service_20;
-    __termina_allocator_t a_tc_handler_pool;
+    __termina_allocator_t tc_handler_pool;
     __termina_id_t bkg_message_queue_input;
 } CBKGTCExecutorTask;
 

@@ -78,7 +78,7 @@ resource gpio_drv : CGPIODriver = {
 
 resource tm_channel : CTMChannel = {
     char_dev <-> uart_drv,
-    a_tm_handler_pool <-> tm_pool
+    tm_handler_pool <-> tm_pool
 };
 
 
@@ -90,7 +90,7 @@ resource obt_manager : COBTManager = {
 
     ref_obt = {seconds = 0, finetime = 0},
     ref_time_val_from_power_on = {tv_sec = 0, tv_usec = 0},
-    system_port <-> system_entry
+    system_api <-> system_entry
 };
 
 #[unprotected]
@@ -113,7 +113,7 @@ resource pus_service_5 : CPUSService5 = {
     Ev_ID_enable_config = {0x00000007, 0x00000000, 0x00000000, 0x00000007},
     exec_tc_req_status_update = ps5_init_tc_req_status_update,
     tm_channel <-> tm_channel,
-    a_tm_handler_pool <-> tm_pool,
+    tm_handler_pool <-> tm_pool,
     tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
@@ -131,7 +131,7 @@ resource pus_service_3 : CPUSService3 = {
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> tm_channel,   
-    a_tm_handler_pool <-> tm_pool,
+    tm_handler_pool <-> tm_pool,
     tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1,
@@ -151,7 +151,7 @@ resource pus_service_12 : CPUSService12 = {
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> tm_channel,
-    a_tm_handler_pool <-> tm_pool,
+    tm_handler_pool <-> tm_pool,
     tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
@@ -175,7 +175,7 @@ resource pus_service_20 : CPUSService20 = {
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> tm_channel,
-    a_tm_handler_pool <-> tm_pool,
+    tm_handler_pool <-> tm_pool,
     tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
@@ -184,7 +184,7 @@ resource pus_service_20 : CPUSService20 = {
 resource pus_service_17 : CPUSService17 = {
     exec_tc_req_status_update = ps17_init_tc_req_status_update,
     tm_channel <-> tm_channel,
-    a_tm_handler_pool <-> tm_pool,
+    tm_handler_pool <-> tm_pool,
     tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
@@ -205,7 +205,7 @@ resource pus_service_6 : CPUSService6 = {
     mem_id_write_permissions = {false, true, true, true, true, true, true, false},
     memory @ 0x40000000,
     tm_channel <-> tm_channel,
-    a_tm_handler_pool <-> tm_pool,
+    tm_handler_pool <-> tm_pool,
     tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
@@ -218,7 +218,7 @@ resource pus_service_4 : CPUSService4 = {
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
     tm_channel <-> tm_channel,
-    a_tm_handler_pool <-> tm_pool,
+    tm_handler_pool <-> tm_pool,
     tm_counter <-> tm_counter,
     obt_manager <-> obt_manager,
     pus_service_1 <-> pus_service_1
@@ -234,7 +234,7 @@ resource mng_tc_executor : CManagerTExecutor = {
 
 
 handler init_hdlr : CInitHandler = {
-    uart <-> uart_drv,
+    uart_drv <-> uart_drv,
     gpio_driver <-> gpio_drv,
     system_data_pool_u32 <-> u32_system_data_pool,
     system_data_pool_u8 <-> u8_system_data_pool,
@@ -253,7 +253,7 @@ task tc_rx_bottom_half_task : CTXRxBottomHalfTask = {
     tc_channel <-> tc_channel,
     frame_ready_input <- rx_task_message_queue,
     tc_message_queue_output -> tc_message_queue,
-    a_tc_handler_pool <-> tc_pool
+    tc_handler_pool <-> tc_pool
 };
 
 
@@ -261,10 +261,10 @@ task tc_rx_bottom_half_task : CTXRxBottomHalfTask = {
 task icu_manager : CICUManagerTask = {
     tc_message_queue_input <- tc_message_queue,
     action_tc_message_queue_input <- action_tc_message_queue,
-    a_tc_handler_pool <-> tc_pool,
+    tc_handler_pool <-> tc_pool,
     hkfdir_message_queue_output -> hkfdir_message_queue,
     bkg_message_queue_output -> bkg_message_queue,
-    tc_executor <-> mng_tc_executor
+    mng_tc_executor <-> mng_tc_executor
 };
 
 #[priority(6)]
@@ -272,7 +272,7 @@ task hk_fdir : CHousekeepingFDIRTask = {
     hk_fdir_timer_ev <- hk_fdir_timer,
     hkfdir_message_queue_input <- hkfdir_message_queue,
     action_tc_message_queue_output -> action_tc_message_queue,
-    a_tc_handler_pool <-> tc_pool,
+    tc_handler_pool <-> tc_pool,
     pus_service_3 <-> pus_service_3,
     pus_service_12 <-> pus_service_12,
     pus_service_5 <-> pus_service_5,
@@ -284,7 +284,7 @@ task hk_fdir : CHousekeepingFDIRTask = {
 #[priority(8)]
 task bkg_tc_executor : CBKGTCExecutorTask = {
     bkg_message_queue_input <- bkg_message_queue,
-    a_tc_handler_pool  <-> tc_pool,
+    tc_handler_pool  <-> tc_pool,
     pus_service_20 <-> pus_service_20,
     pus_service_6 <-> pus_service_6,
     pus_service_1 <-> pus_service_1

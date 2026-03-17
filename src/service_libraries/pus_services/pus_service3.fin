@@ -22,7 +22,7 @@ resource class CPUSService3 provides IPUSService3 {
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
     tm_channel: access ITMChannel;   
-    a_tm_handler_pool : access Allocator<TMHandler>;
+    tm_handler_pool : access Allocator<TMHandler>;
     tm_counter : access ITMCounter;
 
     obt_manager : access IOBTManager;
@@ -328,7 +328,7 @@ resource class CPUSService3 provides IPUSService3 {
                     self->hk_config_table[i].interval_control = 0;
 
                     var tm_handler : Option<box TMHandler> = None;
-                    self->a_tm_handler_pool.alloc(&mut tm_handler);
+                    self->tm_handler_pool.alloc(&mut tm_handler);
 
                     match tm_handler {
 
@@ -375,7 +375,7 @@ resource class CPUSService3 provides IPUSService3 {
                          else {
                             //Generar TM[5,2]
                             self->pus_service_5.send_tm_5_2(&mut do_hk_status);
-                            self->a_tm_handler_pool.free(b_tm_handler);
+                            self->tm_handler_pool.free(b_tm_handler);
                         }
                         
                    

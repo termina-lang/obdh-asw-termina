@@ -21,7 +21,7 @@ resource class CPUSService6 provides IPUSService6 {
     memory : loc [[u8; bank_size] ; banks_number];
 
     tm_channel : access ITMChannel;
-    a_tm_handler_pool : access Allocator<TMHandler>;
+    tm_handler_pool : access Allocator<TMHandler>;
     tm_counter : access ITMCounter;
 
     obt_manager : access IOBTManager;
@@ -199,7 +199,7 @@ resource class CPUSService6 provides IPUSService6 {
             if (status is Success) {
 
                 var tm_handler : Option<box TMHandler> = None;
-                self->a_tm_handler_pool.alloc(&mut tm_handler);
+                self->tm_handler_pool.alloc(&mut tm_handler);
 
                 match tm_handler {
 
@@ -216,7 +216,7 @@ resource class CPUSService6 provides IPUSService6 {
                         if (status is Success){
                             self->tm_channel.send_tm(b_tm_handler, &mut status);
                         } else {
-                            self->a_tm_handler_pool.free(b_tm_handler);
+                            self->tm_handler_pool.free(b_tm_handler);
                         }
 
                         if (status is Success) {
@@ -288,7 +288,7 @@ resource class CPUSService6 provides IPUSService6 {
                 case Some(checksum) => {
 
                     var tm_handler : Option<box TMHandler> = None;
-                    self->a_tm_handler_pool.alloc(&mut tm_handler);
+                    self->tm_handler_pool.alloc(&mut tm_handler);
 
                     match tm_handler {
 
@@ -304,7 +304,7 @@ resource class CPUSService6 provides IPUSService6 {
                             if (status is Success){
                                 self->tm_channel.send_tm(b_tm_handler, &mut status);
                             } else {
-                                self->a_tm_handler_pool.free(b_tm_handler);
+                                self->tm_handler_pool.free(b_tm_handler);
                             }
 
                             if (status is Success) {

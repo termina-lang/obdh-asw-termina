@@ -35,7 +35,7 @@ void CPUSService3__do_hk(const __termina_event_t * const __ev, void * const __th
                 tm_handler.__variant = None;
 
                 #line 331 "src/service_libraries/pus_services/pus_service3.fin"
-                self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that, &tm_handler);
+                self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
 
                 #line 335 "src/service_libraries/pus_services/pus_service3.fin"
                 if (tm_handler.__variant == Some) {
@@ -130,7 +130,7 @@ void CPUSService3__do_hk(const __termina_event_t * const __ev, void * const __th
                         self->pus_service_5.send_tm_5_2(__ev, self->pus_service_5.__that, &do_hk_status);
 
                         #line 378 "src/service_libraries/pus_services/pus_service3.fin"
-                        self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that, b_tm_handler);
+                        self->tm_handler_pool.free(__ev, self->tm_handler_pool.__that, b_tm_handler);
 
                     }
 

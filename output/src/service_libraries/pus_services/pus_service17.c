@@ -30,7 +30,7 @@ __status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * const __ev,
         tm_handler.__variant = None;
 
         #line 91 "src/service_libraries/pus_services/pus_service17.fin"
-        self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that, &tm_handler);
+        self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
 
         #line 95 "src/service_libraries/pus_services/pus_service17.fin"
         if (tm_handler.__variant == Some) {

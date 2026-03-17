@@ -15,10 +15,10 @@ typedef struct {
         void (* PUS_prio_exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const, _Bool * const);
         void (* mng_tc_acceptation)(const __termina_event_t * const, void * const, const TCHandler * const, __status_int32_t * const);
         void (* mng_tc_rejection)(const __termina_event_t * const, void * const, const TCHandler * const, const TCStatus * const, __status_int32_t * const);
-    } tc_executor;
+    } mng_tc_executor;
     __termina_out_port_t bkg_message_queue_output;
     __termina_out_port_t hkfdir_message_queue_output;
-    __termina_allocator_t a_tc_handler_pool;
+    __termina_allocator_t tc_handler_pool;
     __termina_id_t action_tc_message_queue_input;
     __termina_id_t tc_message_queue_input;
 } CICUManagerTask;

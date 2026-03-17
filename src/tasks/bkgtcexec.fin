@@ -25,7 +25,7 @@ task class CBKGTCExecutorTask {
     bkg_message_queue_input: in box TCHandler triggers exec_tc;
 
     /// Allocator for TCHandler objects.
-    a_tc_handler_pool : access Allocator<TCHandler>;
+    tc_handler_pool : access Allocator<TCHandler>;
 
     /// Pointer to the interface of PUS Service 20.
     pus_service_20 : access IPUSService20;
@@ -68,7 +68,7 @@ task class CBKGTCExecutorTask {
                     
         }
 
-        self->a_tc_handler_pool.free(tc_handler);
+        self->tc_handler_pool.free(tc_handler);
 
         return res;
     }

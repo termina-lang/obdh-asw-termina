@@ -18,7 +18,7 @@ resource class COBTManager provides IOBTManager {
     ref_obt : MissionOBT; /**< Reference onboard time at last update */
     ref_time_val_from_power_on : TimeVal; /**< System uptime reference from power on */
 
-    system_port : access SystemAPI;
+    system_api : access SystemAPI;
 
     /**
      * @brief Set the onboard time (OBT) reference.
@@ -30,7 +30,7 @@ resource class COBTManager provides IOBTManager {
     procedure set_obt (&mut self, next_obt : MissionOBT) {
 
         self->ref_obt = next_obt;
-        self->system_port.clock_get_uptime(&mut self->ref_time_val_from_power_on);
+        self->system_api.clock_get_uptime(&mut self->ref_time_val_from_power_on);
 
         return;
 
@@ -52,7 +52,7 @@ resource class COBTManager provides IOBTManager {
             tv_sec = 0,
             tv_usec = 0
         };
-        self->system_port.clock_get_uptime(&mut time_val_from_power_on);
+        self->system_api.clock_get_uptime(&mut time_val_from_power_on);
         var interval : TimeVal = {
             tv_sec = 0,
             tv_usec = 0

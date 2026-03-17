@@ -16,7 +16,7 @@ resource class CPUSService20 provides IPUSService20 {
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
     tm_channel: access ITMChannel;   
-    a_tm_handler_pool : access Allocator<TMHandler>;
+    tm_handler_pool : access Allocator<TMHandler>;
     tm_counter : access ITMCounter;
 
     obt_manager : access IOBTManager;
@@ -52,7 +52,7 @@ resource class CPUSService20 provides IPUSService20 {
                     &mut status);
 
             var tm_handler : Option<box TMHandler> = None;
-            self->a_tm_handler_pool.alloc(&mut tm_handler);
+            self->tm_handler_pool.alloc(&mut tm_handler);
 
             match tm_handler {
 
@@ -97,7 +97,7 @@ resource class CPUSService20 provides IPUSService20 {
                         close_tm(&mut b_tm_handler, 20, 2, tm_count, current_obt);
                         self->tm_channel.send_tm(b_tm_handler, &mut status);
                     } else {
-                        self->a_tm_handler_pool.free(b_tm_handler);
+                        self->tm_handler_pool.free(b_tm_handler);
                     }
                 
                 }

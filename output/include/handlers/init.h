@@ -26,7 +26,7 @@ typedef struct {
     struct {
         void * __that;
         void (* initialize)(const __termina_event_t * const, void * const);
-    } uart;
+    } uart_drv;
 } CInitHandler;
 
 __status_int32_t CInitHandler__init(const __termina_event_t * const __ev, void * const __this, TimeVal _boot_time);

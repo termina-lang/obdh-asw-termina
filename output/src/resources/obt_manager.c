@@ -20,7 +20,7 @@ void COBTManager__get_current_obt(const __termina_event_t * const __ev, void * c
     time_val_from_power_on.tv_usec = 0U;
 
     #line 55 "src/resources/obt_manager.fin"
-    self->system_port.clock_get_uptime(__ev, &time_val_from_power_on);
+    self->system_api.clock_get_uptime(__ev, &time_val_from_power_on);
 
     #line 56 "src/resources/obt_manager.fin"
     TimeVal interval;
@@ -64,7 +64,7 @@ void COBTManager__set_obt(const __termina_event_t * const __ev, void * const __t
     self->ref_obt = next_obt;
 
     #line 33 "src/resources/obt_manager.fin"
-    self->system_port.clock_get_uptime(__ev, &self->ref_time_val_from_power_on);
+    self->system_api.clock_get_uptime(__ev, &self->ref_time_val_from_power_on);
 
     #line 35 "src/resources/obt_manager.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);

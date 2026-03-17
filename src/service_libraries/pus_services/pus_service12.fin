@@ -31,7 +31,7 @@ resource class CPUSService12 provides IPUSService12 {
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
     tm_channel : access ITMChannel;
-    a_tm_handler_pool : access Allocator<TMHandler>;
+    tm_handler_pool : access Allocator<TMHandler>;
     tm_counter : access ITMCounter;
 
     obt_manager : access IOBTManager;
@@ -591,7 +591,7 @@ resource class CPUSService12 provides IPUSService12 {
         if(self->monitoring_transition_counter as usize == max_num_transitions){
 
             var tm_handler : Option<box TMHandler> = None;
-            self->a_tm_handler_pool.alloc(&mut tm_handler);
+            self->tm_handler_pool.alloc(&mut tm_handler);
 
             match tm_handler {
 
@@ -608,7 +608,7 @@ resource class CPUSService12 provides IPUSService12 {
                         self->tm_channel.send_tm(b_tm_handler, &mut monitoring_status);
 
                     } else {
-                        self->a_tm_handler_pool.free(b_tm_handler);
+                        self->tm_handler_pool.free(b_tm_handler);
                     }
                 
             

@@ -14,7 +14,7 @@
 typedef struct {
     __termina_id_t __task_id;
     __termina_id_t __task_msg_queue_id;
-    __termina_allocator_t a_tc_handler_pool;
+    __termina_allocator_t tc_handler_pool;
     __termina_out_port_t tc_message_queue_output;
     __termina_id_t frame_ready_input;
     struct {

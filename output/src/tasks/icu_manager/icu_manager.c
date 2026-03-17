@@ -35,10 +35,10 @@ __status_int32_t CICUManagerTask__process_action_tc(const __termina_event_t * co
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
         
         #line 144 "src/tasks/icu_manager/icu_manager.fin"
-        self->tc_executor.PUS_prio_exec_tc(__ev, self->tc_executor.__that, (TCHandler *)tc_handler.data, &ret, &reebot_flag);
+        self->mng_tc_executor.PUS_prio_exec_tc(__ev, self->mng_tc_executor.__that, (TCHandler *)tc_handler.data, &ret, &reebot_flag);
 
         #line 145 "src/tasks/icu_manager/icu_manager.fin"
-        self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that, tc_handler);
+        self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
         #line 147 "src/tasks/icu_manager/icu_manager.fin"
         if (reebot_flag) {
@@ -54,7 +54,7 @@ __status_int32_t CICUManagerTask__process_action_tc(const __termina_event_t * co
     {
         
         #line 154 "src/tasks/icu_manager/icu_manager.fin"
-        self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that, tc_handler);
+        self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
     }
 
@@ -83,7 +83,7 @@ __status_int32_t CICUManagerTask__process_tc(const __termina_event_t * const __e
     if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Accepted) {
         
         #line 63 "src/tasks/icu_manager/icu_manager.fin"
-        self->tc_executor.mng_tc_acceptation(__ev, self->tc_executor.__that, (TCHandler *)tc_handler.data, &ret);
+        self->mng_tc_executor.mng_tc_acceptation(__ev, self->mng_tc_executor.__that, (TCHandler *)tc_handler.data, &ret);
 
         #line 67 "src/tasks/icu_manager/icu_manager.fin"
         if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
@@ -103,10 +103,10 @@ __status_int32_t CICUManagerTask__process_tc(const __termina_event_t * const __e
         if (current_tc_status.execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
             
             #line 78 "src/tasks/icu_manager/icu_manager.fin"
-            self->tc_executor.PUS_prio_exec_tc(__ev, self->tc_executor.__that, (TCHandler *)tc_handler.data, &ret, &reebot_flag);
+            self->mng_tc_executor.PUS_prio_exec_tc(__ev, self->mng_tc_executor.__that, (TCHandler *)tc_handler.data, &ret, &reebot_flag);
 
             #line 80 "src/tasks/icu_manager/icu_manager.fin"
-            self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that, tc_handler);
+            self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
             #line 82 "src/tasks/icu_manager/icu_manager.fin"
             if (reebot_flag) {
@@ -122,7 +122,7 @@ __status_int32_t CICUManagerTask__process_tc(const __termina_event_t * const __e
         {
             
             #line 90 "src/tasks/icu_manager/icu_manager.fin"
-            self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that, tc_handler);
+            self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
         }
 
@@ -131,16 +131,16 @@ __status_int32_t CICUManagerTask__process_tc(const __termina_event_t * const __e
     if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Rejected) {
         
         #line 97 "src/tasks/icu_manager/icu_manager.fin"
-        self->tc_executor.mng_tc_rejection(__ev, self->tc_executor.__that, (TCHandler *)tc_handler.data, &current_tc_status, &ret);
+        self->mng_tc_executor.mng_tc_rejection(__ev, self->mng_tc_executor.__that, (TCHandler *)tc_handler.data, &current_tc_status, &ret);
 
         #line 98 "src/tasks/icu_manager/icu_manager.fin"
-        self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that, tc_handler);
+        self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
     } else
     {
         
         #line 102 "src/tasks/icu_manager/icu_manager.fin"
-        self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that, tc_handler);
+        self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
     }
 

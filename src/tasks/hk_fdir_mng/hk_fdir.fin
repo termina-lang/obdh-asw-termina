@@ -26,7 +26,7 @@ task class CHousekeepingFDIRTask {
     action_tc_message_queue_output: out box TCHandler;
 
     /// @brief Allocator for TCHandler objects.
-    a_tc_handler_pool : access Allocator<TCHandler>;
+    tc_handler_pool : access Allocator<TCHandler>;
 
     /// @brief Interface to PUS service 3 (Housekeeping service).
     pus_service_3 : access IPUSService3;
@@ -125,7 +125,7 @@ task class CHousekeepingFDIRTask {
         if (n < 4){
 
             var tc_handler : Option<box TCHandler> = None;
-            self->a_tc_handler_pool.alloc(&mut tc_handler);
+            self->tc_handler_pool.alloc(&mut tc_handler);
             
             match tc_handler {
 
@@ -212,7 +212,7 @@ task class CHousekeepingFDIRTask {
                     
         }
 
-        self->a_tc_handler_pool.free(tc_handler);
+        self->tc_handler_pool.free(tc_handler);
 
         return status;
     }

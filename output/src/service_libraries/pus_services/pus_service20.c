@@ -33,7 +33,7 @@ __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev,
         tm_handler.__variant = None;
 
         #line 55 "src/service_libraries/pus_services/pus_service20.fin"
-        self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that, &tm_handler);
+        self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
 
         #line 59 "src/service_libraries/pus_services/pus_service20.fin"
         if (tm_handler.__variant == Some) {
@@ -127,7 +127,7 @@ __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev,
             {
                 
                 #line 100 "src/service_libraries/pus_services/pus_service20.fin"
-                self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that, b_tm_handler);
+                self->tm_handler_pool.free(__ev, self->tm_handler_pool.__that, b_tm_handler);
 
             }
 

@@ -11,7 +11,7 @@
 
 typedef struct {
     __termina_resource_lock_type_t __lock_type;
-    __termina_allocator_t a_tm_handler_pool;
+    __termina_allocator_t tm_handler_pool;
     struct {
         void * __that;
         void (* send)(const __termina_event_t * const, void * const, const size_t, const uint8_t *, __status_int32_t * const);

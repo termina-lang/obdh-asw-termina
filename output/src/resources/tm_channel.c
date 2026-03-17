@@ -45,7 +45,7 @@ void CTMChannel__send_tm(const __termina_event_t * const __ev, void * const __th
     }
 
     #line 76 "src/resources/tm_channel.fin"
-    self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that, tm_handler);
+    self->tm_handler_pool.free(__ev, self->tm_handler_pool.__that, tm_handler);
 
     #line 78 "src/resources/tm_channel.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);

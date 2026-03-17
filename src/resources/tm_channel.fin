@@ -36,7 +36,7 @@ resource class CTMChannel provides ITMChannel {
     /**
      * @brief Allocator pool for telemetry handlers.
      */
-    a_tm_handler_pool : access Allocator<TMHandler>;
+    tm_handler_pool : access Allocator<TMHandler>;
 
 
     /**
@@ -73,7 +73,7 @@ resource class CTMChannel provides ITMChannel {
         }
         
         // Free the telemetry handler back to the memory pool
-        self->a_tm_handler_pool.free(tm_handler);
+        self->tm_handler_pool.free(tm_handler);
 
         return;
 

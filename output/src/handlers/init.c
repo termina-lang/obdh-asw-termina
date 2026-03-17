@@ -18,7 +18,7 @@ __status_int32_t CInitHandler__init(const __termina_event_t * const __ev, void *
     ret.__variant = Success;
 
     #line 47 "src/handlers/init.fin"
-    self->uart.initialize(__ev, self->uart.__that);
+    self->uart_drv.initialize(__ev, self->uart_drv.__that);
 
     #line 50 "src/handlers/init.fin"
     self->gpio_driver.init_gpio(__ev, self->gpio_driver.__that);

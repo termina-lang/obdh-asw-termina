@@ -263,7 +263,7 @@ void CPUSService12__add_monitoring_transition(const __termina_event_t * const __
         tm_handler.__variant = None;
 
         #line 594 "src/service_libraries/pus_services/pus_service12.fin"
-        self->a_tm_handler_pool.alloc(__ev, self->a_tm_handler_pool.__that, &tm_handler);
+        self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
 
         #line 598 "src/service_libraries/pus_services/pus_service12.fin"
         if (tm_handler.__variant == Some) {
@@ -300,7 +300,7 @@ void CPUSService12__add_monitoring_transition(const __termina_event_t * const __
             {
                 
                 #line 611 "src/service_libraries/pus_services/pus_service12.fin"
-                self->a_tm_handler_pool.free(__ev, self->a_tm_handler_pool.__that, b_tm_handler);
+                self->tm_handler_pool.free(__ev, self->tm_handler_pool.__that, b_tm_handler);
 
             }
 

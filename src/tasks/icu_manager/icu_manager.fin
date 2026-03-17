@@ -19,9 +19,9 @@ task class CICUManagerTask {
     /// @brief Input message queue for receiving action telecommands.
     action_tc_message_queue_input: in box TCHandler triggers process_action_tc;
 
-    /// @var a_tc_handler_pool
+    /// @var tc_handler_pool
     /// @brief Allocator interface for managing TC handler memory.
-    a_tc_handler_pool : access Allocator<TCHandler>;
+    tc_handler_pool : access Allocator<TCHandler>;
 
     /// @var hkfdir_message_queue_output
     /// @brief Output queue for housekeeping/FDIR-related TCs.
@@ -31,9 +31,9 @@ task class CICUManagerTask {
     /// @brief Output queue for background telecommands.
     bkg_message_queue_output: out box TCHandler;
 
-    /// @var tc_executor
+    /// @var mng_tc_executor
     /// @brief Interface for TC execution and rejection management logic.
-    tc_executor: access IMngTCExecutor;
+    mng_tc_executor: access IMngTCExecutor;
 
 
 
@@ -60,7 +60,7 @@ task class CICUManagerTask {
 
             case Accepted => {
 
-                self->tc_executor.mng_tc_acceptation(&(tc_handler), &mut ret);
+                self->mng_tc_executor.mng_tc_acceptation(&(tc_handler), &mut ret);
 
                 match current_tc_status.execution_status {
 
@@ -75,9 +75,9 @@ task class CICUManagerTask {
                     }
                     case ExecCtrlPrioTC => {
 
-                        self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
+                        self->mng_tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
 
-                        self->a_tc_handler_pool.free(tc_handler);
+                        self->tc_handler_pool.free(tc_handler);
 
                         if(reebot_flag) {
                             reebot_flag = false;
@@ -87,19 +87,19 @@ task class CICUManagerTask {
                     }
                     case Undefined => {
                         
-                        self->a_tc_handler_pool.free(tc_handler);
+                        self->tc_handler_pool.free(tc_handler);
                     }
 
                 }    
             }
             case Rejected => { 
 
-                self->tc_executor.mng_tc_rejection(&tc_handler, &current_tc_status, &mut ret);
-                self->a_tc_handler_pool.free(tc_handler);
+                self->mng_tc_executor.mng_tc_rejection(&tc_handler, &current_tc_status, &mut ret);
+                self->tc_handler_pool.free(tc_handler);
             }
             case Undefined => {
                 
-                self->a_tc_handler_pool.free(tc_handler);
+                self->tc_handler_pool.free(tc_handler);
             }
         }
 
@@ -141,8 +141,8 @@ task class CICUManagerTask {
             }
             case ExecCtrlPrioTC => {
 
-                self->tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
-                self->a_tc_handler_pool.free(tc_handler); 
+                self->mng_tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
+                self->tc_handler_pool.free(tc_handler); 
 
                 if(reebot_flag) {
                     reebot_flag = false;
@@ -151,7 +151,7 @@ task class CICUManagerTask {
             }
             case Undefined => {
                 
-                self->a_tc_handler_pool.free(tc_handler);
+                self->tc_handler_pool.free(tc_handler);
             }
 
         }

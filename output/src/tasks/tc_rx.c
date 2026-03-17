@@ -17,7 +17,7 @@ __status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __e
     tc_handler.__variant = None;
 
     #line 20 "src/tasks/tc_rx.fin"
-    self->a_tc_handler_pool.alloc(__ev, self->a_tc_handler_pool.__that, &tc_handler);
+    self->tc_handler_pool.alloc(__ev, self->tc_handler_pool.__that, &tc_handler);
 
     #line 24 "src/tasks/tc_rx.fin"
     if (tc_handler.__variant == Some) {
@@ -73,7 +73,7 @@ __status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __e
         {
             
             #line 54 "src/tasks/tc_rx.fin"
-            self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that, tc_handler_b);
+            self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler_b);
 
         }
 

@@ -24,7 +24,7 @@ resource class CPUSService4 provides IPUSService4 {
     system_data_pool_u8 : access AtomicArrayAccess<u8; sdp_num_u8_params>;
 
     tm_channel: access ITMChannel;   
-    a_tm_handler_pool : access Allocator<TMHandler>;
+    tm_handler_pool : access Allocator<TMHandler>;
     tm_counter : access ITMCounter;
 
     obt_manager : access IOBTManager;
@@ -165,7 +165,7 @@ resource class CPUSService4 provides IPUSService4 {
             if (self->stats_config_table.defined[i] == true) {
 
                 var tm_handler : Option<box TMHandler> = None;
-                self->a_tm_handler_pool.alloc(&mut tm_handler);
+                self->tm_handler_pool.alloc(&mut tm_handler);
 
                 match tm_handler {
 
@@ -185,7 +185,7 @@ resource class CPUSService4 provides IPUSService4 {
 
                         } 
                         else {
-                            self->a_tm_handler_pool.free(b_tm_handler);
+                            self->tm_handler_pool.free(b_tm_handler);
                         
                         }
                         

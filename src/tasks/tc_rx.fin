@@ -10,14 +10,14 @@ task class CTXRxBottomHalfTask {
 
     frame_ready_input : in usize triggers get_tc;
     tc_message_queue_output: out box TCHandler;
-    a_tc_handler_pool : access Allocator<TCHandler>;
+    tc_handler_pool : access Allocator<TCHandler>;
 
     action get_tc (&priv self, size : usize) -> Status<i32> {
 
         var ret : Status<i32> = Success;
 
         var tc_handler : Option<box TCHandler> = None;
-        self->a_tc_handler_pool.alloc(&mut tc_handler);
+        self->tc_handler_pool.alloc(&mut tc_handler);
 
         match tc_handler {
 
@@ -51,7 +51,7 @@ task class CTXRxBottomHalfTask {
 
                 } else {
 
-                    self->a_tc_handler_pool.free(tc_handler_b);
+                    self->tc_handler_pool.free(tc_handler_b);
 
                 }
 

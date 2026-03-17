@@ -36,7 +36,7 @@ __status_int32_t CBKGTCExecutorTask__exec_tc(const __termina_event_t * const __e
     }
 
     #line 71 "src/tasks/bkgtcexec.fin"
-    self->a_tc_handler_pool.free(__ev, self->a_tc_handler_pool.__that, tc_handler);
+    self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
     #line 73 "src/tasks/bkgtcexec.fin"
     return res;

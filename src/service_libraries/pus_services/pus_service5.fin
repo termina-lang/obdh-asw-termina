@@ -40,7 +40,7 @@ resource class CPUSService5 provides IPUSService5 {
     * 
     * Provides dynamic memory management for telemetry handler instances.
     */
-    a_tm_handler_pool : access Allocator<TMHandler>;
+    tm_handler_pool : access Allocator<TMHandler>;
 
     /**
     * @brief Interface for the telemetry packet counter.
@@ -182,7 +182,7 @@ resource class CPUSService5 provides IPUSService5 {
     procedure send_tm_5_2(&mut self, status: &mut Status<i32>){ 
 
         var tm_handler : Option<box TMHandler> = None;
-        self->a_tm_handler_pool.alloc(&mut tm_handler);
+        self->tm_handler_pool.alloc(&mut tm_handler);
 
         match tm_handler {
 
@@ -205,7 +205,7 @@ resource class CPUSService5 provides IPUSService5 {
 
                 }
                 else {
-                    self->a_tm_handler_pool.free(b_tm_handler);
+                    self->tm_handler_pool.free(b_tm_handler);
                 }
             }
             case None => {
@@ -220,7 +220,7 @@ resource class CPUSService5 provides IPUSService5 {
     procedure send_tm_5_x(&mut self, evID: u16, fault_info: &FaultInfo, status: &mut Status<i32>){
 
         var tm_handler : Option<box TMHandler> = None;
-        self->a_tm_handler_pool.alloc(&mut tm_handler);
+        self->tm_handler_pool.alloc(&mut tm_handler);
 
         match tm_handler {
 
@@ -247,7 +247,7 @@ resource class CPUSService5 provides IPUSService5 {
                 if(*status is Success){
                     self->tm_channel.send_tm(b_tm_handler, status);
                 } else {
-                    self->a_tm_handler_pool.free(b_tm_handler);
+                    self->tm_handler_pool.free(b_tm_handler);
                 }
 
             }
