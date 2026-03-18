@@ -1,16 +1,16 @@
 wcet rtems5-leon3-qemu = {
 
-    HouseKeepingFDIR::check_pending_actions::path0() = 3e-05,
-    HouseKeepingFDIR::check_pending_actions::path1() = 3e-05,
-    HouseKeepingFDIR::do_fdir::path0() = 3e-05,
-    HouseKeepingFDIR::do_fdir::path1() = 3e-05,
-    HouseKeepingFDIR::do_hk_fdir::path0() = 3e-05,
-    HouseKeepingFDIR::do_hk_fdir::path1() = 3e-05,
-    HouseKeepingFDIR::exec_tc::path0() = 3e-05,
-    HouseKeepingFDIR::exec_tc::path1() = 3e-05,
-    HouseKeepingFDIR::exec_tc::path2() = 3e-05,
-    HouseKeepingFDIR::exec_tc::path3() = 3e-05,
-    HouseKeepingFDIR::exec_tc::path4() = 3e-05,
-    HouseKeepingFDIR::exec_tc::path5() = 3e-05
+    CHousekeepingFDIRTask::check_pending_actions::path0() = 1.80e-05,
+    CHousekeepingFDIRTask::check_pending_actions::path1() = 1.27e-05,
+    CHousekeepingFDIRTask::do_fdir::path0() = 2.21e-04,
+    CHousekeepingFDIRTask::do_fdir::path1() = 2.20e-04,
+    CHousekeepingFDIRTask::do_hk_fdir::path0() = 7.64e-06,
+    CHousekeepingFDIRTask::do_hk_fdir::path1() = 7.76e-06,
+    CHousekeepingFDIRTask::exec_tc::path0() = 5.36e-06,
+    CHousekeepingFDIRTask::exec_tc::path1() = 5.36e-06,
+    CHousekeepingFDIRTask::exec_tc::path2() = 5.36e-06,
+    CHousekeepingFDIRTask::exec_tc::path3() = 5.36e-06,
+    CHousekeepingFDIRTask::exec_tc::path4() = 5.36e-06,
+    CHousekeepingFDIRTask::exec_tc::path5() = 5.28e-06
 
 };

@@ -214,7 +214,7 @@ twcep CPUSService5::is_Ev_ID_enabled_ext::path0() = [
 
 twcep CPUSService5::send_tm_5_2::path0() = [
     block@(184:50,184:54),
-    alloc(a_tm_handler_pool)@(185:9,185:55),
+    alloc(tm_handler_pool)@(185:9,185:53),
     case@(189:13,211:13)[
         block@(191:28,192:69),
         if@(194:17,207:17)[
@@ -230,11 +230,11 @@ twcep CPUSService5::send_tm_5_2::path0() = [
 
 twcep CPUSService5::send_tm_5_2::path1() = [
     block@(184:50,184:54),
-    alloc(a_tm_handler_pool)@(185:9,185:55),
+    alloc(tm_handler_pool)@(185:9,185:53),
     case@(189:13,211:13)[
         block@(191:28,192:69),
         else@(207:17,210:13)[
-            free(a_tm_handler_pool)@(208:21,208:63)
+            free(tm_handler_pool)@(208:21,208:61)
         ]
     ],
     return@(216:9,216:15)
@@ -242,14 +242,14 @@ twcep CPUSService5::send_tm_5_2::path1() = [
 
 twcep CPUSService5::send_tm_5_2::path2() = [
     block@(184:50,184:54),
-    alloc(a_tm_handler_pool)@(185:9,185:55),
+    alloc(tm_handler_pool)@(185:9,185:53),
     block@(187:9,216:9),
     return@(216:9,216:15)
 ]
 
 twcep CPUSService5::send_tm_5_x::path0() = [
     block@(222:50,222:54),
-    alloc(a_tm_handler_pool)@(223:9,223:55),
+    alloc(tm_handler_pool)@(223:9,223:53),
     case@(227:13,254:13)[
         block@(229:59,230:45),
         invoke(tm_counter.get_next_tm_count)@(232:17,232:66),
@@ -264,14 +264,14 @@ twcep CPUSService5::send_tm_5_x::path0() = [
 
 twcep CPUSService5::send_tm_5_x::path1() = [
     block@(222:50,222:54),
-    alloc(a_tm_handler_pool)@(223:9,223:55),
+    alloc(tm_handler_pool)@(223:9,223:53),
     case@(227:13,254:13)[
         block@(229:59,230:45),
         invoke(tm_counter.get_next_tm_count)@(232:17,232:66),
         invoke(obt_manager.get_current_obt)@(233:17,233:68),
         block@(235:17,247:17),
         else@(249:19,253:13)[
-            free(a_tm_handler_pool)@(250:21,250:63)
+            free(tm_handler_pool)@(250:21,250:61)
         ]
     ],
     return@(259:9,259:15)
@@ -279,7 +279,7 @@ twcep CPUSService5::send_tm_5_x::path1() = [
 
 twcep CPUSService5::send_tm_5_x::path2() = [
     block@(222:50,222:54),
-    alloc(a_tm_handler_pool)@(223:9,223:55),
+    alloc(tm_handler_pool)@(223:9,223:53),
     block@(225:9,259:9),
     return@(259:9,259:15)
 ]

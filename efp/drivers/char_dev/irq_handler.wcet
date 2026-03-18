@@ -1,6 +1,6 @@
 wcet rtems5-leon3-qemu = {
 
-    CCharDevIRQHandler::irq_handler::path0() = 3e-05,
-    CCharDevIRQHandler::irq_handler::path1() = 3e-05
+    CCharDevIRQHandler::irq_handler::path0() = 8.08e-06,
+    CCharDevIRQHandler::irq_handler::path1() = 5.00e-06
 
 };

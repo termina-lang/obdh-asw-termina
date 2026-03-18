@@ -3,7 +3,7 @@ twcep CCharDevIRQHandler::irq_handler::path0() = [
     block@(16:36,16:43),
     invoke(uart_drv.notify_irq)@(19:9,19:47),
     case@(22:13,25:13)[
-        send(notify_rx)@(23:17,23:43)
+        send(frame_ready_output)@(23:17,23:52)
     ],
     return@(33:9,33:22)
 ]

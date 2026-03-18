@@ -1,18 +1,18 @@
 wcet rtems5-leon3-qemu = {
 
-    CPUSService2::dev_drv_on_off::path0() = 3e-05,
-    CPUSService2::device_drv_is_on_off_address_valid::path0() = 3e-05,
-    CPUSService2::exec2_1TC::path0() = 3e-05,
-    CPUSService2::exec2_1TC::path1() = 3e-05,
-    CPUSService2::exec2_1TC::path2() = 3e-05,
-    CPUSService2::exec2_1TC::path3() = 3e-05,
-    CPUSService2::exec_tc::path0() = 3e-05,
-    CPUSService2::exec_tc::path1() = 3e-05,
-    CPUSService2::exec_tc::path2() = 3e-05,
-    CPUSService2::exec_tc::path3() = 3e-05,
-    CPUSService2::exec_tc::path4() = 3e-05,
-    CPUSService2::exec_tc::path5() = 3e-05,
-    CPUSService2::exec_tc::path6() = 3e-05,
-    CPUSService2::exec_tc::path7() = 3e-05
+    CPUSService2::dev_drv_on_off::path0() = 3.32e-06,
+    CPUSService2::device_drv_is_on_off_address_valid::path0() = 2.68e-06,
+    CPUSService2::exec2_1TC::path0() = 3.04e-06,
+    CPUSService2::exec2_1TC::path1() = 3.04e-06,
+    CPUSService2::exec2_1TC::path2() = 5.76e-06,
+    CPUSService2::exec2_1TC::path3() = 5.68e-06,
+    CPUSService2::exec_tc::path0() = 9.88e-06,
+    CPUSService2::exec_tc::path1() = 6.08e-06,
+    CPUSService2::exec_tc::path2() = 6.08e-06,
+    CPUSService2::exec_tc::path3() = 6.08e-06,
+    CPUSService2::exec_tc::path4() = 1.13e-05,
+    CPUSService2::exec_tc::path5() = 7.76e-06,
+    CPUSService2::exec_tc::path6() = 7.76e-06,
+    CPUSService2::exec_tc::path7() = 7.76e-06
 
 };

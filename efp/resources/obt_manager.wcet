@@ -1,6 +1,6 @@
 wcet rtems5-leon3-qemu = {
 
-    OBTManager::get_current_obt::path0() = 3e-05,
-    OBTManager::set_obt::path0() = 3e-05
+    COBTManager::get_current_obt::path0() = 1.24e-05,
+    COBTManager::set_obt::path0() = 1.04e-05
 
 };

@@ -1,6 +1,6 @@
 wcet rtems5-leon3-qemu = {
 
-    CTCChannel::dequeue::path0() = 3e-05,
-    CTCChannel::enqueue::path0() = 3e-05
+    CTCChannel::dequeue::path0() = 4.40e-07,
+    CTCChannel::enqueue::path0() = 1.23e-05
 
 };

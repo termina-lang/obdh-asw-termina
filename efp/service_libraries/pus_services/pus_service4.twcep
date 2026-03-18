@@ -122,7 +122,7 @@ twcep CPUSService4::exec4_1TC::path0() = [
     for(0..4)@(163:9,205:9)[
         if@(165:13,203:9)[
             block@(167:58,167:62),
-            alloc(a_tm_handler_pool)@(168:17,168:63),
+            alloc(tm_handler_pool)@(168:17,168:61),
             case@(172:21,198:21)[
                 block@(174:67,175:53),
                 invoke(tm_counter.get_next_tm_count)@(177:25,177:74),
@@ -149,14 +149,14 @@ twcep CPUSService4::exec4_1TC::path1() = [
     for(0..4)@(163:9,205:9)[
         if@(165:13,203:9)[
             block@(167:58,167:62),
-            alloc(a_tm_handler_pool)@(168:17,168:63),
+            alloc(tm_handler_pool)@(168:17,168:61),
             case@(172:21,198:21)[
                 block@(174:67,175:53),
                 invoke(tm_counter.get_next_tm_count)@(177:25,177:74),
                 invoke(obt_manager.get_current_obt)@(178:25,178:76),
                 block@(180:165,180:64),
                 else@(187:25,193:25)[
-                    free(a_tm_handler_pool)@(188:29,188:71)
+                    free(tm_handler_pool)@(188:29,188:69)
                 ],
                 block@(193:56,194:89),
                 invoke(obt_manager.get_current_obt)@(195:25,195:83),
@@ -176,7 +176,7 @@ twcep CPUSService4::exec4_1TC::path2() = [
     for(0..4)@(163:9,205:9)[
         if@(165:13,203:9)[
             block@(167:58,167:62),
-            alloc(a_tm_handler_pool)@(168:17,168:63),
+            alloc(tm_handler_pool)@(168:17,168:61),
             block@(170:17,202:13)
         ]
     ],

@@ -1,27 +1,27 @@
 
-twcep PUSBKGTCExecutor::exec_tc::path0() = [
+twcep CBKGTCExecutorTask::exec_tc::path0() = [
     block@(50:33,52:73),
     if@(54:9,58:11)[
         invoke(pus_service_20.exec_tc)@(56:13,56:68)
     ],
-    free(a_tc_handler_pool)@(71:9,71:49),
+    free(tc_handler_pool)@(71:9,71:47),
     return@(73:9,73:19)
 ]
 
-twcep PUSBKGTCExecutor::exec_tc::path1() = [
+twcep CBKGTCExecutorTask::exec_tc::path1() = [
     block@(50:33,52:73),
     elif@(58:11,62:11)[
         invoke(pus_service_6.exec_tc)@(60:13,60:67)
     ],
-    free(a_tc_handler_pool)@(71:9,71:49),
+    free(tc_handler_pool)@(71:9,71:47),
     return@(73:9,73:19)
 ]
 
-twcep PUSBKGTCExecutor::exec_tc::path2() = [
+twcep CBKGTCExecutorTask::exec_tc::path2() = [
     block@(50:33,52:73),
     else@(62:11,71:9)[
         invoke(pus_service_1.send_tm_1_4_error_in_acceptance)@(64:13,67:30)
     ],
-    free(a_tc_handler_pool)@(71:9,71:49),
+    free(tc_handler_pool)@(71:9,71:47),
     return@(73:9,73:19)
 ]

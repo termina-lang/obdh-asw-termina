@@ -1,12 +1,12 @@
 wcet rtems5-leon3-qemu = {
 
-    CPUSService17::exec17_1TC::path0() = 3e-05,
-    CPUSService17::exec17_1TC::path1() = 3e-05,
-    CPUSService17::exec_tc::path0() = 3e-05,
-    CPUSService17::exec_tc::path1() = 3e-05,
-    CPUSService17::exec_tc::path2() = 3e-05,
-    CPUSService17::exec_tc::path3() = 3e-05,
-    CPUSService17::exec_tc::path4() = 3e-05,
-    CPUSService17::exec_tc::path5() = 3e-05
+    CPUSService17::exec17_1TC::path0() = 1.70e-05,
+    CPUSService17::exec17_1TC::path1() = 1.25e-05,
+    CPUSService17::exec_tc::path0() = 6.96e-06,
+    CPUSService17::exec_tc::path1() = 4.28e-06,
+    CPUSService17::exec_tc::path2() = 4.28e-06,
+    CPUSService17::exec_tc::path3() = 8.60e-06,
+    CPUSService17::exec_tc::path4() = 6.16e-06,
+    CPUSService17::exec_tc::path5() = 6.16e-06
 
 };

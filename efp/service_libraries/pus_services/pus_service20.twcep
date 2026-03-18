@@ -20,7 +20,7 @@ twcep CPUSService20::exec20_1TC::path2() = [
     else@(46:11,119:9)[
         invoke(pus_service_1.notify_tm_1_3)@(48:13,52:33),
         block@(54:54,54:58),
-        alloc(a_tm_handler_pool)@(55:13,55:59),
+        alloc(tm_handler_pool)@(55:13,55:57),
         case@(59:17,104:17)[
             block@(61:63,62:49),
             invoke(tm_counter.get_next_tm_count)@(64:21,64:70),
@@ -41,14 +41,14 @@ twcep CPUSService20::exec20_1TC::path3() = [
     else@(46:11,119:9)[
         invoke(pus_service_1.notify_tm_1_3)@(48:13,52:33),
         block@(54:54,54:58),
-        alloc(a_tm_handler_pool)@(55:13,55:59),
+        alloc(tm_handler_pool)@(55:13,55:57),
         case@(59:17,104:17)[
             block@(61:63,62:49),
             invoke(tm_counter.get_next_tm_count)@(64:21,64:70),
             block@(66:32,94:21),
             invoke(obt_manager.get_current_obt)@(94:21,94:72),
             else@(99:23,103:17)[
-                free(a_tm_handler_pool)@(100:25,100:67)
+                free(tm_handler_pool)@(100:25,100:65)
             ]
         ],
         invoke(pus_service_1.notify_tm_1_7)@(111:13,115:33)
@@ -61,7 +61,7 @@ twcep CPUSService20::exec20_1TC::path4() = [
     else@(46:11,119:9)[
         invoke(pus_service_1.notify_tm_1_3)@(48:13,52:33),
         block@(54:54,54:58),
-        alloc(a_tm_handler_pool)@(55:13,55:59),
+        alloc(tm_handler_pool)@(55:13,55:57),
         block@(57:13,111:13),
         invoke(pus_service_1.notify_tm_1_7)@(111:13,115:33)
     ],

@@ -4,7 +4,7 @@ twcep CPUSService17::exec17_1TC::path0() = [
     invoke(pus_service_1.notify_tm_1_3)@(78:9,82:33),
     if@(85:9,113:9)[
         block@(87:55,90:58),
-        alloc(a_tm_handler_pool)@(91:13,91:59),
+        alloc(tm_handler_pool)@(91:13,91:57),
         case@(95:17,103:17)[
             invoke(tm_counter.get_next_tm_count)@(97:21,97:70),
             invoke(obt_manager.get_current_obt)@(98:21,98:72),
@@ -23,7 +23,7 @@ twcep CPUSService17::exec17_1TC::path1() = [
     invoke(pus_service_1.notify_tm_1_3)@(78:9,82:33),
     if@(85:9,113:9)[
         block@(87:55,90:58),
-        alloc(a_tm_handler_pool)@(91:13,91:59),
+        alloc(tm_handler_pool)@(91:13,91:57),
         block@(93:13,111:9)
     ],
     if@(113:9,123:9)[

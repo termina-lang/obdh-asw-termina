@@ -6,7 +6,7 @@ twcep CPUSService3::do_hk::path0() = [
             block@(324:61,324:106),
             if@(326:17,389:13)[
                 block@(328:65,330:66),
-                alloc(a_tm_handler_pool)@(331:21,331:67),
+                alloc(tm_handler_pool)@(331:21,331:65),
                 case@(335:25,383:25)[
                     block@(337:46,337:53),
                     invoke(tm_counter.get_next_tm_count)@(338:25,338:74),
@@ -30,7 +30,7 @@ twcep CPUSService3::do_hk::path1() = [
             block@(324:61,324:106),
             if@(326:17,389:13)[
                 block@(328:65,330:66),
-                alloc(a_tm_handler_pool)@(331:21,331:67),
+                alloc(tm_handler_pool)@(331:21,331:65),
                 case@(335:25,383:25)[
                     block@(337:46,337:53),
                     invoke(tm_counter.get_next_tm_count)@(338:25,338:74),
@@ -38,7 +38,7 @@ twcep CPUSService3::do_hk::path1() = [
                     invoke(obt_manager.get_current_obt)@(369:25,369:76),
                     else@(375:26,382:25)[
                         invoke(pus_service_5.send_tm_5_2)@(377:29,377:79),
-                        free(a_tm_handler_pool)@(378:29,378:71)
+                        free(tm_handler_pool)@(378:29,378:69)
                     ]
                 ]
             ]
@@ -54,7 +54,7 @@ twcep CPUSService3::do_hk::path2() = [
             block@(324:61,324:106),
             if@(326:17,389:13)[
                 block@(328:65,330:66),
-                alloc(a_tm_handler_pool)@(331:21,331:67),
+                alloc(tm_handler_pool)@(331:21,331:65),
                 block@(333:21,388:17)
             ]
         ]

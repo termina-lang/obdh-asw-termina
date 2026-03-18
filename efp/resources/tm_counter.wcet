@@ -1,5 +1,5 @@
 wcet rtems5-leon3-qemu = {
 
-    TMCounter::get_next_tm_count::path0() = 3e-05
+    CTMCounter::get_next_tm_count::path0() = 6.00e-07
 
 };

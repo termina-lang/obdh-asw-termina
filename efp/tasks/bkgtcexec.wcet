@@ -1,7 +1,7 @@
 wcet rtems5-leon3-qemu = {
 
-    PUSBKGTCExecutor::exec_tc::path0() = 3e-05,
-    PUSBKGTCExecutor::exec_tc::path1() = 3e-05,
-    PUSBKGTCExecutor::exec_tc::path2() = 3e-05
+    CBKGTCExecutorTask::exec_tc::path0() = 5.36e-06,
+    CBKGTCExecutorTask::exec_tc::path1() = 5.36e-06,
+    CBKGTCExecutorTask::exec_tc::path2() = 5.28e-06
 
 };
