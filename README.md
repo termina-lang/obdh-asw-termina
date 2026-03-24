@@ -1,40 +1,78 @@
 # OBDH-ASW-Termina
 
-### 🧩 Application Architecture
+This repository contains the source code of an on-board data handling (OBDH) application for a satellite, written in the Termina programming language. The application implements a representative subset of the functionality expected from an OBDH system: receiving telecommands from the ground, generating and transmitting telemetry, monitoring system parameters, and executing corrective actions when anomalies are detected. Command and telemetry packets follow the protocol defined by the Consultative Committee for Space Data Systems (CCSDS), and the application implements a set of services in accordance with the ECSS Packet Utilization Standard (PUS).
 
-Keeping the focus on the main objective — **evaluating Termina as a language for programming critical systems** — a working prototype of the satellite's on-board data management software has been developed.
+The application has been validated on a LEON3 processor synthesized on a Nexys A7 FPGA development board, running the RTEMS real-time operating system.
 
-The application implements a system that communicates with the outside world via a UART serial interface. Through this connection, **telecommands** are received (i.e., commands sent from the ground), and **telemetry** is transmitted, which reports the internal state of the system. Both message types follow the protocol defined by the **Consultative Committee for Space Data Systems (CCSDS)**. Additionally, the system incorporates several services from the **ECSS-E-ST-70-41C** standard, known as **PUS (Packet Utilisation Services)**, which structure and standardize common functionalities in space systems.
+## Architecture
 
-![Application architecture diagram](docs/images/architecture_diagram.png)
+![Component diagram of the OBDH application](docs/images/architecture_diagram.png)
 
-These capabilities are implemented across different system components represented in the diagram above. At the top left, the `uart_handler` receives telecommands via an interrupt (`irq_3`), while the `tm_channel` resource handles the transmission of telemetry.
+The system comprises 4 tasks, 2 interrupt handlers, 23 resources, 1 periodic timer emitter, and 5 message queue channels. Communication with the external environment takes place via a UART serial interface: the `uart_hdlr` interrupt handler receives telecommand frames, and the `tm_channel` resource manages telemetry transmission.
 
-To correctly process these messages, auxiliary modules have been developed to handle tasks such as encoding and decoding data according to the **CCSDS standard**. These modules, accessible system-wide, are grouped in the lower right-hand corner of the diagram.
+The active entities that define the system's behavior are the following:
 
-The implemented **PUS services** cover several functional areas:
-- Time management (`pus_service_9`)
-- Housekeeping (`pus_service_3`)
-- Fault detection, isolation, and recovery (FDIR: `pus_service_12`, `pus_service_5`, `pus_service_19`)
-- Configuration parameter management (`pus_service_20`)
+- `hk_fdir`: periodically triggered by `hk_fdir_timer` (1 s period), collects housekeeping telemetry and performs FDIR monitoring. When a recovery action is pending, it extracts and routes it for execution.
+- `obdh_manager`: receives telecommands from `tc_rx_bottom_half_task` and classifies them by execution category. Housekeeping/FDIR commands are forwarded to `hk_fdir`; background commands to `bkg_tc_executor`; priority commands are executed inline via `mng_tc_executor`.
+- `tc_rx_bottom_half_task`: assembles telecommand frames from the byte stream provided by the UART interrupt handler and forwards complete telecommands to `obdh_manager`.
+- `bkg_tc_executor`: executes background telecommands (parameter management, memory access).
 
-The data managed by these services are stored in the system's data pool, represented in the diagram by two structures — `u8_system_data_pool` and `u32_system_data_pool` — which allow handling variables of different types.
+These tasks interact with a set of PUS service resources that implement the application's functional capabilities:
 
-All these services act as **passive components**, exposing functionality that is used by the **tasks**, which are the active elements defining the system's behavior. Notably, the `obdh_manager` task is responsible for managing telecommands. It directly executes those requiring immediate attention using the associated resource (`mng_tc_executor`), and delegates the rest to the `bkg_tc_executor` and `hk_fdir` tasks. The latter also periodically trigger housekeeping and FDIR actions based on timer events, making use of the corresponding PUS services.
+| Resource | PUS Service | Function |
+|----------|-------------|----------|
+| `pus_service_1` | TC Verification (ST[01]) | Acceptance and execution verification reports |
+| `pus_service_2` | Device Access (ST[02]) | GPIO device control |
+| `pus_service_3` | Housekeeping (ST[03]) | Periodic HK data collection and reporting |
+| `pus_service_4` | Statistics (ST[04]) | Parameter statistics (min, max, mean) |
+| `pus_service_5` | Event Reporting (ST[05]) | Event detection and TM generation |
+| `pus_service_6` | Memory Management (ST[06]) | On-board memory read/write access |
+| `pus_service_9` | Time Management (ST[09]) | On-board time correlation |
+| `pus_service_12` | Parameter Monitoring (ST[12]) | Limit checking on system parameters |
+| `pus_service_17` | Test (ST[17]) | Connection (alive) test |
+| `pus_service_19` | Event-Action (ST[19]) | Autonomous recovery action management |
+| `pus_service_20` | Parameter Management (ST[20]) | System data pool read/write |
+| `pus_service_128` | Reboot (vendor-specific) | System reboot command |
 
+System parameters are stored in two atomic arrays (`u32_system_data_pool` and `u8_system_data_pool`) that serve as the centralized system data pool. Additional resources handle telemetry formatting and transmission (`tm_channel`, `tm_counter`, `obt_manager`), telecommand byte-level reception (`tc_channel`, `uart_drv`), and GPIO access (`gpio_drv`).
 
+## Real-Time Situation Specifications
 
-### 📁 Repository Structure
+The `rts/` directory contains six real-time situation specifications of increasing complexity, used for schedulability analysis:
 
-The repository is organized as follows:
+| Scenario | Description |
+|----------|-------------|
+| S1 (`s1-hk-fdir.rt`) | Baseline: single periodic HK/FDIR transaction |
+| S2 (`s2-hk-fdir-recovery.rt`) | Full FDIR recovery path (5-step single transaction) |
+| S3 (`s3-hk-fdir-tc-hkfdir.rt`) | HK/FDIR + TC reception routed to `hk_fdir` |
+| S4 (`s4-hk-fdir-tc-bkg.rt`) | HK/FDIR + TC reception routed to `bkg_tc_executor` |
+| S5 (`s5-full.rt`) | Full operational mode with three-way TC routing |
+| S6 (`s6-overload.rt`) | Overload scenario (unschedulable by design) |
 
-- 📁 **`app/`**: contains the `app.fin` file with the application deployment.
-- 📁 **`src/`**: contains the code developed in **Termina**.
-  - 📁 **`handlers/`**: class files for the *handlers*, which are Termina reactive elements.
-  - 📁 **`resources/`**: class files for the *resources*, which are Termina passive elements.
-  - 📁 **`service_libraries/`**: auxiliary modules supporting additional system functionalities.
-  - 📁 **`tasks/`**: class files for the *tasks*, which are also Termina reactive elements.
-- 📁 **`output/`**: contains the C code generated by the Termina transpiler.
-- 🧾 **`termina.yaml`**: defines the transpilation process and execution platform configuration.
+Each scenario specifies the transaction structure, event sources, activation patterns, and end-to-end deadlines. The Termina transpiler uses these specifications, together with the WCET data in `efp/`, to derive schedulability analysis models.
 
+## Repository Structure
 
+```
+app/                    Application deployment (app.fin)
+src/                    Termina source code
+  handlers/             Interrupt and initialization handlers
+  tasks/                Task class definitions
+  resources/            Resource class definitions
+  service_libraries/    PUS services, CCSDS encoding, and auxiliary modules
+efp/                    Execution flow profiles
+  drivers/              WCET and path data for device drivers
+  handlers/             WCET and path data for handlers
+  tasks/                WCET and path data for tasks
+  resources/            WCET and path data for resources
+  service_libraries/    WCET and path data for PUS services
+rts/                    Real-time situation specifications (S1-S6)
+output/                 Generated C code (produced by the Termina transpiler)
+termina.yaml            Transpilation and platform configuration
+```
+
+## Target Platform
+
+- **Processor**: LEON3 (synthesized on Nexys A7 FPGA)
+- **RTOS**: RTEMS 5
+- **Build system**: Make (generated by the transpiler)
