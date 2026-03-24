@@ -36,7 +36,7 @@ SRCS+=$(wildcard $R/src/service_libraries/pus_services/pus_service6/*.c)
 SRCS+=$(wildcard $R/src/service_libraries/pus_services/pus_service9/*.c)
 SRCS+=$(wildcard $R/src/tasks/*.c)
 SRCS+=$(wildcard $R/src/tasks/hk_fdir_mng/*.c)
-SRCS+=$(wildcard $R/src/tasks/icu_manager/*.c)
+SRCS+=$(wildcard $R/src/tasks/obdh_manager/*.c)
 
 OBJS+=$(patsubst %.c, %.o, $(patsubst %.s, %.o, $(patsubst $(TERMINA_OSAL_DIR)/%, $(TARGET_DIR_NAME)/termina/%, $(wildcard $(OSAL_SRCS)))))
 OBJS+=$(patsubst %.c, %.o, $(patsubst $R/%, $(TARGET_DIR_NAME)/%, $(SRCS)))

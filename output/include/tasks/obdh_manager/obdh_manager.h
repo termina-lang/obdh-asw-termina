@@ -1,9 +1,9 @@
-#ifndef __TASKS__ICU_MANAGER__ICU_MANAGER_H__
-#define __TASKS__ICU_MANAGER__ICU_MANAGER_H__
+#ifndef __TASKS__OBDH_MANAGER__OBDH_MANAGER_H__
+#define __TASKS__OBDH_MANAGER__OBDH_MANAGER_H__
 
 #include <termina.h>
 
-#include "tasks/icu_manager/mng_tc_executor.h"
+#include "tasks/obdh_manager/mng_tc_executor.h"
 
 #include "option.h"
 
@@ -21,12 +21,12 @@ typedef struct {
     __termina_allocator_t tc_handler_pool;
     __termina_id_t action_tc_message_queue_input;
     __termina_id_t tc_message_queue_input;
-} CICUManagerTask;
+} COBDHManagerTask;
 
-void __CICUManagerTask__termina_task(void * const arg);
+void __COBDHManagerTask__termina_task(void * const arg);
 
-__status_int32_t CICUManagerTask__process_action_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
+__status_int32_t COBDHManagerTask__process_action_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
 
-__status_int32_t CICUManagerTask__process_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
+__status_int32_t COBDHManagerTask__process_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
 
 #endif

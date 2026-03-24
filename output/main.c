@@ -34,11 +34,11 @@ static void __termina_app__init_tasks(int32_t * const status) {
 
     if (0L == *status) {
         
-        icu_manager.__task_id = __icu_manager__task_id;
+        obdh_manager.__task_id = __obdh_manager__task_id;
 
-        icu_manager.__task_msg_queue_id = __icu_manager__task_msg_queue_id;
+        obdh_manager.__task_msg_queue_id = __obdh_manager__task_msg_queue_id;
 
-        __termina_task__init(__icu_manager__task_id, 5, 4096U, __CICUManagerTask__termina_task, &icu_manager, status);
+        __termina_task__init(__obdh_manager__task_id, 5, 4096U, __COBDHManagerTask__termina_task, &obdh_manager, status);
 
     }
 
@@ -166,7 +166,7 @@ static void __termina_app__init_msg_queues(int32_t * const status) {
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__icu_manager__task_msg_queue_id, sizeof(__termina_event_t), 10U + 5U, status);
+        __termina_msg_queue__init(__obdh_manager__task_msg_queue_id, sizeof(__termina_event_t), 10U + 5U, status);
 
     }
 
@@ -247,12 +247,12 @@ static void __termina_app__init_channel_connections(int32_t * const status) {
     
     *status = 0L;
 
-    action_tc_message_queue.task_id = __icu_manager__task_id;
-    action_tc_message_queue.task_msg_queue_id = __icu_manager__task_msg_queue_id;
+    action_tc_message_queue.task_id = __obdh_manager__task_id;
+    action_tc_message_queue.task_msg_queue_id = __obdh_manager__task_msg_queue_id;
     action_tc_message_queue.channel_msg_queue_id = __action_tc_message_queue__channel_msg_queue_id;
-    action_tc_message_queue.port_id = __CICUManagerTask__action_tc_message_queue_input;
+    action_tc_message_queue.port_id = __COBDHManagerTask__action_tc_message_queue_input;
 
-    icu_manager.action_tc_message_queue_input = __action_tc_message_queue__channel_msg_queue_id;
+    obdh_manager.action_tc_message_queue_input = __action_tc_message_queue__channel_msg_queue_id;
 
     bkg_message_queue.task_id = __bkg_tc_executor__task_id;
     bkg_message_queue.task_msg_queue_id = __bkg_tc_executor__task_msg_queue_id;
@@ -275,12 +275,12 @@ static void __termina_app__init_channel_connections(int32_t * const status) {
 
     tc_rx_bottom_half_task.frame_ready_input = __rx_task_message_queue__channel_msg_queue_id;
 
-    tc_message_queue.task_id = __icu_manager__task_id;
-    tc_message_queue.task_msg_queue_id = __icu_manager__task_msg_queue_id;
+    tc_message_queue.task_id = __obdh_manager__task_id;
+    tc_message_queue.task_msg_queue_id = __obdh_manager__task_msg_queue_id;
     tc_message_queue.channel_msg_queue_id = __tc_message_queue__channel_msg_queue_id;
-    tc_message_queue.port_id = __CICUManagerTask__tc_message_queue_input;
+    tc_message_queue.port_id = __COBDHManagerTask__tc_message_queue_input;
 
-    icu_manager.tc_message_queue_input = __tc_message_queue__channel_msg_queue_id;
+    obdh_manager.tc_message_queue_input = __tc_message_queue__channel_msg_queue_id;
 
 }
 

@@ -22,7 +22,7 @@
 #include "service_libraries/pus_services/pus_service9.h"
 #include "tasks/bkgtcexec.h"
 #include "tasks/hk_fdir_mng/hk_fdir.h"
-#include "tasks/icu_manager/icu_manager.h"
+#include "tasks/obdh_manager/obdh_manager.h"
 #include "tasks/tc_rx.h"
 
 #include "option.h"
@@ -91,7 +91,7 @@ extern CCharDevIRQHandler uart_hdlr;
 
 extern CTXRxBottomHalfTask tc_rx_bottom_half_task;
 
-extern CICUManagerTask icu_manager;
+extern COBDHManagerTask obdh_manager;
 
 extern CHousekeepingFDIRTask hk_fdir;
 

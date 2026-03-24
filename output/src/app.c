@@ -65,7 +65,7 @@ CCharDevIRQHandler uart_hdlr;
 
 CTXRxBottomHalfTask tc_rx_bottom_half_task;
 
-CICUManagerTask icu_manager;
+COBDHManagerTask obdh_manager;
 
 CHousekeepingFDIRTask hk_fdir;
 
