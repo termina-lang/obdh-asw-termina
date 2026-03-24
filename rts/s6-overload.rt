@@ -18,9 +18,9 @@
  *     -> tc_rx_bottom_half_task.get_tc::path0
  *        (assembles TC, sends to tc_message_queue)
  *
- *     -> icu_manager.process_tc::path2
- *        TC classified as priority type. Executed inline by icu_manager
- *        (no message passing — the TC executor runs in icu_manager's
+ *     -> obdh_manager.process_tc::path2
+ *        TC classified as priority type. Executed inline by obdh_manager
+ *        (no message passing — the TC executor runs in obdh_manager's
  *        context at priority 5). Invokes:
  *          - tc_executor.mng_tc_acceptation (pus_service_1, unprotected)
  *          - tc_executor.PUS_prio_exec_tc (5 internal paths):
@@ -77,7 +77,7 @@ transaction tr_hk_fdir = step0#hk_fdir.do_hk_fdir::path0
 //                      (no message passing, ends after inline execution)
 transaction tr_tc_prio = step0#uart_hdlr.irq_handler::path0
     -> step1#tc_rx_bottom_half_task.get_tc::path0
-    -> step2#icu_manager.process_tc::path2 -> step3#end;
+    -> step2#obdh_manager.process_tc::path2 -> step3#end;
 
 rts sit0 = {
 

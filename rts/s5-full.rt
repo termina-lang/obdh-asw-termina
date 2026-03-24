@@ -18,7 +18,7 @@
  *
  *     -> Conditional branch on TC classification:
  *
- *        30%: icu_manager.process_tc::path0
+ *        30%: obdh_manager.process_tc::path0
  *             TC classified as HK/FDIR type.
  *             Invokes tc_executor.mng_tc_acceptation, sends to hkfdir queue.
  *             -> hk_fdir.exec_tc::path0
@@ -26,7 +26,7 @@
  *                Accesses: pus_service_3, SDP, tm_pool, tm_counter,
  *                obt_manager, tm_channel.
  *
- *        20%: icu_manager.process_tc::path1
+ *        20%: obdh_manager.process_tc::path1
  *             TC classified as background type.
  *             Invokes tc_executor.mng_tc_acceptation, sends to bkg queue.
  *             -> bkg_tc_executor.exec_tc::path0
@@ -34,7 +34,7 @@
  *                Accesses: pus_service_20, SDP (write), tm_pool, tm_counter,
  *                obt_manager, tm_channel.
  *
- *        50%: icu_manager.process_tc::path2
+ *        50%: obdh_manager.process_tc::path2
  *             TC classified as priority type. Executed inline (no message
  *             passing). Invokes:
  *               - tc_executor.PUS_prio_exec_tc (5 internal paths):
@@ -90,11 +90,11 @@ transaction tr_hk_fdir = step0#hk_fdir.do_hk_fdir::path0
 //   50%: process_tc::path2 (priority TC, inline exec via mng_tc_executor)
 transaction tr_tc_all = step0#uart_hdlr.irq_handler::path0
     -> step1#tc_rx_bottom_half_task.get_tc::path0
-    -> <30!step2#icu_manager.process_tc::path0
+    -> <30!step2#obdh_manager.process_tc::path0
             -> step3#hk_fdir.exec_tc::path0 -> step4#end,
-        20!step5#icu_manager.process_tc::path1
+        20!step5#obdh_manager.process_tc::path1
             -> step6#bkg_tc_executor.exec_tc::path0 -> step7#end,
-        50!step8#icu_manager.process_tc::path2 -> step9#end>;
+        50!step8#obdh_manager.process_tc::path2 -> step9#end>;
 
 rts sit0 = {
 

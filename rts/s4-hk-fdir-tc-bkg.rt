@@ -16,7 +16,7 @@
  *     -> tc_rx_bottom_half_task.get_tc::path0
  *        (same as S3: assembles TC, sends to tc_message_queue)
  *
- *     -> icu_manager.process_tc::path1
+ *     -> obdh_manager.process_tc::path1
  *        Task context (priority 5). Invokes:
  *          - tc_executor.mng_tc_acceptation (via pus_service_1.notify_tm_1_1,
  *            unprotected)
@@ -76,7 +76,7 @@ transaction tr_hk_fdir = step0#hk_fdir.do_hk_fdir::path0
 // exec_tc::path0     = dispatch to pus_service_20.exec_tc (parameter mgmt)
 transaction tr_tc_bkg = step0#uart_hdlr.irq_handler::path0
     -> step1#tc_rx_bottom_half_task.get_tc::path0
-    -> step2#icu_manager.process_tc::path1
+    -> step2#obdh_manager.process_tc::path1
     -> step3#bkg_tc_executor.exec_tc::path0 -> step4#end;
 
 rts sit0 = {

@@ -1,5 +1,5 @@
 
-twcep CICUManagerTask::process_action_tc::path0() = [
+twcep COBDHManagerTask::process_action_tc::path0() = [
     block@(126:33,129:88),
     case@(133:13,137:13)[
         send(hkfdir_message_queue_output)@(135:17,135:67)
@@ -7,7 +7,7 @@ twcep CICUManagerTask::process_action_tc::path0() = [
     return@(160:9,160:19)
 ]
 
-twcep CICUManagerTask::process_action_tc::path1() = [
+twcep COBDHManagerTask::process_action_tc::path1() = [
     block@(126:33,129:88),
     case@(137:13,142:13)[
         send(bkg_message_queue_output)@(139:17,139:64)
@@ -15,7 +15,7 @@ twcep CICUManagerTask::process_action_tc::path1() = [
     return@(160:9,160:19)
 ]
 
-twcep CICUManagerTask::process_action_tc::path2() = [
+twcep COBDHManagerTask::process_action_tc::path2() = [
     block@(126:33,129:88),
     case@(142:13,152:13)[
         invoke(mng_tc_executor.PUS_prio_exec_tc)@(144:17,144:100),
@@ -28,7 +28,7 @@ twcep CICUManagerTask::process_action_tc::path2() = [
     return@(160:9,160:19)
 ]
 
-twcep CICUManagerTask::process_action_tc::path3() = [
+twcep COBDHManagerTask::process_action_tc::path3() = [
     block@(126:33,129:88),
     case@(152:13,157:9)[
         free(tc_handler_pool)@(154:17,154:55)
@@ -36,7 +36,7 @@ twcep CICUManagerTask::process_action_tc::path3() = [
     return@(160:9,160:19)
 ]
 
-twcep CICUManagerTask::process_tc::path0() = [
+twcep COBDHManagerTask::process_tc::path0() = [
     block@(54:33,57:90),
     case@(61:13,95:13)[
         invoke(mng_tc_executor.mng_tc_acceptation)@(63:17,63:82),
@@ -47,7 +47,7 @@ twcep CICUManagerTask::process_tc::path0() = [
     return@(107:9,107:19)
 ]
 
-twcep CICUManagerTask::process_tc::path1() = [
+twcep COBDHManagerTask::process_tc::path1() = [
     block@(54:33,57:90),
     case@(61:13,95:13)[
         invoke(mng_tc_executor.mng_tc_acceptation)@(63:17,63:82),
@@ -58,7 +58,7 @@ twcep CICUManagerTask::process_tc::path1() = [
     return@(107:9,107:19)
 ]
 
-twcep CICUManagerTask::process_tc::path2() = [
+twcep COBDHManagerTask::process_tc::path2() = [
     block@(54:33,57:90),
     case@(61:13,95:13)[
         invoke(mng_tc_executor.mng_tc_acceptation)@(63:17,63:82),
@@ -74,7 +74,7 @@ twcep CICUManagerTask::process_tc::path2() = [
     return@(107:9,107:19)
 ]
 
-twcep CICUManagerTask::process_tc::path3() = [
+twcep COBDHManagerTask::process_tc::path3() = [
     block@(54:33,57:90),
     case@(61:13,95:13)[
         invoke(mng_tc_executor.mng_tc_acceptation)@(63:17,63:82),
@@ -85,7 +85,7 @@ twcep CICUManagerTask::process_tc::path3() = [
     return@(107:9,107:19)
 ]
 
-twcep CICUManagerTask::process_tc::path4() = [
+twcep COBDHManagerTask::process_tc::path4() = [
     block@(54:33,57:90),
     case@(95:13,100:13)[
         invoke(mng_tc_executor.mng_tc_rejection)@(97:17,97:98),
@@ -94,7 +94,7 @@ twcep CICUManagerTask::process_tc::path4() = [
     return@(107:9,107:19)
 ]
 
-twcep CICUManagerTask::process_tc::path5() = [
+twcep COBDHManagerTask::process_tc::path5() = [
     block@(54:33,57:90),
     case@(100:13,104:9)[
         free(tc_handler_pool)@(102:17,102:55)

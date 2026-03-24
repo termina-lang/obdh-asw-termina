@@ -1,0 +1,14 @@
+wcet rtems5-leon3-qemu = {
+
+    COBDHManagerTask::process_action_tc::path0() = 6.16e-06,
+    COBDHManagerTask::process_action_tc::path1() = 6.16e-06,
+    COBDHManagerTask::process_action_tc::path2() = 6.00e-06,
+    COBDHManagerTask::process_action_tc::path3() = 3.16e-06,
+    COBDHManagerTask::process_tc::path0() = 8.80e-06,
+    COBDHManagerTask::process_tc::path1() = 8.80e-06,
+    COBDHManagerTask::process_tc::path2() = 8.64e-06,
+    COBDHManagerTask::process_tc::path3() = 5.80e-06,
+    COBDHManagerTask::process_tc::path4() = 5.56e-06,
+    COBDHManagerTask::process_tc::path5() = 3.16e-06
+
+};

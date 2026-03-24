@@ -24,7 +24,7 @@
  *          - tc_channel.dequeue (up to 256 bytes in a loop)
  *        path0: TC assembled successfully, sends to tc_message_queue.
  *
- *     -> icu_manager.process_tc::path0
+ *     -> obdh_manager.process_tc::path0
  *        Task context (priority 5). Invokes:
  *          - tc_executor.mng_tc_acceptation (via pus_service_1.notify_tm_1_1,
  *            unprotected)
@@ -75,7 +75,7 @@ transaction tr_hk_fdir = step0#hk_fdir.do_hk_fdir::path0
 // exec_tc::path0     = dispatch to pus_service_3.exec_tc
 transaction tr_tc_hkfdir = step0#uart_hdlr.irq_handler::path0
     -> step1#tc_rx_bottom_half_task.get_tc::path0
-    -> step2#icu_manager.process_tc::path0
+    -> step2#obdh_manager.process_tc::path0
     -> step3#hk_fdir.exec_tc::path0 -> step4#end;
 
 rts sit0 = {

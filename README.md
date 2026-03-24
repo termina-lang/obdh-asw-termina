@@ -20,7 +20,7 @@ The implemented **PUS services** cover several functional areas:
 
 The data managed by these services are stored in the system's data pool, represented in the diagram by two structures — `u8_system_data_pool` and `u32_system_data_pool` — which allow handling variables of different types.
 
-All these services act as **passive components**, exposing functionality that is used by the **tasks**, which are the active elements defining the system's behavior. Notably, the `icu_manager` task is responsible for managing telecommands. It directly executes those requiring immediate attention using the associated resource (`mng_tc_executor`), and delegates the rest to the `bkg_tc_executor` and `hk_fdir` tasks. The latter also periodically trigger housekeeping and FDIR actions based on timer events, making use of the corresponding PUS services.
+All these services act as **passive components**, exposing functionality that is used by the **tasks**, which are the active elements defining the system's behavior. Notably, the `obdh_manager` task is responsible for managing telecommands. It directly executes those requiring immediate attention using the associated resource (`mng_tc_executor`), and delegates the rest to the `bkg_tc_executor` and `hk_fdir` tasks. The latter also periodically trigger housekeeping and FDIR actions based on timer events, making use of the corresponding PUS services.
 
 
 

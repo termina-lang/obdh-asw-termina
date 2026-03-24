@@ -14,7 +14,7 @@ import drivers.char_dev.uart.apbuart;
 import resources.gpio_driver;
 import tasks.hk_fdir_mng.hk_fdir;
 import tasks.bkgtcexec;
-import tasks.icu_manager.icu_manager;
+import tasks.obdh_manager.obdh_manager;
 import handlers.init;
 import drivers.char_dev.irq_handler;
 import tasks.tc_rx;
@@ -22,7 +22,7 @@ import resources.tm_counter;
 import resources.obt_manager;
 
 
-import tasks.icu_manager.icu_manager;
+import tasks.obdh_manager.obdh_manager;
 import tasks.hk_fdir_mng.hk_fdir;
 
 emitter hk_fdir_timer : PeriodicTimer = {
@@ -258,7 +258,7 @@ task tc_rx_bottom_half_task : CTXRxBottomHalfTask = {
 
 
 #[priority(5)]
-task icu_manager : CICUManagerTask = {
+task obdh_manager : COBDHManagerTask = {
     tc_message_queue_input <- tc_message_queue,
     action_tc_message_queue_input <- action_tc_message_queue,
     tc_handler_pool <-> tc_pool,

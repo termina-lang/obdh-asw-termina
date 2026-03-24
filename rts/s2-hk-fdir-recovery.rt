@@ -24,7 +24,7 @@
  *          - tc_pool.alloc (allocate TC handler for the action)
  *        Sends the action TC to action_tc_message_queue.
  *
- *     -> icu_manager.process_action_tc::path0
+ *     -> obdh_manager.process_action_tc::path0
  *        Task context (priority 5). Classifies the action TC and routes it.
  *        path0: classified as HK/FDIR type, sends to hkfdir_message_queue.
  *
@@ -63,7 +63,7 @@
 transaction tr_recovery = step0#hk_fdir.do_hk_fdir::path0
     -> step1#hk_fdir.do_fdir::path0
     -> step2#hk_fdir.check_pending_actions::path0
-    -> step3#icu_manager.process_action_tc::path0
+    -> step3#obdh_manager.process_action_tc::path0
     -> step4#hk_fdir.exec_tc::path0 -> step5#end;
 
 rts sit0 = {
