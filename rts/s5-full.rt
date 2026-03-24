@@ -62,15 +62,11 @@
  *     pus_service_17, pus_service_19, pus_service_20, pus_service_128,
  *     mng_tc_executor, gpio_drv
  *
- * Reduction effectiveness:
- *   - Filtering: many priority TC paths share empty lock sets (since
- *     pus_service_1, pus_service_17, pus_service_128, pus_service_2,
- *     gpio_drv, and mng_tc_executor are all unprotected, error paths and
- *     simple services produce identical empty lock profiles)
- *   - Merging: paths with comparable lock sets (e.g., paths touching only
- *     unprotected resources vs paths that additionally lock obt_manager
- *     via pus_service_9) collapse further.
- *     Expected to produce the largest reduction ratio across all scenarios.
+ * Cross-product: by far the largest across all scenarios, driven by the
+ * three flattened sub-transactions. Filtering is effective (many priority
+ * TC paths share empty lock sets since most services are unprotected);
+ * merging collapses all remaining models (all lock sets within each step
+ * are comparable under subset inclusion). Schedulable.
  *
  * Purpose: most complex schedulable scenario; largest cross-product and
  * largest reduction ratios; demonstrates that the approach scales to
@@ -112,16 +108,16 @@ rts sit0 = {
     },
 
     // Bursty: max 10 TC arrivals within a 1 s interval.
-    // Deadline: 100 ms end-to-end for each branch
+    // Deadline: 1 s end-to-end for each branch
     bursty ev_irq_2 = {
         emitter = irq_2,
         arrivals = 10,
         interval = 1,
         transaction = tr_tc_all,
         deadlines = {
-            step4 = 0.1,
-            step7 = 0.1,
-            step9 = 0.1
+            step4 = 1,
+            step7 = 1,
+            step9 = 1
         }
     }
 

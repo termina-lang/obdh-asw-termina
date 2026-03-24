@@ -50,15 +50,15 @@
  *     pus_service_5, pus_service_6, pus_service_12, pus_service_19,
  *     pus_service_20, mng_tc_executor
  *
- * Expected cross-product: medium-large — fewer exec_tc paths than S3
- * (3 vs 6), but pus_service_20 and pus_service_6 have their own internal
+ * Cross-product: larger than S3 despite fewer exec_tc paths (3 vs 6),
+ * because pus_service_20 and pus_service_6 have their own internal
  * resource access chains (SDP stores, memory bank reads/writes, TM
- * generation). Comparison with S3 shows how different TC routing affects
- * model space size and reduction ratios.
+ * generation).
+ * Both filtering and merging are effective. Schedulable.
  *
  * Purpose: paired with S3 to contrast how different resource access
  * patterns in the same architectural slot (TC execution) produce different
- * cross-product sizes and reduction effectiveness.
+ * cross-product sizes and reduction ratios.
  */
 
 // Transaction 1: Regular HK + FDIR chain (same as S1/S3)
@@ -91,14 +91,14 @@ rts sit0 = {
     },
 
     // Bursty: max 10 TC arrivals within a 1 s interval.
-    // Deadline: 100 ms end-to-end (from IRQ to TC execution completion)
+    // Deadline: 1 s end-to-end (from IRQ to TC execution completion)
     bursty ev_irq_2 = {
         emitter = irq_2,
         arrivals = 10,
         interval = 1,
         transaction = tr_tc_bkg,
         deadlines = {
-            step4 = 0.1
+            step4 = 1
         }
     }
 

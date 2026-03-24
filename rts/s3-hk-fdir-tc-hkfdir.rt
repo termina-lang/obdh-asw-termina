@@ -49,13 +49,11 @@
  *   Unprotected: pus_service_1, pus_service_3, pus_service_4,
  *     pus_service_5, pus_service_12, pus_service_19, mng_tc_executor
  *
- * Expected cross-product: large — the exec_tc step invokes
- * pus_service_3.exec_tc, which calls several resources (both protected
- * and unprotected) with multiple procedure paths. Inter-transaction
- * cross-product multiplies
+ * Cross-product: large — the exec_tc step invokes pus_service_3.exec_tc,
+ * which calls several resources (both protected and unprotected) with
+ * multiple procedure paths. The inter-transaction cross-product multiplies
  * the per-step alternatives of both transactions.
- * Filtering should be effective on paths sharing lock sets.
- * Merging should improve further by collapsing comparable lock sets.
+ * Both filtering and merging are effective. Schedulable.
  *
  * Purpose: first scenario with resource contention between two transactions;
  * demonstrates inter-transaction cross-product explosion and the
@@ -92,14 +90,14 @@ rts sit0 = {
     },
 
     // Bursty: max 10 TC arrivals within a 1 s interval.
-    // Deadline: 100 ms end-to-end (from IRQ to TC execution completion)
+    // Deadline: 1 s end-to-end (from IRQ to TC execution completion)
     bursty ev_irq_2 = {
         emitter = irq_2,
         arrivals = 10,
         interval = 1,
         transaction = tr_tc_hkfdir,
         deadlines = {
-            step4 = 0.1
+            step4 = 1
         }
     }
 

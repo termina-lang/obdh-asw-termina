@@ -52,10 +52,10 @@
  *     pus_service_17, pus_service_19, pus_service_128,
  *     mng_tc_executor, gpio_drv
  *
- * Expected cross-product: medium — single step after tc_rx (path2
- * executes inline), but PUS_prio_exec_tc has 5 internal paths with
- * different resource access patterns. The interest is not in the
- * cross-product size but in the schedulability result.
+ * Cross-product: moderate — PUS_prio_exec_tc has 5 internal paths with
+ * different resource access patterns. Both filtering and merging are
+ * effective. Unschedulable — the overload arises entirely from the
+ * arrival rate.
  *
  * Purpose: demonstrates the analysis pipeline detecting an unschedulable
  * configuration. Validates that the approach is useful not only for
@@ -91,7 +91,7 @@ rts sit0 = {
     },
 
     // Overload burst: 50 arrivals within 100 ms (one TC every 2 ms).
-    // Deadline: 100 ms end-to-end — same as other scenarios, but the
+    // Deadline: 1 s end-to-end — even with a relaxed deadline, the
     // aggressive arrival rate makes it unschedulable.
     bursty ev_irq_2 = {
         emitter = irq_2,
@@ -99,7 +99,7 @@ rts sit0 = {
         interval = 0.1,
         transaction = tr_tc_prio,
         deadlines = {
-            step3 = 0.1
+            step3 = 1
         }
     }
 

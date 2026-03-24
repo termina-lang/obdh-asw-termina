@@ -35,12 +35,12 @@
  *   Unprotected: pus_service_1, pus_service_3, pus_service_4,
  *     pus_service_5, pus_service_12, pus_service_19
  *
- * Expected cross-product: small — single transaction, two steps, but
- * do_fdir has deeply nested resource invocations (loop over 16 PMONIDs,
- * nested calls to services 12, 5, 19). The resource procedure path
- * combinations within these calls drive the cross-product.
+ * Cross-product: small, but non-trivial for a single two-step transaction
+ * because do_fdir's deeply nested resource invocations (loop over 16
+ * PMONIDs, nested calls to services 12, 5, 19) drive the count.
+ * Both filtering and merging are effective. Schedulable.
  *
- * Purpose: baseline for the evaluation table; establishes the cost of the
+ * Purpose: baseline for the evaluation; establishes the cost of the
  * regular periodic monitoring chain that is present in all operational modes.
  */
 

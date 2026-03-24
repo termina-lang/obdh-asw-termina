@@ -43,12 +43,10 @@
  *   Unprotected: pus_service_1, pus_service_3, pus_service_4,
  *     pus_service_5, pus_service_12, pus_service_19
  *
- * Expected cross-product: medium — longer chain (5 steps) with resource
- * procedure paths at each step. The do_fdir step contributes the most
- * alternatives due to its nested invocation structure.
- * Filtering should collapse paths that differ only in WCET across the
- * pus_service_1 invocations. Merging may further reduce comparable
- * lock sets across the exec_tc resource procedure paths.
+ * Cross-product: large — the five-step chain multiplies path alternatives
+ * at each level. The do_fdir step contributes the most alternatives due
+ * to its nested invocation structure.
+ * Both filtering and merging are effective. Schedulable.
  *
  * Purpose: shows the pipeline cost of the full recovery chain; provides
  * a single-transaction scenario with more steps than S1 to demonstrate
