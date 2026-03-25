@@ -43,7 +43,7 @@ it was set to 99.
 	</step>
 	<step name="tc_20_1_get_pid10_equal_99" id="1" prev_step_idref="NULL" output_idref_from_prev_step="NULL" mode="continuous">
 		<inputs>
-			<input_level_2 name="tc_20_1" ifRef="0" delay_value="500" delay_unit="miliseconds">
+			<input_level_2 name="tc_20_1" ifRef="0" delay_value="1000" delay_unit="miliseconds">
 				<level2 format="TC_Formats/Level2/st20/asw_pus_tc_20_1_format.xml"/>
 				<app_to_level2 export="STEPS_XML/INPUTS/tc_20_1/tc_20_1_get_pid10.xml"/>
 				<level1 format="DEFAULT"/>

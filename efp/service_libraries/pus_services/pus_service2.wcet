@@ -1,4 +1,4 @@
-wcet rtems5-leon3-qemu = {
+wcet rtems5-leon3-nexysa7 = {
 
     CPUSService2::dev_drv_on_off::path0() = 3.32e-06,
     CPUSService2::device_drv_is_on_off_address_valid::path0() = 2.68e-06,
