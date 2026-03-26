@@ -46,7 +46,7 @@
  * Cross-product: large — the five-step chain multiplies path alternatives
  * at each level. The do_fdir step contributes the most alternatives due
  * to its nested invocation structure.
- * Both filtering and merging are effective. Schedulable.
+ * Both grouping and merging are effective. Schedulable.
  *
  * Purpose: shows the pipeline cost of the full recovery chain; provides
  * a single-transaction scenario with more steps than S1 to demonstrate

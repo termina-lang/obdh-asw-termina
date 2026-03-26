@@ -53,7 +53,7 @@
  * which calls several resources (both protected and unprotected) with
  * multiple procedure paths. The inter-transaction cross-product multiplies
  * the per-step alternatives of both transactions.
- * Both filtering and merging are effective. Schedulable.
+ * Both grouping and merging are effective. Schedulable.
  *
  * Purpose: first scenario with resource contention between two transactions;
  * demonstrates inter-transaction cross-product explosion and the

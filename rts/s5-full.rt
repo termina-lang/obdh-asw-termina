@@ -63,7 +63,7 @@
  *     mng_tc_executor, gpio_drv
  *
  * Cross-product: by far the largest across all scenarios, driven by the
- * three flattened sub-transactions. Filtering is effective (many priority
+ * three flattened sub-transactions. Grouping is effective (many priority
  * TC paths share empty lock sets since most services are unprotected);
  * merging collapses all remaining models (all lock sets within each step
  * are comparable under subset inclusion). Schedulable.

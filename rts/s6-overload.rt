@@ -53,7 +53,7 @@
  *     mng_tc_executor, gpio_drv
  *
  * Cross-product: moderate — PUS_prio_exec_tc has 5 internal paths with
- * different resource access patterns. Both filtering and merging are
+ * different resource access patterns. Both grouping and merging are
  * effective. Unschedulable — the overload arises entirely from the
  * arrival rate.
  *
