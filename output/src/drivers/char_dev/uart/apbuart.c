@@ -279,7 +279,7 @@ void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __t
         if ((size_t)(queue_max_noe - num_elements) >= nbytes) {
             
             #line 262 "src/drivers/char_dev/uart/apbuart.fin"
-            for (size_t i = 0U; i < nbytes && (*status).__variant == Failure == 0; i = i + 1U) {
+            for (size_t i = 0U; i < nbytes && ((*status).__variant == Failure) == 0; i = i + 1U) {
                 
                 #line 264 "src/drivers/char_dev/uart/apbuart.fin"
                 *status = enqueue(&self->uart_tx_queue, output_bytes[__termina_array__index(nbytes, i)]);
@@ -337,7 +337,7 @@ void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __t
             if ((size_t)(queue_max_noe - num_elements) >= left_bytes) {
                 
                 #line 299 "src/drivers/char_dev/uart/apbuart.fin"
-                for (size_t i = 0U; i < nbytes && (i < left_bytes && (*status).__variant == Failure == 0); i = i + 1U) {
+                for (size_t i = 0U; i < nbytes && (i < left_bytes && ((*status).__variant == Failure) == 0); i = i + 1U) {
                     
                     #line 301 "src/drivers/char_dev/uart/apbuart.fin"
                     *status = enqueue(&self->uart_tx_queue, output_bytes[__termina_array__index(nbytes, i + sent_bytes)]);

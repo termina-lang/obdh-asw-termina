@@ -190,7 +190,7 @@ function close_tm (tm_handler : &mut TMHandler, type : u8, subtype : u8, tm_coun
     tm_handler_build_packet_header(tm_handler, tm_count);
     tm_handler_build_df_header(tm_handler, type, subtype, current_obt);
 
-    ccsds_pus_tm_set_fields(&mut (tm_handler->tm_descriptor.tm_bytes[0 : usize .. 10 : usize]), &(tm_handler->packet_header), &(tm_handler->df_header));
+    ccsds_pus_tm_set_fields(&mut (tm_handler->tm_descriptor.tm_bytes[0 .. 19]), &(tm_handler->packet_header), &(tm_handler->df_header));
 
     tm_handler->tm_descriptor.tm_num_bytes = tm_handler->packet_header.packet_length as usize + 7;
 

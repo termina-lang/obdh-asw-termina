@@ -95,7 +95,7 @@ function ccsds_pus_tm_build_df_header_version(version : u8) -> u8 {
  * @param p_tm_packet_header Pointer to the TM packet header structure
  * @param p_tm_df_header Pointer to the TM data field header structure
  */
-function ccsds_pus_tm_set_fields(tm_bytes : &mut[u8 ; 10],
+function ccsds_pus_tm_set_fields(tm_bytes : &mut[u8 ; 19],
         p_tm_packet_header : &CCSDSPUSTMPacketHeader,
         p_tm_df_header : &CCSDSPUSTMDFHeader) {
 
