@@ -259,6 +259,7 @@ resource class CAPBUARTDriver provides
             if queue_max_noe - num_elements >= 1 {
 
                 *status = enqueue(&mut(self->uart_tx_queue), output_byte);
+                self->rem_bytes = true;
 
             } else {
                 *status = Failure(TM_SEND_FAILURE);
