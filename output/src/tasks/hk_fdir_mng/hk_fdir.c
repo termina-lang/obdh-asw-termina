@@ -9,17 +9,10 @@ __status_int32_t CHousekeepingFDIRTask__check_pending_actions(const __termina_ev
     CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)__this;
 
     #line 98 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    __status_int32_t result;
-    #line 98 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    result.__variant = Success;
+    __status_int32_t result = { .__variant = Success };
 
     #line 100 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    size_t pending_actions[4U];
-    #line 100 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
-        #line 100 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        pending_actions[__i0] = 0U;
-    }
+    size_t pending_actions[4U] = { 0U, 0U, 0U, 0U };
 
     #line 101 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     self->pus_service_19.get_pending_action_number(__ev, self->pus_service_19.__that, pending_actions);
@@ -64,9 +57,7 @@ __status_int32_t CHousekeepingFDIRTask__check_pending_actions(const __termina_ev
     if (n < 4U) {
         
         #line 127 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        __option_box_t tc_handler;
-        #line 127 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-        tc_handler.__variant = None;
+        __option_box_t tc_handler = { .__variant = None };
 
         #line 128 "src/tasks/hk_fdir_mng/hk_fdir.fin"
         self->tc_handler_pool.alloc(__ev, self->tc_handler_pool.__that, &tc_handler);
@@ -106,9 +97,7 @@ __status_int32_t CHousekeepingFDIRTask__do_fdir(const __termina_event_t * const 
     CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)__this;
 
     #line 55 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    __status_int32_t result;
-    #line 55 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    result.__variant = Success;
+    __status_int32_t result = { .__variant = Success };
 
     #line 57 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     _Bool is_monitor_enabled = 0;
@@ -126,9 +115,7 @@ __status_int32_t CHousekeepingFDIRTask__do_fdir(const __termina_event_t * const 
             uint16_t evID = 0U;
 
             #line 66 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            FaultInfo fault_info;
-            #line 66 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            fault_info.__variant = FaultInfo__Empty;
+            FaultInfo fault_info = { .__variant = FaultInfo__Empty };
 
             #line 67 "src/tasks/hk_fdir_mng/hk_fdir.fin"
             _Bool event_triggered = 0;
@@ -184,9 +171,7 @@ __status_int32_t CHousekeepingFDIRTask__do_hk_fdir(const __termina_event_t * con
     CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)__this;
 
     #line 158 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    __status_int32_t result;
-    #line 158 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    result.__variant = Success;
+    __status_int32_t result = { .__variant = Success };
 
     #line 160 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     self->pus_service_3.update_params(__ev, self->pus_service_3.__that);
@@ -219,9 +204,7 @@ __status_int32_t CHousekeepingFDIRTask__exec_tc(const __termina_event_t * const 
     CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)__this;
 
     #line 181 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    __status_int32_t status;
-    #line 181 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 183 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     uint8_t tc_type = (*(TCHandler *)tc_handler.data).df_header.type;

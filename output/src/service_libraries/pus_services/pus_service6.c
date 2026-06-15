@@ -10,27 +10,18 @@ __option_uint16_t CPUSService6__check_data(const __termina_event_t * const __ev,
     size_t start_address = (size_t)self->exec_tc_req_status_update.address;
 
     #line 88 "src/service_libraries/pus_services/pus_service6.fin"
-    uint8_t data[256U];
-    #line 88 "src/service_libraries/pus_services/pus_service6.fin"
-    for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
-        #line 88 "src/service_libraries/pus_services/pus_service6.fin"
-        data[__i0] = 0U;
-    }
+    uint8_t data[256U] = { 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U };
 
     #line 89 "src/service_libraries/pus_services/pus_service6.fin"
     for (size_t i = 0U; i < 256U && i < (size_t)self->exec_tc_req_status_update.length; i = i + 1U) {
         
         #line 90 "src/service_libraries/pus_services/pus_service6.fin"
-        data[__termina_array__index(256U, i)] = self->memory[__termina_array__index(banks_number, bank_index)][__termina_array__index(bank_size, start_address + i)];
+        data[__termina_array__index(256U, i)] = self->memory[__termina_array__index(8U, bank_index)][__termina_array__index(16777216U, start_address + i)];
 
     }
 
     #line 93 "src/service_libraries/pus_services/pus_service6.fin"
-    __option_uint16_t checksum;
-    #line 94 "src/service_libraries/pus_services/pus_service6.fin"
-    checksum.__variant = Some;
-    #line 93 "src/service_libraries/pus_services/pus_service6.fin"
-    checksum.Some.__0 = cal_crc_16(data, (size_t)self->exec_tc_req_status_update.length);
+    __option_uint16_t checksum = { .__variant = Some, .Some = { .__0 = cal_crc_16(data, (size_t)self->exec_tc_req_status_update.length) } };
 
     #line 96 "src/service_libraries/pus_services/pus_service6.fin"
     return checksum;
@@ -83,16 +74,14 @@ _Bool CPUSService6__is_address_valid(const __termina_event_t * const __ev, const
 _Bool CPUSService6__is_mem_id_write_enabled(const __termina_event_t * const __ev, const CPUSService6 * const self) {
     
     #line 53 "src/service_libraries/pus_services/pus_service6.fin"
-    return self->mem_id_write_permissions[__termina_array__index(banks_number, (size_t)self->exec_tc_req_status_update.mem_id)] == 1;
+    return self->mem_id_write_permissions[__termina_array__index(8U, (size_t)self->exec_tc_req_status_update.mem_id)] == 1;
 
 }
 
 __status_int32_t CPUSService6__write_data(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 59 "src/service_libraries/pus_services/pus_service6.fin"
-    __status_int32_t status;
-    #line 59 "src/service_libraries/pus_services/pus_service6.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 61 "src/service_libraries/pus_services/pus_service6.fin"
     size_t bank_index = (size_t)self->exec_tc_req_status_update.mem_id;
@@ -104,7 +93,7 @@ __status_int32_t CPUSService6__write_data(const __termina_event_t * const __ev, 
     for (size_t i = 0U; i < 256U && i < (size_t)self->exec_tc_req_status_update.length; i = i + 1U) {
         
         #line 65 "src/service_libraries/pus_services/pus_service6.fin"
-        self->memory[__termina_array__index(banks_number, bank_index)][__termina_array__index(bank_size, start_address + i)] = self->exec_tc_req_status_update.data[__termina_array__index(max_num_of_bytes_memory_load, i)];
+        self->memory[__termina_array__index(8U, bank_index)][__termina_array__index(16777216U, start_address + i)] = self->exec_tc_req_status_update.data[__termina_array__index(256U, i)];
 
     }
 
@@ -116,9 +105,7 @@ __status_int32_t CPUSService6__write_data(const __termina_event_t * const __ev, 
 __status_int32_t CPUSService6__exec6_2TC(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 101 "src/service_libraries/pus_services/pus_service6.fin"
-    __status_int32_t status;
-    #line 101 "src/service_libraries/pus_services/pus_service6.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 103 "src/service_libraries/pus_services/pus_service6.fin"
     if (self->exec_tc_req_status_update.N != 1U) {
@@ -178,9 +165,7 @@ __status_int32_t CPUSService6__exec6_2TC(const __termina_event_t * const __ev, C
 __status_int32_t CPUSService6__read_data(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 73 "src/service_libraries/pus_services/pus_service6.fin"
-    __status_int32_t status;
-    #line 73 "src/service_libraries/pus_services/pus_service6.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 74 "src/service_libraries/pus_services/pus_service6.fin"
     size_t bank_index = (size_t)self->exec_tc_req_status_update.mem_id;
@@ -192,7 +177,7 @@ __status_int32_t CPUSService6__read_data(const __termina_event_t * const __ev, C
     for (size_t i = 0U; i < 256U && i < (size_t)self->exec_tc_req_status_update.length; i = i + 1U) {
         
         #line 78 "src/service_libraries/pus_services/pus_service6.fin"
-        self->exec_tc_req_status_update.data[__termina_array__index(max_num_of_bytes_memory_load, i)] = self->memory[__termina_array__index(banks_number, bank_index)][__termina_array__index(bank_size, start_address + i)];
+        self->exec_tc_req_status_update.data[__termina_array__index(256U, i)] = self->memory[__termina_array__index(8U, bank_index)][__termina_array__index(16777216U, start_address + i)];
 
     }
 
@@ -204,9 +189,7 @@ __status_int32_t CPUSService6__read_data(const __termina_event_t * const __ev, C
 __status_int32_t CPUSService6__exec6_5TC(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 166 "src/service_libraries/pus_services/pus_service6.fin"
-    __status_int32_t status;
-    #line 166 "src/service_libraries/pus_services/pus_service6.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 168 "src/service_libraries/pus_services/pus_service6.fin"
     if (self->exec_tc_req_status_update.N != 1U) {
@@ -239,9 +222,7 @@ __status_int32_t CPUSService6__exec6_5TC(const __termina_event_t * const __ev, C
         if (status.__variant == Success) {
             
             #line 201 "src/service_libraries/pus_services/pus_service6.fin"
-            __option_box_t tm_handler;
-            #line 201 "src/service_libraries/pus_services/pus_service6.fin"
-            tm_handler.__variant = None;
+            __option_box_t tm_handler = { .__variant = None };
 
             #line 202 "src/service_libraries/pus_services/pus_service6.fin"
             self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -253,11 +234,7 @@ __status_int32_t CPUSService6__exec6_5TC(const __termina_event_t * const __ev, C
                 __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
                 #line 208 "src/service_libraries/pus_services/pus_service6.fin"
-                MissionOBT current_obt;
-                #line 208 "src/service_libraries/pus_services/pus_service6.fin"
-                current_obt.finetime = 0U;
-                #line 208 "src/service_libraries/pus_services/pus_service6.fin"
-                current_obt.seconds = 0U;
+                MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
                 #line 209 "src/service_libraries/pus_services/pus_service6.fin"
                 uint16_t tm_count = 0U;
@@ -321,9 +298,7 @@ __status_int32_t CPUSService6__exec6_5TC(const __termina_event_t * const __ev, C
 __status_int32_t CPUSService6__exec6_9TC(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     #line 257 "src/service_libraries/pus_services/pus_service6.fin"
-    __status_int32_t status;
-    #line 257 "src/service_libraries/pus_services/pus_service6.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 259 "src/service_libraries/pus_services/pus_service6.fin"
     if (self->exec_tc_req_status_update.N != 1U) {
@@ -345,9 +320,7 @@ __status_int32_t CPUSService6__exec6_9TC(const __termina_event_t * const __ev, C
         self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
 
         #line 283 "src/service_libraries/pus_services/pus_service6.fin"
-        __option_uint16_t option_checksum;
-        #line 283 "src/service_libraries/pus_services/pus_service6.fin"
-        option_checksum.__variant = None;
+        __option_uint16_t option_checksum = { .__variant = None };
 
         #line 284 "src/service_libraries/pus_services/pus_service6.fin"
         option_checksum = CPUSService6__check_data(__ev, self);
@@ -359,9 +332,7 @@ __status_int32_t CPUSService6__exec6_9TC(const __termina_event_t * const __ev, C
             uint16_t checksum = option_checksum.Some.__0;
 
             #line 290 "src/service_libraries/pus_services/pus_service6.fin"
-            __option_box_t tm_handler;
-            #line 290 "src/service_libraries/pus_services/pus_service6.fin"
-            tm_handler.__variant = None;
+            __option_box_t tm_handler = { .__variant = None };
 
             #line 291 "src/service_libraries/pus_services/pus_service6.fin"
             self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -373,11 +344,7 @@ __status_int32_t CPUSService6__exec6_9TC(const __termina_event_t * const __ev, C
                 __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
                 #line 297 "src/service_libraries/pus_services/pus_service6.fin"
-                MissionOBT current_obt;
-                #line 297 "src/service_libraries/pus_services/pus_service6.fin"
-                current_obt.finetime = 0U;
-                #line 297 "src/service_libraries/pus_services/pus_service6.fin"
-                current_obt.seconds = 0U;
+                MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
                 #line 298 "src/service_libraries/pus_services/pus_service6.fin"
                 uint16_t tm_count = 0U;
@@ -447,9 +414,7 @@ void CPUSService6__exec_tc(const __termina_event_t * const __ev, void * const __
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 347 "src/service_libraries/pus_services/pus_service6.fin"
-    __status_int32_t status;
-    #line 347 "src/service_libraries/pus_services/pus_service6.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 348 "src/service_libraries/pus_services/pus_service6.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
@@ -500,7 +465,7 @@ void CPUSService6__exec_tc(const __termina_event_t * const __ev, void * const __
         for (size_t j = 0U; j < max_num_of_bytes_memory_load && (j < (size_t)self->exec_tc_req_status_update.length && status.__variant == Success); j = j + 1U) {
             
             #line 371 "src/service_libraries/pus_services/pus_service6.fin"
-            status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.data[__termina_array__index(max_num_of_bytes_memory_load, j)]);
+            status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.data[__termina_array__index(256U, j)]);
 
         }
 

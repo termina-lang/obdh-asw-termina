@@ -4,11 +4,7 @@
 TimeVal substract_TimeVal(TimeVal timeval1, TimeVal timeval2) {
     
     #line 13 "src/service_libraries/timeval.fin"
-    TimeVal result;
-    #line 13 "src/service_libraries/timeval.fin"
-    result.tv_sec = 0U;
-    #line 13 "src/service_libraries/timeval.fin"
-    result.tv_usec = 0U;
+    TimeVal result = { .tv_sec = 0U, .tv_usec = 0U };
 
     #line 14 "src/service_libraries/timeval.fin"
     result.tv_sec = timeval1.tv_sec - timeval2.tv_sec;

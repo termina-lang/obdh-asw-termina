@@ -4,9 +4,7 @@
 __status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * const __ev, CPUSService17 * const self) {
     
     #line 76 "src/service_libraries/pus_services/pus_service17.fin"
-    __status_int32_t status;
-    #line 76 "src/service_libraries/pus_services/pus_service17.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 78 "src/service_libraries/pus_services/pus_service17.fin"
     self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -15,19 +13,13 @@ __status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * const __ev,
     if (status.__variant == Success) {
         
         #line 87 "src/service_libraries/pus_services/pus_service17.fin"
-        MissionOBT current_obt;
-        #line 87 "src/service_libraries/pus_services/pus_service17.fin"
-        current_obt.finetime = 0U;
-        #line 87 "src/service_libraries/pus_services/pus_service17.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 88 "src/service_libraries/pus_services/pus_service17.fin"
         uint16_t tm_count = 0U;
 
         #line 90 "src/service_libraries/pus_services/pus_service17.fin"
-        __option_box_t tm_handler;
-        #line 90 "src/service_libraries/pus_services/pus_service17.fin"
-        tm_handler.__variant = None;
+        __option_box_t tm_handler = { .__variant = None };
 
         #line 91 "src/service_libraries/pus_services/pus_service17.fin"
         self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -84,9 +76,7 @@ void CPUSService17__exec_tc(const __termina_event_t * const __ev, void * const _
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 137 "src/service_libraries/pus_services/pus_service17.fin"
-    __status_int32_t status;
-    #line 137 "src/service_libraries/pus_services/pus_service17.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 138 "src/service_libraries/pus_services/pus_service17.fin"
     uint8_t subtype = tc_handler->df_header.subtype;

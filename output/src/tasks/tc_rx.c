@@ -7,14 +7,10 @@ __status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __e
     CTXRxBottomHalfTask * self = (CTXRxBottomHalfTask *)__this;
 
     #line 17 "src/tasks/tc_rx.fin"
-    __status_int32_t ret;
-    #line 17 "src/tasks/tc_rx.fin"
-    ret.__variant = Success;
+    __status_int32_t ret = { .__variant = Success };
 
     #line 19 "src/tasks/tc_rx.fin"
-    __option_box_t tc_handler;
-    #line 19 "src/tasks/tc_rx.fin"
-    tc_handler.__variant = None;
+    __option_box_t tc_handler = { .__variant = None };
 
     #line 20 "src/tasks/tc_rx.fin"
     self->tc_handler_pool.alloc(__ev, self->tc_handler_pool.__that, &tc_handler);
@@ -29,9 +25,7 @@ __status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __e
         for (size_t i = 0U; i < 256U && (i < size && ret.__variant == Success); i = i + 1U) {
             
             #line 28 "src/tasks/tc_rx.fin"
-            __option_uint8_t obyte;
-            #line 28 "src/tasks/tc_rx.fin"
-            obyte.__variant = None;
+            __option_uint8_t obyte = { .__variant = None };
 
             #line 29 "src/tasks/tc_rx.fin"
             self->tc_channel.dequeue(__ev, self->tc_channel.__that, &obyte);

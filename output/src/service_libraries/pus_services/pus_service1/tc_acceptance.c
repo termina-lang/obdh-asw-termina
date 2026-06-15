@@ -7,9 +7,7 @@ TCExecutionCtrl handle_tc(const TCDescriptor * const tc_descriptor) {
     uint8_t type = get_type(tc_descriptor->tc_bytes);
 
     #line 26 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    TCExecutionCtrl exec_ctrl;
-    #line 26 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    exec_ctrl.__variant = TCExecutionCtrl__ExecCtrlPrioTC;
+    TCExecutionCtrl exec_ctrl = { .__variant = TCExecutionCtrl__ExecCtrlPrioTC };
 
     #line 28 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
     if (type == 9U || type == 17U || type == 128U) {
@@ -45,13 +43,7 @@ TCExecutionCtrl handle_tc(const TCDescriptor * const tc_descriptor) {
 TCStatus try_tc_acceptation(const TCDescriptor * const tc_descriptor) {
     
     #line 65 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    TCStatus tc_status;
-    #line 65 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    tc_status.acceptation_status.__variant = TCAcceptationStatus__Undefined;
-    #line 67 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    tc_status.error_code.__variant = TCErrorType__Undefined;
-    #line 66 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    tc_status.execution_status.__variant = TCExecutionCtrl__Undefined;
+    TCStatus tc_status = { .acceptation_status = { .__variant = TCAcceptationStatus__Undefined }, .error_code = { .__variant = TCErrorType__Undefined }, .execution_status = { .__variant = TCExecutionCtrl__Undefined } };
 
     #line 69 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
     if (0 == is_crc_valid(tc_descriptor)) {

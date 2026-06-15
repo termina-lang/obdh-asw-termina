@@ -16,9 +16,7 @@ const uint16_t EvID_build_tm_error = 0x2100U;
 Ev_IDType get_Ev_ID_type(uint16_t Ev_ID) {
     
     #line 61 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    Ev_IDType Ev_ID_type;
-    #line 61 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    Ev_ID_type.__variant = Ev_IDType__Ev_IDNotValid;
+    Ev_IDType Ev_ID_type = { .__variant = Ev_IDType__Ev_IDNotValid };
 
     #line 62 "src/service_libraries/pus_services/pus_service5/internal.fin"
     uint16_t aux_type = Ev_ID >> 12U;
@@ -193,9 +191,7 @@ uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID) {
 __status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamOutOfLimitInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
     
     #line 145 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    __status_int32_t status;
-    #line 145 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 147 "src/service_libraries/pus_services/pus_service5/internal.fin"
     startup_tm(p_tm_handler);
@@ -246,9 +242,7 @@ __status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler,
 __status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamFaultValueInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
     
     #line 169 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    __status_int32_t status;
-    #line 169 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 171 "src/service_libraries/pus_services/pus_service5/internal.fin"
     startup_tm(p_tm_handler);

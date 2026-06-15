@@ -4,9 +4,7 @@
 __status_int32_t CPUSService19__delete_event_action(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 67 "src/service_libraries/pus_services/pus_service19.fin"
-    __status_int32_t status;
-    #line 67 "src/service_libraries/pus_services/pus_service19.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 69 "src/service_libraries/pus_services/pus_service19.fin"
     if (self->exec_tc_req_status_update.tc_data.EvID == self->event_action_config[__termina_array__index(16U, self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].event_ID) {
@@ -35,9 +33,7 @@ __status_int32_t CPUSService19__delete_event_action(const __termina_event_t * co
 __status_int32_t CPUSService19__disable_event_action(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 35 "src/service_libraries/pus_services/pus_service19.fin"
-    __status_int32_t status;
-    #line 35 "src/service_libraries/pus_services/pus_service19.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 37 "src/service_libraries/pus_services/pus_service19.fin"
     if (self->exec_tc_req_status_update.tc_data.EvID == self->event_action_config[__termina_array__index(16U, self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].event_ID) {
@@ -63,9 +59,7 @@ __status_int32_t CPUSService19__disable_event_action(const __termina_event_t * c
 __status_int32_t CPUSService19__enable_event_action(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 51 "src/service_libraries/pus_services/pus_service19.fin"
-    __status_int32_t status;
-    #line 51 "src/service_libraries/pus_services/pus_service19.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 53 "src/service_libraries/pus_services/pus_service19.fin"
     if (self->exec_tc_req_status_update.tc_data.EvID == self->event_action_config[__termina_array__index(16U, self->exec_tc_req_status_update.ev_action_ID.ev_action_index)].event_ID) {
@@ -91,13 +85,7 @@ __status_int32_t CPUSService19__enable_event_action(const __termina_event_t * co
 FoundID CPUSService19__get_free_event_action_index(const __termina_event_t * const __ev, const CPUSService19 * const self) {
     
     #line 85 "src/service_libraries/pus_services/pus_service19.fin"
-    FoundID found_and_id;
-    #line 85 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id.enabled = 0;
-    #line 85 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id.ev_action_index = 0U;
-    #line 85 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id.found = 0;
+    FoundID found_and_id = { .enabled = 0, .ev_action_index = 0U, .found = 0 };
 
     #line 87 "src/service_libraries/pus_services/pus_service19.fin"
     for (size_t i = 0U; i < 16U && found_and_id.found == 0; i = i + 1U) {
@@ -123,13 +111,7 @@ FoundID CPUSService19__get_free_event_action_index(const __termina_event_t * con
 FoundID CPUSService19__is_ev_action_defined(const __termina_event_t * const __ev, const CPUSService19 * const self, uint16_t evID) {
     
     #line 100 "src/service_libraries/pus_services/pus_service19.fin"
-    FoundID found_and_id;
-    #line 100 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id.enabled = 0;
-    #line 100 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id.ev_action_index = 0U;
-    #line 100 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id.found = 0;
+    FoundID found_and_id = { .enabled = 0, .ev_action_index = 0U, .found = 0 };
 
     #line 102 "src/service_libraries/pus_services/pus_service19.fin"
     for (size_t i = 0U; i < 16U && found_and_id.found == 0; i = i + 1U) {
@@ -158,9 +140,7 @@ FoundID CPUSService19__is_ev_action_defined(const __termina_event_t * const __ev
 __status_int32_t CPUSService19__exec19_1TC(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 119 "src/service_libraries/pus_services/pus_service19.fin"
-    __status_int32_t status;
-    #line 119 "src/service_libraries/pus_services/pus_service19.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 121 "src/service_libraries/pus_services/pus_service19.fin"
     if (self->exec_tc_req_status_update.tc_data.N != 1U) {
@@ -182,9 +162,7 @@ __status_int32_t CPUSService19__exec19_1TC(const __termina_event_t * const __ev,
         _Bool is_enabled = 0;
 
         #line 139 "src/service_libraries/pus_services/pus_service19.fin"
-        TC19_1_Error error;
-        #line 139 "src/service_libraries/pus_services/pus_service19.fin"
-        error.__variant = TC19_1_Error__NoError;
+        TC19_1_Error error = { .__variant = TC19_1_Error__NoError };
 
         #line 141 "src/service_libraries/pus_services/pus_service19.fin"
         self->exec_tc_req_status_update.ev_action_ID = CPUSService19__is_ev_action_defined(__ev, self, self->exec_tc_req_status_update.tc_data.EvID);
@@ -232,39 +210,13 @@ __status_int32_t CPUSService19__exec19_1TC(const __termina_event_t * const __ev,
         if (error.__variant == TC19_1_Error__NoError) {
             
             #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            TCHandler action_tc_handler;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.app_data_index = 0U;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.df_header.flag_ver_ack = 0U;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.df_header.sourceID = 0U;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.df_header.subtype = 0U;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.df_header.type = 0U;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.packet_error_ctrl = 0U;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.packet_header.packet_id = 0U;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.packet_header.packet_length = 0U;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.packet_header.packet_seq_ctrl = 0U;
-            #line 170 "src/service_libraries/pus_services/pus_service19.fin"
-            action_tc_handler.tc_descriptor = self->exec_tc_req_status_update.action_tc_packet;
+            TCHandler action_tc_handler = { .app_data_index = 0U, .df_header = { .flag_ver_ack = 0U, .sourceID = 0U, .subtype = 0U, .type = 0U }, .packet_error_ctrl = 0U, .packet_header = { .packet_id = 0U, .packet_length = 0U, .packet_seq_ctrl = 0U }, .tc_descriptor = self->exec_tc_req_status_update.action_tc_packet };
 
             #line 187 "src/service_libraries/pus_services/pus_service19.fin"
             tc_handler_build(&action_tc_handler);
 
             #line 189 "src/service_libraries/pus_services/pus_service19.fin"
-            TCStatus tc_status;
-            #line 190 "src/service_libraries/pus_services/pus_service19.fin"
-            tc_status.acceptation_status.__variant = TCAcceptationStatus__Undefined;
-            #line 192 "src/service_libraries/pus_services/pus_service19.fin"
-            tc_status.error_code.__variant = TCErrorType__Undefined;
-            #line 191 "src/service_libraries/pus_services/pus_service19.fin"
-            tc_status.execution_status.__variant = TCExecutionCtrl__Undefined;
+            TCStatus tc_status = { .acceptation_status = { .__variant = TCAcceptationStatus__Undefined }, .error_code = { .__variant = TCErrorType__Undefined }, .execution_status = { .__variant = TCExecutionCtrl__Undefined } };
 
             #line 195 "src/service_libraries/pus_services/pus_service19.fin"
             tc_status = try_tc_acceptation(&self->exec_tc_req_status_update.action_tc_packet);
@@ -325,9 +277,7 @@ __status_int32_t CPUSService19__exec19_1TC(const __termina_event_t * const __ev,
 __status_int32_t CPUSService19__exec19_2TC(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 256 "src/service_libraries/pus_services/pus_service19.fin"
-    __status_int32_t status;
-    #line 256 "src/service_libraries/pus_services/pus_service19.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 258 "src/service_libraries/pus_services/pus_service19.fin"
     if (self->exec_tc_req_status_update.tc_data.N != 1U) {
@@ -402,9 +352,7 @@ __status_int32_t CPUSService19__exec19_2TC(const __termina_event_t * const __ev,
 __status_int32_t CPUSService19__exec19_4TC(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 335 "src/service_libraries/pus_services/pus_service19.fin"
-    __status_int32_t status;
-    #line 335 "src/service_libraries/pus_services/pus_service19.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 337 "src/service_libraries/pus_services/pus_service19.fin"
     if (self->exec_tc_req_status_update.tc_data.N != 1U) {
@@ -465,9 +413,7 @@ __status_int32_t CPUSService19__exec19_4TC(const __termina_event_t * const __ev,
 __status_int32_t CPUSService19__exec19_5TC(const __termina_event_t * const __ev, CPUSService19 * const self) {
     
     #line 398 "src/service_libraries/pus_services/pus_service19.fin"
-    __status_int32_t status;
-    #line 398 "src/service_libraries/pus_services/pus_service19.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 401 "src/service_libraries/pus_services/pus_service19.fin"
     if (self->exec_tc_req_status_update.tc_data.N != 1U) {
@@ -534,9 +480,7 @@ void CPUSService19__exec_tc(const __termina_event_t * const __ev, void * const _
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 464 "src/service_libraries/pus_services/pus_service19.fin"
-    __status_int32_t status;
-    #line 464 "src/service_libraries/pus_services/pus_service19.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 465 "src/service_libraries/pus_services/pus_service19.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
@@ -780,13 +724,7 @@ void CPUSService19__manage_event_action(const __termina_event_t * const __ev, vo
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 562 "src/service_libraries/pus_services/pus_service19.fin"
-    FoundID found_and_id;
-    #line 562 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id.enabled = 0;
-    #line 562 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id.ev_action_index = 0U;
-    #line 562 "src/service_libraries/pus_services/pus_service19.fin"
-    found_and_id.found = 0;
+    FoundID found_and_id = { .enabled = 0, .ev_action_index = 0U, .found = 0 };
 
     #line 563 "src/service_libraries/pus_services/pus_service19.fin"
     found_and_id = CPUSService19__is_ev_action_defined(__ev, self, evID);

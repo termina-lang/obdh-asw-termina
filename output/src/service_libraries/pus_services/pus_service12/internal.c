@@ -167,9 +167,7 @@ _Bool are_status_equal(CheckState status1, CheckState status2) {
 MonitorCheckType get_check_type(uint8_t aux) {
     
     #line 294 "src/service_libraries/pus_services/pus_service12/internal.fin"
-    MonitorCheckType monitor_check;
-    #line 294 "src/service_libraries/pus_services/pus_service12/internal.fin"
-    monitor_check.__variant = MonitorCheckType__Free;
+    MonitorCheckType monitor_check = { .__variant = MonitorCheckType__Free };
 
     #line 296 "src/service_libraries/pus_services/pus_service12/internal.fin"
     if (aux == 0U) {
@@ -239,9 +237,7 @@ _Bool is_valid_check_limit_def(const MonitorDefinition * const param_limit_check
 __status_int32_t build_tm_12_12(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, uint8_t counter, const ParamMonitoringTransition param_mon_transitions_table[1U]) {
     
     #line 344 "src/service_libraries/pus_services/pus_service12/internal.fin"
-    __status_int32_t status;
-    #line 344 "src/service_libraries/pus_services/pus_service12/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 346 "src/service_libraries/pus_services/pus_service12/internal.fin"
     startup_tm(p_tm_handler);

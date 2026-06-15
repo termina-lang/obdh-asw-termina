@@ -10,9 +10,7 @@ void CPUSService3__do_hk(const __termina_event_t * const __ev, void * const __th
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 318 "src/service_libraries/pus_services/pus_service3.fin"
-    __status_int32_t do_hk_status;
-    #line 318 "src/service_libraries/pus_services/pus_service3.fin"
-    do_hk_status.__variant = Success;
+    __status_int32_t do_hk_status = { .__variant = Success };
 
     #line 320 "src/service_libraries/pus_services/pus_service3.fin"
     for (size_t i = 0U; i < 8U && (*action_status).__variant == Success; i = i + 1U) {
@@ -30,9 +28,7 @@ void CPUSService3__do_hk(const __termina_event_t * const __ev, void * const __th
                 self->hk_config_table[__termina_array__index(8U, i)].interval_control = 0U;
 
                 #line 330 "src/service_libraries/pus_services/pus_service3.fin"
-                __option_box_t tm_handler;
-                #line 330 "src/service_libraries/pus_services/pus_service3.fin"
-                tm_handler.__variant = None;
+                __option_box_t tm_handler = { .__variant = None };
 
                 #line 331 "src/service_libraries/pus_services/pus_service3.fin"
                 self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -105,11 +101,7 @@ void CPUSService3__do_hk(const __termina_event_t * const __ev, void * const __th
                     }
 
                     #line 368 "src/service_libraries/pus_services/pus_service3.fin"
-                    MissionOBT current_obt;
-                    #line 368 "src/service_libraries/pus_services/pus_service3.fin"
-                    current_obt.finetime = 0U;
-                    #line 368 "src/service_libraries/pus_services/pus_service3.fin"
-                    current_obt.seconds = 0U;
+                    MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
                     #line 369 "src/service_libraries/pus_services/pus_service3.fin"
                     self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
@@ -161,9 +153,7 @@ void CPUSService3__do_hk(const __termina_event_t * const __ev, void * const __th
 __option_size_t CPUSService3__get_SIDindex(const __termina_event_t * const __ev, const CPUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 37 "src/service_libraries/pus_services/pus_service3.fin"
-    __option_size_t index_found;
-    #line 37 "src/service_libraries/pus_services/pus_service3.fin"
-    index_found.__variant = None;
+    __option_size_t index_found = { .__variant = None };
 
     #line 39 "src/service_libraries/pus_services/pus_service3.fin"
     for (size_t i = 0U; i < 8U && index_found.__variant == None; i = i + 1U) {
@@ -188,14 +178,10 @@ __option_size_t CPUSService3__get_SIDindex(const __termina_event_t * const __ev,
 __status_int32_t CPUSService3__exec3_31TC(const __termina_event_t * const __ev, CPUSService3 * const self, PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 170 "src/service_libraries/pus_services/pus_service3.fin"
-    __status_int32_t status;
-    #line 170 "src/service_libraries/pus_services/pus_service3.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 171 "src/service_libraries/pus_services/pus_service3.fin"
-    __option_size_t opt_index;
-    #line 171 "src/service_libraries/pus_services/pus_service3.fin"
-    opt_index.__variant = None;
+    __option_size_t opt_index = { .__variant = None };
 
     #line 173 "src/service_libraries/pus_services/pus_service3.fin"
     if (exec_tc_req_status_update->N != 1U) {
@@ -250,14 +236,10 @@ __status_int32_t CPUSService3__exec3_31TC(const __termina_event_t * const __ev, 
 __status_int32_t CPUSService3__exec3_5TC(const __termina_event_t * const __ev, CPUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 52 "src/service_libraries/pus_services/pus_service3.fin"
-    __status_int32_t status;
-    #line 52 "src/service_libraries/pus_services/pus_service3.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 53 "src/service_libraries/pus_services/pus_service3.fin"
-    __option_size_t opt_index;
-    #line 53 "src/service_libraries/pus_services/pus_service3.fin"
-    opt_index.__variant = None;
+    __option_size_t opt_index = { .__variant = None };
 
     #line 55 "src/service_libraries/pus_services/pus_service3.fin"
     if (exec_tc_req_status_update->N != 1U) {
@@ -312,14 +294,10 @@ __status_int32_t CPUSService3__exec3_5TC(const __termina_event_t * const __ev, C
 __status_int32_t CPUSService3__exec3_6TC(const __termina_event_t * const __ev, CPUSService3 * const self, const PS3ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 111 "src/service_libraries/pus_services/pus_service3.fin"
-    __status_int32_t status;
-    #line 111 "src/service_libraries/pus_services/pus_service3.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 112 "src/service_libraries/pus_services/pus_service3.fin"
-    __option_size_t opt_index;
-    #line 112 "src/service_libraries/pus_services/pus_service3.fin"
-    opt_index.__variant = None;
+    __option_size_t opt_index = { .__variant = None };
 
     #line 114 "src/service_libraries/pus_services/pus_service3.fin"
     if (exec_tc_req_status_update->N != 1U) {
@@ -380,29 +358,13 @@ void CPUSService3__exec_tc(const __termina_event_t * const __ev, void * const __
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 230 "src/service_libraries/pus_services/pus_service3.fin"
-    __status_int32_t status;
-    #line 230 "src/service_libraries/pus_services/pus_service3.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 231 "src/service_libraries/pus_services/pus_service3.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
 
     #line 232 "src/service_libraries/pus_services/pus_service3.fin"
-    PS3ExecTCReqStatusUpdate exec_tc_req_status_update;
-    #line 232 "src/service_libraries/pus_services/pus_service3.fin"
-    exec_tc_req_status_update.N = 0U;
-    #line 232 "src/service_libraries/pus_services/pus_service3.fin"
-    exec_tc_req_status_update.SID = 0U;
-    #line 232 "src/service_libraries/pus_services/pus_service3.fin"
-    exec_tc_req_status_update.collection_interval = 0U;
-    #line 232 "src/service_libraries/pus_services/pus_service3.fin"
-    exec_tc_req_status_update.flags_ack = 0U;
-    #line 232 "src/service_libraries/pus_services/pus_service3.fin"
-    exec_tc_req_status_update.packet_id = 0U;
-    #line 232 "src/service_libraries/pus_services/pus_service3.fin"
-    exec_tc_req_status_update.packet_seq_ctrl = 0U;
-    #line 232 "src/service_libraries/pus_services/pus_service3.fin"
-    exec_tc_req_status_update.tc_num_bytes = 0U;
+    PS3ExecTCReqStatusUpdate exec_tc_req_status_update = { .N = 0U, .SID = 0U, .collection_interval = 0U, .flags_ack = 0U, .packet_id = 0U, .packet_seq_ctrl = 0U, .tc_num_bytes = 0U };
 
     #line 234 "src/service_libraries/pus_services/pus_service3.fin"
     exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;

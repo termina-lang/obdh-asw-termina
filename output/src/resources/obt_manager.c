@@ -13,21 +13,13 @@ void COBTManager__get_current_obt(const __termina_event_t * const __ev, void * c
     uint32_t fine_time_increment = 0U;
 
     #line 51 "src/resources/obt_manager.fin"
-    TimeVal time_val_from_power_on;
-    #line 51 "src/resources/obt_manager.fin"
-    time_val_from_power_on.tv_sec = 0U;
-    #line 51 "src/resources/obt_manager.fin"
-    time_val_from_power_on.tv_usec = 0U;
+    TimeVal time_val_from_power_on = { .tv_sec = 0U, .tv_usec = 0U };
 
     #line 55 "src/resources/obt_manager.fin"
     self->system_api.clock_get_uptime(__ev, &time_val_from_power_on);
 
     #line 56 "src/resources/obt_manager.fin"
-    TimeVal interval;
-    #line 56 "src/resources/obt_manager.fin"
-    interval.tv_sec = 0U;
-    #line 56 "src/resources/obt_manager.fin"
-    interval.tv_usec = 0U;
+    TimeVal interval = { .tv_sec = 0U, .tv_usec = 0U };
 
     #line 61 "src/resources/obt_manager.fin"
     interval = substract_TimeVal(time_val_from_power_on, self->ref_time_val_from_power_on);

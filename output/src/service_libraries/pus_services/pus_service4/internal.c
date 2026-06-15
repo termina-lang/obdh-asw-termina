@@ -4,9 +4,7 @@
 __status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, size_t index, uint8_t N, const StatsConfig * const stats_config_table, const StatsDef param_stats[4U], MissionOBT current_obt) {
     
     #line 55 "src/service_libraries/pus_services/pus_service4/internal.fin"
-    __status_int32_t status;
-    #line 55 "src/service_libraries/pus_services/pus_service4/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 56 "src/service_libraries/pus_services/pus_service4/internal.fin"
     startup_tm(p_tm_handler);

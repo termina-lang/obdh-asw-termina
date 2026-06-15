@@ -10,9 +10,7 @@ const size_t tm_app_data_offset = 19U;
 __status_int32_t append_u8_appdata_field(TMHandler * const tm_handler, uint8_t data) {
     
     #line 58 "src/service_libraries/pus_tm_handler.fin"
-    __status_int32_t status;
-    #line 58 "src/service_libraries/pus_tm_handler.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 60 "src/service_libraries/pus_tm_handler.fin"
     if (tm_handler->app_data_index < 256U) {
@@ -44,9 +42,7 @@ __status_int32_t append_u8_appdata_field(TMHandler * const tm_handler, uint8_t d
 __status_int32_t append_u16_appdata_field(TMHandler * const tm_handler, uint16_t data) {
     
     #line 86 "src/service_libraries/pus_tm_handler.fin"
-    __status_int32_t status;
-    #line 86 "src/service_libraries/pus_tm_handler.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 88 "src/service_libraries/pus_tm_handler.fin"
     if ((size_t)(tm_handler->app_data_index + 1U) < 256U) {
@@ -78,9 +74,7 @@ __status_int32_t append_u16_appdata_field(TMHandler * const tm_handler, uint16_t
 __status_int32_t append_u32_appdata_field(TMHandler * const tm_handler, uint32_t data) {
     
     #line 113 "src/service_libraries/pus_tm_handler.fin"
-    __status_int32_t status;
-    #line 113 "src/service_libraries/pus_tm_handler.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 115 "src/service_libraries/pus_tm_handler.fin"
     if ((size_t)(tm_handler->app_data_index + 3U) < 256U) {

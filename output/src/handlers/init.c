@@ -13,9 +13,7 @@ __status_int32_t CInitHandler__init(const __termina_event_t * const __ev, void *
     CInitHandler * self = (CInitHandler *)__this;
 
     #line 44 "src/handlers/init.fin"
-    __status_int32_t ret;
-    #line 44 "src/handlers/init.fin"
-    ret.__variant = Success;
+    __status_int32_t ret = { .__variant = Success };
 
     #line 47 "src/handlers/init.fin"
     self->uart_drv.initialize(__ev, self->uart_drv.__that);

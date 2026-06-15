@@ -60,15 +60,16 @@ resource class CTMChannel provides ITMChannel {
         // Set TM length in frame
         serialize_uint16(tm_descriptor.tm_num_bytes as u16, &mut frame_header[4 .. 6]);
 
+        for i : usize in 0 .. 6 {
 
-        self->char_dev.send(6, &frame_header, status);
+            self->char_dev.send(frame_header[i], status);
+
+        }
 
         // Send telemetry packet bytes
         for i : usize in 0 .. 256 while (i < tm_descriptor.tm_num_bytes) && (*status is Success) {
 
-            let index : usize = i as usize;
-
-            self->char_dev.send(1, &tm_descriptor.tm_bytes[index .. index + 1], status);
+            self->char_dev.send(tm_descriptor.tm_bytes[i], status);
 
         }
         

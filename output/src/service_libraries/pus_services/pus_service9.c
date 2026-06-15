@@ -4,9 +4,7 @@
 __status_int32_t CPUSService9__exec9_129TC(const __termina_event_t * const __ev, CPUSService9 * const self) {
     
     #line 52 "src/service_libraries/pus_services/pus_service9.fin"
-    __status_int32_t status;
-    #line 52 "src/service_libraries/pus_services/pus_service9.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 54 "src/service_libraries/pus_services/pus_service9.fin"
     self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -36,9 +34,7 @@ void CPUSService9__exec_tc(const __termina_event_t * const __ev, void * const __
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 87 "src/service_libraries/pus_services/pus_service9.fin"
-    __status_int32_t status;
-    #line 87 "src/service_libraries/pus_services/pus_service9.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 88 "src/service_libraries/pus_services/pus_service9.fin"
     uint8_t subtype = tc_handler->df_header.subtype;

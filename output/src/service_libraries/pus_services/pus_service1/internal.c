@@ -170,9 +170,7 @@ uint8_t get_failure_subtype(TCVerifyStage verify_stage) {
 __status_int32_t build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, MissionOBT current_obt) {
     
     #line 235 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status;
-    #line 235 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 236 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -215,9 +213,7 @@ __status_int32_t build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, ui
 __status_int32_t build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint8_t failure_data, MissionOBT current_obt) {
     
     #line 261 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status;
-    #line 261 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 262 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -268,9 +264,7 @@ __status_int32_t build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, ui
 __status_int32_t build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint16_t failure_data, MissionOBT current_obt) {
     
     #line 290 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status;
-    #line 290 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 291 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -321,9 +315,7 @@ __status_int32_t build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, u
 __status_int32_t build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint32_t failure_data, MissionOBT current_obt) {
     
     #line 319 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status;
-    #line 319 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 320 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -374,9 +366,7 @@ __status_int32_t build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, u
 __status_int32_t build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint8_t failure_data1, uint32_t failure_data2, MissionOBT current_obt) {
     
     #line 350 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status;
-    #line 350 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 351 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);

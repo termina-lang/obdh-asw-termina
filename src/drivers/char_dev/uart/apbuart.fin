@@ -246,24 +246,19 @@ resource class CAPBUARTDriver provides
      * @param[in] output_bytes Bytes to be transmitted.
      * @param[out] status Success or failure (e.g. buffer full).
      */
-    procedure send(&mut self, nbytes : const usize,
-                   output_bytes : & [u8; nbytes], 
+    procedure send(&mut self, output_byte : u8, 
                    status : &mut Status<i32>) {
 
         *status = Success;
 
-        if (self->rem_bytes) {
+        if (self->rem_bytes || self->tf_is_empty() == false) { 
 
             var num_elements : usize = 0;
             get_num_enqueued_elems(&(self->uart_tx_queue), &mut num_elements);
 
-            if queue_max_noe - num_elements >= nbytes {
+            if queue_max_noe - num_elements >= 1 {
 
-                for i : usize in 0 : usize .. nbytes while (*status is Failure) == false {
-
-                    *status = enqueue(&mut(self->uart_tx_queue), output_bytes[i]);
-
-                }
+                *status = enqueue(&mut(self->uart_tx_queue), output_byte);
 
             } else {
                 *status = Failure(TM_SEND_FAILURE);
@@ -271,45 +266,7 @@ resource class CAPBUARTDriver provides
 
         } else {
 
-            var sent_bytes : usize = 0;
-
-            if self->tf_is_empty() {
-
-                for i : usize in 0 .. hw_fifo_size while i < nbytes {
-
-                    self->registers.data = output_bytes[i] as u32;
-            
-                    sent_bytes = sent_bytes + 1;
-                    
-                }
-
-            }
-
-            if sent_bytes < nbytes {
-
-                self->rem_bytes = true;
-
-                var left_bytes : usize = nbytes - sent_bytes;
-                var num_elements : usize = 0;
-
-                get_num_enqueued_elems(&(self->uart_tx_queue), &mut num_elements);
-
-                if queue_max_noe - num_elements >= left_bytes {
-
-                    for i : usize in 0 .. nbytes while (i < left_bytes && (*status is Failure) == false){
-
-                        *status = enqueue(&mut(self->uart_tx_queue), output_bytes[i + sent_bytes]);
-
-                    }
-
-
-                } else {
-                    
-                    *status = Failure(TM_SEND_FAILURE);
-                     
-                }
-
-            }
+            self->registers.data = output_byte as u32;
 
         }
 

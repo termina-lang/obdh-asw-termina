@@ -12,8 +12,7 @@ enum CharDevIrqStatus {
  */
 interface ICharDevSend {
     procedure send(&mut self,
-                   nbytes : const usize,
-                   output_bytes : &[u8; nbytes], 
+                   output_byte : u8, 
                    status : &mut Status<i32>);
 };
 

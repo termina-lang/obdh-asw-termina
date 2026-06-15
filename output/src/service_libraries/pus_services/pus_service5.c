@@ -4,9 +4,7 @@
 __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, CPUSService5 * const self) {
     
     #line 88 "src/service_libraries/pus_services/pus_service5.fin"
-    __status_int32_t status;
-    #line 88 "src/service_libraries/pus_services/pus_service5.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 90 "src/service_libraries/pus_services/pus_service5.fin"
     size_t index = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
@@ -57,9 +55,7 @@ __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, C
 __status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const __ev, CPUSService5 * const self) {
     
     #line 136 "src/service_libraries/pus_services/pus_service5.fin"
-    __status_int32_t status;
-    #line 136 "src/service_libraries/pus_services/pus_service5.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 138 "src/service_libraries/pus_services/pus_service5.fin"
     size_t index = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
@@ -116,9 +112,7 @@ void CPUSService5__exec_tc(const __termina_event_t * const __ev, void * const __
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 264 "src/service_libraries/pus_services/pus_service5.fin"
-    __status_int32_t status;
-    #line 264 "src/service_libraries/pus_services/pus_service5.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 265 "src/service_libraries/pus_services/pus_service5.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
@@ -286,9 +280,7 @@ void CPUSService5__send_tm_5_2(const __termina_event_t * const __ev, void * cons
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 184 "src/service_libraries/pus_services/pus_service5.fin"
-    __option_box_t tm_handler;
-    #line 184 "src/service_libraries/pus_services/pus_service5.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 185 "src/service_libraries/pus_services/pus_service5.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -309,11 +301,7 @@ void CPUSService5__send_tm_5_2(const __termina_event_t * const __ev, void * cons
         if ((*status).__variant == Success) {
             
             #line 196 "src/service_libraries/pus_services/pus_service5.fin"
-            MissionOBT current_obt;
-            #line 196 "src/service_libraries/pus_services/pus_service5.fin"
-            current_obt.finetime = 0U;
-            #line 196 "src/service_libraries/pus_services/pus_service5.fin"
-            current_obt.seconds = 0U;
+            MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
             #line 197 "src/service_libraries/pus_services/pus_service5.fin"
             uint16_t tm_count = 0U;
@@ -365,9 +353,7 @@ void CPUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * cons
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 222 "src/service_libraries/pus_services/pus_service5.fin"
-    __option_box_t tm_handler;
-    #line 222 "src/service_libraries/pus_services/pus_service5.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 223 "src/service_libraries/pus_services/pus_service5.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -379,11 +365,7 @@ void CPUSService5__send_tm_5_x(const __termina_event_t * const __ev, void * cons
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 229 "src/service_libraries/pus_services/pus_service5.fin"
-        MissionOBT current_obt;
-        #line 229 "src/service_libraries/pus_services/pus_service5.fin"
-        current_obt.finetime = 0U;
-        #line 229 "src/service_libraries/pus_services/pus_service5.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 230 "src/service_libraries/pus_services/pus_service5.fin"
         uint16_t tm_count = 0U;

@@ -7,9 +7,7 @@ __status_int32_t COBDHManagerTask__process_action_tc(const __termina_event_t * c
     COBDHManagerTask * self = (COBDHManagerTask *)__this;
 
     #line 126 "src/tasks/obdh_manager/obdh_manager.fin"
-    __status_int32_t ret;
-    #line 126 "src/tasks/obdh_manager/obdh_manager.fin"
-    ret.__variant = Success;
+    __status_int32_t ret = { .__variant = Success };
 
     #line 127 "src/tasks/obdh_manager/obdh_manager.fin"
     _Bool reebot_flag = 0;
@@ -69,9 +67,7 @@ __status_int32_t COBDHManagerTask__process_tc(const __termina_event_t * const __
     COBDHManagerTask * self = (COBDHManagerTask *)__this;
 
     #line 54 "src/tasks/obdh_manager/obdh_manager.fin"
-    __status_int32_t ret;
-    #line 54 "src/tasks/obdh_manager/obdh_manager.fin"
-    ret.__variant = Success;
+    __status_int32_t ret = { .__variant = Success };
 
     #line 55 "src/tasks/obdh_manager/obdh_manager.fin"
     _Bool reebot_flag = 0;

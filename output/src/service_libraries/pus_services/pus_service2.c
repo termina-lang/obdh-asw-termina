@@ -4,9 +4,7 @@
 __status_int32_t CPUSService2__dev_drv_on_off(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 110 "src/service_libraries/pus_services/pus_service2.fin"
-    __status_int32_t status;
-    #line 110 "src/service_libraries/pus_services/pus_service2.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 112 "src/service_libraries/pus_services/pus_service2.fin"
     uint8_t led = (uint8_t)((uint32_t)(exec_tc_req_status_update->dev_address & 0xF0000000U) >> 28U);
@@ -46,9 +44,7 @@ _Bool CPUSService2__device_drv_is_on_off_address_valid(const __termina_event_t *
 __status_int32_t CPUSService2__exec2_1TC(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 35 "src/service_libraries/pus_services/pus_service2.fin"
-    __status_int32_t status;
-    #line 35 "src/service_libraries/pus_services/pus_service2.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 37 "src/service_libraries/pus_services/pus_service2.fin"
     if (exec_tc_req_status_update->N != 1U) {
@@ -107,27 +103,13 @@ void CPUSService2__exec_tc(const __termina_event_t * const __ev, void * const __
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 122 "src/service_libraries/pus_services/pus_service2.fin"
-    __status_int32_t status;
-    #line 122 "src/service_libraries/pus_services/pus_service2.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 123 "src/service_libraries/pus_services/pus_service2.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
 
     #line 124 "src/service_libraries/pus_services/pus_service2.fin"
-    PS2ExecTCReqStatusUpdate exec_tc_req_status_update;
-    #line 124 "src/service_libraries/pus_services/pus_service2.fin"
-    exec_tc_req_status_update.N = 0U;
-    #line 124 "src/service_libraries/pus_services/pus_service2.fin"
-    exec_tc_req_status_update.dev_address = 0U;
-    #line 124 "src/service_libraries/pus_services/pus_service2.fin"
-    exec_tc_req_status_update.flags_ack = 0U;
-    #line 124 "src/service_libraries/pus_services/pus_service2.fin"
-    exec_tc_req_status_update.packet_id = 0U;
-    #line 124 "src/service_libraries/pus_services/pus_service2.fin"
-    exec_tc_req_status_update.packet_seq_ctrl = 0U;
-    #line 124 "src/service_libraries/pus_services/pus_service2.fin"
-    exec_tc_req_status_update.tc_num_bytes = 0U;
+    PS2ExecTCReqStatusUpdate exec_tc_req_status_update = { .N = 0U, .dev_address = 0U, .flags_ack = 0U, .packet_id = 0U, .packet_seq_ctrl = 0U, .tc_num_bytes = 0U };
 
     #line 126 "src/service_libraries/pus_services/pus_service2.fin"
     exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;

@@ -7,14 +7,10 @@ __status_int32_t CCharDevIRQHandler__irq_handler(const __termina_event_t * const
     CCharDevIRQHandler * self = (CCharDevIRQHandler *)__this;
 
     #line 16 "src/drivers/char_dev/irq_handler.fin"
-    __status_int32_t status;
-    #line 16 "src/drivers/char_dev/irq_handler.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 17 "src/drivers/char_dev/irq_handler.fin"
-    CharDevIrqStatus result;
-    #line 17 "src/drivers/char_dev/irq_handler.fin"
-    result.__variant = CharDevIrqStatus__IrqOk;
+    CharDevIrqStatus result = { .__variant = CharDevIrqStatus__IrqOk };
 
     #line 19 "src/drivers/char_dev/irq_handler.fin"
     self->uart_drv.notify_irq(__ev, self->uart_drv.__that, &result);

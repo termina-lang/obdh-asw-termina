@@ -4,9 +4,7 @@
 __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev, CPUSService20 * const self) {
     
     #line 28 "src/service_libraries/pus_services/pus_service20.fin"
-    __status_int32_t status;
-    #line 28 "src/service_libraries/pus_services/pus_service20.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 30 "src/service_libraries/pus_services/pus_service20.fin"
     if (self->exec_tc_req_status_update.N != 1U) {
@@ -28,9 +26,7 @@ __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev,
         self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
 
         #line 54 "src/service_libraries/pus_services/pus_service20.fin"
-        __option_box_t tm_handler;
-        #line 54 "src/service_libraries/pus_services/pus_service20.fin"
-        tm_handler.__variant = None;
+        __option_box_t tm_handler = { .__variant = None };
 
         #line 55 "src/service_libraries/pus_services/pus_service20.fin"
         self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -42,11 +38,7 @@ __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev,
             __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
             #line 61 "src/service_libraries/pus_services/pus_service20.fin"
-            MissionOBT current_obt;
-            #line 61 "src/service_libraries/pus_services/pus_service20.fin"
-            current_obt.finetime = 0U;
-            #line 61 "src/service_libraries/pus_services/pus_service20.fin"
-            current_obt.seconds = 0U;
+            MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
             #line 62 "src/service_libraries/pus_services/pus_service20.fin"
             uint16_t tm_count = 0U;
@@ -154,9 +146,7 @@ __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev,
 __status_int32_t CPUSService20__exec20_3TC(const __termina_event_t * const __ev, CPUSService20 * const self) {
     
     #line 126 "src/service_libraries/pus_services/pus_service20.fin"
-    __status_int32_t status;
-    #line 126 "src/service_libraries/pus_services/pus_service20.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 128 "src/service_libraries/pus_services/pus_service20.fin"
     if (self->exec_tc_req_status_update.N != 1U) {
@@ -239,9 +229,7 @@ void CPUSService20__exec_tc(const __termina_event_t * const __ev, void * const _
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 196 "src/service_libraries/pus_services/pus_service20.fin"
-    __status_int32_t status;
-    #line 196 "src/service_libraries/pus_services/pus_service20.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 197 "src/service_libraries/pus_services/pus_service20.fin"
     uint8_t subtype = tc_handler->df_header.subtype;

@@ -7,9 +7,7 @@ __status_int32_t CBKGTCExecutorTask__exec_tc(const __termina_event_t * const __e
     CBKGTCExecutorTask * self = (CBKGTCExecutorTask *)__this;
 
     #line 50 "src/tasks/bkgtcexec.fin"
-    __status_int32_t res;
-    #line 50 "src/tasks/bkgtcexec.fin"
-    res.__variant = Success;
+    __status_int32_t res = { .__variant = Success };
 
     #line 52 "src/tasks/bkgtcexec.fin"
     uint8_t tc_type = get_type((*(TCHandler *)tc_handler.data).tc_descriptor.tc_bytes);

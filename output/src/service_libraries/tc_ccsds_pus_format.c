@@ -122,12 +122,7 @@ void tc_get_fields(const uint8_t tc_bytes[256U], CCSDSPUSTCPacketHeader * const 
     p_tc_df_header->sourceID = deserialize_uint16(&tc_bytes[9U]);
 
     #line 202 "src/service_libraries/tc_ccsds_pus_format.fin"
-    uint8_t packet_error_ctrl[2U];
-    #line 202 "src/service_libraries/tc_ccsds_pus_format.fin"
-    for (size_t __i0 = 0U; __i0 < 2U; __i0 = __i0 + 1U) {
-        #line 202 "src/service_libraries/tc_ccsds_pus_format.fin"
-        packet_error_ctrl[__i0] = 0U;
-    }
+    uint8_t packet_error_ctrl[2U] = { 0U, 0U };
 
     #line 203 "src/service_libraries/tc_ccsds_pus_format.fin"
     packet_error_ctrl[0U] = tc_bytes[__termina_array__index(256U, (size_t)((*p_tc_packet_header).packet_length + 5U))];

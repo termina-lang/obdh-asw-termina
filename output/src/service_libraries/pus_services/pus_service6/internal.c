@@ -10,9 +10,7 @@ const size_t bank_size = 16777216U;
 __status_int32_t build_tm_6_6(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data) {
     
     #line 30 "src/service_libraries/pus_services/pus_service6/internal.fin"
-    __status_int32_t status;
-    #line 30 "src/service_libraries/pus_services/pus_service6/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 32 "src/service_libraries/pus_services/pus_service6/internal.fin"
     startup_tm(p_tm_handler);
@@ -48,7 +46,7 @@ __status_int32_t build_tm_6_6(TMHandler * const p_tm_handler, uint16_t tm_seq_co
     for (size_t i = 0U; i < 256U - tm_app_data_offset && (status.__variant == Success && i < (size_t)mem_data->length); i = i + 1U) {
         
         #line 44 "src/service_libraries/pus_services/pus_service6/internal.fin"
-        status = append_u8_appdata_field(p_tm_handler, mem_data->data[__termina_array__index(max_num_of_bytes_memory_load, i)]);
+        status = append_u8_appdata_field(p_tm_handler, mem_data->data[__termina_array__index(256U, i)]);
 
     }
 
@@ -68,9 +66,7 @@ __status_int32_t build_tm_6_6(TMHandler * const p_tm_handler, uint16_t tm_seq_co
 __status_int32_t build_tm_6_10(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data, uint16_t checksum) {
     
     #line 56 "src/service_libraries/pus_services/pus_service6/internal.fin"
-    __status_int32_t status;
-    #line 56 "src/service_libraries/pus_services/pus_service6/internal.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 57 "src/service_libraries/pus_services/pus_service6/internal.fin"
     startup_tm(p_tm_handler);

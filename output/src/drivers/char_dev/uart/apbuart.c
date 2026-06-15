@@ -96,34 +96,34 @@ void CAPBUARTDriver__enable_TX(const __termina_event_t * const __ev, CAPBUARTDri
 
 void CAPBUARTDriver__initialize(const __termina_event_t * const __ev, void * const __this) {
     
-    #line 327 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 284 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver * self = (CAPBUARTDriver *)__this;
 
-    #line 327 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 284 "src/drivers/char_dev/uart/apbuart.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
-    #line 329 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 286 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver__enable_RX(__ev, self);
 
-    #line 330 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 287 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver__enable_TX(__ev, self);
 
-    #line 331 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 288 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver__enable_RI(__ev, self);
 
-    #line 332 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 289 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver__enable_TI(__ev, self);
 
-    #line 333 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 290 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver__disable_TF(__ev, self);
 
-    #line 334 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 291 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver__disable_RF(__ev, self);
 
-    #line 336 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 293 "src/drivers/char_dev/uart/apbuart.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 336 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 293 "src/drivers/char_dev/uart/apbuart.fin"
     return;
 
 }
@@ -143,9 +143,7 @@ void CAPBUARTDriver__release_tx(const __termina_event_t * const __ev, CAPBUARTDr
         size_t sent_bytes = 0U;
 
         #line 204 "src/drivers/char_dev/uart/apbuart.fin"
-        __option_uint8_t extracted_elem;
-        #line 204 "src/drivers/char_dev/uart/apbuart.fin"
-        extracted_elem.__variant = None;
+        __option_uint8_t extracted_elem = { .__variant = None };
 
         #line 206 "src/drivers/char_dev/uart/apbuart.fin"
         for (size_t i = 0U; i < hw_fifo_size; i = i + 1U) {
@@ -255,7 +253,7 @@ _Bool CAPBUARTDriver__tf_is_empty(const __termina_event_t * const __ev, const CA
 
 }
 
-void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __this, const size_t nbytes, const uint8_t output_bytes[nbytes], __status_int32_t * const status) {
+void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __this, uint8_t output_byte, __status_int32_t * const status) {
     
     #line 249 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver * self = (CAPBUARTDriver *)__this;
@@ -263,35 +261,30 @@ void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __t
     #line 249 "src/drivers/char_dev/uart/apbuart.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
-    #line 253 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 252 "src/drivers/char_dev/uart/apbuart.fin"
     (*status).__variant = Success;
 
-    #line 255 "src/drivers/char_dev/uart/apbuart.fin"
-    if (self->rem_bytes) {
+    #line 254 "src/drivers/char_dev/uart/apbuart.fin"
+    if (self->rem_bytes || CAPBUARTDriver__tf_is_empty(__ev, self) == 0) {
         
-        #line 257 "src/drivers/char_dev/uart/apbuart.fin"
+        #line 256 "src/drivers/char_dev/uart/apbuart.fin"
         size_t num_elements = 0U;
 
-        #line 258 "src/drivers/char_dev/uart/apbuart.fin"
+        #line 257 "src/drivers/char_dev/uart/apbuart.fin"
         get_num_enqueued_elems(&self->uart_tx_queue, &num_elements);
 
-        #line 260 "src/drivers/char_dev/uart/apbuart.fin"
-        if ((size_t)(queue_max_noe - num_elements) >= nbytes) {
+        #line 259 "src/drivers/char_dev/uart/apbuart.fin"
+        if ((size_t)(queue_max_noe - num_elements) >= 1U) {
             
-            #line 262 "src/drivers/char_dev/uart/apbuart.fin"
-            for (size_t i = 0U; i < nbytes && ((*status).__variant == Failure) == 0; i = i + 1U) {
-                
-                #line 264 "src/drivers/char_dev/uart/apbuart.fin"
-                *status = enqueue(&self->uart_tx_queue, output_bytes[__termina_array__index(nbytes, i)]);
-
-            }
+            #line 261 "src/drivers/char_dev/uart/apbuart.fin"
+            *status = enqueue(&self->uart_tx_queue, output_byte);
 
         } else
         {
             
-            #line 269 "src/drivers/char_dev/uart/apbuart.fin"
+            #line 264 "src/drivers/char_dev/uart/apbuart.fin"
             (*status).__variant = Failure;
-            #line 269 "src/drivers/char_dev/uart/apbuart.fin"
+            #line 264 "src/drivers/char_dev/uart/apbuart.fin"
             (*status).Failure.__0 = TM_SEND_FAILURE;
 
         }
@@ -299,69 +292,15 @@ void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __t
     } else
     {
         
-        #line 274 "src/drivers/char_dev/uart/apbuart.fin"
-        size_t sent_bytes = 0U;
-
-        #line 276 "src/drivers/char_dev/uart/apbuart.fin"
-        if (CAPBUARTDriver__tf_is_empty(__ev, self)) {
-            
-            #line 278 "src/drivers/char_dev/uart/apbuart.fin"
-            for (size_t i = 0U; i < hw_fifo_size && i < nbytes; i = i + 1U) {
-                
-                #line 280 "src/drivers/char_dev/uart/apbuart.fin"
-                self->registers->data = (uint32_t)output_bytes[__termina_array__index(nbytes, i)];
-
-                #line 282 "src/drivers/char_dev/uart/apbuart.fin"
-                sent_bytes = sent_bytes + 1U;
-
-            }
-
-        }
-
-        #line 288 "src/drivers/char_dev/uart/apbuart.fin"
-        if (sent_bytes < nbytes) {
-            
-            #line 290 "src/drivers/char_dev/uart/apbuart.fin"
-            self->rem_bytes = 1;
-
-            #line 292 "src/drivers/char_dev/uart/apbuart.fin"
-            size_t left_bytes = nbytes - sent_bytes;
-
-            #line 293 "src/drivers/char_dev/uart/apbuart.fin"
-            size_t num_elements = 0U;
-
-            #line 295 "src/drivers/char_dev/uart/apbuart.fin"
-            get_num_enqueued_elems(&self->uart_tx_queue, &num_elements);
-
-            #line 297 "src/drivers/char_dev/uart/apbuart.fin"
-            if ((size_t)(queue_max_noe - num_elements) >= left_bytes) {
-                
-                #line 299 "src/drivers/char_dev/uart/apbuart.fin"
-                for (size_t i = 0U; i < nbytes && (i < left_bytes && ((*status).__variant == Failure) == 0); i = i + 1U) {
-                    
-                    #line 301 "src/drivers/char_dev/uart/apbuart.fin"
-                    *status = enqueue(&self->uart_tx_queue, output_bytes[__termina_array__index(nbytes, i + sent_bytes)]);
-
-                }
-
-            } else
-            {
-                
-                #line 308 "src/drivers/char_dev/uart/apbuart.fin"
-                (*status).__variant = Failure;
-                #line 308 "src/drivers/char_dev/uart/apbuart.fin"
-                (*status).Failure.__0 = TM_SEND_FAILURE;
-
-            }
-
-        }
+        #line 269 "src/drivers/char_dev/uart/apbuart.fin"
+        self->registers->data = (uint32_t)output_byte;
 
     }
 
-    #line 316 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 273 "src/drivers/char_dev/uart/apbuart.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 316 "src/drivers/char_dev/uart/apbuart.fin"
+    #line 273 "src/drivers/char_dev/uart/apbuart.fin"
     return;
 
 }

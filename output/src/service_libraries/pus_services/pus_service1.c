@@ -76,9 +76,7 @@ void CPUSService1__notify_tm_1_1(const __termina_event_t * const __ev, void * co
     if (is_tc_ack_accept_enabled(flags_ack)) {
         
         #line 406 "src/service_libraries/pus_services/pus_service1.fin"
-        __option_box_t tm_handler;
-        #line 406 "src/service_libraries/pus_services/pus_service1.fin"
-        tm_handler.__variant = None;
+        __option_box_t tm_handler = { .__variant = None };
 
         #line 408 "src/service_libraries/pus_services/pus_service1.fin"
         self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -90,11 +88,7 @@ void CPUSService1__notify_tm_1_1(const __termina_event_t * const __ev, void * co
             __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
             #line 414 "src/service_libraries/pus_services/pus_service1.fin"
-            MissionOBT current_obt;
-            #line 414 "src/service_libraries/pus_services/pus_service1.fin"
-            current_obt.finetime = 0U;
-            #line 414 "src/service_libraries/pus_services/pus_service1.fin"
-            current_obt.seconds = 0U;
+            MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
             #line 418 "src/service_libraries/pus_services/pus_service1.fin"
             uint16_t tm_count = 0U;
@@ -171,9 +165,7 @@ void CPUSService1__notify_tm_1_3(const __termina_event_t * const __ev, void * co
     if (is_tc_ack_start_exec_enabled(flags_ack)) {
         
         #line 573 "src/service_libraries/pus_services/pus_service1.fin"
-        __option_box_t tm_handler;
-        #line 573 "src/service_libraries/pus_services/pus_service1.fin"
-        tm_handler.__variant = None;
+        __option_box_t tm_handler = { .__variant = None };
 
         #line 575 "src/service_libraries/pus_services/pus_service1.fin"
         self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -185,11 +177,7 @@ void CPUSService1__notify_tm_1_3(const __termina_event_t * const __ev, void * co
             __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
             #line 581 "src/service_libraries/pus_services/pus_service1.fin"
-            MissionOBT current_obt;
-            #line 581 "src/service_libraries/pus_services/pus_service1.fin"
-            current_obt.finetime = 0U;
-            #line 581 "src/service_libraries/pus_services/pus_service1.fin"
-            current_obt.seconds = 0U;
+            MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
             #line 585 "src/service_libraries/pus_services/pus_service1.fin"
             uint16_t tm_count = 0U;
@@ -266,9 +254,7 @@ void CPUSService1__notify_tm_1_7(const __termina_event_t * const __ev, void * co
     if (is_tc_ack_completion_exec_enabled(flags_ack)) {
         
         #line 1525 "src/service_libraries/pus_services/pus_service1.fin"
-        __option_box_t tm_handler;
-        #line 1525 "src/service_libraries/pus_services/pus_service1.fin"
-        tm_handler.__variant = None;
+        __option_box_t tm_handler = { .__variant = None };
 
         #line 1527 "src/service_libraries/pus_services/pus_service1.fin"
         self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -280,11 +266,7 @@ void CPUSService1__notify_tm_1_7(const __termina_event_t * const __ev, void * co
             __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
             #line 1533 "src/service_libraries/pus_services/pus_service1.fin"
-            MissionOBT current_obt;
-            #line 1533 "src/service_libraries/pus_services/pus_service1.fin"
-            current_obt.finetime = 0U;
-            #line 1533 "src/service_libraries/pus_services/pus_service1.fin"
-            current_obt.seconds = 0U;
+            MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
             #line 1537 "src/service_libraries/pus_services/pus_service1.fin"
             uint16_t tm_count = 0U;
@@ -358,9 +340,7 @@ void CPUSService1__send_tm_1_2(const __termina_event_t * const __ev, void * cons
     (*status).__variant = Success;
 
     #line 456 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 456 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 458 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -375,11 +355,7 @@ void CPUSService1__send_tm_1_2(const __termina_event_t * const __ev, void * cons
         uint8_t error_code = 0U;
 
         #line 466 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 466 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 466 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 470 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -554,9 +530,7 @@ void CPUSService1__send_tm_1_4_EvID_not_valid(const __termina_event_t * const __
     (*status).__variant = Success;
 
     #line 910 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 910 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 912 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -568,11 +542,7 @@ void CPUSService1__send_tm_1_4_EvID_not_valid(const __termina_event_t * const __
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 918 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 918 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 918 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 922 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -584,9 +554,7 @@ void CPUSService1__send_tm_1_4_EvID_not_valid(const __termina_event_t * const __
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 927 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 927 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 929 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_5_X_INVALID_EV_ID, EvID, current_obt);
@@ -635,9 +603,7 @@ void CPUSService1__send_tm_1_4_PID_not_valid(const __termina_event_t * const __e
     (*status).__variant = Success;
 
     #line 958 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 958 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 960 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -649,11 +615,7 @@ void CPUSService1__send_tm_1_4_PID_not_valid(const __termina_event_t * const __e
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 966 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 966 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 966 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 970 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -665,9 +627,7 @@ void CPUSService1__send_tm_1_4_PID_not_valid(const __termina_event_t * const __e
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 975 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 975 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 977 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_20_X_INVALID_PID, PID, current_obt);
@@ -716,9 +676,7 @@ void CPUSService1__send_tm_1_4_PID_read_only_via_TC(const __termina_event_t * co
     (*status).__variant = Success;
 
     #line 1428 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1428 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1430 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -730,11 +688,7 @@ void CPUSService1__send_tm_1_4_PID_read_only_via_TC(const __termina_event_t * co
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1436 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1436 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1436 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1440 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -746,9 +700,7 @@ void CPUSService1__send_tm_1_4_PID_read_only_via_TC(const __termina_event_t * co
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1445 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1445 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1447 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC, PID, current_obt);
@@ -797,9 +749,7 @@ void CPUSService1__send_tm_1_4_PID_stats_undefined(const __termina_event_t * con
     (*status).__variant = Success;
 
     #line 1381 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1381 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1383 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -811,11 +761,7 @@ void CPUSService1__send_tm_1_4_PID_stats_undefined(const __termina_event_t * con
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1389 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1389 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1389 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1393 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -827,9 +773,7 @@ void CPUSService1__send_tm_1_4_PID_stats_undefined(const __termina_event_t * con
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1398 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1398 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1400 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_4_7_PID_STATS_UNDEFINED, PID, current_obt);
@@ -878,9 +822,7 @@ void CPUSService1__send_tm_1_4_PMONID_invalid(const __termina_event_t * const __
     (*status).__variant = Success;
 
     #line 1146 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1146 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1148 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -892,11 +834,7 @@ void CPUSService1__send_tm_1_4_PMONID_invalid(const __termina_event_t * const __
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1154 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1154 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1154 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1158 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -908,9 +846,7 @@ void CPUSService1__send_tm_1_4_PMONID_invalid(const __termina_event_t * const __
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1163 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1163 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1165 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_INVALID_PMONID, PMONID, current_obt);
@@ -959,9 +895,7 @@ void CPUSService1__send_tm_1_4_PMON_defined(const __termina_event_t * const __ev
     (*status).__variant = Success;
 
     #line 1052 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1052 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1054 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -973,11 +907,7 @@ void CPUSService1__send_tm_1_4_PMON_defined(const __termina_event_t * const __ev
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1060 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1060 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1060 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1064 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -989,9 +919,7 @@ void CPUSService1__send_tm_1_4_PMON_defined(const __termina_event_t * const __ev
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1069 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1069 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1071 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_PMON_DEFINED, PMONID, current_obt);
@@ -1040,9 +968,7 @@ void CPUSService1__send_tm_1_4_PMON_definition_invalid(const __termina_event_t *
     (*status).__variant = Success;
 
     #line 1192 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1192 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1194 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1054,11 +980,7 @@ void CPUSService1__send_tm_1_4_PMON_definition_invalid(const __termina_event_t *
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1200 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1200 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1200 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1204 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1070,9 +992,7 @@ void CPUSService1__send_tm_1_4_PMON_definition_invalid(const __termina_event_t *
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1209 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1209 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1211 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_INVALID_PMON_DEFINITION, PMONID, current_obt);
@@ -1121,9 +1041,7 @@ void CPUSService1__send_tm_1_4_PMON_enabled(const __termina_event_t * const __ev
     (*status).__variant = Success;
 
     #line 1099 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1099 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1101 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1135,11 +1053,7 @@ void CPUSService1__send_tm_1_4_PMON_enabled(const __termina_event_t * const __ev
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1107 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1107 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1107 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1111 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1151,9 +1065,7 @@ void CPUSService1__send_tm_1_4_PMON_enabled(const __termina_event_t * const __ev
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1116 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1116 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1118 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_PMON_ENABLED, PMONID, current_obt);
@@ -1202,9 +1114,7 @@ void CPUSService1__send_tm_1_4_PMON_undefined(const __termina_event_t * const __
     (*status).__variant = Success;
 
     #line 1005 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1005 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1007 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1216,11 +1126,7 @@ void CPUSService1__send_tm_1_4_PMON_undefined(const __termina_event_t * const __
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1013 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1013 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1013 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1017 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1232,9 +1138,7 @@ void CPUSService1__send_tm_1_4_PMON_undefined(const __termina_event_t * const __
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1022 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1022 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1024 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_PMON_UNDEFINED, PMONID, current_obt);
@@ -1283,9 +1187,7 @@ void CPUSService1__send_tm_1_4_SID_not_valid(const __termina_event_t * const __e
     (*status).__variant = Success;
 
     #line 766 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 766 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 768 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1297,11 +1199,7 @@ void CPUSService1__send_tm_1_4_SID_not_valid(const __termina_event_t * const __e
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 774 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 774 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 774 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 778 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1313,9 +1211,7 @@ void CPUSService1__send_tm_1_4_SID_not_valid(const __termina_event_t * const __e
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 783 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 783 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 785 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_3_X_INVALID_SID, SID, current_obt);
@@ -1364,9 +1260,7 @@ void CPUSService1__send_tm_1_4_device_address_not_valid(const __termina_event_t 
     (*status).__variant = Success;
 
     #line 718 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 718 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 720 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1378,11 +1272,7 @@ void CPUSService1__send_tm_1_4_device_address_not_valid(const __termina_event_t 
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 726 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 726 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 726 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 730 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1394,9 +1284,7 @@ void CPUSService1__send_tm_1_4_device_address_not_valid(const __termina_event_t 
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 735 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 735 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 737 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u32_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_2_X_DEVICE_ADDRESS_NOT_VALID, device_address, current_obt);
@@ -1445,9 +1333,7 @@ void CPUSService1__send_tm_1_4_error_in_acceptance(const __termina_event_t * con
     (*status).__variant = Success;
 
     #line 1475 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1475 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1477 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1459,11 +1345,7 @@ void CPUSService1__send_tm_1_4_error_in_acceptance(const __termina_event_t * con
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1483 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1483 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1483 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1487 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1475,9 +1357,7 @@ void CPUSService1__send_tm_1_4_error_in_acceptance(const __termina_event_t * con
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1492 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1492 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1494 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_no_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_ERROR_IN_ACCEPTANCE, current_obt);
@@ -1526,9 +1406,7 @@ void CPUSService1__send_tm_1_4_ev_action_enabled(const __termina_event_t * const
     (*status).__variant = Success;
 
     #line 1239 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1239 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1241 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1540,11 +1418,7 @@ void CPUSService1__send_tm_1_4_ev_action_enabled(const __termina_event_t * const
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1247 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1247 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1247 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1251 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1556,9 +1430,7 @@ void CPUSService1__send_tm_1_4_ev_action_enabled(const __termina_event_t * const
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1256 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1256 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1258 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_19_X_EV_ACTION_IS_ENABLED, event_ID, current_obt);
@@ -1607,9 +1479,7 @@ void CPUSService1__send_tm_1_4_ev_action_rejected(const __termina_event_t * cons
     (*status).__variant = Success;
 
     #line 1286 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1286 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1288 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1621,11 +1491,7 @@ void CPUSService1__send_tm_1_4_ev_action_rejected(const __termina_event_t * cons
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1294 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1294 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1294 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1298 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1637,9 +1503,7 @@ void CPUSService1__send_tm_1_4_ev_action_rejected(const __termina_event_t * cons
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1303 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1303 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1305 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_19_1_EV_ACTION_REJECTED, event_ID, current_obt);
@@ -1688,9 +1552,7 @@ void CPUSService1__send_tm_1_4_ev_action_undefined(const __termina_event_t * con
     (*status).__variant = Success;
 
     #line 1334 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1334 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1336 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1702,11 +1564,7 @@ void CPUSService1__send_tm_1_4_ev_action_undefined(const __termina_event_t * con
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1342 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1342 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1342 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1346 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1718,9 +1576,7 @@ void CPUSService1__send_tm_1_4_ev_action_undefined(const __termina_event_t * con
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1351 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1351 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 1353 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_19_X_EV_ACTION_NOT_DEFINED, event_ID, current_obt);
@@ -1769,9 +1625,7 @@ void CPUSService1__send_tm_1_4_mem_address_not_valid(const __termina_event_t * c
     (*status).__variant = Success;
 
     #line 813 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 813 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 815 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1783,11 +1637,7 @@ void CPUSService1__send_tm_1_4_mem_address_not_valid(const __termina_event_t * c
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 821 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 821 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 821 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 825 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1799,9 +1649,7 @@ void CPUSService1__send_tm_1_4_mem_address_not_valid(const __termina_event_t * c
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 830 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 830 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 832 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u8_u32_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_6_X_INVALID_MEMORY_ADDRESS, mem_id, mem_address, current_obt);
@@ -1850,9 +1698,7 @@ void CPUSService1__send_tm_1_4_mem_id_read_only(const __termina_event_t * const 
     (*status).__variant = Success;
 
     #line 862 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 862 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 864 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1864,11 +1710,7 @@ void CPUSService1__send_tm_1_4_mem_id_read_only(const __termina_event_t * const 
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 870 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 870 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 870 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 874 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1880,9 +1722,7 @@ void CPUSService1__send_tm_1_4_mem_id_read_only(const __termina_event_t * const 
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 879 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 879 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 881 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u8_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_6_X_MEMORY_ID_READ_ONLY, mem_id, current_obt);
@@ -1931,9 +1771,7 @@ void CPUSService1__send_tm_1_4_num_of_instr_not_valid(const __termina_event_t * 
     (*status).__variant = Success;
 
     #line 672 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 672 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 674 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -1945,11 +1783,7 @@ void CPUSService1__send_tm_1_4_num_of_instr_not_valid(const __termina_event_t * 
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 680 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 680 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 680 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 684 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -1961,9 +1795,7 @@ void CPUSService1__send_tm_1_4_num_of_instr_not_valid(const __termina_event_t * 
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 689 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 689 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 691 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u8_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_X_Y_TC_NOT_VALID_NUM_OF_INSTR, N, current_obt);
@@ -2012,9 +1844,7 @@ void CPUSService1__send_tm_1_4_short_pack_length(const __termina_event_t * const
     (*status).__variant = Success;
 
     #line 623 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 623 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 625 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -2026,11 +1856,7 @@ void CPUSService1__send_tm_1_4_short_pack_length(const __termina_event_t * const
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 631 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 631 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 631 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 635 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -2042,9 +1868,7 @@ void CPUSService1__send_tm_1_4_short_pack_length(const __termina_event_t * const
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 640 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 640 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecStart;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecStart };
 
         #line 641 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t failure_data = (uint16_t)tc_bytes;
@@ -2096,9 +1920,7 @@ void CPUSService1__send_tm_1_8_device_command_exec_error(const __termina_event_t
     (*status).__variant = Success;
 
     #line 1670 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1670 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1672 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -2110,11 +1932,7 @@ void CPUSService1__send_tm_1_8_device_command_exec_error(const __termina_event_t
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1678 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1678 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1678 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1682 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -2126,9 +1944,7 @@ void CPUSService1__send_tm_1_8_device_command_exec_error(const __termina_event_t
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1687 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1687 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecCompletion;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecCompletion };
 
         #line 1689 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u32_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TM_2_1_DEV_COMMAND_EXEC_ERROR, on_off_command, current_obt);
@@ -2177,9 +1993,7 @@ void CPUSService1__send_tm_1_8_max_ev_actions_defined(const __termina_event_t * 
     (*status).__variant = Success;
 
     #line 1574 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1574 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1576 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -2191,11 +2005,7 @@ void CPUSService1__send_tm_1_8_max_ev_actions_defined(const __termina_event_t * 
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1582 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1582 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1582 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1586 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -2207,9 +2017,7 @@ void CPUSService1__send_tm_1_8_max_ev_actions_defined(const __termina_event_t * 
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1591 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1591 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecCompletion;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecCompletion };
 
         #line 1593 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED, evID, current_obt);
@@ -2258,9 +2066,7 @@ void CPUSService1__send_tm_1_8_mem_access_error(const __termina_event_t * const 
     (*status).__variant = Success;
 
     #line 1766 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1766 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1768 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -2272,11 +2078,7 @@ void CPUSService1__send_tm_1_8_mem_access_error(const __termina_event_t * const 
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1774 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1774 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1774 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1778 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -2288,9 +2090,7 @@ void CPUSService1__send_tm_1_8_mem_access_error(const __termina_event_t * const 
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1783 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1783 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecCompletion;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecCompletion };
 
         #line 1785 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u8_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TC_6_X_MEM_ACCESS_FAIL, mem_ID, current_obt);
@@ -2339,9 +2139,7 @@ void CPUSService1__send_tm_1_8_not_free_stats_config(const __termina_event_t * c
     (*status).__variant = Success;
 
     #line 1718 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1718 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1720 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -2353,11 +2151,7 @@ void CPUSService1__send_tm_1_8_not_free_stats_config(const __termina_event_t * c
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1726 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1726 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1726 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1730 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -2369,9 +2163,7 @@ void CPUSService1__send_tm_1_8_not_free_stats_config(const __termina_event_t * c
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1735 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1735 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecCompletion;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecCompletion };
 
         #line 1737 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TC_4_1_NOT_FREE_PID_STATS_CONFIG, PID, current_obt);
@@ -2420,9 +2212,7 @@ void CPUSService1__send_tm_1_8_tm_exceed_limit_appdata(const __termina_event_t *
     (*status).__variant = Success;
 
     #line 1623 "src/service_libraries/pus_services/pus_service1.fin"
-    __option_box_t tm_handler;
-    #line 1623 "src/service_libraries/pus_services/pus_service1.fin"
-    tm_handler.__variant = None;
+    __option_box_t tm_handler = { .__variant = None };
 
     #line 1625 "src/service_libraries/pus_services/pus_service1.fin"
     self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
@@ -2434,11 +2224,7 @@ void CPUSService1__send_tm_1_8_tm_exceed_limit_appdata(const __termina_event_t *
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 1631 "src/service_libraries/pus_services/pus_service1.fin"
-        MissionOBT current_obt;
-        #line 1631 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.finetime = 0U;
-        #line 1631 "src/service_libraries/pus_services/pus_service1.fin"
-        current_obt.seconds = 0U;
+        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
         #line 1635 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
@@ -2450,9 +2236,7 @@ void CPUSService1__send_tm_1_8_tm_exceed_limit_appdata(const __termina_event_t *
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
         #line 1640 "src/service_libraries/pus_services/pus_service1.fin"
-        TCVerifyStage verify_stage;
-        #line 1640 "src/service_libraries/pus_services/pus_service1.fin"
-        verify_stage.__variant = TCVerifyStage__ExecCompletion;
+        TCVerifyStage verify_stage = { .__variant = TCVerifyStage__ExecCompletion };
 
         #line 1642 "src/service_libraries/pus_services/pus_service1.fin"
         *status = build_tm_1_X_no_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA, current_obt);

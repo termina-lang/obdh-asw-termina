@@ -38,9 +38,7 @@ _Bool tc_handler_is_valid_next_appdata_field(const TCHandler * const tc_handler,
 __status_int32_t tc_handler_get_u8_appdata_field(TCHandler * const tc_handler, uint8_t * const data) {
     
     #line 101 "src/service_libraries/pus_tc_handler.fin"
-    __status_int32_t status;
-    #line 101 "src/service_libraries/pus_tc_handler.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 103 "src/service_libraries/pus_tc_handler.fin"
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 1U)) {
@@ -69,9 +67,7 @@ __status_int32_t tc_handler_get_u8_appdata_field(TCHandler * const tc_handler, u
 __status_int32_t tc_handler_get_u16_appdata_field(TCHandler * const tc_handler, uint16_t * const data) {
     
     #line 130 "src/service_libraries/pus_tc_handler.fin"
-    __status_int32_t status;
-    #line 130 "src/service_libraries/pus_tc_handler.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 132 "src/service_libraries/pus_tc_handler.fin"
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 2U)) {
@@ -100,9 +96,7 @@ __status_int32_t tc_handler_get_u16_appdata_field(TCHandler * const tc_handler, 
 __status_int32_t tc_handler_get_u32_appdata_field(TCHandler * const tc_handler, uint32_t * const data) {
     
     #line 159 "src/service_libraries/pus_tc_handler.fin"
-    __status_int32_t status;
-    #line 159 "src/service_libraries/pus_tc_handler.fin"
-    status.__variant = Success;
+    __status_int32_t status = { .__variant = Success };
 
     #line 161 "src/service_libraries/pus_tc_handler.fin"
     if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 4U)) {

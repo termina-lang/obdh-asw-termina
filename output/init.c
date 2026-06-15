@@ -605,7 +605,7 @@ void __termina_app__init_globals() {
     pus_service_6.mem_id_write_permissions[5U] = 1;
     pus_service_6.mem_id_write_permissions[6U] = 1;
     pus_service_6.mem_id_write_permissions[7U] = 0;
-    pus_service_6.memory = (volatile uint8_t (*)[bank_size])0x40000000U;
+    pus_service_6.memory = (volatile uint8_t (*)[16777216U])0x40000000U;
     pus_service_6.obt_manager.__that = &obt_manager;
     pus_service_6.obt_manager.get_current_obt = COBTManager__get_current_obt;
     pus_service_6.pus_service_1.__that = &pus_service_1;

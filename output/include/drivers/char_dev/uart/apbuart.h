@@ -53,7 +53,7 @@ _Bool CAPBUARTDriver__rf_data_ready(const __termina_event_t * const __ev, const 
 
 _Bool CAPBUARTDriver__tf_is_empty(const __termina_event_t * const __ev, const CAPBUARTDriver * const self);
 
-void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __this, const size_t nbytes, const uint8_t output_bytes[nbytes], __status_int32_t * const status);
+void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __this, uint8_t output_byte, __status_int32_t * const status);
 
 _Bool CAPBUARTDriver__tf_is_full(const __termina_event_t * const __ev, const CAPBUARTDriver * const self);
 
