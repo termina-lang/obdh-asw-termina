@@ -135,14 +135,13 @@ resource class CPUSService19 provides IPUSService19 {
 
         } else {
 
-            var is_enabled : bool = false;
             var error: TC19_1_Error;
 
             self->exec_tc_req_status_update.ev_action_ID = self->is_ev_action_defined(self->exec_tc_req_status_update.tc_data.EvID);
 
             if (self->exec_tc_req_status_update.ev_action_ID.found) {
 
-                if (is_enabled){
+                if (self->exec_tc_req_status_update.ev_action_ID.enabled){
 
                     error = TC19_1_Error::EvIDEnabled;
                 }
@@ -267,14 +266,12 @@ resource class CPUSService19 provides IPUSService19 {
 
         } else {
 
-            var is_enabled : bool = false;
-
-            self->exec_tc_req_status_update.ev_action_ID = 
+            self->exec_tc_req_status_update.ev_action_ID =
                     self->is_ev_action_defined(self->exec_tc_req_status_update.tc_data.EvID);
 
             if (self->exec_tc_req_status_update.ev_action_ID.found) {
 
-                if (is_enabled) {
+                if (self->exec_tc_req_status_update.ev_action_ID.enabled) {
 
                     self->pus_service_1.send_tm_1_4_ev_action_enabled(
                                 self->exec_tc_req_status_update.tc_data.packet_id,
