@@ -46,7 +46,7 @@ TCStatus try_tc_acceptation(const TCDescriptor * const tc_descriptor) {
     TCStatus tc_status = { .acceptation_status = { .__variant = TCAcceptationStatus__Undefined }, .error_code = { .__variant = TCErrorType__Undefined }, .execution_status = { .__variant = TCExecutionCtrl__Undefined } };
 
     #line 69 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    if (0 == is_crc_valid(tc_descriptor)) {
+    if (false == is_crc_valid(tc_descriptor)) {
         
         #line 71 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
         tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
@@ -56,7 +56,7 @@ TCStatus try_tc_acceptation(const TCDescriptor * const tc_descriptor) {
 
     } else
     #line 74 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    if (0 == is_apid_valid(tc_descriptor)) {
+    if (false == is_apid_valid(tc_descriptor)) {
         
         #line 76 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
         tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;
@@ -66,7 +66,7 @@ TCStatus try_tc_acceptation(const TCDescriptor * const tc_descriptor) {
 
     } else
     #line 79 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    if (0 == is_sourceID_valid(tc_descriptor)) {
+    if (false == is_sourceID_valid(tc_descriptor)) {
         
         #line 81 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
         tc_status.acceptation_status.__variant = TCAcceptationStatus__Rejected;

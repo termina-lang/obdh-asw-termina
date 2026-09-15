@@ -9,18 +9,6 @@
 
 #include "option.h"
 
-extern const uint16_t informative_Ev_IDs;
-
-extern const uint16_t low_severity_anomaly_Ev_IDs;
-
-extern const uint16_t medium_severity_anomaly_Ev_IDs;
-
-extern const uint16_t high_severity_anomaly_Ev_IDs;
-
-extern const uint16_t offset_mask;
-
-extern const uint16_t EvID_build_tm_error;
-
 typedef enum {
     Ev_IDType__Informative,
     Ev_IDType__LowSeverityAnomaly,
@@ -32,6 +20,20 @@ typedef enum {
 typedef struct {
     __enum_Ev_IDType_t __variant;
 } Ev_IDType;
+
+extern const uint16_t informative_Ev_IDs;
+
+extern const uint16_t low_severity_anomaly_Ev_IDs;
+
+extern const uint16_t medium_severity_anomaly_Ev_IDs;
+
+extern const uint16_t high_severity_anomaly_Ev_IDs;
+
+extern const uint16_t Ev_IDs_per_type[5U];
+
+extern const uint16_t offset_mask;
+
+extern const uint16_t EvID_build_tm_error;
 
 typedef struct {
     uint16_t PID;

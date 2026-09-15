@@ -12,7 +12,7 @@ import service_libraries.pus_services.pus_service12.internal;
 
 interface IPUSService12 {
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>);
-    procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &mut FaultInfo, event_triggered: &mut bool);
+    procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, fault_info : &mut FaultInfo, event_triggered: &mut bool, status : &mut Status<i32>);
     procedure is_PMON_enabled(&mut self, PMONID : usize, is_enabled : &mut bool);
 };
 
@@ -141,9 +141,6 @@ resource class CPUSService12 provides IPUSService12 {
             self->param_mon_config_table[current_PMON_ID].interval_control = 0;
             next_status = DoMonitoringReqStatus::GetMonitoringType;
 
-        } else {
-
-            next_status = DoMonitoringReqStatus::Exit;
         }
 
         return next_status;
@@ -152,7 +149,7 @@ resource class CPUSService12 provides IPUSService12 {
     method check_PID_status_limits_monitoring(&self)-> CheckLimitsStatus{
 
         var current_monitor_definition : ParamLimitCheckDefinition = self->get_limits_monitoring_definition();
-        var check_status: CheckLimitsStatus = CheckLimitsStatus::MonitorUnchecked;
+        var check_status: CheckLimitsStatus;
 
         if(self->PID_is_above_upper_limit(&current_monitor_definition)){
 
@@ -177,7 +174,7 @@ resource class CPUSService12 provides IPUSService12 {
     method check_PID_status_exp_val_monitoring(&self)-> CheckValueStatus {
 
         var current_monitor_definition : ParamValueCheckDefinition = self->get_expected_value_monitoring_definition();
-        var check_status : CheckValueStatus = CheckValueStatus::MonitorUnchecked;
+        var check_status : CheckValueStatus;
 
         if(self->PID_has_expected_masked_value(&current_monitor_definition)){
 
@@ -334,7 +331,7 @@ resource class CPUSService12 provides IPUSService12 {
 
                     self->do_monitoring_req_status_update.event_triggered = true;
                     self->do_monitoring_req_status_update.fault_info = FaultInfo::ParamFaultValue(fault_info);
-                    self->add_monitoring_transition();
+                    self->do_monitoring_req_status_update.status = self->add_monitoring_transition();
                     self->do_monitoring_req_status_update.EvID = check_definition.EvID;
                 }
 
@@ -357,7 +354,7 @@ resource class CPUSService12 provides IPUSService12 {
 
         if(self->manage_new_status()){
 
-            self->add_monitoring_transition();
+            self->do_monitoring_req_status_update.status = self->add_monitoring_transition();
 
         }
         return next_status;
@@ -404,7 +401,7 @@ resource class CPUSService12 provides IPUSService12 {
 
                     self->do_monitoring_req_status_update.event_triggered = true;
                     self->do_monitoring_req_status_update.fault_info = FaultInfo::ParamOutOfLimit(fault_info);
-                    self->add_monitoring_transition();
+                    self->do_monitoring_req_status_update.status = self->add_monitoring_transition();
                     self->do_monitoring_req_status_update.EvID = check_definition.high_limit_evID;
                 }
 
@@ -459,7 +456,7 @@ resource class CPUSService12 provides IPUSService12 {
 
                     self->do_monitoring_req_status_update.event_triggered = true;
                     self->do_monitoring_req_status_update.fault_info = FaultInfo::ParamOutOfLimit(fault_info);
-                    self->add_monitoring_transition();
+                    self->do_monitoring_req_status_update.status = self->add_monitoring_transition();
                     self->do_monitoring_req_status_update.EvID = check_definition.low_limit_evID;
                 }
 
@@ -482,22 +479,18 @@ resource class CPUSService12 provides IPUSService12 {
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize;
         let current_status : CheckState = self->param_mon_config_table[current_PMON_ID].current_state;
 
-        if(self->are_status_equal(new_status, current_status) == false){
+        if(are_status_equal(new_status, current_status) == false){
 
             if(self->manage_new_status()){
 
-                self->add_monitoring_transition();
+                self->do_monitoring_req_status_update.status = self->add_monitoring_transition();
             }
         }
 
         return next_status;
     }
 
-    method are_status_equal(&self, status1: CheckState, status2: CheckState) -> bool{
 
-        var equal : bool = get_check_status_index(status1) == get_check_status_index(status2);
-        return equal;
-    }
 
     method manage_new_status(&priv self)->bool{
 
@@ -508,7 +501,7 @@ resource class CPUSService12 provides IPUSService12 {
         var current_state : CheckState = self->param_mon_config_table[current_PMON_ID].current_state;
         var temp_state : CheckState = self->param_mon_config_table[current_PMON_ID].temp_state;
 
-        if (self->are_status_equal(new_state, current_state) == false) {
+        if (are_status_equal(new_state, current_state) == false) {
 
             if(are_status_equal(new_state, temp_state)) {
 
@@ -543,7 +536,7 @@ resource class CPUSService12 provides IPUSService12 {
         
     }
 
-    method add_monitoring_transition(&priv self){
+    method add_monitoring_transition(&priv self) -> Status<i32> {
 
         var monitoring_status : Status<i32> = Success;
 
@@ -623,11 +616,11 @@ resource class CPUSService12 provides IPUSService12 {
             self->monitoring_transition_counter = 0;
         }
 
-        return;
+        return monitoring_status;
     }
 
     procedure do_monitoring (&mut self, PMONID: u16, evID : &mut u16, 
-                             fault_info : &mut FaultInfo, event_triggered: &mut bool) {
+                             fault_info : &mut FaultInfo, event_triggered: &mut bool, status : &mut Status<i32>) {
 
         for i : usize in 0 .. 5 while (self->do_monitoring_req_status is DoMonitoringReqStatus::Exit == false){
             match self->do_monitoring_req_status {
@@ -638,6 +631,7 @@ resource class CPUSService12 provides IPUSService12 {
                     self->do_monitoring_req_status_update.fault_info = *fault_info;
                     self->do_monitoring_req_status = DoMonitoringReqStatus::CheckPMONID;
                     self->do_monitoring_req_status_update.event_triggered = false;
+                    self->do_monitoring_req_status_update.status = Success;
 
                 }
                 case CheckPMONID => {
@@ -724,6 +718,7 @@ resource class CPUSService12 provides IPUSService12 {
                     *evID = self->do_monitoring_req_status_update.EvID;
                     *fault_info = self->do_monitoring_req_status_update.fault_info;
                     *event_triggered = self->do_monitoring_req_status_update.event_triggered;
+                    *status = self->do_monitoring_req_status_update.status;
                     self->do_monitoring_req_status = DoMonitoringReqStatus::Exit;
                     
                 }
@@ -754,18 +749,6 @@ resource class CPUSService12 provides IPUSService12 {
         }
 
         return;
-    }
-
-    method get_PMON_type (&self, PMONID : usize) -> MonitorCheckType {
-
-        var mon_type : MonitorCheckType = MonitorCheckType::Free;
-
-        if (PMONID < max_num_pmon_ids) {
-
-            mon_type = self->param_mon_config_table[PMONID as usize].type;
-        }
-
-        return mon_type;
     }
 
     method set_unchecked (&priv self) {

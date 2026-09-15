@@ -8,6 +8,8 @@ import service_libraries.serialize;
 import service_libraries.tc_ccsds_pus_format;
 import service_libraries.tm_ccsds_pus_format;
 import service_libraries.pus_services.pus_service2.types;
+import service_libraries.pus_services.pus_service2.internal;
+import service_libraries.pus_services.pus_service12;
 
 
 
@@ -41,7 +43,7 @@ resource class CPUSService2 provides IPUSService2 {
                     exec_tc_req_status_update->packet_seq_ctrl, 
                     exec_tc_req_status_update->N, &mut status);
 
-        } else if self->device_drv_is_on_off_address_valid(exec_tc_req_status_update) == false {
+        } else if device_drv_is_on_off_address_valid(exec_tc_req_status_update) == false {
 
             self->pus_service_1.send_tm_1_4_device_address_not_valid(
                     exec_tc_req_status_update->packet_id,
@@ -85,26 +87,6 @@ resource class CPUSService2 provides IPUSService2 {
         return status;
     }
 
-    method device_drv_is_on_off_address_valid(&self, exec_tc_req_status_update: &PS2ExecTCReqStatusUpdate) -> bool {
-
-        var is_valid : bool = false;
-        var device_address : u32 = exec_tc_req_status_update->dev_address;
-
-        if (device_address == 0x60000001 
-            || device_address == 0x70000001 
-            || device_address == 0x80000001 
-            || device_address == 0x90000001 
-            || device_address == 0x60000000 
-            || device_address == 0x70000000 
-            || device_address == 0x80000000
-            || device_address == 0x90000000) {
-            is_valid = true;
-        }
-
-        return is_valid;
-
-    }
-
     method dev_drv_on_off(&priv self, exec_tc_req_status_update: &PS2ExecTCReqStatusUpdate) -> Status<i32> {
 
         var status : Status<i32> = Success;
@@ -119,7 +101,6 @@ resource class CPUSService2 provides IPUSService2 {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>){
 
-        var status : Status<i32> = Success; 
         var subtype : u8 = tc_handler->df_header.subtype;
         var exec_tc_req_status_update : PS2ExecTCReqStatusUpdate = ps2_init_tc_req_status_update;
 
@@ -128,7 +109,7 @@ resource class CPUSService2 provides IPUSService2 {
         exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
         exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
-        status = tc_handler_get_u8_appdata_field(tc_handler, &mut exec_tc_req_status_update.N);
+        var status : Status<i32> = tc_handler_get_u8_appdata_field(tc_handler, &mut exec_tc_req_status_update.N);
 
         if (status is Success) {
             status = tc_handler_get_u32_appdata_field(tc_handler, &mut exec_tc_req_status_update.dev_address);

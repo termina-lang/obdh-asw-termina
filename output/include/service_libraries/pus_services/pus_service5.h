@@ -58,13 +58,7 @@ typedef struct {
     uint32_t Ev_ID_enable_config[4U];
 } CPUSService5;
 
-__status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, CPUSService5 * const self);
-
-__status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const __ev, CPUSService5 * const self);
-
 void CPUSService5__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
-
-_Bool CPUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const CPUSService5 * const self, uint16_t Ev_ID);
 
 void CPUSService5__is_Ev_ID_enabled_ext(const __termina_event_t * const __ev, void * const __this, uint16_t Ev_ID, _Bool * const p_enabled);
 

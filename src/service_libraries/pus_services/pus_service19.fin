@@ -136,7 +136,7 @@ resource class CPUSService19 provides IPUSService19 {
         } else {
 
             var is_enabled : bool = false;
-            var error: TC19_1_Error = TC19_1_Error::NoError;
+            var error: TC19_1_Error;
 
             self->exec_tc_req_status_update.ev_action_ID = self->is_ev_action_defined(self->exec_tc_req_status_update.tc_data.EvID);
 
@@ -186,13 +186,7 @@ resource class CPUSService19 provides IPUSService19 {
                     
                     tc_handler_build(&mut action_tc_handler);
                 
-                    var tc_status : TCStatus = {
-                        acceptation_status = TCAcceptationStatus::Undefined,
-                        execution_status = TCExecutionCtrl::Undefined,
-                        error_code =  TCErrorType::Undefined
-                    };
-
-                    tc_status = try_tc_acceptation(&(self->exec_tc_req_status_update.action_tc_packet)); 
+                    var tc_status : TCStatus = try_tc_acceptation(&(self->exec_tc_req_status_update.action_tc_packet));
 
                     if (tc_status.acceptation_status is TCAcceptationStatus::Accepted) {
 
@@ -461,7 +455,6 @@ resource class CPUSService19 provides IPUSService19 {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>){
 
-        var status : Status<i32> = Success;
         var subtype : u8 = tc_handler->df_header.subtype;
 
         self->exec_tc_req_status_update.tc_data.packet_id = tc_handler->packet_header.packet_id;
@@ -469,7 +462,7 @@ resource class CPUSService19 provides IPUSService19 {
         self->exec_tc_req_status_update.tc_data.flags_ack = tc_handler->df_header.flag_ver_ack;
         self->exec_tc_req_status_update.tc_data.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
-        status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.N));
+        var status : Status<i32> = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.N));
 
         if (status is Success) {
             status = tc_handler_get_u16_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data.EvID));
@@ -559,23 +552,21 @@ resource class CPUSService19 provides IPUSService19 {
     
     procedure manage_event_action(&mut self, evID: u16){
 
-        var found_and_id: FoundID = {found = false, ev_action_index = 0, enabled = false};
-        found_and_id = self->is_ev_action_defined(evID);
+        var found_and_id: FoundID = self->is_ev_action_defined(evID);
 
         if(found_and_id.found && found_and_id.enabled){
 
             if(found_and_id.ev_action_index < max_event_action_definitions){
 
                 var RID_type : Ev_IDType = get_Ev_ID_type(evID);
-                var tail_index : usize = 0;
-                   
+
                 match RID_type {
 
                     case Informative => {
                         
                         if (self->pending_action_number[0] < event_action_queue_dimension){
 
-                            tail_index = (self->pending_action_head[0] + self->pending_action_number[0])%event_action_queue_dimension;
+                            var tail_index : usize = (self->pending_action_head[0] + self->pending_action_number[0])%event_action_queue_dimension;
                             self->pending_action_queue_1I[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
                             self->pending_action_number[0] = self->pending_action_number[0] + 1;
                         }
@@ -589,7 +580,7 @@ resource class CPUSService19 provides IPUSService19 {
 
                         if (self->pending_action_number[1] < event_action_queue_dimension){
 
-                            tail_index = (self->pending_action_head[1] + self->pending_action_number[1])%event_action_queue_dimension;
+                            var tail_index : usize = (self->pending_action_head[1] + self->pending_action_number[1])%event_action_queue_dimension;
                             self->pending_action_queue_2LS[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
                             self->pending_action_number[1] = self->pending_action_number[1] + 1;
                         }
@@ -603,7 +594,7 @@ resource class CPUSService19 provides IPUSService19 {
 
                         if (self->pending_action_number[2] < event_action_queue_dimension){
 
-                            tail_index = (self->pending_action_head[2] + self->pending_action_number[2])%event_action_queue_dimension;
+                            var tail_index : usize = (self->pending_action_head[2] + self->pending_action_number[2])%event_action_queue_dimension;
                             self->pending_action_queue_3MS[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
                             self->pending_action_number[2] = self->pending_action_number[2] +1;
                         }
@@ -617,7 +608,7 @@ resource class CPUSService19 provides IPUSService19 {
 
                         if (self->pending_action_number[3] < event_action_queue_dimension){
 
-                            tail_index = (self->pending_action_head[3] + self->pending_action_number[3])%event_action_queue_dimension;
+                            var tail_index : usize = (self->pending_action_head[3] + self->pending_action_number[3])%event_action_queue_dimension;
                             self->pending_action_queue_4HS[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
                             self->pending_action_number[3] = self->pending_action_number[3] +1;
                         }

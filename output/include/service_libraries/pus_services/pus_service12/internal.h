@@ -162,6 +162,7 @@ typedef struct {
     CheckState new_status;
     CheckState prev_status;
     _Bool event_triggered;
+    __status_int32_t status;
 } DoMonitoringReqStatusUpdate;
 
 typedef enum {

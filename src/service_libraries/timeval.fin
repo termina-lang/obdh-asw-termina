@@ -10,12 +10,16 @@
  * @return TimeVal The result of the subtraction (timeval1 - timeval2)
  */
 function substract_TimeVal(timeval1: TimeVal, timeval2: TimeVal) -> TimeVal {
+
     var result : TimeVal = {tv_sec = 0, tv_usec = 0};
-    result.tv_sec = timeval1.tv_sec - timeval2.tv_sec;
-    result.tv_usec = timeval1.tv_usec - timeval2.tv_usec;
-    if (result.tv_usec < 0) {
-        result.tv_sec = result.tv_sec - 1;
-        result.tv_usec = result.tv_usec + 1000000;
+
+    if (timeval1.tv_usec < timeval2.tv_usec) {
+        result.tv_sec = timeval1.tv_sec - timeval2.tv_sec - 1;
+        result.tv_usec = (1000000 - timeval2.tv_usec) + timeval1.tv_usec;
+    } else {
+        result.tv_sec = timeval1.tv_sec - timeval2.tv_sec;
+        result.tv_usec = timeval1.tv_usec - timeval2.tv_usec;
     }
+
     return result;
 }

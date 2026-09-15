@@ -21,8 +21,6 @@ typedef struct {
     PS128ExecTCReqStatusUpdate exec_tc_req_status_update;
 } CPUSService128;
 
-__status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * const __ev, CPUSService128 * const self);
-
 void CPUSService128__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status, _Bool * const reebot_flag);
 
 #endif

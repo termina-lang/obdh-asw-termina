@@ -261,14 +261,13 @@ resource class CPUSService5 provides IPUSService5 {
 
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>){
 
-        var status : Status<i32> = Success;
         var subtype : u8 = tc_handler->df_header.subtype;
 
         self->exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;
         self->exec_tc_req_status_update.packet_seq_ctrl = tc_handler->packet_header.packet_seq_ctrl;
         self->exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
         self->exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
-        status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.N));
+        var status : Status<i32> = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.N));
 
         if (status is Success){
             status = tc_handler_get_u16_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.EvID));

@@ -1,7 +1,9 @@
 
 #include "service_libraries/pus_services/pus_service128.h"
 
-__status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * const __ev, CPUSService128 * const self) {
+static __status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * const __ev, CPUSService128 * const self);
+
+static __status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * const __ev, CPUSService128 * const self) {
     
     #line 22 "src/service_libraries/pus_services/pus_service128.fin"
     __status_int32_t status = { .__variant = Success };
@@ -13,7 +15,7 @@ __status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * const __e
     if (status.__variant == Success) {
         
         #line 31 "src/service_libraries/pus_services/pus_service128.fin"
-        self->exec_tc_req_status_update.reebot_flag = 1;
+        self->exec_tc_req_status_update.reebot_flag = true;
 
         #line 32 "src/service_libraries/pus_services/pus_service128.fin"
         self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -34,7 +36,7 @@ void CPUSService128__exec_tc(const __termina_event_t * const __ev, void * const 
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 45 "src/service_libraries/pus_services/pus_service128.fin"
-    __status_int32_t status = { .__variant = Success };
+    __status_int32_t status;
 
     #line 46 "src/service_libraries/pus_services/pus_service128.fin"
     uint8_t subtype = tc_handler->df_header.subtype;

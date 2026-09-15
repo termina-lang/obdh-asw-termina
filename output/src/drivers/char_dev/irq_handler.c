@@ -3,6 +3,8 @@
 
 __status_int32_t CCharDevIRQHandler__irq_handler(const __termina_event_t * const __ev, void * const __this, uint32_t _vector) {
     
+    (void)_vector;
+
     #line 14 "src/drivers/char_dev/irq_handler.fin"
     CCharDevIRQHandler * self = (CCharDevIRQHandler *)__this;
 

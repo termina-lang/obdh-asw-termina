@@ -122,7 +122,7 @@ void __CTXRxBottomHalfTask__termina_task(void * arg) {
                 if (result.__variant != Success) {
                     
                     ExceptSource source;
-                    source.__variant = ExceptSource__Handler;
+                    source.__variant = ExceptSource__Task;
                     source.Task.__0 = self->__task_id;
 
                     __termina_except__action_failure(source, __CTXRxBottomHalfTask__frame_ready_input, result.Failure.__0);

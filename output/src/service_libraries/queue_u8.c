@@ -26,13 +26,13 @@ _Bool is_empty(const QueueU8 * const queue) {
 __status_int32_t enqueue(QueueU8 * const queue, uint8_t new_elem) {
     
     #line 25 "src/service_libraries/queue_u8.fin"
-    _Bool queue_is_full = is_full(&*queue);
+    _Bool queue_is_full = is_full(queue);
 
     #line 26 "src/service_libraries/queue_u8.fin"
     __status_int32_t status = { .__variant = Success };
 
     #line 28 "src/service_libraries/queue_u8.fin"
-    if (0 == queue_is_full) {
+    if (false == queue_is_full) {
         
         #line 29 "src/service_libraries/queue_u8.fin"
         size_t next_tail_index = (size_t)(queue->head_index + queue->num_elements) % queue_max_noe;
@@ -61,10 +61,10 @@ __status_int32_t enqueue(QueueU8 * const queue, uint8_t new_elem) {
 void dequeue(QueueU8 * const queue, __option_uint8_t * const old_elem) {
     
     #line 40 "src/service_libraries/queue_u8.fin"
-    _Bool queue_is_empty = is_empty(&*queue);
+    _Bool queue_is_empty = is_empty(queue);
 
     #line 42 "src/service_libraries/queue_u8.fin"
-    if (0 == queue_is_empty) {
+    if (false == queue_is_empty) {
         
         #line 43 "src/service_libraries/queue_u8.fin"
         uint8_t element = queue->elements[__termina_array__index(1024U, queue->head_index)];

@@ -3,27 +3,30 @@
 
 TimeVal substract_TimeVal(TimeVal timeval1, TimeVal timeval2) {
     
-    #line 13 "src/service_libraries/timeval.fin"
+    #line 14 "src/service_libraries/timeval.fin"
     TimeVal result = { .tv_sec = 0U, .tv_usec = 0U };
 
-    #line 14 "src/service_libraries/timeval.fin"
-    result.tv_sec = timeval1.tv_sec - timeval2.tv_sec;
-
-    #line 15 "src/service_libraries/timeval.fin"
-    result.tv_usec = timeval1.tv_usec - timeval2.tv_usec;
-
     #line 16 "src/service_libraries/timeval.fin"
-    if (result.tv_usec < 0U) {
+    if (timeval1.tv_usec < timeval2.tv_usec) {
         
         #line 17 "src/service_libraries/timeval.fin"
-        result.tv_sec = result.tv_sec - 1U;
+        result.tv_sec = (uint32_t)(timeval1.tv_sec - timeval2.tv_sec) - 1U;
 
         #line 18 "src/service_libraries/timeval.fin"
-        result.tv_usec = result.tv_usec + 1000000U;
+        result.tv_usec = (uint32_t)(1000000U - timeval2.tv_usec) + timeval1.tv_usec;
+
+    } else
+    {
+        
+        #line 20 "src/service_libraries/timeval.fin"
+        result.tv_sec = timeval1.tv_sec - timeval2.tv_sec;
+
+        #line 21 "src/service_libraries/timeval.fin"
+        result.tv_usec = timeval1.tv_usec - timeval2.tv_usec;
 
     }
 
-    #line 20 "src/service_libraries/timeval.fin"
+    #line 24 "src/service_libraries/timeval.fin"
     return result;
 
 }

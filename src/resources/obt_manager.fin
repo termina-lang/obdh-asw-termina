@@ -47,20 +47,14 @@ resource class COBTManager provides IOBTManager {
      */
     procedure get_current_obt(&mut self, current_obt: &mut MissionOBT) {
 
-        var fine_time_increment : u32 = 0;
         var time_val_from_power_on : TimeVal = {
             tv_sec = 0,
             tv_usec = 0
         };
         self->system_api.clock_get_uptime(&mut time_val_from_power_on);
-        var interval : TimeVal = {
-            tv_sec = 0,
-            tv_usec = 0
-        };
+        var interval : TimeVal = substract_TimeVal(time_val_from_power_on, self->ref_time_val_from_power_on);
 
-        interval = substract_TimeVal(time_val_from_power_on, self->ref_time_val_from_power_on);
-
-        fine_time_increment = self->ref_obt.finetime as u32;
+        var fine_time_increment : u32 = self->ref_obt.finetime as u32;
         fine_time_increment = fine_time_increment + (interval.tv_usec*1000) / 15259;
 
         current_obt->seconds = self->ref_obt.seconds + interval.tv_sec + (fine_time_increment >> 16 : u32);

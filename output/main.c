@@ -3,8 +3,6 @@
 
 #include "app.h"
 
-void __termina_app__init_globals();
-
 static uint8_t __pool_tc_pool_memory[__termina_pool__size(sizeof(TCHandler), 10U)];
 static uint8_t __pool_tm_pool_memory[__termina_pool__size(sizeof(TMHandler), 10U)];
 
@@ -12,15 +10,11 @@ static void __termina_app__init_tasks(int32_t * const status) {
     
     *status = 0L;
 
-    if (0L == *status) {
-        
-        bkg_tc_executor.__task_id = __bkg_tc_executor__task_id;
+    bkg_tc_executor.__task_id = __bkg_tc_executor__task_id;
 
-        bkg_tc_executor.__task_msg_queue_id = __bkg_tc_executor__task_msg_queue_id;
+    bkg_tc_executor.__task_msg_queue_id = __bkg_tc_executor__task_msg_queue_id;
 
-        __termina_task__init(__bkg_tc_executor__task_id, 8, 4096U, __CBKGTCExecutorTask__termina_task, &bkg_tc_executor, status);
-
-    }
+    __termina_task__init(__bkg_tc_executor__task_id, 8, 4096U, &__CBKGTCExecutorTask__termina_task, &bkg_tc_executor, status);
 
     if (0L == *status) {
         
@@ -28,7 +22,7 @@ static void __termina_app__init_tasks(int32_t * const status) {
 
         hk_fdir.__task_msg_queue_id = __hk_fdir__task_msg_queue_id;
 
-        __termina_task__init(__hk_fdir__task_id, 6, 4096U, __CHousekeepingFDIRTask__termina_task, &hk_fdir, status);
+        __termina_task__init(__hk_fdir__task_id, 6, 4096U, &__CHousekeepingFDIRTask__termina_task, &hk_fdir, status);
 
     }
 
@@ -38,7 +32,7 @@ static void __termina_app__init_tasks(int32_t * const status) {
 
         obdh_manager.__task_msg_queue_id = __obdh_manager__task_msg_queue_id;
 
-        __termina_task__init(__obdh_manager__task_id, 5, 4096U, __COBDHManagerTask__termina_task, &obdh_manager, status);
+        __termina_task__init(__obdh_manager__task_id, 5, 4096U, &__COBDHManagerTask__termina_task, &obdh_manager, status);
 
     }
 
@@ -48,16 +42,14 @@ static void __termina_app__init_tasks(int32_t * const status) {
 
         tc_rx_bottom_half_task.__task_msg_queue_id = __tc_rx_bottom_half_task__task_msg_queue_id;
 
-        __termina_task__init(__tc_rx_bottom_half_task__task_id, 4, 4096U, __CTXRxBottomHalfTask__termina_task, &tc_rx_bottom_half_task, status);
+        __termina_task__init(__tc_rx_bottom_half_task__task_id, 4, 4096U, &__CTXRxBottomHalfTask__termina_task, &tc_rx_bottom_half_task, status);
 
     }
 
 }
 
-static void __termina_app__init_handlers(int32_t * const status) {
+static void __termina_app__init_handlers(void) {
     
-    *status = 0L;
-
     init_hdlr.__handler_id = __init_hdlr__handler_id;
 
     uart_hdlr.__handler_id = __uart_hdlr__handler_id;
@@ -66,31 +58,29 @@ static void __termina_app__init_handlers(int32_t * const status) {
 
 static void __termina_app__init_emitters(int32_t * const status) {
     
+    __termina_periodic_timer_connection_t timer_connection;
+
+    __termina_interrupt_connection_t interrupt_connection;
+
     *status = 0L;
 
-    if (0L == *status) {
-        
-        __termina_periodic_timer_connection_t connection;
-        connection.type = __termina_emitter_connection_type__task;
-        connection.task.task_msg_queue_id = __hk_fdir__task_msg_queue_id;
-        connection.task.sink_msgq_id = __hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id;
-        connection.task.sink_port_id = __CHousekeepingFDIRTask__hk_fdir_timer_ev;
+    timer_connection.type = __termina_emitter_connection_type__task;
+    timer_connection.task.task_msg_queue_id = __hk_fdir__task_msg_queue_id;
+    timer_connection.task.sink_msgq_id = __hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id;
+    timer_connection.task.sink_port_id = __CHousekeepingFDIRTask__hk_fdir_timer_ev;
 
-        hk_fdir.hk_fdir_timer_ev = __hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id;
+    hk_fdir.hk_fdir_timer_ev = __hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id;
 
-        __termina_periodic_timer__init(__hk_fdir_timer__timer_id, __hk_fdir_timer__emitter_id, &connection, &hk_fdir_timer.period, status);
-
-    }
+    __termina_periodic_timer__init(__hk_fdir_timer__timer_id, __hk_fdir_timer__emitter_id, &timer_connection, &hk_fdir_timer.period, status);
 
     if (0L == *status) {
         
-        __termina_interrupt_connection_t connection;
-        connection.type = __termina_emitter_connection_type__handler;
-        connection.handler.handler_object = (void *)&uart_hdlr;
-        connection.handler.handler_id = __uart_hdlr__handler_id;
-        connection.handler.handler_action = CCharDevIRQHandler__irq_handler;
+        interrupt_connection.type = __termina_emitter_connection_type__handler;
+        interrupt_connection.handler.handler_object = (void *)&uart_hdlr;
+        interrupt_connection.handler.handler_id = __uart_hdlr__handler_id;
+        interrupt_connection.handler.handler_action = CCharDevIRQHandler__irq_handler;
 
-        __termina_interrupt__init(2, __irq_2__emitter_id, &connection, status);
+        __termina_interrupt__init(2, __irq_2__emitter_id, &interrupt_connection, status);
 
     }
 
@@ -98,35 +88,48 @@ static void __termina_app__init_emitters(int32_t * const status) {
 
 static void __termina_app__init_mutexes(int32_t * const status) {
     
+    MutexProtocol protocol;
+
     *status = 0L;
 
+    protocol.__variant = MutexProtocol__Ceiling;
+    protocol.Ceiling.__0 = 5;
+
+    __termina_mutex__init(__obt_manager__mutex_id, protocol, status);
+
     if (0L == *status) {
         
-        __termina_mutex__init(__obt_manager__mutex_id, __termina_mutex_policy__ceiling, 5, status);
+        protocol.__variant = MutexProtocol__Ceiling;
+        protocol.Ceiling.__0 = 4;
+
+        __termina_mutex__init(__tc_pool__mutex_id, protocol, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_mutex__init(__tc_pool__mutex_id, __termina_mutex_policy__ceiling, 4, status);
+        protocol.__variant = MutexProtocol__Ceiling;
+        protocol.Ceiling.__0 = 5;
+
+        __termina_mutex__init(__tm_channel__mutex_id, protocol, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_mutex__init(__tm_channel__mutex_id, __termina_mutex_policy__ceiling, 5, status);
+        protocol.__variant = MutexProtocol__Ceiling;
+        protocol.Ceiling.__0 = 5;
+
+        __termina_mutex__init(__tm_counter__mutex_id, protocol, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_mutex__init(__tm_counter__mutex_id, __termina_mutex_policy__ceiling, 5, status);
+        protocol.__variant = MutexProtocol__Ceiling;
+        protocol.Ceiling.__0 = 5;
 
-    }
-
-    if (0L == *status) {
-        
-        __termina_mutex__init(__tm_pool__mutex_id, __termina_mutex_policy__ceiling, 5, status);
+        __termina_mutex__init(__tm_pool__mutex_id, protocol, status);
 
     }
 
@@ -136,13 +139,9 @@ static void __termina_app__init_pools(int32_t * const status) {
     
     *status = 0L;
 
-    if (0L == *status) {
-        
-        tc_pool.__pool_id = __tc_pool__pool_id;
+    tc_pool.__pool_id = __tc_pool__pool_id;
 
-        __termina_pool__init(&tc_pool, (void *)__pool_tc_pool_memory, sizeof(__pool_tc_pool_memory), sizeof(TCHandler), status);
-
-    }
+    __termina_pool__init(&tc_pool, (void *)__pool_tc_pool_memory, sizeof(__pool_tc_pool_memory), sizeof(TCHandler), status);
 
     if (0L == *status) {
         
@@ -158,11 +157,7 @@ static void __termina_app__init_msg_queues(int32_t * const status) {
     
     *status = 0L;
 
-    if (0L == *status) {
-        
-        __termina_msg_queue__init(__tc_rx_bottom_half_task__task_msg_queue_id, sizeof(__termina_event_t), 10U, status);
-
-    }
+    __termina_msg_queue__init(__tc_rx_bottom_half_task__task_msg_queue_id, sizeof(__termina_event_t), 10U, status);
 
     if (0L == *status) {
         
@@ -220,7 +215,7 @@ static void __termina_app__init_msg_queues(int32_t * const status) {
 
 }
 
-static void __termina_app__enable_protection() {
+static void __termina_app__enable_protection(void) {
     
     obt_manager.__lock_type.type = __termina_resource_lock_type__mutex;
     obt_manager.__lock_type.mutex.mutex_id = __obt_manager__mutex_id;
@@ -243,10 +238,8 @@ static void __termina_app__enable_protection() {
 
 }
 
-static void __termina_app__init_channel_connections(int32_t * const status) {
+static void __termina_app__init_channel_connections(void) {
     
-    *status = 0L;
-
     action_tc_message_queue.task_id = __obdh_manager__task_id;
     action_tc_message_queue.task_msg_queue_id = __obdh_manager__task_msg_queue_id;
     action_tc_message_queue.channel_msg_queue_id = __action_tc_message_queue__channel_msg_queue_id;
@@ -284,7 +277,7 @@ static void __termina_app__init_channel_connections(int32_t * const status) {
 
 }
 
-static void __termina_app__initial_event() {
+static void __termina_app__initial_event(void) {
     
     __termina_event_t event;
     event.emitter_id = __system_init__emitter_id;
@@ -297,13 +290,19 @@ static void __termina_app__initial_event() {
 
     CInitHandler * self = &init_hdlr;
 
-    __status_int32_t status;
-    status.__variant = Success;
+    __status_int32_t result;
+    result.__variant = Success;
 
-    status = CInitHandler__init(&event, self, current);
+    result = CInitHandler__init(&event, self, current);
 
-    if (status.__variant != Success) {
-        __termina_exec__reboot();
+    if (result.__variant != Success) {
+        
+        ExceptSource source;
+        source.__variant = ExceptSource__Handler;
+        source.Handler.__0 = __init_hdlr__handler_id;
+
+        __termina_except__action_failure(source, 0U, result.Failure.__0);
+
     }
 
     return;
@@ -320,24 +319,16 @@ void __termina_app__init(int32_t * const status) {
 
     if (0L == *status) {
         
-        __termina_app__init_channel_connections(status);
+        __termina_app__init_channel_connections();
 
-    }
-
-    if (0L == *status) {
-        
         __termina_app__init_pools(status);
 
     }
 
     if (0L == *status) {
         
-        __termina_app__initial_event(status);
+        __termina_app__initial_event();
 
-    }
-
-    if (0L == *status) {
-        
         __termina_app__init_mutexes(status);
 
     }
@@ -346,22 +337,14 @@ void __termina_app__init(int32_t * const status) {
         
         __termina_app__enable_protection();
 
-    }
-
-    if (0L == *status) {
-        
         __termina_app__init_emitters(status);
 
     }
 
     if (0L == *status) {
         
-        __termina_app__init_handlers(status);
+        __termina_app__init_handlers();
 
-    }
-
-    if (0L == *status) {
-        
         __termina_app__init_tasks(status);
 
     }

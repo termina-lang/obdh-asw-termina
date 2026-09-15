@@ -196,7 +196,7 @@ function is_tc_ack_completion_exec_enabled(flags_ack : u8) -> bool{
  */
 function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
 
-    var subtype : u8 = 0;
+    var subtype : u8;
 
     match verify_stage {
         case Acceptation => {
@@ -232,11 +232,10 @@ function get_failure_subtype (verify_stage : TCVerifyStage) -> u8 {
 function build_tm_1_X_no_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16, 
             tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, current_obt : MissionOBT) -> Status<i32> {
 
-    var status : Status<i32> = Success;
     var subtype : u8 = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
-    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    var status : Status<i32> = append_u16_appdata_field(p_tm_handler, tc_packet_id);
     if (status is Success){
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
     }
@@ -258,11 +257,10 @@ function build_tm_1_X_no_failure_data(p_tm_handler : &mut TMHandler, tm_seq_coun
 function build_tm_1_X_u8_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16,
          tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u8, current_obt : MissionOBT) -> Status<i32> {
 
-    var status : Status<i32> = Success;
     var subtype : u8 = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
-    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    var status : Status<i32> = append_u16_appdata_field(p_tm_handler, tc_packet_id);
     if (status is Success){
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
     }
@@ -287,11 +285,10 @@ function build_tm_1_X_u8_failure_data(p_tm_handler : &mut TMHandler, tm_seq_coun
 function build_tm_1_X_u16_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16,
          tc_packet_seq_ctrl: u16, verify_stage : TCVerifyStage, failure_code : u8, failure_data : u16, current_obt : MissionOBT) -> Status<i32> {
 
-    var status : Status<i32> = Success;
     var subtype : u8 = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
-    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    var status : Status<i32> = append_u16_appdata_field(p_tm_handler, tc_packet_id);
     if (status is Success){
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
     }
@@ -316,11 +313,10 @@ function build_tm_1_X_u16_failure_data(p_tm_handler : &mut TMHandler, tm_seq_cou
 function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_seq_ctrl: u16,
          verify_stage : TCVerifyStage, failure_code : u8, failure_data : u32, current_obt : MissionOBT) -> Status<i32> {
 
-    var status : Status<i32> = Success;
     var subtype : u8 = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
-    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    var status : Status<i32> = append_u16_appdata_field(p_tm_handler, tc_packet_id);
     if (status is Success){
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
     }
@@ -347,11 +343,10 @@ function build_tm_1_X_u32_failure_data(p_tm_handler : &mut TMHandler, tm_seq_cou
 function build_tm_1_X_u8_u32_failure_data(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, tc_packet_id : u16, tc_packet_seq_ctrl: u16,
                      verify_stage : TCVerifyStage, failure_code : u8, failure_data1 : u8, failure_data2 : u32, current_obt : MissionOBT) -> Status<i32> {
 
-    var status : Status<i32> = Success;
     var subtype : u8 = get_failure_subtype(verify_stage);
 
     startup_tm(p_tm_handler);
-    status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    var status : Status<i32> = append_u16_appdata_field(p_tm_handler, tc_packet_id);
     if (status is Success){
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
     }

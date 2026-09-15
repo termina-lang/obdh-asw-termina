@@ -1,7 +1,11 @@
 
 #include "service_libraries/pus_services/pus_service20.h"
 
-__status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev, CPUSService20 * const self) {
+static __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev, CPUSService20 * const self);
+
+static __status_int32_t CPUSService20__exec20_3TC(const __termina_event_t * const __ev, CPUSService20 * const self);
+
+static __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev, CPUSService20 * const self) {
     
     #line 28 "src/service_libraries/pus_services/pus_service20.fin"
     __status_int32_t status = { .__variant = Success };
@@ -14,7 +18,7 @@ __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev,
 
     } else
     #line 38 "src/service_libraries/pus_services/pus_service20.fin"
-    if (sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID) == 0) {
+    if (sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID) == false) {
         
         #line 40 "src/service_libraries/pus_services/pus_service20.fin"
         self->pus_service_1.send_tm_1_4_PID_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.PID, &status);
@@ -143,7 +147,7 @@ __status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev,
 
 }
 
-__status_int32_t CPUSService20__exec20_3TC(const __termina_event_t * const __ev, CPUSService20 * const self) {
+static __status_int32_t CPUSService20__exec20_3TC(const __termina_event_t * const __ev, CPUSService20 * const self) {
     
     #line 126 "src/service_libraries/pus_services/pus_service20.fin"
     __status_int32_t status = { .__variant = Success };
@@ -156,14 +160,14 @@ __status_int32_t CPUSService20__exec20_3TC(const __termina_event_t * const __ev,
 
     } else
     #line 136 "src/service_libraries/pus_services/pus_service20.fin"
-    if (sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID) == 0) {
+    if (sys_data_pool_is_valid_PID(self->exec_tc_req_status_update.PID) == false) {
         
         #line 138 "src/service_libraries/pus_services/pus_service20.fin"
         self->pus_service_1.send_tm_1_4_PID_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.PID, &status);
 
     } else
     #line 144 "src/service_libraries/pus_services/pus_service20.fin"
-    if (sys_data_pool_is_PID_update_via_TC_enabled(self->exec_tc_req_status_update.PID) == 0) {
+    if (sys_data_pool_is_PID_update_via_TC_enabled(self->exec_tc_req_status_update.PID) == false) {
         
         #line 146 "src/service_libraries/pus_services/pus_service20.fin"
         self->pus_service_1.send_tm_1_4_PID_read_only_via_TC(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.PID, &status);
@@ -229,148 +233,145 @@ void CPUSService20__exec_tc(const __termina_event_t * const __ev, void * const _
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 196 "src/service_libraries/pus_services/pus_service20.fin"
-    __status_int32_t status = { .__variant = Success };
-
-    #line 197 "src/service_libraries/pus_services/pus_service20.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
 
-    #line 199 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 198 "src/service_libraries/pus_services/pus_service20.fin"
     self->exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;
 
-    #line 200 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 199 "src/service_libraries/pus_services/pus_service20.fin"
     self->exec_tc_req_status_update.packet_seq_ctrl = tc_handler->packet_header.packet_seq_ctrl;
 
-    #line 201 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 200 "src/service_libraries/pus_services/pus_service20.fin"
     self->exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
 
-    #line 202 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 201 "src/service_libraries/pus_services/pus_service20.fin"
     self->exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
-    #line 204 "src/service_libraries/pus_services/pus_service20.fin"
-    status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.N);
+    #line 203 "src/service_libraries/pus_services/pus_service20.fin"
+    __status_int32_t status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.N);
 
-    #line 206 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 205 "src/service_libraries/pus_services/pus_service20.fin"
     if (status.__variant == Success) {
         
-        #line 207 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 206 "src/service_libraries/pus_services/pus_service20.fin"
         status = tc_handler_get_u16_appdata_field(tc_handler, &self->exec_tc_req_status_update.PID);
 
     }
 
-    #line 210 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 209 "src/service_libraries/pus_services/pus_service20.fin"
     if (status.__variant == Success && subtype == 3U) {
         
-        #line 212 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 211 "src/service_libraries/pus_services/pus_service20.fin"
         DataPoolItemType item_type = sys_data_pool_get_item_type(self->exec_tc_req_status_update.PID);
 
-        #line 215 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 214 "src/service_libraries/pus_services/pus_service20.fin"
         if (item_type.__variant == DataPoolItemType__u8_t) {
             
-            #line 216 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 215 "src/service_libraries/pus_services/pus_service20.fin"
             status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.tc_20_3_data.PID_value_u8);
 
         } else
-        #line 218 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 217 "src/service_libraries/pus_services/pus_service20.fin"
         if (item_type.__variant == DataPoolItemType__u32_t) {
             
-            #line 219 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 218 "src/service_libraries/pus_services/pus_service20.fin"
             status = tc_handler_get_u32_appdata_field(tc_handler, &self->exec_tc_req_status_update.tc_20_3_data.PID_value_u32);
 
         } else
         {
             
-            #line 222 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 221 "src/service_libraries/pus_services/pus_service20.fin"
             status.__variant = Failure;
-            #line 222 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 221 "src/service_libraries/pus_services/pus_service20.fin"
             status.Failure.__0 = INVALID_PID_ERROR;
 
         }
 
     }
 
-    #line 228 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 227 "src/service_libraries/pus_services/pus_service20.fin"
     if (status.__variant == Success) {
         
-        #line 230 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 229 "src/service_libraries/pus_services/pus_service20.fin"
         if (subtype == 1U) {
             
-            #line 232 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 231 "src/service_libraries/pus_services/pus_service20.fin"
             status = CPUSService20__exec20_1TC(__ev, self);
 
         } else
-        #line 234 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 233 "src/service_libraries/pus_services/pus_service20.fin"
         if (subtype == 3U) {
             
-            #line 236 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 235 "src/service_libraries/pus_services/pus_service20.fin"
             status = CPUSService20__exec20_3TC(__ev, self);
 
         } else
         {
             
-            #line 240 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 239 "src/service_libraries/pus_services/pus_service20.fin"
             status.__variant = Failure;
-            #line 240 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 239 "src/service_libraries/pus_services/pus_service20.fin"
             status.Failure.__0 = ACCEPTANCE_ERROR;
 
         }
 
     }
 
-    #line 248 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 247 "src/service_libraries/pus_services/pus_service20.fin"
     if (status.__variant == Success) {
         
-        #line 250 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 249 "src/service_libraries/pus_services/pus_service20.fin"
         (*action_status).__variant = Success;
 
     } else
     {
         
-        #line 253 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 252 "src/service_libraries/pus_services/pus_service20.fin"
         int32_t error_code = status.Failure.__0;
 
-        #line 255 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 254 "src/service_libraries/pus_services/pus_service20.fin"
         if (error_code == ACCEPTANCE_ERROR) {
             
-            #line 257 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 256 "src/service_libraries/pus_services/pus_service20.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
-        #line 262 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 261 "src/service_libraries/pus_services/pus_service20.fin"
         if (error_code == BUILD_TM_ERROR) {
             
-            #line 264 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 263 "src/service_libraries/pus_services/pus_service20.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
-        #line 269 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 268 "src/service_libraries/pus_services/pus_service20.fin"
         if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
             
-            #line 271 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 270 "src/service_libraries/pus_services/pus_service20.fin"
             self->pus_service_1.send_tm_1_4_short_pack_length(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.tc_num_bytes, action_status);
 
         } else
-        #line 277 "src/service_libraries/pus_services/pus_service20.fin"
+        #line 276 "src/service_libraries/pus_services/pus_service20.fin"
         if (error_code == INVALID_PID_ERROR) {
             
-            #line 279 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 278 "src/service_libraries/pus_services/pus_service20.fin"
             self->pus_service_1.send_tm_1_4_PID_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.PID, action_status);
 
         } else
         {
             
-            #line 286 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 285 "src/service_libraries/pus_services/pus_service20.fin"
             (*action_status).__variant = Failure;
-            #line 286 "src/service_libraries/pus_services/pus_service20.fin"
+            #line 285 "src/service_libraries/pus_services/pus_service20.fin"
             (*action_status).Failure.__0 = error_code;
 
         }
 
     }
 
-    #line 292 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 291 "src/service_libraries/pus_services/pus_service20.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 292 "src/service_libraries/pus_services/pus_service20.fin"
+    #line 291 "src/service_libraries/pus_services/pus_service20.fin"
     return;
 
 }

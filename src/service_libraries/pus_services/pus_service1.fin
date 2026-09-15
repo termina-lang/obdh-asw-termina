@@ -461,7 +461,7 @@ resource class CPUSService1 provides IPUSService1 {
 
             case Some(b_tm_handler) => {
 
-                var error_code : u8 = 0;
+                var error_code : u8;
 
                 var current_obt : MissionOBT = {
                     seconds = 0,

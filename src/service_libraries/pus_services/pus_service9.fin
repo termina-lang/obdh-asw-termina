@@ -84,7 +84,6 @@ resource class CPUSService9 provides IPUSService9 {
     */
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>){
 
-        var status : Status<i32> = Success;
         var subtype : u8 = tc_handler->df_header.subtype;
 
         self->exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;
@@ -92,7 +91,7 @@ resource class CPUSService9 provides IPUSService9 {
         self->exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
         self->exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
-        status = tc_handler_get_u32_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.next_OBT.seconds));
+        var status : Status<i32> = tc_handler_get_u32_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.next_OBT.seconds));
 
         if (status is Success) {
             status = tc_handler_get_u16_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.next_OBT.finetime));

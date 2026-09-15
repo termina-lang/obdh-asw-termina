@@ -352,7 +352,7 @@ void CPUSService1__send_tm_1_2(const __termina_event_t * const __ev, void * cons
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 464 "src/service_libraries/pus_services/pus_service1.fin"
-        uint8_t error_code = 0U;
+        uint8_t error_code;
 
         #line 466 "src/service_libraries/pus_services/pus_service1.fin"
         MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };

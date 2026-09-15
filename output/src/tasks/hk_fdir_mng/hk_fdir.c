@@ -100,7 +100,7 @@ __status_int32_t CHousekeepingFDIRTask__do_fdir(const __termina_event_t * const 
     __status_int32_t result = { .__variant = Success };
 
     #line 57 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-    _Bool is_monitor_enabled = 0;
+    _Bool is_monitor_enabled = false;
 
     #line 59 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     for (size_t i = 0U; i < 16U; i = i + 1U) {
@@ -118,16 +118,16 @@ __status_int32_t CHousekeepingFDIRTask__do_fdir(const __termina_event_t * const 
             FaultInfo fault_info = { .__variant = FaultInfo__Empty };
 
             #line 67 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            _Bool event_triggered = 0;
+            _Bool event_triggered = false;
 
             #line 69 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            self->pus_service_12.do_monitoring(__ev, self->pus_service_12.__that, (uint16_t)i, &evID, &fault_info, &event_triggered);
+            self->pus_service_12.do_monitoring(__ev, self->pus_service_12.__that, (uint16_t)i, &evID, &fault_info, &event_triggered, &result);
 
             #line 71 "src/tasks/hk_fdir_mng/hk_fdir.fin"
             if (event_triggered) {
                 
                 #line 73 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-                _Bool is_Ev_ID_enabled = 0;
+                _Bool is_Ev_ID_enabled = false;
 
                 #line 74 "src/tasks/hk_fdir_mng/hk_fdir.fin"
                 self->pus_service_5.is_Ev_ID_enabled_ext(__ev, self->pus_service_5.__that, evID, &is_Ev_ID_enabled);
@@ -167,6 +167,8 @@ __status_int32_t CHousekeepingFDIRTask__do_fdir(const __termina_event_t * const 
 
 __status_int32_t CHousekeepingFDIRTask__do_hk_fdir(const __termina_event_t * const __ev, void * const __this, TimeVal _current_time) {
     
+    (void)_current_time;
+
     #line 156 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)__this;
 
@@ -296,7 +298,7 @@ void __CHousekeepingFDIRTask__termina_task(void * arg) {
                 if (result.__variant != Success) {
                     
                     ExceptSource source;
-                    source.__variant = ExceptSource__Handler;
+                    source.__variant = ExceptSource__Task;
                     source.Task.__0 = self->__task_id;
 
                     __termina_except__action_failure(source, __CHousekeepingFDIRTask__hk_fdir_timer_ev, result.Failure.__0);
@@ -318,7 +320,7 @@ void __CHousekeepingFDIRTask__termina_task(void * arg) {
                 if (result.__variant != Success) {
                     
                     ExceptSource source;
-                    source.__variant = ExceptSource__Handler;
+                    source.__variant = ExceptSource__Task;
                     source.Task.__0 = self->__task_id;
 
                     __termina_except__action_failure(source, __CHousekeepingFDIRTask__hkfdir_message_queue_input, result.Failure.__0);

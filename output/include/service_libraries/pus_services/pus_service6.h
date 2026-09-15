@@ -39,22 +39,6 @@ typedef struct {
     PS6ExecTCReqStatusUpdate exec_tc_req_status_update;
 } CPUSService6;
 
-__option_uint16_t CPUSService6__check_data(const __termina_event_t * const __ev, CPUSService6 * const self);
-
-_Bool CPUSService6__is_address_valid(const __termina_event_t * const __ev, const CPUSService6 * const self);
-
-_Bool CPUSService6__is_mem_id_write_enabled(const __termina_event_t * const __ev, const CPUSService6 * const self);
-
-__status_int32_t CPUSService6__write_data(const __termina_event_t * const __ev, CPUSService6 * const self);
-
-__status_int32_t CPUSService6__exec6_2TC(const __termina_event_t * const __ev, CPUSService6 * const self);
-
-__status_int32_t CPUSService6__read_data(const __termina_event_t * const __ev, CPUSService6 * const self);
-
-__status_int32_t CPUSService6__exec6_5TC(const __termina_event_t * const __ev, CPUSService6 * const self);
-
-__status_int32_t CPUSService6__exec6_9TC(const __termina_event_t * const __ev, CPUSService6 * const self);
-
 void CPUSService6__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 
 #endif

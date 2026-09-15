@@ -1,7 +1,9 @@
 
 #include "service_libraries/pus_services/pus_service17.h"
 
-__status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * const __ev, CPUSService17 * const self) {
+static __status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * const __ev, CPUSService17 * const self);
+
+static __status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * const __ev, CPUSService17 * const self) {
     
     #line 76 "src/service_libraries/pus_services/pus_service17.fin"
     __status_int32_t status = { .__variant = Success };
@@ -76,7 +78,7 @@ void CPUSService17__exec_tc(const __termina_event_t * const __ev, void * const _
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 137 "src/service_libraries/pus_services/pus_service17.fin"
-    __status_int32_t status = { .__variant = Success };
+    __status_int32_t status;
 
     #line 138 "src/service_libraries/pus_services/pus_service17.fin"
     uint8_t subtype = tc_handler->df_header.subtype;

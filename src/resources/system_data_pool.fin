@@ -49,7 +49,7 @@ enum DataPoolItemType {
  */
 function sys_data_pool_get_item_type (PID : u16) -> DataPoolItemType {
 
-    var sdp_type : DataPoolItemType = DataPoolItemType::NoValidPID;
+    var sdp_type : DataPoolItemType;
 
     if PID as usize < sdp_last_u32_param_id {
 

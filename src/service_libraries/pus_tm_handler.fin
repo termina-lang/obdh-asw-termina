@@ -61,7 +61,6 @@ function append_u8_appdata_field (tm_handler : &mut TMHandler, data : u8) -> Sta
 
         tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index] = data;
         tm_handler->app_data_index = tm_handler->app_data_index + 1;
-        status = Success;
 
     } else {
 
@@ -89,7 +88,6 @@ function append_u16_appdata_field (tm_handler : &mut TMHandler, data : u16) -> S
 
         serialize_uint16(data, &mut tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index .. tm_handler->app_data_index + 2]);
         tm_handler->app_data_index = tm_handler->app_data_index + 2;
-        status = Success;
 
     } else {
 
@@ -116,7 +114,6 @@ function append_u32_appdata_field (tm_handler : &mut TMHandler, data : u32) -> S
 
         serialize_uint32(data, &mut tm_handler->tm_descriptor.tm_bytes[tm_handler->app_data_index .. tm_handler->app_data_index + 4]);
         tm_handler->app_data_index = tm_handler->app_data_index + 4;
-        status = Success;
 
     } else {
 

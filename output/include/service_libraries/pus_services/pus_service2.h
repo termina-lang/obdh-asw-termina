@@ -5,6 +5,8 @@
 
 #include "resources/gpio_driver.h"
 #include "service_libraries/pus_services/pus_service1.h"
+#include "service_libraries/pus_services/pus_service12.h"
+#include "service_libraries/pus_services/pus_service2/internal.h"
 #include "service_libraries/pus_services/pus_service2/types.h"
 #include "service_libraries/serialize.h"
 #include "service_libraries/tc_ccsds_pus_format.h"
@@ -30,12 +32,6 @@ typedef struct {
         void (* send_tm_1_8_tm_exceed_limit_appdata)(const __termina_event_t * const, void * const, uint16_t, uint16_t, __status_int32_t * const);
     } pus_service_1;
 } CPUSService2;
-
-__status_int32_t CPUSService2__dev_drv_on_off(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
-
-_Bool CPUSService2__device_drv_is_on_off_address_valid(const __termina_event_t * const __ev, const CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
-
-__status_int32_t CPUSService2__exec2_1TC(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
 void CPUSService2__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 

@@ -65,32 +65,12 @@ resource class CAPBUARTDriver provides
     rx_queue : access ICharDevEnqueue;
 
     /**
-     * @brief Checks if transmit FIFO is full.
-     * @return True if full, false otherwise.
-     */
-    method tf_is_full(&self) -> bool {
-        let riscv_uart_tf : u32 = 0x00000200 : u32;
-        return ((self->registers.status & riscv_uart_tf) != 0 : u32);
-    }
-
-
-    /**
      * @brief Checks if transmit FIFO is empty.
      * @return True if empty, false otherwise.
      */
     method tf_is_empty(&self) -> bool {
         let riscv_uart_te : u32 = 0x00000004 : u32;
         return ((self->registers.status & riscv_uart_te) != 0 : u32);
-    }
-
-
-    /**
-     * @brief Checks if receive FIFO has data available.
-     * @return True if data is ready, false otherwise.
-     */
-    method rf_data_ready(&self) -> bool {
-        let riscv_uart_rf : u32 = 0x00000001 : u32;
-        return ((self->registers.status & riscv_uart_rf) != 0 : u32);
     }
 
 
@@ -130,16 +110,6 @@ resource class CAPBUARTDriver provides
     method enable_TI(&priv self) {
         let riscv_uart_ti : u32 = 0x00000008 : u32;
         self->registers.control = self->registers.control | riscv_uart_ti;
-        return;
-    }
-
-
-    /**
-     * @brief Disables transmission interrupts.
-     */
-    method disable_TI(&priv self) {
-        let riscv_uart_ti : u32 = 0xFFFFFFF7 : u32;
-        self->registers.control = self->registers.control & riscv_uart_ti;
         return;
     }
 

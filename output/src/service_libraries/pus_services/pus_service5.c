@@ -1,7 +1,13 @@
 
 #include "service_libraries/pus_services/pus_service5.h"
 
-__status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, CPUSService5 * const self) {
+static __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, CPUSService5 * const self);
+
+static __status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const __ev, CPUSService5 * const self);
+
+static _Bool CPUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const CPUSService5 * const self, uint16_t Ev_ID);
+
+static __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, CPUSService5 * const self) {
     
     #line 88 "src/service_libraries/pus_services/pus_service5.fin"
     __status_int32_t status = { .__variant = Success };
@@ -35,7 +41,7 @@ __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, C
         if (status.__variant == Success) {
             
             #line 117 "src/service_libraries/pus_services/pus_service5.fin"
-            uint32_t mask = 0x1U << (uint8_t)(offset - 1U);
+            uint32_t mask = (uint32_t)0x1U << __termina_shift__amount(32U, (uint8_t)(offset - 1U));
 
             #line 118 "src/service_libraries/pus_services/pus_service5.fin"
             self->Ev_ID_enable_config[__termina_array__index(4U, index - 1U)] = self->Ev_ID_enable_config[__termina_array__index(4U, index - 1U)] | mask;
@@ -52,7 +58,7 @@ __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const __ev, C
 
 }
 
-__status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const __ev, CPUSService5 * const self) {
+static __status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const __ev, CPUSService5 * const self) {
     
     #line 136 "src/service_libraries/pus_services/pus_service5.fin"
     __status_int32_t status = { .__variant = Success };
@@ -86,7 +92,7 @@ __status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const __ev, C
         if (status.__variant == Success) {
             
             #line 166 "src/service_libraries/pus_services/pus_service5.fin"
-            uint32_t mask = 0x1U << (uint8_t)(offset - 1U);
+            uint32_t mask = (uint32_t)0x1U << __termina_shift__amount(32U, (uint8_t)(offset - 1U));
 
             #line 167 "src/service_libraries/pus_services/pus_service5.fin"
             self->Ev_ID_enable_config[__termina_array__index(4U, index - 1U)] = self->Ev_ID_enable_config[__termina_array__index(4U, index - 1U)] & (uint32_t)(0xFFFFFFFEU ^ mask);
@@ -112,118 +118,117 @@ void CPUSService5__exec_tc(const __termina_event_t * const __ev, void * const __
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 264 "src/service_libraries/pus_services/pus_service5.fin"
-    __status_int32_t status = { .__variant = Success };
-
-    #line 265 "src/service_libraries/pus_services/pus_service5.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
 
-    #line 267 "src/service_libraries/pus_services/pus_service5.fin"
+    #line 266 "src/service_libraries/pus_services/pus_service5.fin"
     self->exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;
 
-    #line 268 "src/service_libraries/pus_services/pus_service5.fin"
+    #line 267 "src/service_libraries/pus_services/pus_service5.fin"
     self->exec_tc_req_status_update.packet_seq_ctrl = tc_handler->packet_header.packet_seq_ctrl;
 
-    #line 269 "src/service_libraries/pus_services/pus_service5.fin"
+    #line 268 "src/service_libraries/pus_services/pus_service5.fin"
     self->exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
 
-    #line 270 "src/service_libraries/pus_services/pus_service5.fin"
+    #line 269 "src/service_libraries/pus_services/pus_service5.fin"
     self->exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
-    #line 271 "src/service_libraries/pus_services/pus_service5.fin"
-    status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.N);
+    #line 270 "src/service_libraries/pus_services/pus_service5.fin"
+    __status_int32_t status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.N);
 
-    #line 273 "src/service_libraries/pus_services/pus_service5.fin"
+    #line 272 "src/service_libraries/pus_services/pus_service5.fin"
     if (status.__variant == Success) {
         
-        #line 274 "src/service_libraries/pus_services/pus_service5.fin"
+        #line 273 "src/service_libraries/pus_services/pus_service5.fin"
         status = tc_handler_get_u16_appdata_field(tc_handler, &self->exec_tc_req_status_update.EvID);
 
     }
 
-    #line 277 "src/service_libraries/pus_services/pus_service5.fin"
+    #line 276 "src/service_libraries/pus_services/pus_service5.fin"
     if (status.__variant == Success) {
         
-        #line 279 "src/service_libraries/pus_services/pus_service5.fin"
+        #line 278 "src/service_libraries/pus_services/pus_service5.fin"
         if (subtype == 5U) {
             
-            #line 281 "src/service_libraries/pus_services/pus_service5.fin"
+            #line 280 "src/service_libraries/pus_services/pus_service5.fin"
             status = CPUSService5__exec5_5TC(__ev, self);
 
         } else
-        #line 283 "src/service_libraries/pus_services/pus_service5.fin"
+        #line 282 "src/service_libraries/pus_services/pus_service5.fin"
         if (subtype == 6U) {
             
-            #line 285 "src/service_libraries/pus_services/pus_service5.fin"
+            #line 284 "src/service_libraries/pus_services/pus_service5.fin"
             status = CPUSService5__exec5_6TC(__ev, self);
 
         } else
         {
             
-            #line 289 "src/service_libraries/pus_services/pus_service5.fin"
+            #line 288 "src/service_libraries/pus_services/pus_service5.fin"
             status.__variant = Failure;
-            #line 289 "src/service_libraries/pus_services/pus_service5.fin"
+            #line 288 "src/service_libraries/pus_services/pus_service5.fin"
             status.Failure.__0 = ACCEPTANCE_ERROR;
 
         }
 
     }
 
-    #line 296 "src/service_libraries/pus_services/pus_service5.fin"
+    #line 295 "src/service_libraries/pus_services/pus_service5.fin"
     if (status.__variant == Success) {
         
-        #line 298 "src/service_libraries/pus_services/pus_service5.fin"
+        #line 297 "src/service_libraries/pus_services/pus_service5.fin"
         (*action_status).__variant = Success;
 
     } else
     {
         
-        #line 301 "src/service_libraries/pus_services/pus_service5.fin"
+        #line 300 "src/service_libraries/pus_services/pus_service5.fin"
         int32_t error_code = status.Failure.__0;
 
-        #line 303 "src/service_libraries/pus_services/pus_service5.fin"
+        #line 302 "src/service_libraries/pus_services/pus_service5.fin"
         if (error_code == ACCEPTANCE_ERROR) {
             
-            #line 305 "src/service_libraries/pus_services/pus_service5.fin"
+            #line 304 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
-        #line 310 "src/service_libraries/pus_services/pus_service5.fin"
+        #line 309 "src/service_libraries/pus_services/pus_service5.fin"
         if (error_code == BUILD_TM_ERROR) {
             
-            #line 312 "src/service_libraries/pus_services/pus_service5.fin"
+            #line 311 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
-        #line 317 "src/service_libraries/pus_services/pus_service5.fin"
+        #line 316 "src/service_libraries/pus_services/pus_service5.fin"
         if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
             
-            #line 319 "src/service_libraries/pus_services/pus_service5.fin"
+            #line 318 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.send_tm_1_4_short_pack_length(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.tc_num_bytes, action_status);
 
         } else
         {
             
-            #line 327 "src/service_libraries/pus_services/pus_service5.fin"
+            #line 326 "src/service_libraries/pus_services/pus_service5.fin"
             (*action_status).__variant = Failure;
-            #line 327 "src/service_libraries/pus_services/pus_service5.fin"
+            #line 326 "src/service_libraries/pus_services/pus_service5.fin"
             (*action_status).Failure.__0 = error_code;
 
         }
 
     }
 
-    #line 334 "src/service_libraries/pus_services/pus_service5.fin"
+    #line 333 "src/service_libraries/pus_services/pus_service5.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 334 "src/service_libraries/pus_services/pus_service5.fin"
+    #line 333 "src/service_libraries/pus_services/pus_service5.fin"
     return;
 
 }
 
-_Bool CPUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const CPUSService5 * const self, uint16_t Ev_ID) {
+static _Bool CPUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const CPUSService5 * const self, uint16_t Ev_ID) {
     
+    (void)__ev;
+
     #line 64 "src/service_libraries/pus_services/pus_service5.fin"
-    _Bool enabled = 0;
+    _Bool enabled = false;
 
     #line 65 "src/service_libraries/pus_services/pus_service5.fin"
     size_t index = get_Ev_ID_enable_config_index(Ev_ID);
@@ -238,10 +243,10 @@ _Bool CPUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev, const
         size_t config_array_index = index - 1U;
 
         #line 71 "src/service_libraries/pus_services/pus_service5.fin"
-        if ((uint32_t)((uint32_t)(self->Ev_ID_enable_config[__termina_array__index(4U, config_array_index)] >> (uint8_t)(offset - 1U)) & 0x1U) != 0U) {
+        if ((uint32_t)((uint32_t)(self->Ev_ID_enable_config[__termina_array__index(4U, config_array_index)] >> __termina_shift__amount(32U, (uint8_t)(offset - 1U))) & 0x1U) != 0U) {
             
             #line 72 "src/service_libraries/pus_services/pus_service5.fin"
-            enabled = 1;
+            enabled = true;
 
         }
 

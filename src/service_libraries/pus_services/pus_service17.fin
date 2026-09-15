@@ -134,7 +134,7 @@ resource class CPUSService17 provides IPUSService17 {
      */
     procedure exec_tc (&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>) {
 
-        var status : Status<i32> = Success;
+        var status : Status<i32>;
         var subtype : u8 = tc_handler->df_header.subtype;
 
         self->exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;

@@ -27,10 +27,8 @@ constexpr ps6_init_tc_req_status_update : PS6ExecTCReqStatusUpdate = {
 
 function build_tm_6_6(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, current_obt : MissionOBT, mem_data : &PS6ExecTCReqStatusUpdate) -> Status<i32> {
 
-    var status : Status<i32> = Success;
-  
     startup_tm(p_tm_handler);
-    status = append_u8_appdata_field(p_tm_handler, mem_data->mem_id);
+    var status : Status<i32> = append_u8_appdata_field(p_tm_handler, mem_data->mem_id);
     if (status is Success) {
         status = append_u8_appdata_field(p_tm_handler,1);
     }
@@ -53,9 +51,8 @@ function build_tm_6_6(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, curre
 
 function build_tm_6_10(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, current_obt : MissionOBT, mem_data : &PS6ExecTCReqStatusUpdate, checksum : u16) -> Status<i32> {
 
-    var status : Status<i32> = Success;
     startup_tm(p_tm_handler);
-    status = append_u8_appdata_field(p_tm_handler, mem_data->mem_id);
+    var status : Status<i32> = append_u8_appdata_field(p_tm_handler, mem_data->mem_id);
     if (status is Success) {
         status = append_u8_appdata_field(p_tm_handler,1);
     }

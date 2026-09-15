@@ -17,7 +17,7 @@ void tc_handler_build(TCHandler * const tc_handler) {
 _Bool tc_handler_is_valid_next_appdata_field(const TCHandler * const tc_handler, size_t field_size) {
     
     #line 76 "src/service_libraries/pus_tc_handler.fin"
-    _Bool res = 0;
+    _Bool res = false;
 
     #line 78 "src/service_libraries/pus_tc_handler.fin"
     size_t required_size = tc_handler->app_data_index + field_size;
@@ -26,7 +26,7 @@ _Bool tc_handler_is_valid_next_appdata_field(const TCHandler * const tc_handler,
     if (required_size <= tc_handler->tc_descriptor.tc_num_bytes) {
         
         #line 81 "src/service_libraries/pus_tc_handler.fin"
-        res = 1;
+        res = true;
 
     }
 
@@ -41,7 +41,7 @@ __status_int32_t tc_handler_get_u8_appdata_field(TCHandler * const tc_handler, u
     __status_int32_t status = { .__variant = Success };
 
     #line 103 "src/service_libraries/pus_tc_handler.fin"
-    if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 1U)) {
+    if (tc_handler_is_valid_next_appdata_field(tc_handler, 1U)) {
         
         #line 105 "src/service_libraries/pus_tc_handler.fin"
         *data = tc_handler->tc_descriptor.tc_bytes[__termina_array__index(256U, tc_handler->app_data_index)];
@@ -70,7 +70,7 @@ __status_int32_t tc_handler_get_u16_appdata_field(TCHandler * const tc_handler, 
     __status_int32_t status = { .__variant = Success };
 
     #line 132 "src/service_libraries/pus_tc_handler.fin"
-    if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 2U)) {
+    if (tc_handler_is_valid_next_appdata_field(tc_handler, 2U)) {
         
         #line 134 "src/service_libraries/pus_tc_handler.fin"
         *data = deserialize_uint16(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(256U, 2U, tc_handler->app_data_index, tc_handler->app_data_index + 2U)]);
@@ -99,7 +99,7 @@ __status_int32_t tc_handler_get_u32_appdata_field(TCHandler * const tc_handler, 
     __status_int32_t status = { .__variant = Success };
 
     #line 161 "src/service_libraries/pus_tc_handler.fin"
-    if (tc_handler_is_valid_next_appdata_field(&*tc_handler, 4U)) {
+    if (tc_handler_is_valid_next_appdata_field(tc_handler, 4U)) {
         
         #line 163 "src/service_libraries/pus_tc_handler.fin"
         *data = deserialize_uint32(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(256U, 4U, tc_handler->app_data_index, tc_handler->app_data_index + 4U)]);

@@ -50,19 +50,18 @@ resource class CPUSService3 provides IPUSService3 {
     method exec3_5TC(&priv self, exec_tc_req_status_update : &PS3ExecTCReqStatusUpdate) -> Status<i32> {
 
         var status : Status<i32> = Success;
-        var opt_index : Option<usize> = None;
 
         if (exec_tc_req_status_update->N != 1) {
 
             self->pus_service_1.send_tm_1_4_num_of_instr_not_valid(
                         exec_tc_req_status_update->packet_id,
                         exec_tc_req_status_update->packet_seq_ctrl,
-                        exec_tc_req_status_update->N, 
+                        exec_tc_req_status_update->N,
                         &mut status);
-        
+
         } else {
 
-            opt_index = self->get_SIDindex(exec_tc_req_status_update);
+            var opt_index : Option<usize> = self->get_SIDindex(exec_tc_req_status_update);
 
             match opt_index {
 
@@ -109,7 +108,6 @@ resource class CPUSService3 provides IPUSService3 {
     method exec3_6TC(&priv self, exec_tc_req_status_update : & PS3ExecTCReqStatusUpdate) -> Status<i32> {
 
         var status : Status<i32> = Success;
-        var opt_index : Option<usize> = None;
 
         if (exec_tc_req_status_update->N != 1) {
 
@@ -118,10 +116,10 @@ resource class CPUSService3 provides IPUSService3 {
                         exec_tc_req_status_update->packet_seq_ctrl,
                         exec_tc_req_status_update->N,
                         &mut status);
-        
+
         } else {
 
-            opt_index = self->get_SIDindex(exec_tc_req_status_update);
+            var opt_index : Option<usize> = self->get_SIDindex(exec_tc_req_status_update);
             
             match opt_index {
 
@@ -168,7 +166,6 @@ resource class CPUSService3 provides IPUSService3 {
     method exec3_31TC(&priv self, exec_tc_req_status_update : &mut PS3ExecTCReqStatusUpdate) -> Status<i32> {
 
         var status : Status<i32> = Success;
-        var opt_index : Option<usize> = None;
 
         if (exec_tc_req_status_update->N != 1) {
 
@@ -180,7 +177,7 @@ resource class CPUSService3 provides IPUSService3 {
 
         } else {
 
-            opt_index = self->get_SIDindex(&(*exec_tc_req_status_update));
+            var opt_index : Option<usize> = self->get_SIDindex(&(*exec_tc_req_status_update));
 
             match opt_index {
 
@@ -227,7 +224,6 @@ resource class CPUSService3 provides IPUSService3 {
 
     procedure exec_tc(&mut self, tc_handler : &mut TCHandler, action_status: &mut Status<i32>){
 
-        var status : Status<i32> = Success;
         var subtype : u8 = tc_handler->df_header.subtype;
         var exec_tc_req_status_update : PS3ExecTCReqStatusUpdate = ps3_init_tc_req_status_update;
 
@@ -236,7 +232,7 @@ resource class CPUSService3 provides IPUSService3 {
         exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
         exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
-        status = tc_handler_get_u8_appdata_field(tc_handler, &mut (exec_tc_req_status_update.N));
+        var status : Status<i32> = tc_handler_get_u8_appdata_field(tc_handler, &mut (exec_tc_req_status_update.N));
 
         if (status is Success) {
             status = tc_handler_get_u16_appdata_field(tc_handler, &mut exec_tc_req_status_update.SID);
@@ -315,8 +311,6 @@ resource class CPUSService3 provides IPUSService3 {
     
     procedure do_hk (&mut self, action_status : &mut Status<i32>) {
 
-        var do_hk_status : Status<i32> = Success;
-
         for i : usize in 0 .. max_num_of_SIDs while (*action_status is Success) {
 
             if (self->hk_config_table[i].enabled == true){
@@ -338,15 +332,14 @@ resource class CPUSService3 provides IPUSService3 {
                         self->tm_counter.get_next_tm_count(&mut tm_count);
 
                         startup_tm(&mut b_tm_handler);
-                        do_hk_status = append_u16_appdata_field(&mut b_tm_handler, self->hk_config_table[i].SID);
+                        var do_hk_status : Status<i32> = append_u16_appdata_field(&mut b_tm_handler, self->hk_config_table[i].SID);
 
-                        var PID : u16 = 0;
                         var u32_SDP_value : u32 = 0;
                         var u8_SDP_value : u8 = 0;
 
                         for j : usize in 0 .. max_params_per_SID while (j < (self->hk_config_table[i].num_params as usize) && (do_hk_status is Success)) {
 
-                            PID = self->hk_config_table[i].params_def[j];
+                            var PID : u16 = self->hk_config_table[i].params_def[j];
                             var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
 
                             match item_type {

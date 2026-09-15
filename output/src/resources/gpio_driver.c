@@ -41,7 +41,7 @@ void CGPIODriver__write_led(const __termina_event_t * const __ev, void * const _
         if (value == 0U) {
             
             #line 71 "src/resources/gpio_driver.fin"
-            uint32_t mask = 0xFFFFFFFFU ^ (uint32_t)(1U << bit);
+            uint32_t mask = 0xFFFFFFFFU ^ (uint32_t)((uint32_t)1U << __termina_shift__amount(32U, bit));
 
             #line 72 "src/resources/gpio_driver.fin"
             self->registers->Output = self->registers->Output & mask;
@@ -50,7 +50,7 @@ void CGPIODriver__write_led(const __termina_event_t * const __ev, void * const _
         {
             
             #line 74 "src/resources/gpio_driver.fin"
-            self->registers->Output = self->registers->Output | (uint32_t)(1U << bit);
+            self->registers->Output = self->registers->Output | (uint32_t)((uint32_t)1U << __termina_shift__amount(32U, bit));
 
         }
 

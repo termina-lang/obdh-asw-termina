@@ -66,7 +66,7 @@ task class CHousekeepingFDIRTask {
                 var fault_info : FaultInfo = FaultInfo::Empty;
                 var event_triggered : bool = false;
 
-                self->pus_service_12.do_monitoring(i as u16, &mut evID, &mut fault_info, &mut event_triggered);
+                self->pus_service_12.do_monitoring(i as u16, &mut evID, &mut fault_info, &mut event_triggered, &mut result);
 
                 if(event_triggered){
 

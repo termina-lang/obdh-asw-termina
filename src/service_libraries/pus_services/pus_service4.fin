@@ -95,9 +95,8 @@ resource class CPUSService4 provides IPUSService4 {
 
     method add_PID_stats (&priv self) -> Status<i32> {
         
-        var status : Status<i32> = Success;
         var index_status : IndexStatus = {index = 0, status = Success};
-        status = self->get_PID_defined_stats_index();
+        var status : Status<i32> = self->get_PID_defined_stats_index();
 
         if(status is Failure) {
 
@@ -128,24 +127,13 @@ resource class CPUSService4 provides IPUSService4 {
 
     method delete_PID_stats (&priv self) -> Status<i32> {
 
-        var status : Status<i32> = Success;
-        status = self->get_PID_defined_stats_index();
+        var status : Status<i32> = self->get_PID_defined_stats_index();
 
         if (status is Success) {
             self->stats_config_table.defined[self->exec_tc_req_status_update.valid_index] = false;
         }
 
         return status;
-        
-    }
-
-    method delete_all_stats (&priv self){
-
-        for i : usize in 0 .. max_num_of_stats {
-            self->stats_config_table.defined[i] = false;
-        }
-
-        return;
         
     }
 

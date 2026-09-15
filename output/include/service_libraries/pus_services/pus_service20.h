@@ -38,10 +38,6 @@ typedef struct {
     PS20ExecTCReqStatusUpdate exec_tc_req_status_update;
 } CPUSService20;
 
-__status_int32_t CPUSService20__exec20_1TC(const __termina_event_t * const __ev, CPUSService20 * const self);
-
-__status_int32_t CPUSService20__exec20_3TC(const __termina_event_t * const __ev, CPUSService20 * const self);
-
 void CPUSService20__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 
 #endif

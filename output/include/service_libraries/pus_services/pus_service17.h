@@ -35,8 +35,6 @@ typedef struct {
     PS17ExecTCReqStatusUpdate exec_tc_req_status_update;
 } CPUSService17;
 
-__status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * const __ev, CPUSService17 * const self);
-
 void CPUSService17__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 
 #endif

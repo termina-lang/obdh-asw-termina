@@ -4,7 +4,7 @@
 DataPoolItemType sys_data_pool_get_item_type(uint16_t PID) {
     
     #line 52 "src/resources/system_data_pool.fin"
-    DataPoolItemType sdp_type = { .__variant = DataPoolItemType__NoValidPID };
+    DataPoolItemType sdp_type;
 
     #line 54 "src/resources/system_data_pool.fin"
     if ((size_t)PID < 11U) {

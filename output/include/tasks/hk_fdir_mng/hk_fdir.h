@@ -41,7 +41,7 @@ typedef struct {
     } pus_service_5;
     struct {
         void * __that;
-        void (* do_monitoring)(const __termina_event_t * const, void * const, uint16_t, uint16_t * const, FaultInfo * const, _Bool * const);
+        void (* do_monitoring)(const __termina_event_t * const, void * const, uint16_t, uint16_t * const, FaultInfo * const, _Bool * const, __status_int32_t * const);
         void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const);
         void (* is_PMON_enabled)(const __termina_event_t * const, void * const, size_t, _Bool * const);
     } pus_service_12;

@@ -77,3 +77,5 @@ dist-clean: clean
 	@$(RM) -rf $(TARGET_DIR_NAME)
 
 -include $(DEPS)
+
+include $(TERMINA_OSAL_DIR)/shared/shared.mk

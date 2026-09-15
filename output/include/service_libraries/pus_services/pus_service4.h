@@ -42,33 +42,7 @@ typedef struct {
     PS4ExecTCReqStatusUpdate exec_tc_req_status_update;
 } CPUSService4;
 
-uint32_t CPUSService4__SDP_get_mean(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t pid_index);
-
-_Bool CPUSService4__SDP_param_higher_than_limit(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t pid_index);
-
-_Bool CPUSService4__SDP_param_lower_than_limit(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t pid_index);
-
-__status_int32_t CPUSService4__get_PID_defined_stats_index(const __termina_event_t * const __ev, CPUSService4 * const self);
-
-IndexStatus CPUSService4__get_free_index(const __termina_event_t * const __ev, const CPUSService4 * const self);
-
-__status_int32_t CPUSService4__add_PID_stats(const __termina_event_t * const __ev, CPUSService4 * const self);
-
-__status_int32_t CPUSService4__delete_PID_stats(const __termina_event_t * const __ev, CPUSService4 * const self);
-
-void CPUSService4__delete_all_stats(const __termina_event_t * const __ev, CPUSService4 * const self);
-
-__status_int32_t CPUSService4__exec4_1TC(const __termina_event_t * const __ev, CPUSService4 * const self);
-
-__status_int32_t CPUSService4__exec4_6TC(const __termina_event_t * const __ev, CPUSService4 * const self);
-
-__status_int32_t CPUSService4__exec4_7TC(const __termina_event_t * const __ev, CPUSService4 * const self);
-
 void CPUSService4__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
-
-uint32_t CPUSService4__get_data_pool_item(const __termina_event_t * const __ev, const CPUSService4 * const self, uint16_t PID);
-
-_Bool CPUSService4__is_stats_index_defined(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t index);
 
 void CPUSService4__startup(const __termina_event_t * const __ev, void * const __this);
 

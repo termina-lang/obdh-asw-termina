@@ -11,11 +11,10 @@
 function rand_r (mutseed : &mut u32) -> u32 {
     
     var next : u32 = *mutseed;
-    var result : u32 = 0 : u32;
 
     next = next * 1103515245 : u32;
     next = next + 12345 : u32;
-    result = (next / 65536 : u32) % 2048 : u32;
+    var result : u32 = (next / 65536 : u32) % 2048 : u32;
 
     next = next * 1103515245 : u32;
     next = next + 12345 : u32;
