@@ -26,7 +26,7 @@ static __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const 
 
     } else
     #line 100 "src/service_libraries/pus_services/pus_service5.fin"
-    if (index > 4U) {
+    if (index == 0U) {
         
         #line 102 "src/service_libraries/pus_services/pus_service5.fin"
         self->pus_service_1.send_tm_1_4_EvID_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.EvID, &status);
@@ -77,7 +77,7 @@ static __status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const 
 
     } else
     #line 148 "src/service_libraries/pus_services/pus_service5.fin"
-    if (index > 4U) {
+    if (index == 0U) {
         
         #line 150 "src/service_libraries/pus_services/pus_service5.fin"
         self->pus_service_1.send_tm_1_4_EvID_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.EvID, &status);
@@ -237,7 +237,7 @@ static _Bool CPUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev
     uint8_t offset = get_Ev_ID_enable_config_offset(Ev_ID);
 
     #line 68 "src/service_libraries/pus_services/pus_service5.fin"
-    if (index <= 4U) {
+    if (index != 0U) {
         
         #line 70 "src/service_libraries/pus_services/pus_service5.fin"
         size_t config_array_index = index - 1U;

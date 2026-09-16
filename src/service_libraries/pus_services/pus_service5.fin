@@ -65,7 +65,7 @@ resource class CPUSService5 provides IPUSService5 {
         var index : usize = get_Ev_ID_enable_config_index(Ev_ID);
         var offset : u8 = get_Ev_ID_enable_config_offset(Ev_ID);
 
-        if (index <= 4){
+        if (index != 0){
 
             var config_array_index : usize = index - 1; 
             if(((self->Ev_ID_enable_config[config_array_index] >> (offset-1)) & 0x01) != 0){
@@ -97,7 +97,7 @@ resource class CPUSService5 provides IPUSService5 {
                         self->exec_tc_req_status_update.packet_seq_ctrl,
                         self->exec_tc_req_status_update.N, &mut status);
             
-        } else if (index > 4) {
+        } else if (index == 0) {
 
             self->pus_service_1.send_tm_1_4_EvID_not_valid(
                         self->exec_tc_req_status_update.packet_id,
@@ -145,7 +145,7 @@ resource class CPUSService5 provides IPUSService5 {
                         self->exec_tc_req_status_update.packet_seq_ctrl,
                         self->exec_tc_req_status_update.N, &mut status);
 
-        } else if (index > 4) {
+        } else if (index == 0) {
 
             self->pus_service_1.send_tm_1_4_EvID_not_valid(
                         self->exec_tc_req_status_update.packet_id,
