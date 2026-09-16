@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service6.h"
 
-static __option_uint16_t CPUSService6__check_data(const __termina_event_t * const __ev, CPUSService6 * const self);
+static uint16_t CPUSService6__check_data(const __termina_event_t * const __ev, CPUSService6 * const self);
 
 static _Bool CPUSService6__is_address_valid(const __termina_event_t * const __ev, const CPUSService6 * const self);
 
@@ -17,7 +17,7 @@ static __status_int32_t CPUSService6__exec6_5TC(const __termina_event_t * const 
 
 static __status_int32_t CPUSService6__exec6_9TC(const __termina_event_t * const __ev, CPUSService6 * const self);
 
-static __option_uint16_t CPUSService6__check_data(const __termina_event_t * const __ev, CPUSService6 * const self) {
+static uint16_t CPUSService6__check_data(const __termina_event_t * const __ev, CPUSService6 * const self) {
     
     (void)__ev;
 
@@ -39,7 +39,7 @@ static __option_uint16_t CPUSService6__check_data(const __termina_event_t * cons
     }
 
     #line 93 "src/service_libraries/pus_services/pus_service6.fin"
-    __option_uint16_t checksum = { .__variant = Some, .Some = { .__0 = cal_crc_16(data, (size_t)self->exec_tc_req_status_update.length) } };
+    uint16_t checksum = cal_crc_16(data, (size_t)self->exec_tc_req_status_update.length);
 
     #line 96 "src/service_libraries/pus_services/pus_service6.fin"
     return checksum;
@@ -346,234 +346,220 @@ static __status_int32_t CPUSService6__exec6_9TC(const __termina_event_t * const 
         self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
 
         #line 283 "src/service_libraries/pus_services/pus_service6.fin"
-        __option_uint16_t option_checksum = CPUSService6__check_data(__ev, self);
+        uint16_t checksum = CPUSService6__check_data(__ev, self);
 
-        #line 287 "src/service_libraries/pus_services/pus_service6.fin"
-        if (option_checksum.__variant == Some) {
+        #line 285 "src/service_libraries/pus_services/pus_service6.fin"
+        __option_box_t tm_handler = { .__variant = None };
+
+        #line 286 "src/service_libraries/pus_services/pus_service6.fin"
+        self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
+
+        #line 290 "src/service_libraries/pus_services/pus_service6.fin"
+        if (tm_handler.__variant == Some) {
             
-            #line 287 "src/service_libraries/pus_services/pus_service6.fin"
-            uint16_t checksum = option_checksum.Some.__0;
-
-            #line 289 "src/service_libraries/pus_services/pus_service6.fin"
-            __option_box_t tm_handler = { .__variant = None };
-
             #line 290 "src/service_libraries/pus_services/pus_service6.fin"
-            self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
+            __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+            #line 292 "src/service_libraries/pus_services/pus_service6.fin"
+            MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
+
+            #line 293 "src/service_libraries/pus_services/pus_service6.fin"
+            uint16_t tm_count = 0U;
 
             #line 294 "src/service_libraries/pus_services/pus_service6.fin"
-            if (tm_handler.__variant == Some) {
+            self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that, &tm_count);
+
+            #line 295 "src/service_libraries/pus_services/pus_service6.fin"
+            self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
+
+            #line 297 "src/service_libraries/pus_services/pus_service6.fin"
+            status = build_tm_6_10((TMHandler *)b_tm_handler.data, tm_count, current_obt, &self->exec_tc_req_status_update, checksum);
+
+            #line 299 "src/service_libraries/pus_services/pus_service6.fin"
+            if (status.__variant == Success) {
                 
-                #line 294 "src/service_libraries/pus_services/pus_service6.fin"
-                __termina_box_t b_tm_handler = tm_handler.Some.__0;
-
-                #line 296 "src/service_libraries/pus_services/pus_service6.fin"
-                MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
-
-                #line 297 "src/service_libraries/pus_services/pus_service6.fin"
-                uint16_t tm_count = 0U;
-
-                #line 298 "src/service_libraries/pus_services/pus_service6.fin"
-                self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that, &tm_count);
-
-                #line 299 "src/service_libraries/pus_services/pus_service6.fin"
-                self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
-
-                #line 301 "src/service_libraries/pus_services/pus_service6.fin"
-                status = build_tm_6_10((TMHandler *)b_tm_handler.data, tm_count, current_obt, &self->exec_tc_req_status_update, checksum);
-
-                #line 303 "src/service_libraries/pus_services/pus_service6.fin"
-                if (status.__variant == Success) {
-                    
-                    #line 304 "src/service_libraries/pus_services/pus_service6.fin"
-                    self->tm_channel.send_tm(__ev, self->tm_channel.__that, b_tm_handler, &status);
-
-                } else
-                {
-                    
-                    #line 306 "src/service_libraries/pus_services/pus_service6.fin"
-                    self->tm_handler_pool.free(__ev, self->tm_handler_pool.__that, b_tm_handler);
-
-                }
-
-                #line 309 "src/service_libraries/pus_services/pus_service6.fin"
-                if (status.__variant == Success) {
-                    
-                    #line 311 "src/service_libraries/pus_services/pus_service6.fin"
-                    self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
-
-                }
+                #line 300 "src/service_libraries/pus_services/pus_service6.fin"
+                self->tm_channel.send_tm(__ev, self->tm_channel.__that, b_tm_handler, &status);
 
             } else
             {
                 
-                #line 322 "src/service_libraries/pus_services/pus_service6.fin"
-                status.__variant = Failure;
-                #line 322 "src/service_libraries/pus_services/pus_service6.fin"
-                status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+                #line 302 "src/service_libraries/pus_services/pus_service6.fin"
+                self->tm_handler_pool.free(__ev, self->tm_handler_pool.__that, b_tm_handler);
+
+            }
+
+            #line 305 "src/service_libraries/pus_services/pus_service6.fin"
+            if (status.__variant == Success) {
+                
+                #line 307 "src/service_libraries/pus_services/pus_service6.fin"
+                self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
 
             }
 
         } else
         {
             
-            #line 328 "src/service_libraries/pus_services/pus_service6.fin"
-            self->pus_service_1.send_tm_1_8_mem_access_error(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.mem_id, &status);
+            #line 318 "src/service_libraries/pus_services/pus_service6.fin"
+            status.__variant = Failure;
+            #line 318 "src/service_libraries/pus_services/pus_service6.fin"
+            status.Failure.__0 = TM_POOL_ALLOC_FAILURE;
 
         }
 
     }
 
-    #line 340 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 324 "src/service_libraries/pus_services/pus_service6.fin"
     return status;
 
 }
 
 void CPUSService6__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
     
-    #line 344 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 328 "src/service_libraries/pus_services/pus_service6.fin"
     CPUSService6 * self = (CPUSService6 *)__this;
 
-    #line 344 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 328 "src/service_libraries/pus_services/pus_service6.fin"
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
-    #line 346 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 330 "src/service_libraries/pus_services/pus_service6.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
 
-    #line 348 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 332 "src/service_libraries/pus_services/pus_service6.fin"
     self->exec_tc_req_status_update.packet_id = tc_handler->packet_header.packet_id;
 
-    #line 349 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 333 "src/service_libraries/pus_services/pus_service6.fin"
     self->exec_tc_req_status_update.packet_seq_ctrl = tc_handler->packet_header.packet_seq_ctrl;
 
-    #line 350 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 334 "src/service_libraries/pus_services/pus_service6.fin"
     self->exec_tc_req_status_update.flags_ack = tc_handler->df_header.flag_ver_ack;
 
-    #line 351 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 335 "src/service_libraries/pus_services/pus_service6.fin"
     self->exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
-    #line 353 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 337 "src/service_libraries/pus_services/pus_service6.fin"
     __status_int32_t status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.mem_id);
 
-    #line 355 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 339 "src/service_libraries/pus_services/pus_service6.fin"
     if (status.__variant == Success) {
         
-        #line 356 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 340 "src/service_libraries/pus_services/pus_service6.fin"
         status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.N);
 
     }
 
-    #line 359 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 343 "src/service_libraries/pus_services/pus_service6.fin"
     if (status.__variant == Success) {
         
-        #line 360 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 344 "src/service_libraries/pus_services/pus_service6.fin"
         status = tc_handler_get_u32_appdata_field(tc_handler, &self->exec_tc_req_status_update.address);
 
     }
 
-    #line 363 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 347 "src/service_libraries/pus_services/pus_service6.fin"
     if (status.__variant == Success) {
         
-        #line 364 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 348 "src/service_libraries/pus_services/pus_service6.fin"
         status = tc_handler_get_u16_appdata_field(tc_handler, &self->exec_tc_req_status_update.length);
 
     }
 
-    #line 367 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 351 "src/service_libraries/pus_services/pus_service6.fin"
     if (status.__variant == Success && subtype == 2U) {
         
-        #line 368 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 352 "src/service_libraries/pus_services/pus_service6.fin"
         for (size_t j = 0U; j < max_num_of_bytes_memory_load && (j < (size_t)self->exec_tc_req_status_update.length && status.__variant == Success); j = j + 1U) {
             
-            #line 369 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 353 "src/service_libraries/pus_services/pus_service6.fin"
             status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.data[__termina_array__index(256U, j)]);
 
         }
 
     }
 
-    #line 373 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 357 "src/service_libraries/pus_services/pus_service6.fin"
     if (status.__variant == Success) {
         
-        #line 375 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 359 "src/service_libraries/pus_services/pus_service6.fin"
         if (subtype == 2U) {
             
-            #line 377 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 361 "src/service_libraries/pus_services/pus_service6.fin"
             status = CPUSService6__exec6_2TC(__ev, self);
 
         } else
-        #line 379 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 363 "src/service_libraries/pus_services/pus_service6.fin"
         if (subtype == 5U) {
             
-            #line 381 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 365 "src/service_libraries/pus_services/pus_service6.fin"
             status = CPUSService6__exec6_5TC(__ev, self);
 
         } else
-        #line 383 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 367 "src/service_libraries/pus_services/pus_service6.fin"
         if (subtype == 9U) {
             
-            #line 385 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 369 "src/service_libraries/pus_services/pus_service6.fin"
             status = CPUSService6__exec6_9TC(__ev, self);
 
         } else
         {
             
-            #line 389 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 373 "src/service_libraries/pus_services/pus_service6.fin"
             status.__variant = Failure;
-            #line 389 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 373 "src/service_libraries/pus_services/pus_service6.fin"
             status.Failure.__0 = ACCEPTANCE_ERROR;
 
         }
 
     }
 
-    #line 396 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 380 "src/service_libraries/pus_services/pus_service6.fin"
     if (status.__variant == Success) {
         
-        #line 398 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 382 "src/service_libraries/pus_services/pus_service6.fin"
         (*action_status).__variant = Success;
 
     } else
     {
         
-        #line 401 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 385 "src/service_libraries/pus_services/pus_service6.fin"
         int32_t error_code = status.Failure.__0;
 
-        #line 403 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 387 "src/service_libraries/pus_services/pus_service6.fin"
         if (error_code == ACCEPTANCE_ERROR) {
             
-            #line 405 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 389 "src/service_libraries/pus_services/pus_service6.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
-        #line 410 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 394 "src/service_libraries/pus_services/pus_service6.fin"
         if (error_code == BUILD_TM_ERROR) {
             
-            #line 412 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 396 "src/service_libraries/pus_services/pus_service6.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
-        #line 417 "src/service_libraries/pus_services/pus_service6.fin"
+        #line 401 "src/service_libraries/pus_services/pus_service6.fin"
         if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
             
-            #line 419 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 403 "src/service_libraries/pus_services/pus_service6.fin"
             self->pus_service_1.send_tm_1_4_short_pack_length(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.tc_num_bytes, action_status);
 
         } else
         {
             
-            #line 427 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 411 "src/service_libraries/pus_services/pus_service6.fin"
             (*action_status).__variant = Failure;
-            #line 427 "src/service_libraries/pus_services/pus_service6.fin"
+            #line 411 "src/service_libraries/pus_services/pus_service6.fin"
             (*action_status).Failure.__0 = error_code;
 
         }
 
     }
 
-    #line 434 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 418 "src/service_libraries/pus_services/pus_service6.fin"
     __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
 
-    #line 434 "src/service_libraries/pus_services/pus_service6.fin"
+    #line 418 "src/service_libraries/pus_services/pus_service6.fin"
     return;
 
 }
