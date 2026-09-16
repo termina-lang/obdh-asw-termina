@@ -146,44 +146,44 @@ resource class CPUSService12 provides IPUSService12 {
         return next_status;
     }
 
-    method check_PID_status_limits_monitoring(&self)-> CheckLimitsStatus{
+    method check_PID_status_limits_monitoring(&self)-> CheckLimitsResult{
 
         var current_monitor_definition : ParamLimitCheckDefinition = self->get_limits_monitoring_definition();
-        var check_status: CheckLimitsStatus;
+        var check_status: CheckLimitsResult;
 
         if(self->PID_is_above_upper_limit(&current_monitor_definition)){
 
-            check_status = CheckLimitsStatus::MonitorAboveHighLimit;
+            check_status = CheckLimitsResult::MonitorAboveHighLimit;
 
         }
         else if(self->PID_is_below_lower_limit(&current_monitor_definition)){
 
-            check_status = CheckLimitsStatus::MonitorBelowLowLimit;
+            check_status = CheckLimitsResult::MonitorBelowLowLimit;
 
         }
         else {
 
             //monitor within limits
-            check_status = CheckLimitsStatus::MonitorWithinLimits;
+            check_status = CheckLimitsResult::MonitorWithinLimits;
         }
 
         return check_status;
 
     }
 
-    method check_PID_status_exp_val_monitoring(&self)-> CheckValueStatus {
+    method check_PID_status_exp_val_monitoring(&self)-> CheckValueResult {
 
         var current_monitor_definition : ParamValueCheckDefinition = self->get_expected_value_monitoring_definition();
-        var check_status : CheckValueStatus;
+        var check_status : CheckValueResult;
 
         if(self->PID_has_expected_masked_value(&current_monitor_definition)){
 
-            check_status = CheckValueStatus::MonitorValueExpected;
+            check_status = CheckValueResult::MonitorValueExpected;
 
         }
         else {
 
-            check_status = CheckValueStatus::MonitorValueUnexpected;
+            check_status = CheckValueResult::MonitorValueUnexpected;
 
         }
 
@@ -297,8 +297,8 @@ resource class CPUSService12 provides IPUSService12 {
                                                 PID_mask = 0,
                                                 PID_expected_value = 0};
 
-        let check_status : CheckValueStatus = CheckValueStatus::MonitorValueUnexpected;
-        self->do_monitoring_req_status_update.new_status = CheckState::ParamValueStatus(check_status);
+        let check_status : CheckValueResult = CheckValueResult::MonitorValueUnexpected;
+        self->do_monitoring_req_status_update.new_status = CheckState::ParamValueStatus(Some(check_status));
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
 
         match(self->param_mon_config_table[current_PMON_ID].definition){
@@ -349,8 +349,8 @@ resource class CPUSService12 provides IPUSService12 {
 
         var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
-        let check_status : CheckValueStatus = CheckValueStatus::MonitorValueExpected;
-        self->do_monitoring_req_status_update.new_status = CheckState::ParamValueStatus(check_status); 
+        let check_status : CheckValueResult = CheckValueResult::MonitorValueExpected;
+        self->do_monitoring_req_status_update.new_status = CheckState::ParamValueStatus(Some(check_status)); 
 
         if(self->manage_new_status()){
 
@@ -368,8 +368,8 @@ resource class CPUSService12 provides IPUSService12 {
                                                 PID_value = 0,
                                                 PID_limit = 0};
 
-        let check_status : CheckLimitsStatus = CheckLimitsStatus:: MonitorAboveHighLimit;
-        self->do_monitoring_req_status_update.new_status = CheckState::ParamLimitStatus(check_status);
+        let check_status : CheckLimitsResult = CheckLimitsResult::MonitorAboveHighLimit;
+        self->do_monitoring_req_status_update.new_status = CheckState::ParamLimitStatus(Some(check_status));
 
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
 
@@ -423,8 +423,8 @@ resource class CPUSService12 provides IPUSService12 {
                                                 PID_value = 0,
                                                 PID_limit = 0};
 
-        let check_status : CheckLimitsStatus = CheckLimitsStatus:: MonitorBelowLowLimit;
-        self->do_monitoring_req_status_update.new_status = CheckState::ParamLimitStatus(check_status);
+        let check_status : CheckLimitsResult = CheckLimitsResult::MonitorBelowLowLimit;
+        self->do_monitoring_req_status_update.new_status = CheckState::ParamLimitStatus(Some(check_status));
 
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
 
@@ -473,8 +473,8 @@ resource class CPUSService12 provides IPUSService12 {
 
         var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
-        var within_limits : CheckLimitsStatus = CheckLimitsStatus::MonitorWithinLimits;
-        var new_status : CheckState = CheckState::ParamLimitStatus(within_limits);
+        var within_limits : CheckLimitsResult = CheckLimitsResult::MonitorWithinLimits;
+        var new_status : CheckState = CheckState::ParamLimitStatus(Some(within_limits));
         self->do_monitoring_req_status_update.new_status = new_status;
         let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize;
         let current_status : CheckState = self->param_mon_config_table[current_PMON_ID].current_state;
@@ -671,7 +671,7 @@ resource class CPUSService12 provides IPUSService12 {
                 } 
                 case DoLimitsMonitoring =>{
 
-                    var limits_monitoring_status : CheckLimitsStatus = self->check_PID_status_limits_monitoring(); 
+                    var limits_monitoring_status : CheckLimitsResult = self->check_PID_status_limits_monitoring(); 
 
                     match limits_monitoring_status {
                         case MonitorAboveHighLimit => {
@@ -687,16 +687,13 @@ resource class CPUSService12 provides IPUSService12 {
 
                             self->do_monitoring_req_status = self->manage_param_within_limits(); //method
                         }
-                        case MonitorUnchecked => {
-
-                        }
 
                     }
                         
                 }
                 case DoExpectedValueMonitoring => {
 
-                    var exp_value_monitoring_status: CheckValueStatus = self->check_PID_status_exp_val_monitoring(); //viewer
+                    var exp_value_monitoring_status: CheckValueResult = self->check_PID_status_exp_val_monitoring(); //viewer
 
                     match exp_value_monitoring_status {
                         case MonitorValueUnexpected =>{
@@ -707,10 +704,6 @@ resource class CPUSService12 provides IPUSService12 {
                             self->do_monitoring_req_status = self->manage_expected_value(); //method
 
                         }
-                        case MonitorUnchecked => {
-
-                        }
-                        
 
                     }
                 }
@@ -758,16 +751,13 @@ resource class CPUSService12 provides IPUSService12 {
         match (self->param_mon_config_table[valid_PMONID].type) {
 
             case ExpectedValue => {
-                var monitor_unchecked : CheckValueStatus = CheckValueStatus::MonitorUnchecked;
-                self->param_mon_config_table[valid_PMONID].current_state = CheckState::ParamValueStatus(monitor_unchecked);
+                self->param_mon_config_table[valid_PMONID].current_state = CheckState::ParamValueStatus(None);
             }
             case Limits => {
-                var monitor_unchecked : CheckLimitsStatus = CheckLimitsStatus::MonitorUnchecked;
-                self->param_mon_config_table[valid_PMONID].current_state = CheckState::ParamLimitStatus(monitor_unchecked);
+                self->param_mon_config_table[valid_PMONID].current_state = CheckState::ParamLimitStatus(None);
             }
             case Delta => {
-                var monitor_unchecked : CheckDeltaStatus = CheckDeltaStatus::MonitorUnchecked;
-                self->param_mon_config_table[valid_PMONID].current_state = CheckState::ParamDeltaStatus(monitor_unchecked);
+                self->param_mon_config_table[valid_PMONID].current_state = CheckState::ParamDeltaStatus(None);
             }
             case Free => {
                 //Do nothing
@@ -922,19 +912,16 @@ resource class CPUSService12 provides IPUSService12 {
 
                 case ExpectedValue => {
 
-                    var status : CheckValueStatus = CheckValueStatus::MonitorUnchecked;
-                    (self->param_mon_config_table)[PMONID].current_state = CheckState::ParamValueStatus(status);
+                    (self->param_mon_config_table)[PMONID].current_state = CheckState::ParamValueStatus(None);
                 }
                 case Limits => {
 
-                    var status : CheckLimitsStatus = CheckLimitsStatus::MonitorUnchecked;
-                    (self->param_mon_config_table)[PMONID].current_state = CheckState::ParamLimitStatus(status);
+                    (self->param_mon_config_table)[PMONID].current_state = CheckState::ParamLimitStatus(None);
 
                 }
                 case Delta => { 
 
-                    var status : CheckDeltaStatus = CheckDeltaStatus::MonitorUnchecked;
-                    (self->param_mon_config_table)[PMONID].current_state = CheckState::ParamDeltaStatus(status);
+                    (self->param_mon_config_table)[PMONID].current_state = CheckState::ParamDeltaStatus(None);
 
                 }
                 case Free => {

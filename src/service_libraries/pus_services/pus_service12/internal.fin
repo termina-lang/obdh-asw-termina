@@ -45,31 +45,33 @@ enum MonitorDefinition {
     Unselected
 };
 
-enum CheckValueStatus {
-    MonitorUnchecked, //1
+// The outcome of running a check. A check that has not run yet is not one of
+// these, it is the absence of one, which is why the state below wraps them in
+// an Option: a monitor is either unchecked or holds one of these outcomes.
+enum CheckValueResult {
     MonitorValueUnexpected, //2
     MonitorValueExpected  //3
 };
 
-enum CheckLimitsStatus {
-    MonitorUnchecked,  //4
+enum CheckLimitsResult {
     MonitorAboveHighLimit,  //5
     MonitorBelowLowLimit,  //6
     MonitorWithinLimits  //7
 };
 
-enum CheckDeltaStatus {
-    MonitorUnchecked,  //8
+enum CheckDeltaResult {
     MonitorDeltaLow,  //9
     MonitorDeltaHigh,  //10
     MonitorDeltaWithin  //11
 };
 
 
+// None is the monitor that has not been checked yet, and carries the index the
+// MonitorUnchecked variant used to carry: 1, 4 and 8.
 enum CheckState {
-    ParamValueStatus(CheckValueStatus),
-    ParamLimitStatus(CheckLimitsStatus),
-    ParamDeltaStatus(CheckDeltaStatus),
+    ParamValueStatus(Option<CheckValueResult>),
+    ParamLimitStatus(Option<CheckLimitsResult>),
+    ParamDeltaStatus(Option<CheckDeltaResult>),
     Unselected //0
 };
 
@@ -198,14 +200,20 @@ function get_check_status_index (status : CheckState) -> u8 {
 
             match param_status {
 
-                case MonitorUnchecked => {
+                case None => {
                     index = 1;
                 }
-                case MonitorValueUnexpected => {
-                    index = 2;
-                }
-                case MonitorValueExpected => {
-                    index = 3;
+                case Some(result) => {
+
+                    match result {
+
+                        case MonitorValueUnexpected => {
+                            index = 2;
+                        }
+                        case MonitorValueExpected => {
+                            index = 3;
+                        }
+                    }
                 }
             }
 
@@ -214,17 +222,23 @@ function get_check_status_index (status : CheckState) -> u8 {
 
             match limit_status {
 
-                case MonitorUnchecked => {
+                case None => {
                     index = 4;
                 }
-                case MonitorAboveHighLimit => {
-                    index = 5;
-                }
-                case MonitorBelowLowLimit => {
-                    index = 6;
-                }
-                case MonitorWithinLimits => {
-                    index = 7;
+                case Some(result) => {
+
+                    match result {
+
+                        case MonitorAboveHighLimit => {
+                            index = 5;
+                        }
+                        case MonitorBelowLowLimit => {
+                            index = 6;
+                        }
+                        case MonitorWithinLimits => {
+                            index = 7;
+                        }
+                    }
                 }
             }
 
@@ -233,17 +247,23 @@ function get_check_status_index (status : CheckState) -> u8 {
 
             match delta_status {
 
-                case MonitorUnchecked => {
+                case None => {
                     index = 8;
                 }
-                case MonitorDeltaLow => {
-                    index = 9;
-                }
-                case MonitorDeltaHigh => {
-                    index = 10;
-                }
-                case MonitorDeltaWithin => {
-                    index = 11;
+                case Some(result) => {
+
+                    match result {
+
+                        case MonitorDeltaLow => {
+                            index = 9;
+                        }
+                        case MonitorDeltaHigh => {
+                            index = 10;
+                        }
+                        case MonitorDeltaWithin => {
+                            index = 11;
+                        }
+                    }
                 }
             }
 

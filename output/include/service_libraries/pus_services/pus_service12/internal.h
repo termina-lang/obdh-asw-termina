@@ -69,36 +69,60 @@ typedef struct {
 } MonitorDefinition;
 
 typedef enum {
-    CheckValueStatus__MonitorUnchecked,
-    CheckValueStatus__MonitorValueUnexpected,
-    CheckValueStatus__MonitorValueExpected
-} __enum_CheckValueStatus_t;
+    CheckValueResult__MonitorValueUnexpected,
+    CheckValueResult__MonitorValueExpected
+} __enum_CheckValueResult_t;
 
 typedef struct {
-    __enum_CheckValueStatus_t __variant;
-} CheckValueStatus;
+    __enum_CheckValueResult_t __variant;
+} CheckValueResult;
+
+typedef struct {
+    CheckValueResult __0;
+} __option_CheckValueResult__Some_params_t;
+
+typedef struct {
+    __option_CheckValueResult__Some_params_t Some;
+    __enum_option_t __variant;
+} __option_CheckValueResult_t;
 
 typedef enum {
-    CheckLimitsStatus__MonitorUnchecked,
-    CheckLimitsStatus__MonitorAboveHighLimit,
-    CheckLimitsStatus__MonitorBelowLowLimit,
-    CheckLimitsStatus__MonitorWithinLimits
-} __enum_CheckLimitsStatus_t;
+    CheckLimitsResult__MonitorAboveHighLimit,
+    CheckLimitsResult__MonitorBelowLowLimit,
+    CheckLimitsResult__MonitorWithinLimits
+} __enum_CheckLimitsResult_t;
 
 typedef struct {
-    __enum_CheckLimitsStatus_t __variant;
-} CheckLimitsStatus;
+    __enum_CheckLimitsResult_t __variant;
+} CheckLimitsResult;
+
+typedef struct {
+    CheckLimitsResult __0;
+} __option_CheckLimitsResult__Some_params_t;
+
+typedef struct {
+    __option_CheckLimitsResult__Some_params_t Some;
+    __enum_option_t __variant;
+} __option_CheckLimitsResult_t;
 
 typedef enum {
-    CheckDeltaStatus__MonitorUnchecked,
-    CheckDeltaStatus__MonitorDeltaLow,
-    CheckDeltaStatus__MonitorDeltaHigh,
-    CheckDeltaStatus__MonitorDeltaWithin
-} __enum_CheckDeltaStatus_t;
+    CheckDeltaResult__MonitorDeltaLow,
+    CheckDeltaResult__MonitorDeltaHigh,
+    CheckDeltaResult__MonitorDeltaWithin
+} __enum_CheckDeltaResult_t;
 
 typedef struct {
-    __enum_CheckDeltaStatus_t __variant;
-} CheckDeltaStatus;
+    __enum_CheckDeltaResult_t __variant;
+} CheckDeltaResult;
+
+typedef struct {
+    CheckDeltaResult __0;
+} __option_CheckDeltaResult__Some_params_t;
+
+typedef struct {
+    __option_CheckDeltaResult__Some_params_t Some;
+    __enum_option_t __variant;
+} __option_CheckDeltaResult_t;
 
 typedef enum {
     CheckState__ParamValueStatus,
@@ -108,15 +132,15 @@ typedef enum {
 } __enum_CheckState_t;
 
 typedef struct {
-    CheckValueStatus __0;
+    __option_CheckValueResult_t __0;
 } __enum_CheckState__ParamValueStatus_params_t;
 
 typedef struct {
-    CheckLimitsStatus __0;
+    __option_CheckLimitsResult_t __0;
 } __enum_CheckState__ParamLimitStatus_params_t;
 
 typedef struct {
-    CheckDeltaStatus __0;
+    __option_CheckDeltaResult_t __0;
 } __enum_CheckState__ParamDeltaStatus_params_t;
 
 typedef struct {
