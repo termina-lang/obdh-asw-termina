@@ -3,7 +3,7 @@
 
 const uint16_t APID = 0x32CU;
 
-const uint16_t destinationID = 0x78U;
+const uint16_t DESTINATION_ID = 0x78U;
 
 const size_t tm_app_data_offset = 19U;
 
@@ -125,7 +125,7 @@ void tm_handler_build_df_header(TMHandler * const tm_handler, uint8_t tm_type, u
     tm_handler->df_header.msg_type_counter = 0U;
 
     #line 165 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->df_header.destinationID = destinationID;
+    tm_handler->df_header.destinationID = DESTINATION_ID;
 
     #line 166 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->df_header.obt_secs = current_obt.seconds;

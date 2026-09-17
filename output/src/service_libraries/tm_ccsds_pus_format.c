@@ -15,10 +15,10 @@ uint16_t ccsds_pus_tm_build_packet_seq_ctrl(uint16_t sequence_flags, uint16_t tm
 
 }
 
-uint32_t ccsds_pus_tm_build_df_header(uint8_t service_type, uint8_t service_subtype, uint8_t destinationID) {
+uint32_t ccsds_pus_tm_build_df_header(uint8_t service_type, uint8_t service_subtype, uint8_t destination_id) {
     
     #line 74 "src/service_libraries/tm_ccsds_pus_format.fin"
-    return (uint32_t)((uint32_t)(0x10000000U | (uint32_t)((uint32_t)service_type << 16U)) | (uint32_t)((uint32_t)service_subtype << 8U)) | (uint32_t)destinationID;
+    return (uint32_t)((uint32_t)(0x10000000U | (uint32_t)((uint32_t)service_type << 16U)) | (uint32_t)((uint32_t)service_subtype << 8U)) | (uint32_t)destination_id;
 
 }
 

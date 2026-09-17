@@ -32,7 +32,7 @@ const APID : u16 = 0x32C;
  *
  * Used to indicate the recipient or logical destination of the TM packet.
  */
-const destinationID : u16 = 0x78;
+const DESTINATION_ID : u16 = 0x78;
 
 /**
  * @brief Offset in the TM byte array where application data starts
@@ -162,7 +162,7 @@ function tm_handler_build_df_header (tm_handler : &mut TMHandler, tm_type : u8, 
     tm_handler->df_header.type = tm_type;
     tm_handler->df_header.subtype = tm_subtype;
     tm_handler->df_header.msg_type_counter = 0; 
-    tm_handler->df_header.destinationID = destinationID;
+    tm_handler->df_header.destinationID = DESTINATION_ID;
     tm_handler->df_header.obt_secs = current_obt.seconds;
     tm_handler->df_header.obt_finetime = current_obt.finetime;
     

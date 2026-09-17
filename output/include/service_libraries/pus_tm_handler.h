@@ -19,7 +19,7 @@ typedef struct {
 
 extern const uint16_t APID;
 
-extern const uint16_t destinationID;
+extern const uint16_t DESTINATION_ID;
 
 extern const size_t tm_app_data_offset;
 
