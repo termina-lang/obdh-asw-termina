@@ -19,15 +19,15 @@ typedef struct {
     __termina_id_t __task_msg_queue_id;
     struct {
         void * __that;
-        void (* send_tm_1_4_error_in_acceptance)(const __termina_event_t * const, void * const, uint16_t, uint16_t, __status_int32_t * const);
+        void (* send_tm_1_4_error_in_acceptance)(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, __status_int32_t * const status);
     } pus_service_1;
     struct {
         void * __that;
-        void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const);
+        void (* exec_tc)(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
     } pus_service_6;
     struct {
         void * __that;
-        void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const);
+        void (* exec_tc)(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
     } pus_service_20;
     __termina_allocator_t tc_handler_pool;
     __termina_id_t bkg_message_queue_input;

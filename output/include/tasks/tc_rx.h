@@ -19,7 +19,7 @@ typedef struct {
     __termina_id_t frame_ready_input;
     struct {
         void * __that;
-        void (* dequeue)(const __termina_event_t * const, void * const, __option_uint8_t * const);
+        void (* dequeue)(const __termina_event_t * const __ev, void * const __this, __option_uint8_t * const byte);
     } tc_channel;
 } CTXRxBottomHalfTask;
 

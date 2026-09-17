@@ -22,7 +22,7 @@ typedef struct {
     __termina_resource_lock_type_t __lock_type;
     struct {
         void * __that;
-        void (* enqueue)(const __termina_event_t * const, void * const, uint8_t, CharDevIrqStatus * const);
+        void (* enqueue)(const __termina_event_t * const __ev, void * const __this, uint8_t byte, CharDevIrqStatus * const status);
     } rx_queue;
     QueueU8 uart_tx_queue;
     _Bool rem_bytes;

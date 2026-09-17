@@ -75,16 +75,16 @@ typedef struct {
     __termina_resource_lock_type_t __lock_type;
     struct {
         void * __that;
-        void (* get_current_obt)(const __termina_event_t * const, void * const, MissionOBT * const);
+        void (* get_current_obt)(const __termina_event_t * const __ev, void * const __this, MissionOBT * const current_obt);
     } obt_manager;
     struct {
         void * __that;
-        void (* get_next_tm_count)(const __termina_event_t * const, void * const, uint16_t * const);
+        void (* get_next_tm_count)(const __termina_event_t * const __ev, void * const __this, uint16_t * const count);
     } tm_counter;
     __termina_allocator_t tm_handler_pool;
     struct {
         void * __that;
-        void (* send_tm)(const __termina_event_t * const, void * const, __termina_box_t, __status_int32_t * const);
+        void (* send_tm)(const __termina_event_t * const __ev, void * const __this, __termina_box_t tm_handler, __status_int32_t * const status);
     } tm_channel;
 } CPUSService1;
 

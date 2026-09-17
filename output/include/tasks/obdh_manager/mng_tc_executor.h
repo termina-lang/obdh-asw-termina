@@ -17,25 +17,25 @@ typedef struct {
     __termina_resource_lock_type_t __lock_type;
     struct {
         void * __that;
-        void (* notify_tm_1_1)(const __termina_event_t * const, void * const, uint16_t, uint16_t, uint8_t, __status_int32_t * const);
-        void (* send_tm_1_2)(const __termina_event_t * const, void * const, const TCStatus * const, const TCHandler * const, __status_int32_t * const);
-        void (* send_tm_1_4_error_in_acceptance)(const __termina_event_t * const, void * const, uint16_t, uint16_t, __status_int32_t * const);
+        void (* notify_tm_1_1)(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, uint8_t flags_ack, __status_int32_t * const status);
+        void (* send_tm_1_2)(const __termina_event_t * const __ev, void * const __this, const TCStatus * const tc_status, const TCHandler * const tc_handler, __status_int32_t * const status);
+        void (* send_tm_1_4_error_in_acceptance)(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, __status_int32_t * const status);
     } pus_service_1;
     struct {
         void * __that;
-        void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const, _Bool * const);
+        void (* exec_tc)(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status, _Bool * const reebot_flag);
     } pus_service_128;
     struct {
         void * __that;
-        void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const);
+        void (* exec_tc)(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
     } pus_service_9;
     struct {
         void * __that;
-        void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const);
+        void (* exec_tc)(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
     } pus_service_2;
     struct {
         void * __that;
-        void (* exec_tc)(const __termina_event_t * const, void * const, TCHandler * const, __status_int32_t * const);
+        void (* exec_tc)(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
     } pus_service_17;
 } CManagerTExecutor;
 

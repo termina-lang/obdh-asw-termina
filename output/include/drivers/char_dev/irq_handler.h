@@ -12,7 +12,7 @@ typedef struct {
     __termina_out_port_t frame_ready_output;
     struct {
         void * __that;
-        void (* notify_irq)(const __termina_event_t * const, void * const, CharDevIrqStatus * const);
+        void (* notify_irq)(const __termina_event_t * const __ev, void * const __this, CharDevIrqStatus * const result);
     } uart_drv;
 } CCharDevIRQHandler;
 

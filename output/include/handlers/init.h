@@ -21,11 +21,11 @@ typedef struct {
     _Atomic uint32_t * system_data_pool_u32;
     struct {
         void * __that;
-        void (* init_gpio)(const __termina_event_t * const, void * const);
+        void (* init_gpio)(const __termina_event_t * const __ev, void * const __this);
     } gpio_driver;
     struct {
         void * __that;
-        void (* initialize)(const __termina_event_t * const, void * const);
+        void (* initialize)(const __termina_event_t * const __ev, void * const __this);
     } uart_drv;
 } CInitHandler;
 

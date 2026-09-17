@@ -14,7 +14,7 @@ typedef struct {
     __termina_allocator_t tm_handler_pool;
     struct {
         void * __that;
-        void (* send)(const __termina_event_t * const, void * const, uint8_t, __status_int32_t * const);
+        void (* send)(const __termina_event_t * const __ev, void * const __this, uint8_t output_byte, __status_int32_t * const status);
     } char_dev;
 } CTMChannel;
 
