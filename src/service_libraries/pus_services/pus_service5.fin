@@ -62,12 +62,12 @@ resource class CPUSService5 provides IPUSService5 {
     method is_Ev_ID_enabled(&self, Ev_ID : u16) -> bool {
 
         var enabled : bool = false;
-        var index : usize = get_Ev_ID_enable_config_index(Ev_ID);
+        var config_slot : usize = get_Ev_ID_enable_config_index(Ev_ID);
         var offset : u8 = get_Ev_ID_enable_config_offset(Ev_ID);
 
-        if (index != 0){
+        if (config_slot != 0){
 
-            var config_array_index : usize = index - 1; 
+            var config_array_index : usize = config_slot - 1; 
             if(((self->Ev_ID_enable_config[config_array_index] >> (offset-1)) & 0x01) != 0){
                 enabled = true;
             }
@@ -87,7 +87,7 @@ resource class CPUSService5 provides IPUSService5 {
 
         var status : Status<i32> = Success;
 
-        var index: usize = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
+        var config_slot: usize = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
         var offset : u8 = get_Ev_ID_enable_config_offset(self->exec_tc_req_status_update.EvID);
 
         if (self->exec_tc_req_status_update.N != 1) {
@@ -97,7 +97,7 @@ resource class CPUSService5 provides IPUSService5 {
                         self->exec_tc_req_status_update.packet_seq_ctrl,
                         self->exec_tc_req_status_update.N, &mut status);
             
-        } else if (index == 0) {
+        } else if (config_slot == 0) {
 
             self->pus_service_1.send_tm_1_4_EvID_not_valid(
                         self->exec_tc_req_status_update.packet_id,
@@ -115,7 +115,7 @@ resource class CPUSService5 provides IPUSService5 {
             if (status is Success) {
 
                 let mask : u32 = 0x1 << (offset - 1);
-                self->Ev_ID_enable_config[index - 1] = self->Ev_ID_enable_config[index - 1] | mask;
+                self->Ev_ID_enable_config[config_slot - 1] = self->Ev_ID_enable_config[config_slot - 1] | mask;
 
                 self->pus_service_1.notify_tm_1_7(
                             self->exec_tc_req_status_update.packet_id,
@@ -135,7 +135,7 @@ resource class CPUSService5 provides IPUSService5 {
 
         var status : Status<i32> = Success;
         
-        var index: usize = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
+        var config_slot: usize = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
         var offset : u8 = get_Ev_ID_enable_config_offset(self->exec_tc_req_status_update.EvID);
 
         if (self->exec_tc_req_status_update.N != 1) {
@@ -145,7 +145,7 @@ resource class CPUSService5 provides IPUSService5 {
                         self->exec_tc_req_status_update.packet_seq_ctrl,
                         self->exec_tc_req_status_update.N, &mut status);
 
-        } else if (index == 0) {
+        } else if (config_slot == 0) {
 
             self->pus_service_1.send_tm_1_4_EvID_not_valid(
                         self->exec_tc_req_status_update.packet_id,
@@ -164,7 +164,7 @@ resource class CPUSService5 provides IPUSService5 {
             if (status is Success) {
 
                 let mask : u32 = 0x1 << (offset - 1);
-                self->Ev_ID_enable_config[index - 1] = self->Ev_ID_enable_config[index - 1] & (0xFFFFFFFE ^ mask);
+                self->Ev_ID_enable_config[config_slot - 1] = self->Ev_ID_enable_config[config_slot - 1] & (0xFFFFFFFE ^ mask);
 
                 self->pus_service_1.notify_tm_1_7(
                             self->exec_tc_req_status_update.packet_id,

@@ -13,7 +13,7 @@ static __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const 
     __status_int32_t status = { .__variant = Success };
 
     #line 90 "src/service_libraries/pus_services/pus_service5.fin"
-    size_t index = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
+    size_t config_slot = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
 
     #line 91 "src/service_libraries/pus_services/pus_service5.fin"
     uint8_t offset = get_Ev_ID_enable_config_offset(self->exec_tc_req_status_update.EvID);
@@ -26,7 +26,7 @@ static __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const 
 
     } else
     #line 100 "src/service_libraries/pus_services/pus_service5.fin"
-    if (index == 0U) {
+    if (config_slot == 0U) {
         
         #line 102 "src/service_libraries/pus_services/pus_service5.fin"
         self->pus_service_1.send_tm_1_4_EvID_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.EvID, &status);
@@ -44,7 +44,7 @@ static __status_int32_t CPUSService5__exec5_5TC(const __termina_event_t * const 
             uint32_t mask = (uint32_t)0x1U << __termina_shift__amount(32U, (uint8_t)(offset - 1U));
 
             #line 118 "src/service_libraries/pus_services/pus_service5.fin"
-            self->Ev_ID_enable_config[__termina_array__index(4U, index - 1U)] = self->Ev_ID_enable_config[__termina_array__index(4U, index - 1U)] | mask;
+            self->Ev_ID_enable_config[__termina_array__index(4U, config_slot - 1U)] = self->Ev_ID_enable_config[__termina_array__index(4U, config_slot - 1U)] | mask;
 
             #line 120 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -64,7 +64,7 @@ static __status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const 
     __status_int32_t status = { .__variant = Success };
 
     #line 138 "src/service_libraries/pus_services/pus_service5.fin"
-    size_t index = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
+    size_t config_slot = get_Ev_ID_enable_config_index(self->exec_tc_req_status_update.EvID);
 
     #line 139 "src/service_libraries/pus_services/pus_service5.fin"
     uint8_t offset = get_Ev_ID_enable_config_offset(self->exec_tc_req_status_update.EvID);
@@ -77,7 +77,7 @@ static __status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const 
 
     } else
     #line 148 "src/service_libraries/pus_services/pus_service5.fin"
-    if (index == 0U) {
+    if (config_slot == 0U) {
         
         #line 150 "src/service_libraries/pus_services/pus_service5.fin"
         self->pus_service_1.send_tm_1_4_EvID_not_valid(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.EvID, &status);
@@ -95,7 +95,7 @@ static __status_int32_t CPUSService5__exec5_6TC(const __termina_event_t * const 
             uint32_t mask = (uint32_t)0x1U << __termina_shift__amount(32U, (uint8_t)(offset - 1U));
 
             #line 167 "src/service_libraries/pus_services/pus_service5.fin"
-            self->Ev_ID_enable_config[__termina_array__index(4U, index - 1U)] = self->Ev_ID_enable_config[__termina_array__index(4U, index - 1U)] & (uint32_t)(0xFFFFFFFEU ^ mask);
+            self->Ev_ID_enable_config[__termina_array__index(4U, config_slot - 1U)] = self->Ev_ID_enable_config[__termina_array__index(4U, config_slot - 1U)] & (uint32_t)(0xFFFFFFFEU ^ mask);
 
             #line 169 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -231,16 +231,16 @@ static _Bool CPUSService5__is_Ev_ID_enabled(const __termina_event_t * const __ev
     _Bool enabled = false;
 
     #line 65 "src/service_libraries/pus_services/pus_service5.fin"
-    size_t index = get_Ev_ID_enable_config_index(Ev_ID);
+    size_t config_slot = get_Ev_ID_enable_config_index(Ev_ID);
 
     #line 66 "src/service_libraries/pus_services/pus_service5.fin"
     uint8_t offset = get_Ev_ID_enable_config_offset(Ev_ID);
 
     #line 68 "src/service_libraries/pus_services/pus_service5.fin"
-    if (index != 0U) {
+    if (config_slot != 0U) {
         
         #line 70 "src/service_libraries/pus_services/pus_service5.fin"
-        size_t config_array_index = index - 1U;
+        size_t config_array_index = config_slot - 1U;
 
         #line 71 "src/service_libraries/pus_services/pus_service5.fin"
         if ((uint32_t)((uint32_t)(self->Ev_ID_enable_config[__termina_array__index(4U, config_array_index)] >> __termina_shift__amount(32U, (uint8_t)(offset - 1U))) & 0x1U) != 0U) {

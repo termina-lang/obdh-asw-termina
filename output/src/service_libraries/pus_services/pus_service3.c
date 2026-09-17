@@ -200,7 +200,7 @@ static __status_int32_t CPUSService3__exec3_31TC(const __termina_event_t * const
         if (opt_index.__variant == Some) {
             
             #line 184 "src/service_libraries/pus_services/pus_service3.fin"
-            size_t index = opt_index.Some.__0;
+            size_t sid_index = opt_index.Some.__0;
 
             #line 186 "src/service_libraries/pus_services/pus_service3.fin"
             self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);
@@ -209,10 +209,10 @@ static __status_int32_t CPUSService3__exec3_31TC(const __termina_event_t * const
             if (status.__variant == Success) {
                 
                 #line 194 "src/service_libraries/pus_services/pus_service3.fin"
-                self->hk_config_table[__termina_array__index(8U, index)].interval = exec_tc_req_status_update->collection_interval;
+                self->hk_config_table[__termina_array__index(8U, sid_index)].interval = exec_tc_req_status_update->collection_interval;
 
                 #line 195 "src/service_libraries/pus_services/pus_service3.fin"
-                self->hk_config_table[__termina_array__index(8U, index)].interval_control = 0U;
+                self->hk_config_table[__termina_array__index(8U, sid_index)].interval_control = 0U;
 
                 #line 197 "src/service_libraries/pus_services/pus_service3.fin"
                 self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);
@@ -255,7 +255,7 @@ static __status_int32_t CPUSService3__exec3_5TC(const __termina_event_t * const 
         if (opt_index.__variant == Some) {
             
             #line 68 "src/service_libraries/pus_services/pus_service3.fin"
-            size_t index = opt_index.Some.__0;
+            size_t sid_index = opt_index.Some.__0;
 
             #line 70 "src/service_libraries/pus_services/pus_service3.fin"
             self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);
@@ -264,10 +264,10 @@ static __status_int32_t CPUSService3__exec3_5TC(const __termina_event_t * const 
             if (status.__variant == Success) {
                 
                 #line 78 "src/service_libraries/pus_services/pus_service3.fin"
-                self->hk_config_table[__termina_array__index(8U, index)].enabled = true;
+                self->hk_config_table[__termina_array__index(8U, sid_index)].enabled = true;
 
                 #line 79 "src/service_libraries/pus_services/pus_service3.fin"
-                self->hk_config_table[__termina_array__index(8U, index)].interval_control = 0U;
+                self->hk_config_table[__termina_array__index(8U, sid_index)].interval_control = 0U;
 
                 #line 81 "src/service_libraries/pus_services/pus_service3.fin"
                 self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);
@@ -310,7 +310,7 @@ static __status_int32_t CPUSService3__exec3_6TC(const __termina_event_t * const 
         if (opt_index.__variant == Some) {
             
             #line 126 "src/service_libraries/pus_services/pus_service3.fin"
-            size_t index = opt_index.Some.__0;
+            size_t sid_index = opt_index.Some.__0;
 
             #line 128 "src/service_libraries/pus_services/pus_service3.fin"
             self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);
@@ -319,10 +319,10 @@ static __status_int32_t CPUSService3__exec3_6TC(const __termina_event_t * const 
             if (status.__variant == Success) {
                 
                 #line 136 "src/service_libraries/pus_services/pus_service3.fin"
-                self->hk_config_table[__termina_array__index(8U, index)].enabled = false;
+                self->hk_config_table[__termina_array__index(8U, sid_index)].enabled = false;
 
                 #line 137 "src/service_libraries/pus_services/pus_service3.fin"
-                self->hk_config_table[__termina_array__index(8U, index)].interval_control = 0U;
+                self->hk_config_table[__termina_array__index(8U, sid_index)].interval_control = 0U;
 
                 #line 139 "src/service_libraries/pus_services/pus_service3.fin"
                 self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);

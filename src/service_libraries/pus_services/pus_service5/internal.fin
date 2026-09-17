@@ -101,25 +101,25 @@ function is_Ev_ID_valid (evID : u16) -> bool {
 function get_Ev_ID_enable_config_index(Ev_ID : u16) -> usize {
 
     var Ev_ID_type : Ev_IDType = get_Ev_ID_type(Ev_ID);
-    var index : usize = 0; //not valid index
+    var config_slot : usize = 0; //not valid config_slot
     match Ev_ID_type {
         case Informative => {
-            index = 1;
+            config_slot = 1;
         }
         case LowSeverityAnomaly => {
-            index = 2;
+            config_slot = 2;
         }
         case MediumSeverityAnomaly => {
-            index = 3;
+            config_slot = 3;
         }
         case HighSeverityAnomaly => {
-            index = 4;
+            config_slot = 4;
         }
         case Ev_IDNotValid => {
         }
     }
 
-    return index;
+    return config_slot;
 }
 
 function get_Ev_ID_enable_config_offset(Ev_ID : u16) -> u8 {

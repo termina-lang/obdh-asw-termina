@@ -100,34 +100,34 @@ size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID) {
     Ev_IDType Ev_ID_type = get_Ev_ID_type(Ev_ID);
 
     #line 104 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    size_t index = 0U;
+    size_t config_slot = 0U;
 
     #line 106 "src/service_libraries/pus_services/pus_service5/internal.fin"
     if (Ev_ID_type.__variant == Ev_IDType__Informative) {
         
         #line 107 "src/service_libraries/pus_services/pus_service5/internal.fin"
-        index = 1U;
+        config_slot = 1U;
 
     } else
     #line 109 "src/service_libraries/pus_services/pus_service5/internal.fin"
     if (Ev_ID_type.__variant == Ev_IDType__LowSeverityAnomaly) {
         
         #line 110 "src/service_libraries/pus_services/pus_service5/internal.fin"
-        index = 2U;
+        config_slot = 2U;
 
     } else
     #line 112 "src/service_libraries/pus_services/pus_service5/internal.fin"
     if (Ev_ID_type.__variant == Ev_IDType__MediumSeverityAnomaly) {
         
         #line 113 "src/service_libraries/pus_services/pus_service5/internal.fin"
-        index = 3U;
+        config_slot = 3U;
 
     } else
     #line 115 "src/service_libraries/pus_services/pus_service5/internal.fin"
     if (Ev_ID_type.__variant == Ev_IDType__HighSeverityAnomaly) {
         
         #line 116 "src/service_libraries/pus_services/pus_service5/internal.fin"
-        index = 4U;
+        config_slot = 4U;
 
     } else
     {
@@ -136,7 +136,7 @@ size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID) {
     }
 
     #line 122 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    return index;
+    return config_slot;
 
 }
 

@@ -36,7 +36,7 @@ typedef struct {
 
 void CPUSService19__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
 
-void CPUSService19__extract_action(const __termina_event_t * const __ev, void * const __this, size_t index, TCHandler * const action_packet);
+void CPUSService19__extract_action(const __termina_event_t * const __ev, void * const __this, size_t action_index, TCHandler * const action_packet);
 
 void CPUSService19__get_pending_action_number(const __termina_event_t * const __ev, void * const __this, size_t paction_num[4U]);
 

@@ -192,7 +192,7 @@ constexpr ps12_init_tc_req_status_update : PS12ExecTCReqStatusUpdate = {
 
 function get_check_status_index (status : CheckState) -> u8 {
 
-    var index : u8 = 0;
+    var status_index : u8 = 0;
 
     match status {
 
@@ -201,17 +201,17 @@ function get_check_status_index (status : CheckState) -> u8 {
             match param_status {
 
                 case None => {
-                    index = 1;
+                    status_index = 1;
                 }
                 case Some(result) => {
 
                     match result {
 
                         case MonitorValueUnexpected => {
-                            index = 2;
+                            status_index = 2;
                         }
                         case MonitorValueExpected => {
-                            index = 3;
+                            status_index = 3;
                         }
                     }
                 }
@@ -223,20 +223,20 @@ function get_check_status_index (status : CheckState) -> u8 {
             match limit_status {
 
                 case None => {
-                    index = 4;
+                    status_index = 4;
                 }
                 case Some(result) => {
 
                     match result {
 
                         case MonitorAboveHighLimit => {
-                            index = 5;
+                            status_index = 5;
                         }
                         case MonitorBelowLowLimit => {
-                            index = 6;
+                            status_index = 6;
                         }
                         case MonitorWithinLimits => {
-                            index = 7;
+                            status_index = 7;
                         }
                     }
                 }
@@ -248,20 +248,20 @@ function get_check_status_index (status : CheckState) -> u8 {
             match delta_status {
 
                 case None => {
-                    index = 8;
+                    status_index = 8;
                 }
                 case Some(result) => {
 
                     match result {
 
                         case MonitorDeltaLow => {
-                            index = 9;
+                            status_index = 9;
                         }
                         case MonitorDeltaHigh => {
-                            index = 10;
+                            status_index = 10;
                         }
                         case MonitorDeltaWithin => {
-                            index = 11;
+                            status_index = 11;
                         }
                     }
                 }
@@ -273,30 +273,30 @@ function get_check_status_index (status : CheckState) -> u8 {
         }
     }
 
-    return index;
+    return status_index;
 }
 
 function get_type_index (type : MonitorCheckType) -> u8 {
 
-    var index : u8;
+    var type_index : u8;
 
     match type {
 
         case ExpectedValue => {
-            index = 0;
+            type_index = 0;
         }
         case Limits => {
-            index = 1;
+            type_index = 1;
         }
         case Delta => {
-            index = 2;
+            type_index = 2;
         }
         case Free => {
-            index = 0xFF;
+            type_index = 0xFF;
         }
     }
 
-    return index;
+    return type_index;
 }
 
 

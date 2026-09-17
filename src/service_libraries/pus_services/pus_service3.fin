@@ -65,7 +65,7 @@ resource class CPUSService3 provides IPUSService3 {
 
             match opt_index {
 
-                case Some(index) => {
+                case Some(sid_index) => {
 
                     self->pus_service_1.notify_tm_1_3(
                                 exec_tc_req_status_update->packet_id,
@@ -75,8 +75,8 @@ resource class CPUSService3 provides IPUSService3 {
 
                     if (status is Success) {
 
-                        self->hk_config_table[index].enabled = true;
-                        self->hk_config_table[index].interval_control = 0;
+                        self->hk_config_table[sid_index].enabled = true;
+                        self->hk_config_table[sid_index].interval_control = 0;
 
                         self->pus_service_1.notify_tm_1_7(
                                     exec_tc_req_status_update->packet_id,
@@ -123,7 +123,7 @@ resource class CPUSService3 provides IPUSService3 {
             
             match opt_index {
 
-                case Some(index) => {
+                case Some(sid_index) => {
 
                     self->pus_service_1.notify_tm_1_3(
                                 exec_tc_req_status_update->packet_id,
@@ -133,8 +133,8 @@ resource class CPUSService3 provides IPUSService3 {
                     
                     if (status is Success) {
 
-                        self->hk_config_table[index].enabled = false;
-                        self->hk_config_table[index].interval_control = 0;
+                        self->hk_config_table[sid_index].enabled = false;
+                        self->hk_config_table[sid_index].interval_control = 0;
 
                         self->pus_service_1.notify_tm_1_7(
                                     exec_tc_req_status_update->packet_id,
@@ -181,7 +181,7 @@ resource class CPUSService3 provides IPUSService3 {
 
             match opt_index {
 
-                case Some(index) => {
+                case Some(sid_index) => {
 
                     self->pus_service_1.notify_tm_1_3(
                                 exec_tc_req_status_update->packet_id,
@@ -191,8 +191,8 @@ resource class CPUSService3 provides IPUSService3 {
 
                     if (status is Success) {
                                 
-                        self->hk_config_table[index].interval = exec_tc_req_status_update->collection_interval;
-                        self->hk_config_table[index].interval_control = 0;
+                        self->hk_config_table[sid_index].interval = exec_tc_req_status_update->collection_interval;
+                        self->hk_config_table[sid_index].interval_control = 0;
 
                         self->pus_service_1.notify_tm_1_7(
                                     exec_tc_req_status_update->packet_id,

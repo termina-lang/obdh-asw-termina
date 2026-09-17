@@ -23,7 +23,7 @@ static __status_int32_t CPUSService4__exec4_7TC(const __termina_event_t * const 
 
 static uint32_t CPUSService4__get_data_pool_item(const __termina_event_t * const __ev, const CPUSService4 * const self, uint16_t PID);
 
-static _Bool CPUSService4__is_stats_index_defined(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t index);
+static _Bool CPUSService4__is_stats_index_defined(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t stats_index);
 
 static uint32_t CPUSService4__SDP_get_mean(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t pid_index) {
     
@@ -716,7 +716,7 @@ static uint32_t CPUSService4__get_data_pool_item(const __termina_event_t * const
 
 }
 
-static _Bool CPUSService4__is_stats_index_defined(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t index) {
+static _Bool CPUSService4__is_stats_index_defined(const __termina_event_t * const __ev, const CPUSService4 * const self, size_t stats_index) {
     
     (void)__ev;
 
@@ -724,13 +724,13 @@ static _Bool CPUSService4__is_stats_index_defined(const __termina_event_t * cons
     _Bool is_defined = false;
 
     #line 79 "src/service_libraries/pus_services/pus_service4.fin"
-    if (index < 4U) {
+    if (stats_index < 4U) {
         
         #line 81 "src/service_libraries/pus_services/pus_service4.fin"
-        if (self->stats_config_table.defined[__termina_array__index(4U, index)] == true) {
+        if (self->stats_config_table.defined[__termina_array__index(4U, stats_index)] == true) {
             
             #line 83 "src/service_libraries/pus_services/pus_service4.fin"
-            if (sys_data_pool_is_valid_PID(self->stats_config_table.PID[__termina_array__index(4U, index)])) {
+            if (sys_data_pool_is_valid_PID(self->stats_config_table.PID[__termina_array__index(4U, stats_index)])) {
                 
                 #line 85 "src/service_libraries/pus_services/pus_service4.fin"
                 is_defined = true;

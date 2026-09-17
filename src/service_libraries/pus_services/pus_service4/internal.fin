@@ -50,11 +50,11 @@ struct IndexStatus {
 };
 
 
-function build_tm_4_2(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, index: usize, N : u8, stats_config_table : &StatsConfig, param_stats : &[StatsDef; max_num_of_stats], current_obt: MissionOBT) -> Status<i32> {
+function build_tm_4_2(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, stats_index: usize, N : u8, stats_config_table : &StatsConfig, param_stats : &[StatsDef; max_num_of_stats], current_obt: MissionOBT) -> Status<i32> {
 
     startup_tm(p_tm_handler);
 
-    var status : Status<i32> = append_u32_appdata_field(p_tm_handler, stats_config_table->start_time[index].seconds);
+    var status : Status<i32> = append_u32_appdata_field(p_tm_handler, stats_config_table->start_time[stats_index].seconds);
     if (status is Success) {
         status = append_u32_appdata_field(p_tm_handler, current_obt.seconds);
     }
@@ -62,25 +62,25 @@ function build_tm_4_2(p_tm_handler : &mut TMHandler, tm_seq_counter : u16, index
         status = append_u8_appdata_field(p_tm_handler, N);
     }
     if (status is Success) {
-        status = append_u16_appdata_field(p_tm_handler, stats_config_table->PID[index]);
+        status = append_u16_appdata_field(p_tm_handler, stats_config_table->PID[stats_index]);
     }
     if (status is Success) {
-        status = append_u32_appdata_field(p_tm_handler, param_stats[index].samples);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[stats_index].samples);
     }
     if (status is Success) {
-        status = append_u32_appdata_field(p_tm_handler, param_stats[index].max);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[stats_index].max);
     }
     if (status is Success) {
-        status = append_u32_appdata_field(p_tm_handler, param_stats[index].max_obt.seconds);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[stats_index].max_obt.seconds);
     }
     if (status is Success) {
-        status = append_u32_appdata_field(p_tm_handler, param_stats[index].min);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[stats_index].min);
     }
     if (status is Success) {
-        status = append_u32_appdata_field(p_tm_handler, param_stats[index].min_obt.seconds);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[stats_index].min_obt.seconds);
     }
     if (status is Success) {
-        status = append_u32_appdata_field(p_tm_handler, param_stats[index].mean_value);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[stats_index].mean_value);
     }
 
     if(status is Success) {

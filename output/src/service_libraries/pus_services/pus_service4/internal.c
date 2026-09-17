@@ -1,13 +1,13 @@
 
 #include "service_libraries/pus_services/pus_service4/internal.h"
 
-__status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, size_t index, uint8_t N, const StatsConfig * const stats_config_table, const StatsDef param_stats[4U], MissionOBT current_obt) {
+__status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, size_t stats_index, uint8_t N, const StatsConfig * const stats_config_table, const StatsDef param_stats[4U], MissionOBT current_obt) {
     
     #line 55 "src/service_libraries/pus_services/pus_service4/internal.fin"
     startup_tm(p_tm_handler);
 
     #line 57 "src/service_libraries/pus_services/pus_service4/internal.fin"
-    __status_int32_t status = append_u32_appdata_field(p_tm_handler, stats_config_table->start_time[__termina_array__index(4U, index)].seconds);
+    __status_int32_t status = append_u32_appdata_field(p_tm_handler, stats_config_table->start_time[__termina_array__index(4U, stats_index)].seconds);
 
     #line 58 "src/service_libraries/pus_services/pus_service4/internal.fin"
     if (status.__variant == Success) {
@@ -29,7 +29,7 @@ __status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_co
     if (status.__variant == Success) {
         
         #line 65 "src/service_libraries/pus_services/pus_service4/internal.fin"
-        status = append_u16_appdata_field(p_tm_handler, stats_config_table->PID[__termina_array__index(4U, index)]);
+        status = append_u16_appdata_field(p_tm_handler, stats_config_table->PID[__termina_array__index(4U, stats_index)]);
 
     }
 
@@ -37,7 +37,7 @@ __status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_co
     if (status.__variant == Success) {
         
         #line 68 "src/service_libraries/pus_services/pus_service4/internal.fin"
-        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, index)].samples);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, stats_index)].samples);
 
     }
 
@@ -45,7 +45,7 @@ __status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_co
     if (status.__variant == Success) {
         
         #line 71 "src/service_libraries/pus_services/pus_service4/internal.fin"
-        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, index)].max);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, stats_index)].max);
 
     }
 
@@ -53,7 +53,7 @@ __status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_co
     if (status.__variant == Success) {
         
         #line 74 "src/service_libraries/pus_services/pus_service4/internal.fin"
-        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, index)].max_obt.seconds);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, stats_index)].max_obt.seconds);
 
     }
 
@@ -61,7 +61,7 @@ __status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_co
     if (status.__variant == Success) {
         
         #line 77 "src/service_libraries/pus_services/pus_service4/internal.fin"
-        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, index)].min);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, stats_index)].min);
 
     }
 
@@ -69,7 +69,7 @@ __status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_co
     if (status.__variant == Success) {
         
         #line 80 "src/service_libraries/pus_services/pus_service4/internal.fin"
-        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, index)].min_obt.seconds);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, stats_index)].min_obt.seconds);
 
     }
 
@@ -77,7 +77,7 @@ __status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_co
     if (status.__variant == Success) {
         
         #line 83 "src/service_libraries/pus_services/pus_service4/internal.fin"
-        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, index)].mean_value);
+        status = append_u32_appdata_field(p_tm_handler, param_stats[__termina_array__index(4U, stats_index)].mean_value);
 
     }
 

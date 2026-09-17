@@ -634,7 +634,7 @@ void CPUSService19__exec_tc(const __termina_event_t * const __ev, void * const _
 
 }
 
-void CPUSService19__extract_action(const __termina_event_t * const __ev, void * const __this, size_t index, TCHandler * const action_packet) {
+void CPUSService19__extract_action(const __termina_event_t * const __ev, void * const __this, size_t action_index, TCHandler * const action_packet) {
     
     #line 647 "src/service_libraries/pus_services/pus_service19.fin"
     CPUSService19 * self = (CPUSService19 *)__this;
@@ -643,7 +643,7 @@ void CPUSService19__extract_action(const __termina_event_t * const __ev, void * 
     __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
 
     #line 649 "src/service_libraries/pus_services/pus_service19.fin"
-    if (index == 0U) {
+    if (action_index == 0U) {
         
         #line 651 "src/service_libraries/pus_services/pus_service19.fin"
         *action_packet = self->pending_action_queue_1I[__termina_array__index(8U, self->pending_action_head[0U])];
@@ -656,7 +656,7 @@ void CPUSService19__extract_action(const __termina_event_t * const __ev, void * 
 
     } else
     #line 655 "src/service_libraries/pus_services/pus_service19.fin"
-    if (index == 1U) {
+    if (action_index == 1U) {
         
         #line 657 "src/service_libraries/pus_services/pus_service19.fin"
         *action_packet = self->pending_action_queue_2LS[__termina_array__index(8U, self->pending_action_head[1U])];
@@ -669,7 +669,7 @@ void CPUSService19__extract_action(const __termina_event_t * const __ev, void * 
 
     } else
     #line 661 "src/service_libraries/pus_services/pus_service19.fin"
-    if (index == 2U) {
+    if (action_index == 2U) {
         
         #line 663 "src/service_libraries/pus_services/pus_service19.fin"
         *action_packet = self->pending_action_queue_3MS[__termina_array__index(8U, self->pending_action_head[2U])];
@@ -682,7 +682,7 @@ void CPUSService19__extract_action(const __termina_event_t * const __ev, void * 
 
     } else
     #line 667 "src/service_libraries/pus_services/pus_service19.fin"
-    if (index == 3U) {
+    if (action_index == 3U) {
         
         #line 669 "src/service_libraries/pus_services/pus_service19.fin"
         *action_packet = self->pending_action_queue_4HS[__termina_array__index(8U, self->pending_action_head[3U])];

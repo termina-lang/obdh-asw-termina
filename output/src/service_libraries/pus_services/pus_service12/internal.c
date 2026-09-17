@@ -4,7 +4,7 @@
 uint8_t get_check_status_index(CheckState status) {
     
     #line 195 "src/service_libraries/pus_services/pus_service12/internal.fin"
-    uint8_t index = 0U;
+    uint8_t status_index = 0U;
 
     #line 199 "src/service_libraries/pus_services/pus_service12/internal.fin"
     if (status.__variant == CheckState__ParamValueStatus) {
@@ -16,7 +16,7 @@ uint8_t get_check_status_index(CheckState status) {
         if (param_status.__variant == None) {
             
             #line 204 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            index = 1U;
+            status_index = 1U;
 
         } else
         {
@@ -28,13 +28,13 @@ uint8_t get_check_status_index(CheckState status) {
             if (result.__variant == CheckValueResult__MonitorValueUnexpected) {
                 
                 #line 211 "src/service_libraries/pus_services/pus_service12/internal.fin"
-                index = 2U;
+                status_index = 2U;
 
             } else
             {
                 
                 #line 214 "src/service_libraries/pus_services/pus_service12/internal.fin"
-                index = 3U;
+                status_index = 3U;
 
             }
 
@@ -51,7 +51,7 @@ uint8_t get_check_status_index(CheckState status) {
         if (limit_status.__variant == None) {
             
             #line 226 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            index = 4U;
+            status_index = 4U;
 
         } else
         {
@@ -63,20 +63,20 @@ uint8_t get_check_status_index(CheckState status) {
             if (result.__variant == CheckLimitsResult__MonitorAboveHighLimit) {
                 
                 #line 233 "src/service_libraries/pus_services/pus_service12/internal.fin"
-                index = 5U;
+                status_index = 5U;
 
             } else
             #line 235 "src/service_libraries/pus_services/pus_service12/internal.fin"
             if (result.__variant == CheckLimitsResult__MonitorBelowLowLimit) {
                 
                 #line 236 "src/service_libraries/pus_services/pus_service12/internal.fin"
-                index = 6U;
+                status_index = 6U;
 
             } else
             {
                 
                 #line 239 "src/service_libraries/pus_services/pus_service12/internal.fin"
-                index = 7U;
+                status_index = 7U;
 
             }
 
@@ -93,7 +93,7 @@ uint8_t get_check_status_index(CheckState status) {
         if (delta_status.__variant == None) {
             
             #line 251 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            index = 8U;
+            status_index = 8U;
 
         } else
         {
@@ -105,20 +105,20 @@ uint8_t get_check_status_index(CheckState status) {
             if (result.__variant == CheckDeltaResult__MonitorDeltaLow) {
                 
                 #line 258 "src/service_libraries/pus_services/pus_service12/internal.fin"
-                index = 9U;
+                status_index = 9U;
 
             } else
             #line 260 "src/service_libraries/pus_services/pus_service12/internal.fin"
             if (result.__variant == CheckDeltaResult__MonitorDeltaHigh) {
                 
                 #line 261 "src/service_libraries/pus_services/pus_service12/internal.fin"
-                index = 10U;
+                status_index = 10U;
 
             } else
             {
                 
                 #line 264 "src/service_libraries/pus_services/pus_service12/internal.fin"
-                index = 11U;
+                status_index = 11U;
 
             }
 
@@ -131,45 +131,45 @@ uint8_t get_check_status_index(CheckState status) {
     }
 
     #line 276 "src/service_libraries/pus_services/pus_service12/internal.fin"
-    return index;
+    return status_index;
 
 }
 
 uint8_t get_type_index(MonitorCheckType type) {
     
     #line 281 "src/service_libraries/pus_services/pus_service12/internal.fin"
-    uint8_t index;
+    uint8_t type_index;
 
     #line 285 "src/service_libraries/pus_services/pus_service12/internal.fin"
     if (type.__variant == MonitorCheckType__ExpectedValue) {
         
         #line 286 "src/service_libraries/pus_services/pus_service12/internal.fin"
-        index = 0U;
+        type_index = 0U;
 
     } else
     #line 288 "src/service_libraries/pus_services/pus_service12/internal.fin"
     if (type.__variant == MonitorCheckType__Limits) {
         
         #line 289 "src/service_libraries/pus_services/pus_service12/internal.fin"
-        index = 1U;
+        type_index = 1U;
 
     } else
     #line 291 "src/service_libraries/pus_services/pus_service12/internal.fin"
     if (type.__variant == MonitorCheckType__Delta) {
         
         #line 292 "src/service_libraries/pus_services/pus_service12/internal.fin"
-        index = 2U;
+        type_index = 2U;
 
     } else
     {
         
         #line 295 "src/service_libraries/pus_services/pus_service12/internal.fin"
-        index = 0xFFU;
+        type_index = 0xFFU;
 
     }
 
     #line 299 "src/service_libraries/pus_services/pus_service12/internal.fin"
-    return index;
+    return type_index;
 
 }
 

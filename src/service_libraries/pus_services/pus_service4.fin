@@ -72,15 +72,15 @@ resource class CPUSService4 provides IPUSService4 {
         return id_status;
     }
 
-    method is_stats_index_defined(&self, index: usize) -> bool {
+    method is_stats_index_defined(&self, stats_index: usize) -> bool {
 
         var is_defined: bool = false;
 
-        if(index < max_num_of_stats){
+        if(stats_index < max_num_of_stats){
 
-            if (self->stats_config_table.defined[index] == true) {
+            if (self->stats_config_table.defined[stats_index] == true) {
 
-                if(sys_data_pool_is_valid_PID(self->stats_config_table.PID[index])) {
+                if(sys_data_pool_is_valid_PID(self->stats_config_table.PID[stats_index])) {
 
                     is_defined = true;
 
