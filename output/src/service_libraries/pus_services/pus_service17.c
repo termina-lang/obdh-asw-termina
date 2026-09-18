@@ -15,22 +15,22 @@ static __status_int32_t CPUSService17__exec17_1TC(const __termina_event_t * cons
     if (status.__variant == Success) {
         
         #line 87 "src/service_libraries/pus_services/pus_service17.fin"
-        MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
-
-        #line 88 "src/service_libraries/pus_services/pus_service17.fin"
-        uint16_t tm_count = 0U;
-
-        #line 90 "src/service_libraries/pus_services/pus_service17.fin"
         __option_box_t tm_handler = { .__variant = None };
 
-        #line 91 "src/service_libraries/pus_services/pus_service17.fin"
+        #line 88 "src/service_libraries/pus_services/pus_service17.fin"
         self->tm_handler_pool.alloc(__ev, self->tm_handler_pool.__that, &tm_handler);
 
-        #line 95 "src/service_libraries/pus_services/pus_service17.fin"
+        #line 92 "src/service_libraries/pus_services/pus_service17.fin"
         if (tm_handler.__variant == Some) {
             
-            #line 95 "src/service_libraries/pus_services/pus_service17.fin"
+            #line 92 "src/service_libraries/pus_services/pus_service17.fin"
             __termina_box_t b_tm_handler = tm_handler.Some.__0;
+
+            #line 94 "src/service_libraries/pus_services/pus_service17.fin"
+            MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
+
+            #line 95 "src/service_libraries/pus_services/pus_service17.fin"
+            uint16_t tm_count = 0U;
 
             #line 97 "src/service_libraries/pus_services/pus_service17.fin"
             self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that, &tm_count);

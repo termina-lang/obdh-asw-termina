@@ -33,30 +33,30 @@ static uint32_t CPUSService4__SDP_get_mean(const __termina_event_t * const __ev,
     uint16_t PID = self->stats_config_table.PID[__termina_array__index(4U, pid_index)];
 
     #line 492 "src/service_libraries/pus_services/pus_service4.fin"
-    uint8_t u8_SDP_value = 0U;
-
-    #line 493 "src/service_libraries/pus_services/pus_service4.fin"
-    uint32_t u32_SDP_value = 0U;
-
-    #line 494 "src/service_libraries/pus_services/pus_service4.fin"
     uint32_t mean_value = 0U;
 
-    #line 496 "src/service_libraries/pus_services/pus_service4.fin"
+    #line 494 "src/service_libraries/pus_services/pus_service4.fin"
     DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
 
-    #line 499 "src/service_libraries/pus_services/pus_service4.fin"
+    #line 497 "src/service_libraries/pus_services/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u8_t) {
         
-        #line 500 "src/service_libraries/pus_services/pus_service4.fin"
+        #line 498 "src/service_libraries/pus_services/pus_service4.fin"
+        uint8_t u8_SDP_value = 0U;
+
+        #line 499 "src/service_libraries/pus_services/pus_service4.fin"
         u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
 
-        #line 501 "src/service_libraries/pus_services/pus_service4.fin"
+        #line 500 "src/service_libraries/pus_services/pus_service4.fin"
         mean_value = (uint32_t)((uint32_t)(self->param_stats[__termina_array__index(4U, pid_index)].mean_value * self->param_stats[__termina_array__index(4U, pid_index)].samples) + (uint32_t)u8_SDP_value) / (uint32_t)(self->param_stats[__termina_array__index(4U, pid_index)].samples + 1U);
 
     } else
-    #line 503 "src/service_libraries/pus_services/pus_service4.fin"
+    #line 502 "src/service_libraries/pus_services/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u32_t) {
         
+        #line 503 "src/service_libraries/pus_services/pus_service4.fin"
+        uint32_t u32_SDP_value = 0U;
+
         #line 504 "src/service_libraries/pus_services/pus_service4.fin"
         u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
 
@@ -84,33 +84,33 @@ static _Bool CPUSService4__SDP_param_higher_than_limit(const __termina_event_t *
     #line 408 "src/service_libraries/pus_services/pus_service4.fin"
     uint16_t PID = self->stats_config_table.PID[__termina_array__index(4U, pid_index)];
 
-    #line 409 "src/service_libraries/pus_services/pus_service4.fin"
-    uint8_t u8_SDP_value = 0U;
-
     #line 410 "src/service_libraries/pus_services/pus_service4.fin"
-    uint32_t u32_SDP_value = 0U;
-
-    #line 412 "src/service_libraries/pus_services/pus_service4.fin"
     DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
 
-    #line 415 "src/service_libraries/pus_services/pus_service4.fin"
+    #line 413 "src/service_libraries/pus_services/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u8_t) {
         
-        #line 416 "src/service_libraries/pus_services/pus_service4.fin"
+        #line 414 "src/service_libraries/pus_services/pus_service4.fin"
+        uint8_t u8_SDP_value = 0U;
+
+        #line 415 "src/service_libraries/pus_services/pus_service4.fin"
         u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
 
-        #line 417 "src/service_libraries/pus_services/pus_service4.fin"
+        #line 416 "src/service_libraries/pus_services/pus_service4.fin"
         if ((uint32_t)u8_SDP_value > self->param_stats[__termina_array__index(4U, pid_index)].max) {
             
-            #line 418 "src/service_libraries/pus_services/pus_service4.fin"
+            #line 417 "src/service_libraries/pus_services/pus_service4.fin"
             is_higher = true;
 
         }
 
     } else
-    #line 421 "src/service_libraries/pus_services/pus_service4.fin"
+    #line 420 "src/service_libraries/pus_services/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u32_t) {
         
+        #line 421 "src/service_libraries/pus_services/pus_service4.fin"
+        uint32_t u32_SDP_value = 0U;
+
         #line 422 "src/service_libraries/pus_services/pus_service4.fin"
         u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
 
@@ -143,33 +143,33 @@ static _Bool CPUSService4__SDP_param_lower_than_limit(const __termina_event_t * 
     #line 439 "src/service_libraries/pus_services/pus_service4.fin"
     uint16_t PID = self->stats_config_table.PID[__termina_array__index(4U, pid_index)];
 
-    #line 440 "src/service_libraries/pus_services/pus_service4.fin"
-    uint8_t u8_SDP_value = 0U;
-
     #line 441 "src/service_libraries/pus_services/pus_service4.fin"
-    uint32_t u32_SDP_value = 0U;
-
-    #line 443 "src/service_libraries/pus_services/pus_service4.fin"
     DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
 
-    #line 446 "src/service_libraries/pus_services/pus_service4.fin"
+    #line 444 "src/service_libraries/pus_services/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u8_t) {
         
-        #line 447 "src/service_libraries/pus_services/pus_service4.fin"
+        #line 445 "src/service_libraries/pus_services/pus_service4.fin"
+        uint8_t u8_SDP_value = 0U;
+
+        #line 446 "src/service_libraries/pus_services/pus_service4.fin"
         u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
 
-        #line 448 "src/service_libraries/pus_services/pus_service4.fin"
+        #line 447 "src/service_libraries/pus_services/pus_service4.fin"
         if ((uint32_t)u8_SDP_value < self->param_stats[__termina_array__index(4U, pid_index)].min) {
             
-            #line 449 "src/service_libraries/pus_services/pus_service4.fin"
+            #line 448 "src/service_libraries/pus_services/pus_service4.fin"
             is_lower = true;
 
         }
 
     } else
-    #line 452 "src/service_libraries/pus_services/pus_service4.fin"
+    #line 451 "src/service_libraries/pus_services/pus_service4.fin"
     if (item_type.__variant == DataPoolItemType__u32_t) {
         
+        #line 452 "src/service_libraries/pus_services/pus_service4.fin"
+        uint32_t u32_SDP_value = 0U;
+
         #line 453 "src/service_libraries/pus_services/pus_service4.fin"
         u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
 

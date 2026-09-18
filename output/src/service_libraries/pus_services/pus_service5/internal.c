@@ -23,12 +23,12 @@ Ev_IDType get_Ev_ID_type(uint16_t Ev_ID) {
     #line 66 "src/service_libraries/pus_services/pus_service5/internal.fin"
     uint16_t aux_type = Ev_ID >> 12U;
 
-    #line 67 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    uint16_t aux_id = Ev_ID & 0xFFFU;
-
-    #line 69 "src/service_libraries/pus_services/pus_service5/internal.fin"
+    #line 68 "src/service_libraries/pus_services/pus_service5/internal.fin"
     if (aux_type >= 1U && aux_type <= 4U) {
         
+        #line 69 "src/service_libraries/pus_services/pus_service5/internal.fin"
+        uint16_t aux_id = Ev_ID & 0xFFFU;
+
         #line 70 "src/service_libraries/pus_services/pus_service5/internal.fin"
         if (aux_id < Ev_IDs_per_type[__termina_array__index(5U, (size_t)aux_type)]) {
             

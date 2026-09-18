@@ -352,37 +352,37 @@ void CPUSService1__send_tm_1_2(const __termina_event_t * const __ev, void * cons
         __termina_box_t b_tm_handler = tm_handler.Some.__0;
 
         #line 464 "src/service_libraries/pus_services/pus_service1.fin"
-        uint8_t error_code;
-
-        #line 466 "src/service_libraries/pus_services/pus_service1.fin"
         MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
-        #line 470 "src/service_libraries/pus_services/pus_service1.fin"
+        #line 468 "src/service_libraries/pus_services/pus_service1.fin"
         uint16_t tm_count = 0U;
 
-        #line 472 "src/service_libraries/pus_services/pus_service1.fin"
+        #line 470 "src/service_libraries/pus_services/pus_service1.fin"
         self->tm_counter.get_next_tm_count(__ev, self->tm_counter.__that, &tm_count);
 
-        #line 473 "src/service_libraries/pus_services/pus_service1.fin"
+        #line 471 "src/service_libraries/pus_services/pus_service1.fin"
         self->obt_manager.get_current_obt(__ev, self->obt_manager.__that, &current_obt);
 
-        #line 475 "src/service_libraries/pus_services/pus_service1.fin"
+        #line 473 "src/service_libraries/pus_services/pus_service1.fin"
         startup_tm((TMHandler *)b_tm_handler.data);
 
-        #line 476 "src/service_libraries/pus_services/pus_service1.fin"
+        #line 474 "src/service_libraries/pus_services/pus_service1.fin"
         *status = append_u16_appdata_field((TMHandler *)b_tm_handler.data, tc_handler->packet_header.packet_id);
 
-        #line 478 "src/service_libraries/pus_services/pus_service1.fin"
+        #line 476 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status).__variant == Success) {
             
-            #line 479 "src/service_libraries/pus_services/pus_service1.fin"
+            #line 477 "src/service_libraries/pus_services/pus_service1.fin"
             *status = append_u16_appdata_field((TMHandler *)b_tm_handler.data, tc_handler->packet_error_ctrl);
 
         }
 
-        #line 482 "src/service_libraries/pus_services/pus_service1.fin"
+        #line 480 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status).__variant == Success) {
             
+            #line 482 "src/service_libraries/pus_services/pus_service1.fin"
+            uint8_t error_code;
+
             #line 486 "src/service_libraries/pus_services/pus_service1.fin"
             if (tc_status->error_code.__variant == TCErrorType__CRCError) {
                 
