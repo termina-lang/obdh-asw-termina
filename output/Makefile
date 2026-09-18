@@ -78,4 +78,4 @@ dist-clean: clean
 
 -include $(DEPS)
 
-include $(TERMINA_OSAL_DIR)/shared/shared.mk
+include $(TERMINA_OSAL_DIR)/platform/common.mk
