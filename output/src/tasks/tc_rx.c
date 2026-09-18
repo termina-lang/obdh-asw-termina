@@ -95,7 +95,6 @@ void __CTXRxBottomHalfTask__termina_task(void * arg) {
     __termina_event_t event;
 
     __status_int32_t result;
-    result.__variant = Success;
 
     size_t get_tc__msg_data;
 

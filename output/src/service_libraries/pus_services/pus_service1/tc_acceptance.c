@@ -45,7 +45,7 @@ TCExecutionCtrl handle_tc(const TCDescriptor * const tc_descriptor) {
 TCStatus try_tc_acceptation(const TCDescriptor * const tc_descriptor) {
     
     #line 67 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    TCStatus tc_status = { .acceptation_status = { .__variant = TCAcceptationStatus__Undefined }, .error_code = { .__variant = TCErrorType__Undefined }, .execution_status = { .__variant = TCExecutionCtrl__Undefined } };
+    TCStatus tc_status = { .acceptation_status = { .__variant = TCAcceptationStatus__Rejected }, .error_code = { .__variant = TCErrorType__Undefined }, .execution_status = { .__variant = TCExecutionCtrl__Undefined } };
 
     #line 71 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
     if (false == is_crc_valid(tc_descriptor)) {

@@ -18,8 +18,7 @@ extern const uint8_t EXEC_COMPLETION_ACK_ENABLED_MASK;
 
 typedef enum {
     TCAcceptationStatus__Accepted,
-    TCAcceptationStatus__Rejected,
-    TCAcceptationStatus__Undefined
+    TCAcceptationStatus__Rejected
 } __enum_TCAcceptationStatus_t;
 
 typedef struct {

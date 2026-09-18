@@ -64,7 +64,7 @@ function handle_tc(tc_descriptor: &TCDescriptor) -> TCExecutionCtrl {
  */
 function try_tc_acceptation(tc_descriptor: &TCDescriptor) -> TCStatus {
 
-    var tc_status : TCStatus = {acceptation_status = TCAcceptationStatus::Undefined,
+    var tc_status : TCStatus = {acceptation_status = TCAcceptationStatus::Rejected,
                                 execution_status = TCExecutionCtrl::Undefined,
                                 error_code = TCErrorType::Undefined};
 

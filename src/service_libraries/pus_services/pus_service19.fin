@@ -553,81 +553,75 @@ resource class CPUSService19 provides IPUSService19 {
 
         if(found_and_id.found && found_and_id.enabled){
 
-            if(found_and_id.ev_action_index < max_event_action_definitions){
 
-                var RID_type : Ev_IDType = get_Ev_ID_type(evID);
+            var RID_type : Ev_IDType = get_Ev_ID_type(evID);
 
-                match RID_type {
+            match RID_type {
 
-                    case Informative => {
-                        
-                        if (self->pending_action_number[0] < event_action_queue_dimension){
-
-                            var tail_index : usize = (self->pending_action_head[0] + self->pending_action_number[0])%event_action_queue_dimension;
-                            self->pending_action_queue_1I[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
-                            self->pending_action_number[0] = self->pending_action_number[0] + 1;
-                        }
-                        else {
-                            //error
-                        }
-                
+                case Informative => {
                     
+                    if (self->pending_action_number[0] < event_action_queue_dimension){
+
+                        var tail_index : usize = (self->pending_action_head[0] + self->pending_action_number[0])%event_action_queue_dimension;
+                        self->pending_action_queue_1I[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
+                        self->pending_action_number[0] = self->pending_action_number[0] + 1;
                     }
-                    case LowSeverityAnomaly => {
-
-                        if (self->pending_action_number[1] < event_action_queue_dimension){
-
-                            var tail_index : usize = (self->pending_action_head[1] + self->pending_action_number[1])%event_action_queue_dimension;
-                            self->pending_action_queue_2LS[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
-                            self->pending_action_number[1] = self->pending_action_number[1] + 1;
-                        }
-                        else {
-                            //error
-                        }
-
-                        
-                    }
-                    case MediumSeverityAnomaly => {
-
-                        if (self->pending_action_number[2] < event_action_queue_dimension){
-
-                            var tail_index : usize = (self->pending_action_head[2] + self->pending_action_number[2])%event_action_queue_dimension;
-                            self->pending_action_queue_3MS[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
-                            self->pending_action_number[2] = self->pending_action_number[2] +1;
-                        }
-                        else {
-                            //error
-                        }
-
-                        
-                    }
-                    case HighSeverityAnomaly => {
-
-                        if (self->pending_action_number[3] < event_action_queue_dimension){
-
-                            var tail_index : usize = (self->pending_action_head[3] + self->pending_action_number[3])%event_action_queue_dimension;
-                            self->pending_action_queue_4HS[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
-                            self->pending_action_number[3] = self->pending_action_number[3] +1;
-                        }
-                        else {
-                            //error
-                        }
-
-                    
-                    }
-                    case Ev_IDNotValid => {
-
+                    else {
                         //error
-                        
                     }
+            
+                
                 }
+                case LowSeverityAnomaly => {
+
+                    if (self->pending_action_number[1] < event_action_queue_dimension){
+
+                        var tail_index : usize = (self->pending_action_head[1] + self->pending_action_number[1])%event_action_queue_dimension;
+                        self->pending_action_queue_2LS[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
+                        self->pending_action_number[1] = self->pending_action_number[1] + 1;
+                    }
+                    else {
+                        //error
+                    }
+
+                    
+                }
+                case MediumSeverityAnomaly => {
+
+                    if (self->pending_action_number[2] < event_action_queue_dimension){
+
+                        var tail_index : usize = (self->pending_action_head[2] + self->pending_action_number[2])%event_action_queue_dimension;
+                        self->pending_action_queue_3MS[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
+                        self->pending_action_number[2] = self->pending_action_number[2] +1;
+                    }
+                    else {
+                        //error
+                    }
+
+                    
+                }
+                case HighSeverityAnomaly => {
+
+                    if (self->pending_action_number[3] < event_action_queue_dimension){
+
+                        var tail_index : usize = (self->pending_action_head[3] + self->pending_action_number[3])%event_action_queue_dimension;
+                        self->pending_action_queue_4HS[tail_index] = self->event_action_packets[found_and_id.ev_action_index];
+                        self->pending_action_number[3] = self->pending_action_number[3] +1;
+                    }
+                    else {
+                        //error
+                    }
 
                 
-            }
-            else {
+                }
+                case Ev_IDNotValid => {
 
-                //error
+                    //error
+                    
+                }
             }
+
+            
         }
 
         return;

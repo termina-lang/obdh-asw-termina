@@ -3,42 +3,42 @@
 
 __status_int32_t COBDHManagerTask__process_action_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler) {
     
-    #line 123 "src/tasks/obdh_manager/obdh_manager.fin"
+    #line 119 "src/tasks/obdh_manager/obdh_manager.fin"
     COBDHManagerTask * self = (COBDHManagerTask *)__this;
 
-    #line 125 "src/tasks/obdh_manager/obdh_manager.fin"
+    #line 121 "src/tasks/obdh_manager/obdh_manager.fin"
     __status_int32_t ret = { .__variant = Success };
 
-    #line 126 "src/tasks/obdh_manager/obdh_manager.fin"
+    #line 122 "src/tasks/obdh_manager/obdh_manager.fin"
     _Bool reebot_flag = false;
 
-    #line 128 "src/tasks/obdh_manager/obdh_manager.fin"
+    #line 124 "src/tasks/obdh_manager/obdh_manager.fin"
     TCExecutionCtrl execution_status = handle_tc(&(*(TCHandler *)tc_handler.data).tc_descriptor);
 
-    #line 132 "src/tasks/obdh_manager/obdh_manager.fin"
+    #line 128 "src/tasks/obdh_manager/obdh_manager.fin"
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
         
-        #line 134 "src/tasks/obdh_manager/obdh_manager.fin"
+        #line 130 "src/tasks/obdh_manager/obdh_manager.fin"
         __termina_out_port__send(__ev, self->hkfdir_message_queue_output, (void *)&tc_handler);
 
     } else
-    #line 136 "src/tasks/obdh_manager/obdh_manager.fin"
+    #line 132 "src/tasks/obdh_manager/obdh_manager.fin"
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlBKGTC) {
         
-        #line 138 "src/tasks/obdh_manager/obdh_manager.fin"
+        #line 134 "src/tasks/obdh_manager/obdh_manager.fin"
         __termina_out_port__send(__ev, self->bkg_message_queue_output, (void *)&tc_handler);
 
     } else
-    #line 141 "src/tasks/obdh_manager/obdh_manager.fin"
+    #line 137 "src/tasks/obdh_manager/obdh_manager.fin"
     if (execution_status.__variant == TCExecutionCtrl__ExecCtrlPrioTC) {
         
-        #line 143 "src/tasks/obdh_manager/obdh_manager.fin"
+        #line 139 "src/tasks/obdh_manager/obdh_manager.fin"
         self->mng_tc_executor.PUS_prio_exec_tc(__ev, self->mng_tc_executor.__that, (TCHandler *)tc_handler.data, &ret, &reebot_flag);
 
-        #line 144 "src/tasks/obdh_manager/obdh_manager.fin"
+        #line 140 "src/tasks/obdh_manager/obdh_manager.fin"
         self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
-        #line 146 "src/tasks/obdh_manager/obdh_manager.fin"
+        #line 142 "src/tasks/obdh_manager/obdh_manager.fin"
         if (reebot_flag) {
             
             __termina_exec__reboot();
@@ -48,12 +48,12 @@ __status_int32_t COBDHManagerTask__process_action_tc(const __termina_event_t * c
     } else
     {
         
-        #line 152 "src/tasks/obdh_manager/obdh_manager.fin"
+        #line 148 "src/tasks/obdh_manager/obdh_manager.fin"
         self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
     }
 
-    #line 158 "src/tasks/obdh_manager/obdh_manager.fin"
+    #line 154 "src/tasks/obdh_manager/obdh_manager.fin"
     return ret;
 
 }
@@ -117,8 +117,7 @@ __status_int32_t COBDHManagerTask__process_tc(const __termina_event_t * const __
         }
 
     } else
-    #line 94 "src/tasks/obdh_manager/obdh_manager.fin"
-    if (current_tc_status.acceptation_status.__variant == TCAcceptationStatus__Rejected) {
+    {
         
         #line 96 "src/tasks/obdh_manager/obdh_manager.fin"
         self->mng_tc_executor.mng_tc_rejection(__ev, self->mng_tc_executor.__that, (TCHandler *)tc_handler.data, &current_tc_status, &ret);
@@ -126,15 +125,9 @@ __status_int32_t COBDHManagerTask__process_tc(const __termina_event_t * const __
         #line 97 "src/tasks/obdh_manager/obdh_manager.fin"
         self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
 
-    } else
-    {
-        
-        #line 101 "src/tasks/obdh_manager/obdh_manager.fin"
-        self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler);
-
     }
 
-    #line 106 "src/tasks/obdh_manager/obdh_manager.fin"
+    #line 102 "src/tasks/obdh_manager/obdh_manager.fin"
     return ret;
 
 }
@@ -148,7 +141,6 @@ void __COBDHManagerTask__termina_task(void * arg) {
     __termina_event_t event;
 
     __status_int32_t result;
-    result.__variant = Success;
 
     __termina_box_t process_tc__msg_data;
     __termina_box_t process_action_tc__msg_data;

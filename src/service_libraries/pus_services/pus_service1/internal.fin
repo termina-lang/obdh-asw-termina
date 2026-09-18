@@ -20,8 +20,7 @@ const EXEC_COMPLETION_ACK_ENABLED_MASK : u8 = 0x08;
  */
 enum TCAcceptationStatus{
     Accepted,      /**< TC accepted */
-    Rejected,      /**< TC rejected */
-    Undefined      /**< TC statusundefined */
+    Rejected       /**< TC rejected */
 };
 
 /**

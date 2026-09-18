@@ -270,7 +270,6 @@ void __CHousekeepingFDIRTask__termina_task(void * arg) {
     __termina_event_t event;
 
     __status_int32_t result;
-    result.__variant = Success;
 
     TimeVal do_hk_fdir__msg_data;
     __termina_box_t exec_tc__msg_data;

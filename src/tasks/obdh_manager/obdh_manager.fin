@@ -96,10 +96,6 @@ task class COBDHManagerTask {
                 self->mng_tc_executor.mng_tc_rejection(&tc_handler, &current_tc_status, &mut ret);
                 self->tc_handler_pool.free(tc_handler);
             }
-            case Undefined => {
-                
-                self->tc_handler_pool.free(tc_handler);
-            }
         }
 
         
