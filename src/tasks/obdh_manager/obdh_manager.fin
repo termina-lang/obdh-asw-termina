@@ -52,7 +52,6 @@ task class COBDHManagerTask {
     action process_tc(&priv self, tc_handler: box TCHandler) -> Status<i32> {
 
         var ret : Status<i32> = Success;
-        var reebot_flag : bool = false;
 
         var current_tc_status : TCStatus = try_tc_acceptation(&(tc_handler.tc_descriptor));
 
@@ -74,6 +73,8 @@ task class COBDHManagerTask {
                         
                     }
                     case ExecCtrlPrioTC => {
+
+                        var reebot_flag : bool = false;
 
                         self->mng_tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
 
@@ -119,7 +120,6 @@ task class COBDHManagerTask {
     action process_action_tc(&priv self, tc_handler: box TCHandler) -> Status<i32> {
 
         var ret : Status<i32> = Success;
-        var reebot_flag : bool = false;
 
         var execution_status : TCExecutionCtrl = handle_tc((&(tc_handler.tc_descriptor)));
 
@@ -135,6 +135,8 @@ task class COBDHManagerTask {
              
             }
             case ExecCtrlPrioTC => {
+
+                var reebot_flag : bool = false;
 
                 self->mng_tc_executor.PUS_prio_exec_tc(&mut tc_handler, &mut ret, &mut reebot_flag);
                 self->tc_handler_pool.free(tc_handler); 

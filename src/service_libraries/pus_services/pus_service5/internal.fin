@@ -64,9 +64,9 @@ function get_Ev_ID_type(Ev_ID : u16) -> Ev_IDType {
 
     var Ev_ID_type: Ev_IDType = Ev_IDType::Ev_IDNotValid;
     var aux_type : u16 = Ev_ID >> 12 : u16;
-    var aux_id : u16 = Ev_ID & 0x0FFF;
 
     if ((aux_type >= 1) && (aux_type <= 4)){
+        var aux_id : u16 = Ev_ID & 0x0FFF;
         if (aux_id < Ev_IDs_per_type[aux_type as usize]){
             if (aux_type == 1){
                 Ev_ID_type = Ev_IDType::Informative;

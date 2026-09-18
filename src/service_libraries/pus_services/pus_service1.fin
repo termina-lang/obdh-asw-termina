@@ -461,8 +461,6 @@ resource class CPUSService1 provides IPUSService1 {
 
             case Some(b_tm_handler) => {
 
-                var error_code : u8;
-
                 var current_obt : MissionOBT = {
                     seconds = 0,
                     finetime = 0
@@ -480,6 +478,8 @@ resource class CPUSService1 provides IPUSService1 {
                 }
                 
                 if (*status is Success) {
+
+                    var error_code : u8;
 
                     match (tc_status->error_code) {
 

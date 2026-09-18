@@ -406,19 +406,19 @@ resource class CPUSService4 provides IPUSService4 {
 
         var is_higher : bool = false;
         var PID : u16 = self->stats_config_table.PID[pid_index];
-        var u8_SDP_value : u8 = 0;
-        var u32_SDP_value : u32 = 0;
 
         var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
 
         match item_type {
             case u8_t => {
+                var u8_SDP_value : u8 = 0;
                 self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
                 if ((u8_SDP_value as u32) > self->param_stats[pid_index].max) {
                     is_higher = true;
                 }
             }
             case u32_t => {
+                var u32_SDP_value : u32 = 0;
                 self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
                 if (u32_SDP_value > self->param_stats[pid_index].max) {
                     is_higher = true;
@@ -437,19 +437,19 @@ resource class CPUSService4 provides IPUSService4 {
 
         var is_lower : bool = false;
         var PID : u16 = self->stats_config_table.PID[pid_index];
-        var u8_SDP_value : u8 = 0;
-        var u32_SDP_value : u32 = 0;
 
         var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
 
         match item_type {
             case u8_t => {
+                var u8_SDP_value : u8 = 0;
                 self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
                 if ((u8_SDP_value as u32) < self->param_stats[pid_index].min) {
                     is_lower = true;
                 }
             }
             case u32_t => {
+                var u32_SDP_value : u32 = 0;
                 self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
                 if (u32_SDP_value < self->param_stats[pid_index].min) {
                     is_lower = true;
@@ -489,18 +489,18 @@ resource class CPUSService4 provides IPUSService4 {
     method SDP_get_mean(&self, pid_index : usize) -> u32 {
 
         var PID : u16 = self->stats_config_table.PID[pid_index];
-        var u8_SDP_value : u8 = 0;
-        var u32_SDP_value : u32 = 0;
         var mean_value : u32 = 0;
 
         var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);
 
         match item_type {
             case u8_t => {
+                var u8_SDP_value : u8 = 0;
                 self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
-                mean_value = ((self->param_stats[pid_index].mean_value * self->param_stats[pid_index].samples) + (u8_SDP_value as u32)) / (self->param_stats[pid_index].samples + 1);   
+                mean_value = ((self->param_stats[pid_index].mean_value * self->param_stats[pid_index].samples) + (u8_SDP_value as u32)) / (self->param_stats[pid_index].samples + 1);
             }
             case u32_t => {
+                var u32_SDP_value : u32 = 0;
                 self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
                 mean_value = ((self->param_stats[pid_index].mean_value * self->param_stats[pid_index].samples) + u32_SDP_value) / (self->param_stats[pid_index].samples + 1);
             }

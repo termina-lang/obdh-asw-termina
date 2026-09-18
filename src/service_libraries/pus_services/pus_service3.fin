@@ -334,9 +334,6 @@ resource class CPUSService3 provides IPUSService3 {
                         startup_tm(&mut b_tm_handler);
                         var do_hk_status : Status<i32> = append_u16_appdata_field(&mut b_tm_handler, self->hk_config_table[i].SID);
 
-                        var u32_SDP_value : u32 = 0;
-                        var u8_SDP_value : u8 = 0;
-
                         for j : usize in 0 .. max_params_per_SID while (j < (self->hk_config_table[i].num_params as usize) && (do_hk_status is Success)) {
 
                             var PID : u16 = self->hk_config_table[i].params_def[j];
@@ -344,10 +341,12 @@ resource class CPUSService3 provides IPUSService3 {
 
                             match item_type {
                                 case u8_t => {
+                                    var u8_SDP_value : u8 = 0;
                                     self->system_data_pool_u8.load_index(PID as usize, &mut u8_SDP_value);
                                     do_hk_status = append_u8_appdata_field(&mut b_tm_handler, u8_SDP_value);
                                 }
                                 case u32_t => {
+                                    var u32_SDP_value : u32 = 0;
                                     self->system_data_pool_u32.load_index(PID as usize, &mut u32_SDP_value);
                                     do_hk_status = append_u32_appdata_field(&mut b_tm_handler, u32_SDP_value);
                                 }

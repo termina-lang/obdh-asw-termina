@@ -292,18 +292,18 @@ resource class CPUSService12 provides IPUSService12 {
 
         var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
-        var fault_info : ParamFaultValueInfo = {PID = 0,
-                                                PID_value = 0,
-                                                PID_mask = 0,
-                                                PID_expected_value = 0};
-
         let check_status : CheckValueResult = CheckValueResult::MonitorValueUnexpected;
         self->do_monitoring_req_status_update.new_status = CheckState::ParamValueStatus(Some(check_status));
-        let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
+        let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize;
 
         match(self->param_mon_config_table[current_PMON_ID].definition){
 
             case ParamValueCheck(check_definition) => {
+
+                var fault_info : ParamFaultValueInfo = {PID = 0,
+                                                        PID_value = 0,
+                                                        PID_mask = 0,
+                                                        PID_expected_value = 0};
 
                 fault_info.PID = self->param_mon_config_table[current_PMON_ID].PID; 
                 fault_info.PID_expected_value = check_definition.expected_value;
@@ -364,18 +364,18 @@ resource class CPUSService12 provides IPUSService12 {
 
         var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
-        var fault_info : ParamOutOfLimitInfo = {PID = 0,
-                                                PID_value = 0,
-                                                PID_limit = 0};
-
         let check_status : CheckLimitsResult = CheckLimitsResult::MonitorAboveHighLimit;
         self->do_monitoring_req_status_update.new_status = CheckState::ParamLimitStatus(Some(check_status));
 
-        let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
+        let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize;
 
         match(self->param_mon_config_table[current_PMON_ID].definition){
 
             case ParamLimitCheck(check_definition) => {
+
+                var fault_info : ParamOutOfLimitInfo = {PID = 0,
+                                                        PID_value = 0,
+                                                        PID_limit = 0};
 
                 fault_info.PID = self->param_mon_config_table[current_PMON_ID].PID; 
                 fault_info.PID_limit = check_definition.high_limit;
@@ -419,18 +419,18 @@ resource class CPUSService12 provides IPUSService12 {
 
         var next_status : DoMonitoringReqStatus = DoMonitoringReqStatus::GetRequestStatusUpdate;
 
-        var fault_info : ParamOutOfLimitInfo = {PID = 0,
-                                                PID_value = 0,
-                                                PID_limit = 0};
-
         let check_status : CheckLimitsResult = CheckLimitsResult::MonitorBelowLowLimit;
         self->do_monitoring_req_status_update.new_status = CheckState::ParamLimitStatus(Some(check_status));
 
-        let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize; 
+        let current_PMON_ID : usize = (self->do_monitoring_req_status_update.PMONID) as usize;
 
         match(self->param_mon_config_table[current_PMON_ID].definition){
 
             case ParamLimitCheck(check_definition) => {
+
+                var fault_info : ParamOutOfLimitInfo = {PID = 0,
+                                                        PID_value = 0,
+                                                        PID_limit = 0};
 
                 fault_info.PID = self->param_mon_config_table[current_PMON_ID].PID; 
                 fault_info.PID_limit = check_definition.low_limit;
@@ -1100,8 +1100,6 @@ resource class CPUSService12 provides IPUSService12 {
             
         } else if (subtype == 5) {
 
-            var aux : u8 = 0;
-
             status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data_5.N));
 
             if (status is Success){
@@ -1117,6 +1115,7 @@ resource class CPUSService12 provides IPUSService12 {
                 status = tc_handler_get_u8_appdata_field(tc_handler, &mut (self->exec_tc_req_status_update.tc_data_5.mon_config.repetition));
             }
             if (status is Success){
+                var aux : u8 = 0;
                 status = tc_handler_get_u8_appdata_field(tc_handler, &mut aux);
                 self->exec_tc_req_status_update.tc_data_5.mon_config.type = get_check_type(aux);
             }
@@ -1138,7 +1137,6 @@ resource class CPUSService12 provides IPUSService12 {
                         case u8_t => {
 
                             var mask : u8 = 0;
-                            var expected_value : u8 = 0;
 
                             //get mask
                             status = tc_handler_get_u8_appdata_field(tc_handler, &mut mask);
@@ -1146,6 +1144,7 @@ resource class CPUSService12 provides IPUSService12 {
 
                             //get expected value
                             if (status is Success){
+                                var expected_value : u8 = 0;
                                 status = tc_handler_get_u8_appdata_field(tc_handler, &mut expected_value);
                                 value_def.expected_value = expected_value as u32;
                             }
@@ -1198,7 +1197,6 @@ resource class CPUSService12 provides IPUSService12 {
                         case u8_t => {
 
                             var low_limit : u8 = 0;
-                            var high_limit : u8 = 0;
 
                             //get low limit
                             status = tc_handler_get_u8_appdata_field(tc_handler, &mut low_limit);
@@ -1211,6 +1209,7 @@ resource class CPUSService12 provides IPUSService12 {
                             
                             //get high limit
                             if (status is Success){
+                                var high_limit : u8 = 0;
                                 status = tc_handler_get_u8_appdata_field(tc_handler, &mut high_limit);
                                 limits_def.high_limit = high_limit as u32;
                             }
