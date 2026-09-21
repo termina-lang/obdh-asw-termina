@@ -1,46 +1,46 @@
 
 #include "drivers/char_dev/irq_handler.h"
 
-__status_int32_t CCharDevIRQHandler__irq_handler(const __termina_event_t * const __ev, void * const __this, uint32_t _vector) {
+Status__i32 CCharDevIRQHandler__irq_handler(const termina__event_t * const termina__ev, void * const termina__this, uint32_t _vector) {
     
     (void)_vector;
 
     #line 14 "src/drivers/char_dev/irq_handler.fin"
-    CCharDevIRQHandler * self = (CCharDevIRQHandler *)__this;
+    CCharDevIRQHandler * self = (CCharDevIRQHandler *)termina__this;
 
     #line 16 "src/drivers/char_dev/irq_handler.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 17 "src/drivers/char_dev/irq_handler.fin"
-    CharDevIrqStatus result = { .__variant = CharDevIrqStatus__IrqOk };
+    CharDevIrqStatus result = { ._variant = CharDevIrqStatus__IrqOk };
 
     #line 19 "src/drivers/char_dev/irq_handler.fin"
-    self->uart_drv.notify_irq(__ev, self->uart_drv.__that, &result);
+    self->uart_drv.notify_irq(termina__ev, self->uart_drv._that, &result);
 
     #line 22 "src/drivers/char_dev/irq_handler.fin"
-    if (result.__variant == CharDevIrqStatus__RxComplete) {
+    if (result._variant == CharDevIrqStatus__RxComplete) {
         
         #line 22 "src/drivers/char_dev/irq_handler.fin"
-        size_t size = result.RxComplete.__0;
+        size_t size = result.RxComplete._0;
 
         #line 23 "src/drivers/char_dev/irq_handler.fin"
-        __termina_out_port__send(__ev, self->frame_ready_output, (void *)&size);
+        termina__out_port__send(termina__ev, self->frame_ready_output, (void *)&size);
 
     } else
     #line 25 "src/drivers/char_dev/irq_handler.fin"
-    if (result.__variant == CharDevIrqStatus__IrqOk) {
+    if (result._variant == CharDevIrqStatus__IrqOk) {
         
 
     } else
     {
         
         #line 28 "src/drivers/char_dev/irq_handler.fin"
-        int32_t error_code = result.IrqError.__0;
+        int32_t error_code = result.IrqError._0;
 
         #line 29 "src/drivers/char_dev/irq_handler.fin"
-        status.__variant = Failure;
+        status._variant = Status__Failure;
         #line 29 "src/drivers/char_dev/irq_handler.fin"
-        status.Failure.__0 = error_code;
+        status.Failure._0 = error_code;
 
     }
 

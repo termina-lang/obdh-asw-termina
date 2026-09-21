@@ -1,5 +1,5 @@
-#ifndef __APP_H__
-#define __APP_H__
+#ifndef APP_H__
+#define APP_H__
 
 #include <termina.h>
 
@@ -29,19 +29,19 @@
 
 extern PeriodicTimer hk_fdir_timer;
 
-extern __termina_msg_queue_t rx_task_message_queue;
+extern termina__msg_queue_t rx_task_message_queue;
 
-extern __termina_msg_queue_t tc_message_queue;
+extern termina__msg_queue_t tc_message_queue;
 
-extern __termina_msg_queue_t hkfdir_message_queue;
+extern termina__msg_queue_t hkfdir_message_queue;
 
-extern __termina_msg_queue_t bkg_message_queue;
+extern termina__msg_queue_t bkg_message_queue;
 
-extern __termina_msg_queue_t action_tc_message_queue;
+extern termina__msg_queue_t action_tc_message_queue;
 
-extern __termina_pool_t tm_pool;
+extern termina__pool_t tm_pool;
 
-extern __termina_pool_t tc_pool;
+extern termina__pool_t tc_pool;
 
 extern _Atomic uint32_t u32_system_data_pool[12U];
 

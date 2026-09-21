@@ -1,5 +1,5 @@
-#ifndef __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE4__INTERNAL_H__
-#define __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE4__INTERNAL_H__
+#ifndef SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE4__INTERNAL_H__
+#define SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE4__INTERNAL_H__
 
 #include <termina.h>
 
@@ -36,9 +36,9 @@ typedef struct {
 
 typedef struct {
     size_t index;
-    __status_int32_t status;
+    Status__i32 status;
 } IndexStatus;
 
-__status_int32_t build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, size_t stats_index, uint8_t N, const StatsConfig * const stats_config_table, const StatsDef param_stats[4U], MissionOBT current_obt);
+Status__i32 build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, size_t stats_index, uint8_t N, const StatsConfig * const stats_config_table, const StatsDef param_stats[4U], MissionOBT current_obt);
 
 #endif

@@ -1,24 +1,24 @@
 
 #include "service_libraries/pus_services/pus_service128.h"
 
-static __status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * const __ev, CPUSService128 * const self);
+static Status__i32 CPUSService128__exec128_1TC(const termina__event_t * const termina__ev, CPUSService128 * const self);
 
-static __status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * const __ev, CPUSService128 * const self) {
+static Status__i32 CPUSService128__exec128_1TC(const termina__event_t * const termina__ev, CPUSService128 * const self) {
     
     #line 22 "src/service_libraries/pus_services/pus_service128.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 24 "src/service_libraries/pus_services/pus_service128.fin"
-    self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
+    self->pus_service_1.notify_tm_1_3(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
 
     #line 30 "src/service_libraries/pus_services/pus_service128.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 31 "src/service_libraries/pus_services/pus_service128.fin"
         self->exec_tc_req_status_update.reebot_flag = true;
 
         #line 32 "src/service_libraries/pus_services/pus_service128.fin"
-        self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
+        self->pus_service_1.notify_tm_1_7(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
 
     }
 
@@ -27,16 +27,16 @@ static __status_int32_t CPUSService128__exec128_1TC(const __termina_event_t * co
 
 }
 
-void CPUSService128__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status, _Bool * const reebot_flag) {
+void CPUSService128__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, TCHandler * const tc_handler, Status__i32 * const action_status, _Bool * const reebot_flag) {
     
     #line 43 "src/service_libraries/pus_services/pus_service128.fin"
-    CPUSService128 * self = (CPUSService128 *)__this;
+    CPUSService128 * self = (CPUSService128 *)termina__this;
 
     #line 43 "src/service_libraries/pus_services/pus_service128.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 45 "src/service_libraries/pus_services/pus_service128.fin"
-    __status_int32_t status;
+    Status__i32 status;
 
     #line 46 "src/service_libraries/pus_services/pus_service128.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
@@ -54,50 +54,50 @@ void CPUSService128__exec_tc(const __termina_event_t * const __ev, void * const 
     if (subtype == 1U) {
         
         #line 54 "src/service_libraries/pus_services/pus_service128.fin"
-        status = CPUSService128__exec128_1TC(__ev, self);
+        status = CPUSService128__exec128_1TC(termina__ev, self);
 
     } else
     {
         
         #line 58 "src/service_libraries/pus_services/pus_service128.fin"
-        status.__variant = Failure;
+        status._variant = Status__Failure;
         #line 58 "src/service_libraries/pus_services/pus_service128.fin"
-        status.Failure.__0 = ACCEPTANCE_ERROR;
+        status.Failure._0 = ACCEPTANCE_ERROR;
 
     }
 
     #line 64 "src/service_libraries/pus_services/pus_service128.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 66 "src/service_libraries/pus_services/pus_service128.fin"
-        (*action_status).__variant = Success;
+        (*action_status)._variant = Status__Success;
 
     } else
     {
         
         #line 69 "src/service_libraries/pus_services/pus_service128.fin"
-        int32_t error_code = status.Failure.__0;
+        int32_t error_code = status.Failure._0;
 
         #line 72 "src/service_libraries/pus_services/pus_service128.fin"
         if (error_code == ACCEPTANCE_ERROR) {
             
             #line 74 "src/service_libraries/pus_services/pus_service128.fin"
-            self->pus_service_1.send_tm_1_4_error_in_acceptance(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
+            self->pus_service_1.send_tm_1_4_error_in_acceptance(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 79 "src/service_libraries/pus_services/pus_service128.fin"
         if (error_code == BUILD_TM_ERROR) {
             
             #line 81 "src/service_libraries/pus_services/pus_service128.fin"
-            self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(__ev, self->pus_service_1.__that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
+            self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         {
             
             #line 88 "src/service_libraries/pus_services/pus_service128.fin"
-            (*action_status).__variant = Failure;
+            (*action_status)._variant = Status__Failure;
             #line 88 "src/service_libraries/pus_services/pus_service128.fin"
-            (*action_status).Failure.__0 = error_code;
+            (*action_status).Failure._0 = error_code;
 
         }
 
@@ -107,7 +107,7 @@ void CPUSService128__exec_tc(const __termina_event_t * const __ev, void * const 
     *reebot_flag = self->exec_tc_req_status_update.reebot_flag;
 
     #line 97 "src/service_libraries/pus_services/pus_service128.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 97 "src/service_libraries/pus_services/pus_service128.fin"
     return;

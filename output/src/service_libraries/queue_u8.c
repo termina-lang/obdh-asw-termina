@@ -23,13 +23,13 @@ _Bool is_empty(const QueueU8 * const queue) {
 
 }
 
-__status_int32_t enqueue(QueueU8 * const queue, uint8_t new_elem) {
+Status__i32 enqueue(QueueU8 * const queue, uint8_t new_elem) {
     
     #line 25 "src/service_libraries/queue_u8.fin"
     _Bool queue_is_full = is_full(queue);
 
     #line 26 "src/service_libraries/queue_u8.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 28 "src/service_libraries/queue_u8.fin"
     if (false == queue_is_full) {
@@ -38,7 +38,7 @@ __status_int32_t enqueue(QueueU8 * const queue, uint8_t new_elem) {
         size_t next_tail_index = (size_t)(queue->head_index + queue->num_elements) % queue_max_noe;
 
         #line 30 "src/service_libraries/queue_u8.fin"
-        queue->elements[__termina_array__index(1024U, next_tail_index)] = new_elem;
+        queue->elements[termina__check__array_index(1024U, next_tail_index)] = new_elem;
 
         #line 31 "src/service_libraries/queue_u8.fin"
         queue->num_elements = queue->num_elements + 1U;
@@ -47,9 +47,9 @@ __status_int32_t enqueue(QueueU8 * const queue, uint8_t new_elem) {
     {
         
         #line 33 "src/service_libraries/queue_u8.fin"
-        status.__variant = Failure;
+        status._variant = Status__Failure;
         #line 33 "src/service_libraries/queue_u8.fin"
-        status.Failure.__0 = -(1L);
+        status.Failure._0 = -(1L);
 
     }
 
@@ -58,7 +58,7 @@ __status_int32_t enqueue(QueueU8 * const queue, uint8_t new_elem) {
 
 }
 
-void dequeue(QueueU8 * const queue, __option_uint8_t * const old_elem) {
+void dequeue(QueueU8 * const queue, Option__u8 * const old_elem) {
     
     #line 40 "src/service_libraries/queue_u8.fin"
     _Bool queue_is_empty = is_empty(queue);
@@ -67,12 +67,12 @@ void dequeue(QueueU8 * const queue, __option_uint8_t * const old_elem) {
     if (false == queue_is_empty) {
         
         #line 43 "src/service_libraries/queue_u8.fin"
-        uint8_t element = queue->elements[__termina_array__index(1024U, queue->head_index)];
+        uint8_t element = queue->elements[termina__check__array_index(1024U, queue->head_index)];
 
         #line 44 "src/service_libraries/queue_u8.fin"
-        (*old_elem).__variant = Some;
+        (*old_elem)._variant = Option__Some;
         #line 44 "src/service_libraries/queue_u8.fin"
-        (*old_elem).Some.__0 = element;
+        (*old_elem).Some._0 = element;
 
         #line 45 "src/service_libraries/queue_u8.fin"
         queue->head_index = (size_t)(queue->head_index + 1U) % queue_max_noe;
@@ -84,7 +84,7 @@ void dequeue(QueueU8 * const queue, __option_uint8_t * const old_elem) {
     {
         
         #line 48 "src/service_libraries/queue_u8.fin"
-        (*old_elem).__variant = None;
+        (*old_elem)._variant = Option__None;
 
     }
 

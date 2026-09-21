@@ -7,21 +7,21 @@ const uint32_t Unit = 204U;
 
 const uint32_t Dec = 20U;
 
-__status_int32_t CInitHandler__init(const __termina_event_t * const __ev, void * const __this, TimeVal _boot_time) {
+Status__i32 CInitHandler__init(const termina__event_t * const termina__ev, void * const termina__this, TimeVal _boot_time) {
     
     (void)_boot_time;
 
     #line 42 "src/handlers/init.fin"
-    CInitHandler * self = (CInitHandler *)__this;
+    CInitHandler * self = (CInitHandler *)termina__this;
 
     #line 44 "src/handlers/init.fin"
-    __status_int32_t ret = { .__variant = Success };
+    Status__i32 ret = { ._variant = Status__Success };
 
     #line 47 "src/handlers/init.fin"
-    self->uart_drv.initialize(__ev, self->uart_drv.__that);
+    self->uart_drv.initialize(termina__ev, self->uart_drv._that);
 
     #line 50 "src/handlers/init.fin"
-    self->gpio_driver.init_gpio(__ev, self->gpio_driver.__that);
+    self->gpio_driver.init_gpio(termina__ev, self->gpio_driver._that);
 
     #line 53 "src/handlers/init.fin"
     for (size_t i = 5U; i < 12U; i = i + 1U) {

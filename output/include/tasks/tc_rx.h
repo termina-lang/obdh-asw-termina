@@ -1,5 +1,5 @@
-#ifndef __TASKS__TC_RX_H__
-#define __TASKS__TC_RX_H__
+#ifndef TASKS__TC_RX_H__
+#define TASKS__TC_RX_H__
 
 #include <termina.h>
 
@@ -12,19 +12,19 @@
 #include "option.h"
 
 typedef struct {
-    __termina_id_t __task_id;
-    __termina_id_t __task_msg_queue_id;
-    __termina_allocator_t tc_handler_pool;
-    __termina_out_port_t tc_message_queue_output;
-    __termina_id_t frame_ready_input;
+    termina__id_t _task_id;
+    termina__id_t _task_msg_queue_id;
+    termina__allocator_t tc_handler_pool;
+    termina__out_port_t tc_message_queue_output;
+    termina__id_t frame_ready_input;
     struct {
-        void * __that;
-        void (* dequeue)(const __termina_event_t * const __ev, void * const __this, __option_uint8_t * const byte);
+        void * _that;
+        void (* dequeue)(const termina__event_t * const termina__ev, void * const termina__this, Option__u8 * const byte);
     } tc_channel;
 } CTXRxBottomHalfTask;
 
-void __CTXRxBottomHalfTask__termina_task(void * const arg);
+void termina__task_entry__CTXRxBottomHalfTask(void * const arg);
 
-__status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this, size_t size);
+Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__ev, void * const termina__this, size_t size);
 
 #endif

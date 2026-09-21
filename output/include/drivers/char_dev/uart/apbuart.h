@@ -1,5 +1,5 @@
-#ifndef __DRIVERS__CHAR_DEV__UART__APBUART_H__
-#define __DRIVERS__CHAR_DEV__UART__APBUART_H__
+#ifndef DRIVERS__CHAR_DEV__UART__APBUART_H__
+#define DRIVERS__CHAR_DEV__UART__APBUART_H__
 
 #include <termina.h>
 
@@ -19,20 +19,20 @@ typedef struct {
 } APBUARTRegs;
 
 typedef struct {
-    __termina_resource_lock_type_t __lock_type;
+    termina__resource_lock_type_t _lock_type;
     struct {
-        void * __that;
-        void (* enqueue)(const __termina_event_t * const __ev, void * const __this, uint8_t byte, CharDevIrqStatus * const status);
+        void * _that;
+        void (* enqueue)(const termina__event_t * const termina__ev, void * const termina__this, uint8_t byte, CharDevIrqStatus * const status);
     } rx_queue;
     QueueU8 uart_tx_queue;
     _Bool rem_bytes;
     volatile APBUARTRegs * registers;
 } CAPBUARTDriver;
 
-void CAPBUARTDriver__initialize(const __termina_event_t * const __ev, void * const __this);
+void CAPBUARTDriver__initialize(const termina__event_t * const termina__ev, void * const termina__this);
 
-void CAPBUARTDriver__notify_irq(const __termina_event_t * const __ev, void * const __this, CharDevIrqStatus * const status);
+void CAPBUARTDriver__notify_irq(const termina__event_t * const termina__ev, void * const termina__this, CharDevIrqStatus * const status);
 
-void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __this, uint8_t output_byte, __status_int32_t * const status);
+void CAPBUARTDriver__send(const termina__event_t * const termina__ev, void * const termina__this, uint8_t output_byte, Status__i32 * const status);
 
 #endif

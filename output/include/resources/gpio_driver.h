@@ -1,5 +1,5 @@
-#ifndef __RESOURCES__GPIO_DRIVER_H__
-#define __RESOURCES__GPIO_DRIVER_H__
+#ifndef RESOURCES__GPIO_DRIVER_H__
+#define RESOURCES__GPIO_DRIVER_H__
 
 #include <termina.h>
 
@@ -14,12 +14,12 @@ typedef struct {
 } GPIO_registers;
 
 typedef struct {
-    __termina_resource_lock_type_t __lock_type;
+    termina__resource_lock_type_t _lock_type;
     volatile GPIO_registers * registers;
 } CGPIODriver;
 
-void CGPIODriver__init_gpio(const __termina_event_t * const __ev, void * const __this);
+void CGPIODriver__init_gpio(const termina__event_t * const termina__ev, void * const termina__this);
 
-void CGPIODriver__write_led(const __termina_event_t * const __ev, void * const __this, uint8_t led, uint8_t value, __status_int32_t * const status);
+void CGPIODriver__write_led(const termina__event_t * const termina__ev, void * const termina__this, uint8_t led, uint8_t value, Status__i32 * const status);
 
 #endif

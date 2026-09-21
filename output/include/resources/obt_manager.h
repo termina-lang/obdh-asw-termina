@@ -1,5 +1,5 @@
-#ifndef __RESOURCES__OBT_MANAGER_H__
-#define __RESOURCES__OBT_MANAGER_H__
+#ifndef RESOURCES__OBT_MANAGER_H__
+#define RESOURCES__OBT_MANAGER_H__
 
 #include <termina.h>
 
@@ -13,16 +13,16 @@ typedef struct {
 } MissionOBT;
 
 typedef struct {
-    __termina_resource_lock_type_t __lock_type;
+    termina__resource_lock_type_t _lock_type;
     struct {
-        void (* clock_get_uptime)(const __termina_event_t * const __ev, TimeVal * const current_time);
+        void (* clock_get_uptime)(const termina__event_t * const termina__ev, TimeVal * const current_time);
     } system_api;
     TimeVal ref_time_val_from_power_on;
     MissionOBT ref_obt;
 } COBTManager;
 
-void COBTManager__get_current_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT * const current_obt);
+void COBTManager__get_current_obt(const termina__event_t * const termina__ev, void * const termina__this, MissionOBT * const current_obt);
 
-void COBTManager__set_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT next_obt);
+void COBTManager__set_obt(const termina__event_t * const termina__ev, void * const termina__this, MissionOBT next_obt);
 
 #endif

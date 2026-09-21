@@ -1,14 +1,14 @@
 
 #include "service_libraries/pus_services/pus_service2.h"
 
-static __status_int32_t CPUSService2__dev_drv_on_off(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
+static Status__i32 CPUSService2__dev_drv_on_off(const termina__event_t * const termina__ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-static __status_int32_t CPUSService2__exec2_1TC(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
+static Status__i32 CPUSService2__exec2_1TC(const termina__event_t * const termina__ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update);
 
-static __status_int32_t CPUSService2__dev_drv_on_off(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
+static Status__i32 CPUSService2__dev_drv_on_off(const termina__event_t * const termina__ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 92 "src/service_libraries/pus_services/pus_service2.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 94 "src/service_libraries/pus_services/pus_service2.fin"
     uint8_t led = (uint8_t)(uint32_t)((uint32_t)(exec_tc_req_status_update->dev_address & 0xF0000000U) >> 28U);
@@ -17,54 +17,54 @@ static __status_int32_t CPUSService2__dev_drv_on_off(const __termina_event_t * c
     uint8_t on_off = (uint8_t)(uint32_t)(exec_tc_req_status_update->dev_address & 0xFU);
 
     #line 97 "src/service_libraries/pus_services/pus_service2.fin"
-    self->gpio_driver.write_led(__ev, self->gpio_driver.__that, led, on_off, &status);
+    self->gpio_driver.write_led(termina__ev, self->gpio_driver._that, led, on_off, &status);
 
     #line 99 "src/service_libraries/pus_services/pus_service2.fin"
     return status;
 
 }
 
-static __status_int32_t CPUSService2__exec2_1TC(const __termina_event_t * const __ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
+static Status__i32 CPUSService2__exec2_1TC(const termina__event_t * const termina__ev, CPUSService2 * const self, const PS2ExecTCReqStatusUpdate * const exec_tc_req_status_update) {
     
     #line 37 "src/service_libraries/pus_services/pus_service2.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 39 "src/service_libraries/pus_services/pus_service2.fin"
     if (exec_tc_req_status_update->N != 1U) {
         
         #line 41 "src/service_libraries/pus_services/pus_service2.fin"
-        self->pus_service_1.send_tm_1_4_num_of_instr_not_valid(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->N, &status);
+        self->pus_service_1.send_tm_1_4_num_of_instr_not_valid(termina__ev, self->pus_service_1._that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->N, &status);
 
     } else
     #line 46 "src/service_libraries/pus_services/pus_service2.fin"
     if (device_drv_is_on_off_address_valid(exec_tc_req_status_update) == false) {
         
         #line 48 "src/service_libraries/pus_services/pus_service2.fin"
-        self->pus_service_1.send_tm_1_4_device_address_not_valid(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->dev_address, &status);
+        self->pus_service_1.send_tm_1_4_device_address_not_valid(termina__ev, self->pus_service_1._that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->dev_address, &status);
 
     } else
     {
         
         #line 55 "src/service_libraries/pus_services/pus_service2.fin"
-        self->pus_service_1.notify_tm_1_3(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);
+        self->pus_service_1.notify_tm_1_3(termina__ev, self->pus_service_1._that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);
 
         #line 61 "src/service_libraries/pus_services/pus_service2.fin"
-        if (status.__variant == Success) {
+        if (status._variant == Status__Success) {
             
             #line 63 "src/service_libraries/pus_services/pus_service2.fin"
-            status = CPUSService2__dev_drv_on_off(__ev, self, exec_tc_req_status_update);
+            status = CPUSService2__dev_drv_on_off(termina__ev, self, exec_tc_req_status_update);
 
             #line 65 "src/service_libraries/pus_services/pus_service2.fin"
-            if (status.__variant == Success) {
+            if (status._variant == Status__Success) {
                 
                 #line 67 "src/service_libraries/pus_services/pus_service2.fin"
-                self->pus_service_1.notify_tm_1_7(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);
+                self->pus_service_1.notify_tm_1_7(termina__ev, self->pus_service_1._that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->flags_ack, &status);
 
             } else
             {
                 
                 #line 75 "src/service_libraries/pus_services/pus_service2.fin"
-                self->pus_service_1.send_tm_1_8_device_command_exec_error(__ev, self->pus_service_1.__that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->dev_address, &status);
+                self->pus_service_1.send_tm_1_8_device_command_exec_error(termina__ev, self->pus_service_1._that, exec_tc_req_status_update->packet_id, exec_tc_req_status_update->packet_seq_ctrl, exec_tc_req_status_update->dev_address, &status);
 
             }
 
@@ -77,13 +77,13 @@ static __status_int32_t CPUSService2__exec2_1TC(const __termina_event_t * const 
 
 }
 
-void CPUSService2__exec_tc(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status) {
+void CPUSService2__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, TCHandler * const tc_handler, Status__i32 * const action_status) {
     
     #line 102 "src/service_libraries/pus_services/pus_service2.fin"
-    CPUSService2 * self = (CPUSService2 *)__this;
+    CPUSService2 * self = (CPUSService2 *)termina__this;
 
     #line 102 "src/service_libraries/pus_services/pus_service2.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 104 "src/service_libraries/pus_services/pus_service2.fin"
     uint8_t subtype = tc_handler->df_header.subtype;
@@ -104,10 +104,10 @@ void CPUSService2__exec_tc(const __termina_event_t * const __ev, void * const __
     exec_tc_req_status_update.tc_num_bytes = tc_handler->tc_descriptor.tc_num_bytes;
 
     #line 112 "src/service_libraries/pus_services/pus_service2.fin"
-    __status_int32_t status = tc_handler_get_u8_appdata_field(tc_handler, &exec_tc_req_status_update.N);
+    Status__i32 status = tc_handler_get_u8_appdata_field(tc_handler, &exec_tc_req_status_update.N);
 
     #line 114 "src/service_libraries/pus_services/pus_service2.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 115 "src/service_libraries/pus_services/pus_service2.fin"
         status = tc_handler_get_u32_appdata_field(tc_handler, &exec_tc_req_status_update.dev_address);
@@ -115,72 +115,72 @@ void CPUSService2__exec_tc(const __termina_event_t * const __ev, void * const __
     }
 
     #line 118 "src/service_libraries/pus_services/pus_service2.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 120 "src/service_libraries/pus_services/pus_service2.fin"
         if (subtype == 1U) {
             
             #line 122 "src/service_libraries/pus_services/pus_service2.fin"
-            status = CPUSService2__exec2_1TC(__ev, self, &exec_tc_req_status_update);
+            status = CPUSService2__exec2_1TC(termina__ev, self, &exec_tc_req_status_update);
 
         } else
         {
             
             #line 126 "src/service_libraries/pus_services/pus_service2.fin"
-            status.__variant = Failure;
+            status._variant = Status__Failure;
             #line 126 "src/service_libraries/pus_services/pus_service2.fin"
-            status.Failure.__0 = ACCEPTANCE_ERROR;
+            status.Failure._0 = ACCEPTANCE_ERROR;
 
         }
 
     }
 
     #line 133 "src/service_libraries/pus_services/pus_service2.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 135 "src/service_libraries/pus_services/pus_service2.fin"
-        (*action_status).__variant = Success;
+        (*action_status)._variant = Status__Success;
 
     } else
     {
         
         #line 138 "src/service_libraries/pus_services/pus_service2.fin"
-        int32_t error_code = status.Failure.__0;
+        int32_t error_code = status.Failure._0;
 
         #line 140 "src/service_libraries/pus_services/pus_service2.fin"
         if (error_code == ACCEPTANCE_ERROR) {
             
             #line 142 "src/service_libraries/pus_services/pus_service2.fin"
-            self->pus_service_1.send_tm_1_4_error_in_acceptance(__ev, self->pus_service_1.__that, exec_tc_req_status_update.packet_id, exec_tc_req_status_update.packet_seq_ctrl, action_status);
+            self->pus_service_1.send_tm_1_4_error_in_acceptance(termina__ev, self->pus_service_1._that, exec_tc_req_status_update.packet_id, exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 147 "src/service_libraries/pus_services/pus_service2.fin"
         if (error_code == BUILD_TM_ERROR) {
             
             #line 149 "src/service_libraries/pus_services/pus_service2.fin"
-            self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(__ev, self->pus_service_1.__that, exec_tc_req_status_update.packet_id, exec_tc_req_status_update.packet_seq_ctrl, action_status);
+            self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(termina__ev, self->pus_service_1._that, exec_tc_req_status_update.packet_id, exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 154 "src/service_libraries/pus_services/pus_service2.fin"
         if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
             
             #line 156 "src/service_libraries/pus_services/pus_service2.fin"
-            self->pus_service_1.send_tm_1_4_short_pack_length(__ev, self->pus_service_1.__that, exec_tc_req_status_update.packet_id, exec_tc_req_status_update.packet_seq_ctrl, exec_tc_req_status_update.tc_num_bytes, action_status);
+            self->pus_service_1.send_tm_1_4_short_pack_length(termina__ev, self->pus_service_1._that, exec_tc_req_status_update.packet_id, exec_tc_req_status_update.packet_seq_ctrl, exec_tc_req_status_update.tc_num_bytes, action_status);
 
         } else
         {
             
             #line 164 "src/service_libraries/pus_services/pus_service2.fin"
-            (*action_status).__variant = Failure;
+            (*action_status)._variant = Status__Failure;
             #line 164 "src/service_libraries/pus_services/pus_service2.fin"
-            (*action_status).Failure.__0 = error_code;
+            (*action_status).Failure._0 = error_code;
 
         }
 
     }
 
     #line 171 "src/service_libraries/pus_services/pus_service2.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 171 "src/service_libraries/pus_services/pus_service2.fin"
     return;

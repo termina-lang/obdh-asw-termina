@@ -1,5 +1,5 @@
-#ifndef __RESOURCES__TM_CHANNEL_H__
-#define __RESOURCES__TM_CHANNEL_H__
+#ifndef RESOURCES__TM_CHANNEL_H__
+#define RESOURCES__TM_CHANNEL_H__
 
 #include <termina.h>
 
@@ -10,14 +10,14 @@
 #include "option.h"
 
 typedef struct {
-    __termina_resource_lock_type_t __lock_type;
-    __termina_allocator_t tm_handler_pool;
+    termina__resource_lock_type_t _lock_type;
+    termina__allocator_t tm_handler_pool;
     struct {
-        void * __that;
-        void (* send)(const __termina_event_t * const __ev, void * const __this, uint8_t output_byte, __status_int32_t * const status);
+        void * _that;
+        void (* send)(const termina__event_t * const termina__ev, void * const termina__this, uint8_t output_byte, Status__i32 * const status);
     } char_dev;
 } CTMChannel;
 
-void CTMChannel__send_tm(const __termina_event_t * const __ev, void * const __this, __termina_box_t tm_handler, __status_int32_t * const status);
+void CTMChannel__send_tm(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tm_handler, Status__i32 * const status);
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef __TASKS__BKGTCEXEC_H__
-#define __TASKS__BKGTCEXEC_H__
+#ifndef TASKS__BKGTCEXEC_H__
+#define TASKS__BKGTCEXEC_H__
 
 #include <termina.h>
 
@@ -15,26 +15,26 @@
 #include "option.h"
 
 typedef struct {
-    __termina_id_t __task_id;
-    __termina_id_t __task_msg_queue_id;
+    termina__id_t _task_id;
+    termina__id_t _task_msg_queue_id;
     struct {
-        void * __that;
-        void (* send_tm_1_4_error_in_acceptance)(const __termina_event_t * const __ev, void * const __this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, __status_int32_t * const status);
+        void * _that;
+        void (* send_tm_1_4_error_in_acceptance)(const termina__event_t * const termina__ev, void * const termina__this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, Status__i32 * const status);
     } pus_service_1;
     struct {
-        void * __that;
-        void (* exec_tc)(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
+        void * _that;
+        void (* exec_tc)(const termina__event_t * const termina__ev, void * const termina__this, TCHandler * const tc_handler, Status__i32 * const action_status);
     } pus_service_6;
     struct {
-        void * __that;
-        void (* exec_tc)(const __termina_event_t * const __ev, void * const __this, TCHandler * const tc_handler, __status_int32_t * const action_status);
+        void * _that;
+        void (* exec_tc)(const termina__event_t * const termina__ev, void * const termina__this, TCHandler * const tc_handler, Status__i32 * const action_status);
     } pus_service_20;
-    __termina_allocator_t tc_handler_pool;
-    __termina_id_t bkg_message_queue_input;
+    termina__allocator_t tc_handler_pool;
+    termina__id_t bkg_message_queue_input;
 } CBKGTCExecutorTask;
 
-void __CBKGTCExecutorTask__termina_task(void * const arg);
+void termina__task_entry__CBKGTCExecutorTask(void * const arg);
 
-__status_int32_t CBKGTCExecutorTask__exec_tc(const __termina_event_t * const __ev, void * const __this, __termina_box_t tc_handler);
+Status__i32 CBKGTCExecutorTask__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tc_handler);
 
 #endif

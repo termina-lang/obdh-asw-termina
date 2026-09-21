@@ -1,5 +1,5 @@
-#ifndef __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE6__INTERNAL_H__
-#define __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE6__INTERNAL_H__
+#ifndef SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE6__INTERNAL_H__
+#define SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE6__INTERNAL_H__
 
 #include <termina.h>
 
@@ -28,8 +28,8 @@ typedef struct {
     uint8_t data[256U];
 } PS6ExecTCReqStatusUpdate;
 
-__status_int32_t build_tm_6_6(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data);
+Status__i32 build_tm_6_6(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data);
 
-__status_int32_t build_tm_6_10(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data, uint16_t checksum);
+Status__i32 build_tm_6_10(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data, uint16_t checksum);
 
 #endif

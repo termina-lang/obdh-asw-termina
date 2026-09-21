@@ -1,5 +1,5 @@
-#ifndef __HANDLERS__INIT_H__
-#define __HANDLERS__INIT_H__
+#ifndef HANDLERS__INIT_H__
+#define HANDLERS__INIT_H__
 
 #include <termina.h>
 
@@ -16,19 +16,19 @@ extern const uint32_t Unit;
 extern const uint32_t Dec;
 
 typedef struct {
-    __termina_id_t __handler_id;
+    termina__id_t _handler_id;
     _Atomic uint8_t * system_data_pool_u8;
     _Atomic uint32_t * system_data_pool_u32;
     struct {
-        void * __that;
-        void (* init_gpio)(const __termina_event_t * const __ev, void * const __this);
+        void * _that;
+        void (* init_gpio)(const termina__event_t * const termina__ev, void * const termina__this);
     } gpio_driver;
     struct {
-        void * __that;
-        void (* initialize)(const __termina_event_t * const __ev, void * const __this);
+        void * _that;
+        void (* initialize)(const termina__event_t * const termina__ev, void * const termina__this);
     } uart_drv;
 } CInitHandler;
 
-__status_int32_t CInitHandler__init(const __termina_event_t * const __ev, void * const __this, TimeVal _boot_time);
+Status__i32 CInitHandler__init(const termina__event_t * const termina__ev, void * const termina__this, TimeVal _boot_time);
 
 #endif

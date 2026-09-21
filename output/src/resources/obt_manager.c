@@ -1,19 +1,19 @@
 
 #include "resources/obt_manager.h"
 
-void COBTManager__get_current_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT * const current_obt) {
+void COBTManager__get_current_obt(const termina__event_t * const termina__ev, void * const termina__this, MissionOBT * const current_obt) {
     
     #line 48 "src/resources/obt_manager.fin"
-    COBTManager * self = (COBTManager *)__this;
+    COBTManager * self = (COBTManager *)termina__this;
 
     #line 48 "src/resources/obt_manager.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 50 "src/resources/obt_manager.fin"
     TimeVal time_val_from_power_on = { .tv_sec = 0U, .tv_usec = 0U };
 
     #line 54 "src/resources/obt_manager.fin"
-    self->system_api.clock_get_uptime(__ev, &time_val_from_power_on);
+    self->system_api.clock_get_uptime(termina__ev, &time_val_from_power_on);
 
     #line 55 "src/resources/obt_manager.fin"
     TimeVal interval = substract_TimeVal(time_val_from_power_on, self->ref_time_val_from_power_on);
@@ -31,29 +31,29 @@ void COBTManager__get_current_obt(const __termina_event_t * const __ev, void * c
     current_obt->finetime = (uint16_t)(uint32_t)(fine_time_increment & 0xFFFFU);
 
     #line 63 "src/resources/obt_manager.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 63 "src/resources/obt_manager.fin"
     return;
 
 }
 
-void COBTManager__set_obt(const __termina_event_t * const __ev, void * const __this, MissionOBT next_obt) {
+void COBTManager__set_obt(const termina__event_t * const termina__ev, void * const termina__this, MissionOBT next_obt) {
     
     #line 30 "src/resources/obt_manager.fin"
-    COBTManager * self = (COBTManager *)__this;
+    COBTManager * self = (COBTManager *)termina__this;
 
     #line 30 "src/resources/obt_manager.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 32 "src/resources/obt_manager.fin"
     self->ref_obt = next_obt;
 
     #line 33 "src/resources/obt_manager.fin"
-    self->system_api.clock_get_uptime(__ev, &self->ref_time_val_from_power_on);
+    self->system_api.clock_get_uptime(termina__ev, &self->ref_time_val_from_power_on);
 
     #line 35 "src/resources/obt_manager.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 35 "src/resources/obt_manager.fin"
     return;

@@ -1,5 +1,5 @@
-#ifndef __SERVICE_LIBRARIES__QUEUE_U8_H__
-#define __SERVICE_LIBRARIES__QUEUE_U8_H__
+#ifndef SERVICE_LIBRARIES__QUEUE_U8_H__
+#define SERVICE_LIBRARIES__QUEUE_U8_H__
 
 #include <termina.h>
 
@@ -17,9 +17,9 @@ _Bool is_full(const QueueU8 * const queue);
 
 _Bool is_empty(const QueueU8 * const queue);
 
-__status_int32_t enqueue(QueueU8 * const queue, uint8_t new_elem);
+Status__i32 enqueue(QueueU8 * const queue, uint8_t new_elem);
 
-void dequeue(QueueU8 * const queue, __option_uint8_t * const old_elem);
+void dequeue(QueueU8 * const queue, Option__u8 * const old_elem);
 
 void get_num_enqueued_elems(const QueueU8 * const queue, size_t * const nelems);
 

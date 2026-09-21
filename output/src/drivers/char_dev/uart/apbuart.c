@@ -3,25 +3,25 @@
 
 const size_t hw_fifo_size = 1U;
 
-static void CAPBUARTDriver__disable_RF(const __termina_event_t * const __ev, CAPBUARTDriver * const self);
+static void CAPBUARTDriver__disable_RF(const termina__event_t * const termina__ev, CAPBUARTDriver * const self);
 
-static void CAPBUARTDriver__disable_TF(const __termina_event_t * const __ev, CAPBUARTDriver * const self);
+static void CAPBUARTDriver__disable_TF(const termina__event_t * const termina__ev, CAPBUARTDriver * const self);
 
-static void CAPBUARTDriver__enable_RI(const __termina_event_t * const __ev, CAPBUARTDriver * const self);
+static void CAPBUARTDriver__enable_RI(const termina__event_t * const termina__ev, CAPBUARTDriver * const self);
 
-static void CAPBUARTDriver__enable_RX(const __termina_event_t * const __ev, CAPBUARTDriver * const self);
+static void CAPBUARTDriver__enable_RX(const termina__event_t * const termina__ev, CAPBUARTDriver * const self);
 
-static void CAPBUARTDriver__enable_TI(const __termina_event_t * const __ev, CAPBUARTDriver * const self);
+static void CAPBUARTDriver__enable_TI(const termina__event_t * const termina__ev, CAPBUARTDriver * const self);
 
-static void CAPBUARTDriver__enable_TX(const __termina_event_t * const __ev, CAPBUARTDriver * const self);
+static void CAPBUARTDriver__enable_TX(const termina__event_t * const termina__ev, CAPBUARTDriver * const self);
 
-static void CAPBUARTDriver__release_tx(const __termina_event_t * const __ev, CAPBUARTDriver * const self);
+static void CAPBUARTDriver__release_tx(const termina__event_t * const termina__ev, CAPBUARTDriver * const self);
 
-static _Bool CAPBUARTDriver__tf_is_empty(const __termina_event_t * const __ev, const CAPBUARTDriver * const self);
+static _Bool CAPBUARTDriver__tf_is_empty(const termina__event_t * const termina__ev, const CAPBUARTDriver * const self);
 
-static void CAPBUARTDriver__disable_RF(const __termina_event_t * const __ev, CAPBUARTDriver * const self) {
+static void CAPBUARTDriver__disable_RF(const termina__event_t * const termina__ev, CAPBUARTDriver * const self) {
     
-    (void)__ev;
+    (void)termina__ev;
 
     #line 131 "src/drivers/char_dev/uart/apbuart.fin"
     uint32_t riscv_uart_rf = 0xFFFFFBFFU;
@@ -34,9 +34,9 @@ static void CAPBUARTDriver__disable_RF(const __termina_event_t * const __ev, CAP
 
 }
 
-static void CAPBUARTDriver__disable_TF(const __termina_event_t * const __ev, CAPBUARTDriver * const self) {
+static void CAPBUARTDriver__disable_TF(const termina__event_t * const termina__ev, CAPBUARTDriver * const self) {
     
-    (void)__ev;
+    (void)termina__ev;
 
     #line 121 "src/drivers/char_dev/uart/apbuart.fin"
     uint32_t riscv_uart_tf = 0xFFFFFCFFU;
@@ -49,9 +49,9 @@ static void CAPBUARTDriver__disable_TF(const __termina_event_t * const __ev, CAP
 
 }
 
-static void CAPBUARTDriver__enable_RI(const __termina_event_t * const __ev, CAPBUARTDriver * const self) {
+static void CAPBUARTDriver__enable_RI(const termina__event_t * const termina__ev, CAPBUARTDriver * const self) {
     
-    (void)__ev;
+    (void)termina__ev;
 
     #line 101 "src/drivers/char_dev/uart/apbuart.fin"
     uint32_t riscv_uart_ri = 0x4U;
@@ -64,9 +64,9 @@ static void CAPBUARTDriver__enable_RI(const __termina_event_t * const __ev, CAPB
 
 }
 
-static void CAPBUARTDriver__enable_RX(const __termina_event_t * const __ev, CAPBUARTDriver * const self) {
+static void CAPBUARTDriver__enable_RX(const termina__event_t * const termina__ev, CAPBUARTDriver * const self) {
     
-    (void)__ev;
+    (void)termina__ev;
 
     #line 91 "src/drivers/char_dev/uart/apbuart.fin"
     uint32_t riscv_uart_rxe = 0x1U;
@@ -79,9 +79,9 @@ static void CAPBUARTDriver__enable_RX(const __termina_event_t * const __ev, CAPB
 
 }
 
-static void CAPBUARTDriver__enable_TI(const __termina_event_t * const __ev, CAPBUARTDriver * const self) {
+static void CAPBUARTDriver__enable_TI(const termina__event_t * const termina__ev, CAPBUARTDriver * const self) {
     
-    (void)__ev;
+    (void)termina__ev;
 
     #line 111 "src/drivers/char_dev/uart/apbuart.fin"
     uint32_t riscv_uart_ti = 0x8U;
@@ -94,9 +94,9 @@ static void CAPBUARTDriver__enable_TI(const __termina_event_t * const __ev, CAPB
 
 }
 
-static void CAPBUARTDriver__enable_TX(const __termina_event_t * const __ev, CAPBUARTDriver * const self) {
+static void CAPBUARTDriver__enable_TX(const termina__event_t * const termina__ev, CAPBUARTDriver * const self) {
     
-    (void)__ev;
+    (void)termina__ev;
 
     #line 81 "src/drivers/char_dev/uart/apbuart.fin"
     uint32_t riscv_uart_txe = 0x2U;
@@ -109,43 +109,43 @@ static void CAPBUARTDriver__enable_TX(const __termina_event_t * const __ev, CAPB
 
 }
 
-void CAPBUARTDriver__initialize(const __termina_event_t * const __ev, void * const __this) {
+void CAPBUARTDriver__initialize(const termina__event_t * const termina__ev, void * const termina__this) {
     
     #line 255 "src/drivers/char_dev/uart/apbuart.fin"
-    CAPBUARTDriver * self = (CAPBUARTDriver *)__this;
+    CAPBUARTDriver * self = (CAPBUARTDriver *)termina__this;
 
     #line 255 "src/drivers/char_dev/uart/apbuart.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 257 "src/drivers/char_dev/uart/apbuart.fin"
-    CAPBUARTDriver__enable_RX(__ev, self);
+    CAPBUARTDriver__enable_RX(termina__ev, self);
 
     #line 258 "src/drivers/char_dev/uart/apbuart.fin"
-    CAPBUARTDriver__enable_TX(__ev, self);
+    CAPBUARTDriver__enable_TX(termina__ev, self);
 
     #line 259 "src/drivers/char_dev/uart/apbuart.fin"
-    CAPBUARTDriver__enable_RI(__ev, self);
+    CAPBUARTDriver__enable_RI(termina__ev, self);
 
     #line 260 "src/drivers/char_dev/uart/apbuart.fin"
-    CAPBUARTDriver__enable_TI(__ev, self);
+    CAPBUARTDriver__enable_TI(termina__ev, self);
 
     #line 261 "src/drivers/char_dev/uart/apbuart.fin"
-    CAPBUARTDriver__disable_TF(__ev, self);
+    CAPBUARTDriver__disable_TF(termina__ev, self);
 
     #line 262 "src/drivers/char_dev/uart/apbuart.fin"
-    CAPBUARTDriver__disable_RF(__ev, self);
+    CAPBUARTDriver__disable_RF(termina__ev, self);
 
     #line 264 "src/drivers/char_dev/uart/apbuart.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 264 "src/drivers/char_dev/uart/apbuart.fin"
     return;
 
 }
 
-static void CAPBUARTDriver__release_tx(const __termina_event_t * const __ev, CAPBUARTDriver * const self) {
+static void CAPBUARTDriver__release_tx(const termina__event_t * const termina__ev, CAPBUARTDriver * const self) {
     
-    (void)__ev;
+    (void)termina__ev;
 
     #line 167 "src/drivers/char_dev/uart/apbuart.fin"
     if (self->rem_bytes) {
@@ -160,7 +160,7 @@ static void CAPBUARTDriver__release_tx(const __termina_event_t * const __ev, CAP
         size_t sent_bytes = 0U;
 
         #line 174 "src/drivers/char_dev/uart/apbuart.fin"
-        __option_uint8_t extracted_elem = { .__variant = None };
+        Option__u8 extracted_elem = { ._variant = Option__None };
 
         #line 176 "src/drivers/char_dev/uart/apbuart.fin"
         for (size_t i = 0U; i < hw_fifo_size; i = i + 1U) {
@@ -169,10 +169,10 @@ static void CAPBUARTDriver__release_tx(const __termina_event_t * const __ev, CAP
             dequeue(&self->uart_tx_queue, &extracted_elem);
 
             #line 181 "src/drivers/char_dev/uart/apbuart.fin"
-            if (extracted_elem.__variant == Some) {
+            if (extracted_elem._variant == Option__Some) {
                 
                 #line 181 "src/drivers/char_dev/uart/apbuart.fin"
-                uint8_t elem = extracted_elem.Some.__0;
+                uint8_t elem = extracted_elem.Some._0;
 
                 #line 182 "src/drivers/char_dev/uart/apbuart.fin"
                 self->registers->data = (uint32_t)elem;
@@ -209,25 +209,25 @@ static void CAPBUARTDriver__release_tx(const __termina_event_t * const __ev, CAP
 
 }
 
-void CAPBUARTDriver__notify_irq(const __termina_event_t * const __ev, void * const __this, CharDevIrqStatus * const status) {
+void CAPBUARTDriver__notify_irq(const termina__event_t * const termina__ev, void * const termina__this, CharDevIrqStatus * const status) {
     
     #line 137 "src/drivers/char_dev/uart/apbuart.fin"
-    CAPBUARTDriver * self = (CAPBUARTDriver *)__this;
+    CAPBUARTDriver * self = (CAPBUARTDriver *)termina__this;
 
     #line 137 "src/drivers/char_dev/uart/apbuart.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 139 "src/drivers/char_dev/uart/apbuart.fin"
     uint32_t uart_status = self->registers->status;
 
     #line 140 "src/drivers/char_dev/uart/apbuart.fin"
-    (*status).__variant = CharDevIrqStatus__IrqOk;
+    (*status)._variant = CharDevIrqStatus__IrqOk;
 
     #line 142 "src/drivers/char_dev/uart/apbuart.fin"
     if ((uint32_t)(uart_status & 0x4U) != 0U) {
         
         #line 144 "src/drivers/char_dev/uart/apbuart.fin"
-        CAPBUARTDriver__release_tx(__ev, self);
+        CAPBUARTDriver__release_tx(termina__ev, self);
 
     }
 
@@ -238,21 +238,21 @@ void CAPBUARTDriver__notify_irq(const __termina_event_t * const __ev, void * con
         uint8_t byte = (uint8_t)self->registers->data;
 
         #line 151 "src/drivers/char_dev/uart/apbuart.fin"
-        self->rx_queue.enqueue(__ev, self->rx_queue.__that, byte, status);
+        self->rx_queue.enqueue(termina__ev, self->rx_queue._that, byte, status);
 
     }
 
     #line 155 "src/drivers/char_dev/uart/apbuart.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 155 "src/drivers/char_dev/uart/apbuart.fin"
     return;
 
 }
 
-static _Bool CAPBUARTDriver__tf_is_empty(const __termina_event_t * const __ev, const CAPBUARTDriver * const self) {
+static _Bool CAPBUARTDriver__tf_is_empty(const termina__event_t * const termina__ev, const CAPBUARTDriver * const self) {
     
-    (void)__ev;
+    (void)termina__ev;
 
     #line 72 "src/drivers/char_dev/uart/apbuart.fin"
     uint32_t riscv_uart_te = 0x4U;
@@ -262,19 +262,19 @@ static _Bool CAPBUARTDriver__tf_is_empty(const __termina_event_t * const __ev, c
 
 }
 
-void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __this, uint8_t output_byte, __status_int32_t * const status) {
+void CAPBUARTDriver__send(const termina__event_t * const termina__ev, void * const termina__this, uint8_t output_byte, Status__i32 * const status) {
     
     #line 219 "src/drivers/char_dev/uart/apbuart.fin"
-    CAPBUARTDriver * self = (CAPBUARTDriver *)__this;
+    CAPBUARTDriver * self = (CAPBUARTDriver *)termina__this;
 
     #line 219 "src/drivers/char_dev/uart/apbuart.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 222 "src/drivers/char_dev/uart/apbuart.fin"
-    (*status).__variant = Success;
+    (*status)._variant = Status__Success;
 
     #line 224 "src/drivers/char_dev/uart/apbuart.fin"
-    if (self->rem_bytes || CAPBUARTDriver__tf_is_empty(__ev, self) == false) {
+    if (self->rem_bytes || CAPBUARTDriver__tf_is_empty(termina__ev, self) == false) {
         
         #line 226 "src/drivers/char_dev/uart/apbuart.fin"
         size_t num_elements = 0U;
@@ -295,9 +295,9 @@ void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __t
         {
             
             #line 235 "src/drivers/char_dev/uart/apbuart.fin"
-            (*status).__variant = Failure;
+            (*status)._variant = Status__Failure;
             #line 235 "src/drivers/char_dev/uart/apbuart.fin"
-            (*status).Failure.__0 = TM_SEND_FAILURE;
+            (*status).Failure._0 = TM_SEND_FAILURE;
 
         }
 
@@ -310,7 +310,7 @@ void CAPBUARTDriver__send(const __termina_event_t * const __ev, void * const __t
     }
 
     #line 244 "src/drivers/char_dev/uart/apbuart.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 244 "src/drivers/char_dev/uart/apbuart.fin"
     return;

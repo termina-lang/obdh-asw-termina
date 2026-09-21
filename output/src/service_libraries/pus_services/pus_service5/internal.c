@@ -18,7 +18,7 @@ const uint16_t EvID_build_tm_error = 0x2100U;
 Ev_IDType get_Ev_ID_type(uint16_t Ev_ID) {
     
     #line 65 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    Ev_IDType Ev_ID_type = { .__variant = Ev_IDType__Ev_IDNotValid };
+    Ev_IDType Ev_ID_type = { ._variant = Ev_IDType__Ev_IDNotValid };
 
     #line 66 "src/service_libraries/pus_services/pus_service5/internal.fin"
     uint16_t aux_type = Ev_ID >> 12U;
@@ -30,33 +30,33 @@ Ev_IDType get_Ev_ID_type(uint16_t Ev_ID) {
         uint16_t aux_id = Ev_ID & 0xFFFU;
 
         #line 70 "src/service_libraries/pus_services/pus_service5/internal.fin"
-        if (aux_id < Ev_IDs_per_type[__termina_array__index(5U, (size_t)aux_type)]) {
+        if (aux_id < Ev_IDs_per_type[termina__check__array_index(5U, (size_t)aux_type)]) {
             
             #line 71 "src/service_libraries/pus_services/pus_service5/internal.fin"
             if (aux_type == 1U) {
                 
                 #line 72 "src/service_libraries/pus_services/pus_service5/internal.fin"
-                Ev_ID_type.__variant = Ev_IDType__Informative;
+                Ev_ID_type._variant = Ev_IDType__Informative;
 
             } else
             #line 73 "src/service_libraries/pus_services/pus_service5/internal.fin"
             if (aux_type == 2U) {
                 
                 #line 74 "src/service_libraries/pus_services/pus_service5/internal.fin"
-                Ev_ID_type.__variant = Ev_IDType__LowSeverityAnomaly;
+                Ev_ID_type._variant = Ev_IDType__LowSeverityAnomaly;
 
             } else
             #line 75 "src/service_libraries/pus_services/pus_service5/internal.fin"
             if (aux_type == 3U) {
                 
                 #line 76 "src/service_libraries/pus_services/pus_service5/internal.fin"
-                Ev_ID_type.__variant = Ev_IDType__MediumSeverityAnomaly;
+                Ev_ID_type._variant = Ev_IDType__MediumSeverityAnomaly;
 
             } else
             {
                 
                 #line 78 "src/service_libraries/pus_services/pus_service5/internal.fin"
-                Ev_ID_type.__variant = Ev_IDType__HighSeverityAnomaly;
+                Ev_ID_type._variant = Ev_IDType__HighSeverityAnomaly;
 
             }
 
@@ -78,7 +78,7 @@ _Bool is_Ev_ID_valid(uint16_t evID) {
     Ev_IDType evID_type = get_Ev_ID_type(evID);
 
     #line 91 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (evID_type.__variant == Ev_IDType__Ev_IDNotValid) {
+    if (evID_type._variant == Ev_IDType__Ev_IDNotValid) {
         
         #line 92 "src/service_libraries/pus_services/pus_service5/internal.fin"
         is_valid = false;
@@ -103,28 +103,28 @@ size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID) {
     size_t config_slot = 0U;
 
     #line 106 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (Ev_ID_type.__variant == Ev_IDType__Informative) {
+    if (Ev_ID_type._variant == Ev_IDType__Informative) {
         
         #line 107 "src/service_libraries/pus_services/pus_service5/internal.fin"
         config_slot = 1U;
 
     } else
     #line 109 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (Ev_ID_type.__variant == Ev_IDType__LowSeverityAnomaly) {
+    if (Ev_ID_type._variant == Ev_IDType__LowSeverityAnomaly) {
         
         #line 110 "src/service_libraries/pus_services/pus_service5/internal.fin"
         config_slot = 2U;
 
     } else
     #line 112 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (Ev_ID_type.__variant == Ev_IDType__MediumSeverityAnomaly) {
+    if (Ev_ID_type._variant == Ev_IDType__MediumSeverityAnomaly) {
         
         #line 113 "src/service_libraries/pus_services/pus_service5/internal.fin"
         config_slot = 3U;
 
     } else
     #line 115 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (Ev_ID_type.__variant == Ev_IDType__HighSeverityAnomaly) {
+    if (Ev_ID_type._variant == Ev_IDType__HighSeverityAnomaly) {
         
         #line 116 "src/service_libraries/pus_services/pus_service5/internal.fin"
         config_slot = 4U;
@@ -147,16 +147,16 @@ uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID) {
 
 }
 
-__status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamOutOfLimitInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
+Status__i32 build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamOutOfLimitInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
     
     #line 134 "src/service_libraries/pus_services/pus_service5/internal.fin"
     startup_tm(p_tm_handler);
 
     #line 135 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    __status_int32_t status = append_u16_appdata_field(p_tm_handler, ev_ID);
+    Status__i32 status = append_u16_appdata_field(p_tm_handler, ev_ID);
 
     #line 136 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 137 "src/service_libraries/pus_services/pus_service5/internal.fin"
         status = append_u16_appdata_field(p_tm_handler, fault_info.PID);
@@ -164,7 +164,7 @@ __status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler,
     }
 
     #line 139 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 140 "src/service_libraries/pus_services/pus_service5/internal.fin"
         status = append_u32_appdata_field(p_tm_handler, fault_info.PID_value);
@@ -172,7 +172,7 @@ __status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler,
     }
 
     #line 142 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 143 "src/service_libraries/pus_services/pus_service5/internal.fin"
         status = append_u32_appdata_field(p_tm_handler, fault_info.PID_limit);
@@ -180,7 +180,7 @@ __status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler,
     }
 
     #line 145 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 146 "src/service_libraries/pus_services/pus_service5/internal.fin"
         uint8_t subtype = (uint8_t)get_Ev_ID_enable_config_index(ev_ID);
@@ -195,16 +195,16 @@ __status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler,
 
 }
 
-__status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamFaultValueInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
+Status__i32 build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamFaultValueInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
     
     #line 156 "src/service_libraries/pus_services/pus_service5/internal.fin"
     startup_tm(p_tm_handler);
 
     #line 157 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    __status_int32_t status = append_u16_appdata_field(p_tm_handler, ev_ID);
+    Status__i32 status = append_u16_appdata_field(p_tm_handler, ev_ID);
 
     #line 158 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 159 "src/service_libraries/pus_services/pus_service5/internal.fin"
         status = append_u16_appdata_field(p_tm_handler, fault_info.PID);
@@ -212,7 +212,7 @@ __status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_hand
     }
 
     #line 161 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 162 "src/service_libraries/pus_services/pus_service5/internal.fin"
         status = append_u32_appdata_field(p_tm_handler, fault_info.PID_value);
@@ -220,7 +220,7 @@ __status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_hand
     }
 
     #line 164 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 165 "src/service_libraries/pus_services/pus_service5/internal.fin"
         status = append_u32_appdata_field(p_tm_handler, fault_info.PID_mask);
@@ -228,7 +228,7 @@ __status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_hand
     }
 
     #line 167 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 168 "src/service_libraries/pus_services/pus_service5/internal.fin"
         status = append_u32_appdata_field(p_tm_handler, fault_info.PID_expected_value);
@@ -236,7 +236,7 @@ __status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_hand
     }
 
     #line 170 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 171 "src/service_libraries/pus_services/pus_service5/internal.fin"
         uint8_t subtype = (uint8_t)get_Ev_ID_enable_config_index(ev_ID);

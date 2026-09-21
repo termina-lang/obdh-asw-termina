@@ -1,5 +1,5 @@
-#ifndef __SERVICE_LIBRARIES__PUS_TM_HANDLER_H__
-#define __SERVICE_LIBRARIES__PUS_TM_HANDLER_H__
+#ifndef SERVICE_LIBRARIES__PUS_TM_HANDLER_H__
+#define SERVICE_LIBRARIES__PUS_TM_HANDLER_H__
 
 #include <termina.h>
 
@@ -23,11 +23,11 @@ extern const uint16_t DESTINATION_ID;
 
 extern const size_t tm_app_data_offset;
 
-__status_int32_t append_u8_appdata_field(TMHandler * const tm_handler, uint8_t data);
+Status__i32 append_u8_appdata_field(TMHandler * const tm_handler, uint8_t data);
 
-__status_int32_t append_u16_appdata_field(TMHandler * const tm_handler, uint16_t data);
+Status__i32 append_u16_appdata_field(TMHandler * const tm_handler, uint16_t data);
 
-__status_int32_t append_u32_appdata_field(TMHandler * const tm_handler, uint32_t data);
+Status__i32 append_u32_appdata_field(TMHandler * const tm_handler, uint32_t data);
 
 void tm_handler_build_packet_header(TMHandler * const tm_handler, uint16_t tm_seq_counter);
 

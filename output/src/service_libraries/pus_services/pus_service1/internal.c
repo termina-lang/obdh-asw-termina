@@ -135,21 +135,21 @@ uint8_t get_failure_subtype(TCVerifyStage verify_stage) {
     uint8_t subtype;
 
     #line 201 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (verify_stage.__variant == TCVerifyStage__Acceptation) {
+    if (verify_stage._variant == TCVerifyStage__Acceptation) {
         
         #line 202 "src/service_libraries/pus_services/pus_service1/internal.fin"
         subtype = 2U;
 
     } else
     #line 204 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (verify_stage.__variant == TCVerifyStage__ExecStart) {
+    if (verify_stage._variant == TCVerifyStage__ExecStart) {
         
         #line 205 "src/service_libraries/pus_services/pus_service1/internal.fin"
         subtype = 4U;
 
     } else
     #line 207 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (verify_stage.__variant == TCVerifyStage__Progress) {
+    if (verify_stage._variant == TCVerifyStage__Progress) {
         
         #line 208 "src/service_libraries/pus_services/pus_service1/internal.fin"
         subtype = 6U;
@@ -167,7 +167,7 @@ uint8_t get_failure_subtype(TCVerifyStage verify_stage) {
 
 }
 
-__status_int32_t build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, MissionOBT current_obt) {
     
     #line 234 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -176,10 +176,10 @@ __status_int32_t build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, ui
     startup_tm(p_tm_handler);
 
     #line 237 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    Status__i32 status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
     #line 238 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 239 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
@@ -187,7 +187,7 @@ __status_int32_t build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, ui
     }
 
     #line 241 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 242 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u8_appdata_field(p_tm_handler, failure_code);
@@ -195,7 +195,7 @@ __status_int32_t build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, ui
     }
 
     #line 244 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 245 "src/service_libraries/pus_services/pus_service1/internal.fin"
         close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
@@ -207,7 +207,7 @@ __status_int32_t build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, ui
 
 }
 
-__status_int32_t build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint8_t failure_data, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint8_t failure_data, MissionOBT current_obt) {
     
     #line 259 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -216,10 +216,10 @@ __status_int32_t build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, ui
     startup_tm(p_tm_handler);
 
     #line 262 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    Status__i32 status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
     #line 263 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 264 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
@@ -227,7 +227,7 @@ __status_int32_t build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, ui
     }
 
     #line 266 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 267 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u8_appdata_field(p_tm_handler, failure_code);
@@ -235,7 +235,7 @@ __status_int32_t build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, ui
     }
 
     #line 269 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 270 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u8_appdata_field(p_tm_handler, failure_data);
@@ -243,7 +243,7 @@ __status_int32_t build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, ui
     }
 
     #line 272 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 273 "src/service_libraries/pus_services/pus_service1/internal.fin"
         close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
@@ -255,7 +255,7 @@ __status_int32_t build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, ui
 
 }
 
-__status_int32_t build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint16_t failure_data, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint16_t failure_data, MissionOBT current_obt) {
     
     #line 287 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -264,10 +264,10 @@ __status_int32_t build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, u
     startup_tm(p_tm_handler);
 
     #line 290 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    Status__i32 status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
     #line 291 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 292 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
@@ -275,7 +275,7 @@ __status_int32_t build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, u
     }
 
     #line 294 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 295 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u8_appdata_field(p_tm_handler, failure_code);
@@ -283,7 +283,7 @@ __status_int32_t build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, u
     }
 
     #line 297 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 298 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u16_appdata_field(p_tm_handler, failure_data);
@@ -291,7 +291,7 @@ __status_int32_t build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, u
     }
 
     #line 300 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 301 "src/service_libraries/pus_services/pus_service1/internal.fin"
         close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
@@ -303,7 +303,7 @@ __status_int32_t build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, u
 
 }
 
-__status_int32_t build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint32_t failure_data, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint32_t failure_data, MissionOBT current_obt) {
     
     #line 315 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -312,10 +312,10 @@ __status_int32_t build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, u
     startup_tm(p_tm_handler);
 
     #line 318 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    Status__i32 status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
     #line 319 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 320 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
@@ -323,7 +323,7 @@ __status_int32_t build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, u
     }
 
     #line 322 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 323 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u8_appdata_field(p_tm_handler, failure_code);
@@ -331,7 +331,7 @@ __status_int32_t build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, u
     }
 
     #line 325 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 326 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u32_appdata_field(p_tm_handler, failure_data);
@@ -339,7 +339,7 @@ __status_int32_t build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, u
     }
 
     #line 328 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 329 "src/service_libraries/pus_services/pus_service1/internal.fin"
         close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);
@@ -351,7 +351,7 @@ __status_int32_t build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, u
 
 }
 
-__status_int32_t build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint8_t failure_data1, uint32_t failure_data2, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint8_t failure_data1, uint32_t failure_data2, MissionOBT current_obt) {
     
     #line 345 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -360,10 +360,10 @@ __status_int32_t build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler
     startup_tm(p_tm_handler);
 
     #line 348 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    __status_int32_t status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
+    Status__i32 status = append_u16_appdata_field(p_tm_handler, tc_packet_id);
 
     #line 349 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 350 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u16_appdata_field(p_tm_handler, tc_packet_seq_ctrl);
@@ -371,7 +371,7 @@ __status_int32_t build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler
     }
 
     #line 352 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 353 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u8_appdata_field(p_tm_handler, failure_code);
@@ -379,7 +379,7 @@ __status_int32_t build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler
     }
 
     #line 355 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 356 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u8_appdata_field(p_tm_handler, failure_data1);
@@ -387,7 +387,7 @@ __status_int32_t build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler
     }
 
     #line 358 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 359 "src/service_libraries/pus_services/pus_service1/internal.fin"
         status = append_u32_appdata_field(p_tm_handler, failure_data2);
@@ -395,7 +395,7 @@ __status_int32_t build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler
     }
 
     #line 361 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if (status.__variant == Success) {
+    if (status._variant == Status__Success) {
         
         #line 362 "src/service_libraries/pus_services/pus_service1/internal.fin"
         close_tm(p_tm_handler, 1U, subtype, tm_seq_counter, current_obt);

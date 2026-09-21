@@ -1,5 +1,5 @@
-#ifndef __SERVICE_LIBRARIES__TIMEVAL_H__
-#define __SERVICE_LIBRARIES__TIMEVAL_H__
+#ifndef SERVICE_LIBRARIES__TIMEVAL_H__
+#define SERVICE_LIBRARIES__TIMEVAL_H__
 
 #include <termina.h>
 

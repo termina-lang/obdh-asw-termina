@@ -1,5 +1,5 @@
-#ifndef __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE12__INTERNAL_H__
-#define __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE12__INTERNAL_H__
+#ifndef SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE12__INTERNAL_H__
+#define SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE12__INTERNAL_H__
 
 #include <termina.h>
 
@@ -13,10 +13,10 @@ typedef enum {
     MonitorCheckType__Limits,
     MonitorCheckType__Delta,
     MonitorCheckType__Free
-} __enum_MonitorCheckType_t;
+} termina__enum__MonitorCheckType_t;
 
 typedef struct {
-    __enum_MonitorCheckType_t __variant;
+    termina__enum__MonitorCheckType_t _variant;
 } MonitorCheckType;
 
 typedef struct {
@@ -45,110 +45,110 @@ typedef enum {
     MonitorDefinition__ParamLimitCheck,
     MonitorDefinition__ParamDeltaCheck,
     MonitorDefinition__Unselected
-} __enum_MonitorDefinition_t;
+} termina__enum__MonitorDefinition_t;
 
 typedef struct {
-    ParamValueCheckDefinition __0;
-} __enum_MonitorDefinition__ParamValueCheck_params_t;
+    ParamValueCheckDefinition _0;
+} termina__enum__MonitorDefinition__ParamValueCheck_params_t;
 
 typedef struct {
-    ParamLimitCheckDefinition __0;
-} __enum_MonitorDefinition__ParamLimitCheck_params_t;
+    ParamLimitCheckDefinition _0;
+} termina__enum__MonitorDefinition__ParamLimitCheck_params_t;
 
 typedef struct {
-    ParamDeltaCheckDefinition __0;
-} __enum_MonitorDefinition__ParamDeltaCheck_params_t;
+    ParamDeltaCheckDefinition _0;
+} termina__enum__MonitorDefinition__ParamDeltaCheck_params_t;
 
 typedef struct {
-    __enum_MonitorDefinition_t __variant;
+    termina__enum__MonitorDefinition_t _variant;
     union {
-        __enum_MonitorDefinition__ParamValueCheck_params_t ParamValueCheck;
-        __enum_MonitorDefinition__ParamLimitCheck_params_t ParamLimitCheck;
-        __enum_MonitorDefinition__ParamDeltaCheck_params_t ParamDeltaCheck;
+        termina__enum__MonitorDefinition__ParamValueCheck_params_t ParamValueCheck;
+        termina__enum__MonitorDefinition__ParamLimitCheck_params_t ParamLimitCheck;
+        termina__enum__MonitorDefinition__ParamDeltaCheck_params_t ParamDeltaCheck;
     };
 } MonitorDefinition;
 
 typedef enum {
     CheckValueResult__MonitorValueUnexpected,
     CheckValueResult__MonitorValueExpected
-} __enum_CheckValueResult_t;
+} termina__enum__CheckValueResult_t;
 
 typedef struct {
-    __enum_CheckValueResult_t __variant;
+    termina__enum__CheckValueResult_t _variant;
 } CheckValueResult;
 
 typedef struct {
-    CheckValueResult __0;
-} __option_CheckValueResult__Some_params_t;
+    CheckValueResult _0;
+} termina__enum__Option__CheckValueResult__Some_params_t;
 
 typedef struct {
-    __option_CheckValueResult__Some_params_t Some;
-    __enum_option_t __variant;
-} __option_CheckValueResult_t;
+    termina__enum__Option__CheckValueResult__Some_params_t Some;
+    termina__enum__Option_t _variant;
+} Option__CheckValueResult;
 
 typedef enum {
     CheckLimitsResult__MonitorAboveHighLimit,
     CheckLimitsResult__MonitorBelowLowLimit,
     CheckLimitsResult__MonitorWithinLimits
-} __enum_CheckLimitsResult_t;
+} termina__enum__CheckLimitsResult_t;
 
 typedef struct {
-    __enum_CheckLimitsResult_t __variant;
+    termina__enum__CheckLimitsResult_t _variant;
 } CheckLimitsResult;
 
 typedef struct {
-    CheckLimitsResult __0;
-} __option_CheckLimitsResult__Some_params_t;
+    CheckLimitsResult _0;
+} termina__enum__Option__CheckLimitsResult__Some_params_t;
 
 typedef struct {
-    __option_CheckLimitsResult__Some_params_t Some;
-    __enum_option_t __variant;
-} __option_CheckLimitsResult_t;
+    termina__enum__Option__CheckLimitsResult__Some_params_t Some;
+    termina__enum__Option_t _variant;
+} Option__CheckLimitsResult;
 
 typedef enum {
     CheckDeltaResult__MonitorDeltaLow,
     CheckDeltaResult__MonitorDeltaHigh,
     CheckDeltaResult__MonitorDeltaWithin
-} __enum_CheckDeltaResult_t;
+} termina__enum__CheckDeltaResult_t;
 
 typedef struct {
-    __enum_CheckDeltaResult_t __variant;
+    termina__enum__CheckDeltaResult_t _variant;
 } CheckDeltaResult;
 
 typedef struct {
-    CheckDeltaResult __0;
-} __option_CheckDeltaResult__Some_params_t;
+    CheckDeltaResult _0;
+} termina__enum__Option__CheckDeltaResult__Some_params_t;
 
 typedef struct {
-    __option_CheckDeltaResult__Some_params_t Some;
-    __enum_option_t __variant;
-} __option_CheckDeltaResult_t;
+    termina__enum__Option__CheckDeltaResult__Some_params_t Some;
+    termina__enum__Option_t _variant;
+} Option__CheckDeltaResult;
 
 typedef enum {
     CheckState__ParamValueStatus,
     CheckState__ParamLimitStatus,
     CheckState__ParamDeltaStatus,
     CheckState__Unselected
-} __enum_CheckState_t;
+} termina__enum__CheckState_t;
 
 typedef struct {
-    __option_CheckValueResult_t __0;
-} __enum_CheckState__ParamValueStatus_params_t;
+    Option__CheckValueResult _0;
+} termina__enum__CheckState__ParamValueStatus_params_t;
 
 typedef struct {
-    __option_CheckLimitsResult_t __0;
-} __enum_CheckState__ParamLimitStatus_params_t;
+    Option__CheckLimitsResult _0;
+} termina__enum__CheckState__ParamLimitStatus_params_t;
 
 typedef struct {
-    __option_CheckDeltaResult_t __0;
-} __enum_CheckState__ParamDeltaStatus_params_t;
+    Option__CheckDeltaResult _0;
+} termina__enum__CheckState__ParamDeltaStatus_params_t;
 
 typedef struct {
-    __enum_CheckState_t __variant;
+    termina__enum__CheckState_t _variant;
     union {
-        __enum_CheckState__ParamValueStatus_params_t ParamValueStatus;
-        __enum_CheckState__ParamLimitStatus_params_t ParamLimitStatus;
-        __enum_CheckState__ParamDeltaStatus_params_t ParamDeltaStatus;
+        termina__enum__CheckState__ParamValueStatus_params_t ParamValueStatus;
+        termina__enum__CheckState__ParamLimitStatus_params_t ParamLimitStatus;
+        termina__enum__CheckState__ParamDeltaStatus_params_t ParamDeltaStatus;
     };
 } CheckState;
 
@@ -186,7 +186,7 @@ typedef struct {
     CheckState new_status;
     CheckState prev_status;
     _Bool event_triggered;
-    __status_int32_t status;
+    Status__i32 status;
 } DoMonitoringReqStatusUpdate;
 
 typedef enum {
@@ -197,10 +197,10 @@ typedef enum {
     DoMonitoringReqStatus__DoExpectedValueMonitoring,
     DoMonitoringReqStatus__GetRequestStatusUpdate,
     DoMonitoringReqStatus__Exit
-} __enum_DoMonitoringReqStatus_t;
+} termina__enum__DoMonitoringReqStatus_t;
 
 typedef struct {
-    __enum_DoMonitoringReqStatus_t __variant;
+    termina__enum__DoMonitoringReqStatus_t _variant;
 } DoMonitoringReqStatus;
 
 typedef struct {
@@ -233,6 +233,6 @@ MonitorCheckType get_check_type(uint8_t aux);
 
 _Bool is_valid_check_limit_def(const MonitorDefinition * const param_limit_check_definition);
 
-__status_int32_t build_tm_12_12(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, uint8_t counter, const ParamMonitoringTransition param_mon_transitions_table[1U]);
+Status__i32 build_tm_12_12(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, uint8_t counter, const ParamMonitoringTransition param_mon_transitions_table[1U]);
 
 #endif

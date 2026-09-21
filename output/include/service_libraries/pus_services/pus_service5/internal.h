@@ -1,5 +1,5 @@
-#ifndef __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE5__INTERNAL_H__
-#define __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE5__INTERNAL_H__
+#ifndef SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE5__INTERNAL_H__
+#define SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE5__INTERNAL_H__
 
 #include <termina.h>
 
@@ -15,10 +15,10 @@ typedef enum {
     Ev_IDType__MediumSeverityAnomaly,
     Ev_IDType__HighSeverityAnomaly,
     Ev_IDType__Ev_IDNotValid
-} __enum_Ev_IDType_t;
+} termina__enum__Ev_IDType_t;
 
 typedef struct {
-    __enum_Ev_IDType_t __variant;
+    termina__enum__Ev_IDType_t _variant;
 } Ev_IDType;
 
 extern const uint16_t informative_Ev_IDs;
@@ -65,8 +65,8 @@ size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID);
 
 uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID);
 
-__status_int32_t build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamOutOfLimitInfo fault_info, uint16_t ev_ID, MissionOBT current_obt);
+Status__i32 build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamOutOfLimitInfo fault_info, uint16_t ev_ID, MissionOBT current_obt);
 
-__status_int32_t build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamFaultValueInfo fault_info, uint16_t ev_ID, MissionOBT current_obt);
+Status__i32 build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamFaultValueInfo fault_info, uint16_t ev_ID, MissionOBT current_obt);
 
 #endif

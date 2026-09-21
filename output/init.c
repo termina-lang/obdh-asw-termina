@@ -26,86 +26,96 @@
 #include "service_libraries/tm_ccsds_pus_format.h"
 #include "tasks/hk_fdir_mng/hk_fdir.h"
 
-void __termina_app__init_globals(void) {
+void termina__app__init_globals(void) {
     
     hk_fdir_timer.period.tv_sec = 1U;
     hk_fdir_timer.period.tv_usec = 0U;
-    tm_pool.__lock_type.type = __termina_resource_lock_type__none;
-    tc_pool.__lock_type.type = __termina_resource_lock_type__none;
-    for (size_t __i0 = 0U; __i0 < 12U; __i0 = __i0 + 1U) {
-        atomic_store(&u32_system_data_pool[__i0], 0U);
+    tm_pool._lock_type.type = termina__resource_lock_type__none;
+    tc_pool._lock_type.type = termina__resource_lock_type__none;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 12U;
+         termina__i0 = termina__i0 + 1U) {
+        atomic_store(&u32_system_data_pool[termina__i0], 0U);
     }
-    for (size_t __i0 = 0U; __i0 < 18U; __i0 = __i0 + 1U) {
-        atomic_store(&u8_system_data_pool[__i0], 0U);
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 18U;
+         termina__i0 = termina__i0 + 1U) {
+        atomic_store(&u8_system_data_pool[termina__i0], 0U);
     }
-    tc_channel.__lock_type.type = __termina_resource_lock_type__none;
+    tc_channel._lock_type.type = termina__resource_lock_type__none;
     tc_channel.aux_index = 0U;
-    for (size_t __i0 = 0U; __i0 < 2U; __i0 = __i0 + 1U) {
-        tc_channel.raw_rx_tc_length[__i0] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 2U;
+         termina__i0 = termina__i0 + 1U) {
+        tc_channel.raw_rx_tc_length[termina__i0] = 0U;
     }
-    tc_channel.rx_status.__variant = TCRxStatus__SyncBytesRx;
+    tc_channel.rx_status._variant = TCRxStatus__SyncBytesRx;
     tc_channel.sync_word[0U] = 0xBEU;
     tc_channel.sync_word[1U] = 0xBAU;
     tc_channel.sync_word[2U] = 0xBEU;
     tc_channel.sync_word[3U] = 0xEFU;
     tc_channel.tc_num_bytes = 0U;
-    for (size_t __i0 = 0U; __i0 < queue_max_noe; __i0 = __i0 + 1U) {
-        tc_channel.tc_rx_queue.elements[__i0] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < queue_max_noe;
+         termina__i0 = termina__i0 + 1U) {
+        tc_channel.tc_rx_queue.elements[termina__i0] = 0U;
     }
     tc_channel.tc_rx_queue.head_index = 0U;
     tc_channel.tc_rx_queue.num_elements = 0U;
-    uart_drv.__lock_type.type = __termina_resource_lock_type__none;
+    uart_drv._lock_type.type = termina__resource_lock_type__none;
     uart_drv.registers = (volatile APBUARTRegs *)0x80000100U;
     uart_drv.rem_bytes = false;
-    uart_drv.rx_queue.__that = &tc_channel;
+    uart_drv.rx_queue._that = &tc_channel;
     uart_drv.rx_queue.enqueue = &CTCChannel__enqueue;
-    for (size_t __i0 = 0U; __i0 < queue_max_noe; __i0 = __i0 + 1U) {
-        uart_drv.uart_tx_queue.elements[__i0] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < queue_max_noe;
+         termina__i0 = termina__i0 + 1U) {
+        uart_drv.uart_tx_queue.elements[termina__i0] = 0U;
     }
     uart_drv.uart_tx_queue.head_index = 0U;
     uart_drv.uart_tx_queue.num_elements = 0U;
-    gpio_drv.__lock_type.type = __termina_resource_lock_type__none;
+    gpio_drv._lock_type.type = termina__resource_lock_type__none;
     gpio_drv.registers = (volatile GPIO_registers *)0x80000A00U;
-    tm_channel.__lock_type.type = __termina_resource_lock_type__none;
-    tm_channel.char_dev.__that = &uart_drv;
+    tm_channel._lock_type.type = termina__resource_lock_type__none;
+    tm_channel.char_dev._that = &uart_drv;
     tm_channel.char_dev.send = &CAPBUARTDriver__send;
-    tm_channel.tm_handler_pool.__that = &tm_pool;
-    tm_channel.tm_handler_pool.alloc = __termina_pool__alloc;
-    tm_channel.tm_handler_pool.free = __termina_pool__free;
-    tm_counter.__lock_type.type = __termina_resource_lock_type__none;
+    tm_channel.tm_handler_pool._that = &tm_pool;
+    tm_channel.tm_handler_pool.alloc = termina__pool__alloc;
+    tm_channel.tm_handler_pool.free = termina__pool__free;
+    tm_counter._lock_type.type = termina__resource_lock_type__none;
     tm_counter.tm_count = 0U;
-    obt_manager.__lock_type.type = __termina_resource_lock_type__none;
+    obt_manager._lock_type.type = termina__resource_lock_type__none;
     obt_manager.ref_obt.finetime = 0U;
     obt_manager.ref_obt.seconds = 0U;
     obt_manager.ref_time_val_from_power_on.tv_sec = 0U;
     obt_manager.ref_time_val_from_power_on.tv_usec = 0U;
     obt_manager.system_api.clock_get_uptime = &SystemEntry__clock_get_uptime;
-    pus_service_1.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_1.obt_manager.__that = &obt_manager;
+    pus_service_1._lock_type.type = termina__resource_lock_type__none;
+    pus_service_1.obt_manager._that = &obt_manager;
     pus_service_1.obt_manager.get_current_obt = &COBTManager__get_current_obt;
-    pus_service_1.tm_channel.__that = &tm_channel;
+    pus_service_1.tm_channel._that = &tm_channel;
     pus_service_1.tm_channel.send_tm = &CTMChannel__send_tm;
-    pus_service_1.tm_counter.__that = &tm_counter;
+    pus_service_1.tm_counter._that = &tm_counter;
     pus_service_1.tm_counter.get_next_tm_count = &CTMCounter__get_next_tm_count;
-    pus_service_1.tm_handler_pool.__that = &tm_pool;
-    pus_service_1.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_1.tm_handler_pool.free = __termina_pool__free;
-    pus_service_9.__lock_type.type = __termina_resource_lock_type__none;
+    pus_service_1.tm_handler_pool._that = &tm_pool;
+    pus_service_1.tm_handler_pool.alloc = termina__pool__alloc;
+    pus_service_1.tm_handler_pool.free = termina__pool__free;
+    pus_service_9._lock_type.type = termina__resource_lock_type__none;
     pus_service_9.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_9.exec_tc_req_status_update.next_OBT.finetime = 0U;
     pus_service_9.exec_tc_req_status_update.next_OBT.seconds = 0U;
     pus_service_9.exec_tc_req_status_update.packet_id = 0U;
     pus_service_9.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_9.exec_tc_req_status_update.tc_num_bytes = 0U;
-    pus_service_9.obt_manager.__that = &obt_manager;
+    pus_service_9.obt_manager._that = &obt_manager;
     pus_service_9.obt_manager.set_obt = &COBTManager__set_obt;
-    pus_service_9.pus_service_1.__that = &pus_service_1;
+    pus_service_9.pus_service_1._that = &pus_service_1;
     pus_service_9.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_9.pus_service_1.send_tm_1_4_short_pack_length = &CPUSService1__send_tm_1_4_short_pack_length;
     pus_service_9.pus_service_1.send_tm_1_4_error_in_acceptance = &CPUSService1__send_tm_1_4_error_in_acceptance;
     pus_service_9.pus_service_1.notify_tm_1_7 = &CPUSService1__notify_tm_1_7;
     pus_service_9.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
-    pus_service_5.__lock_type.type = __termina_resource_lock_type__none;
+    pus_service_5._lock_type.type = termina__resource_lock_type__none;
     pus_service_5.Ev_ID_enable_config[0U] = 0x7U;
     pus_service_5.Ev_ID_enable_config[1U] = 0x0U;
     pus_service_5.Ev_ID_enable_config[2U] = 0x0U;
@@ -116,9 +126,9 @@ void __termina_app__init_globals(void) {
     pus_service_5.exec_tc_req_status_update.packet_id = 0U;
     pus_service_5.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_5.exec_tc_req_status_update.tc_num_bytes = 0U;
-    pus_service_5.obt_manager.__that = &obt_manager;
+    pus_service_5.obt_manager._that = &obt_manager;
     pus_service_5.obt_manager.get_current_obt = &COBTManager__get_current_obt;
-    pus_service_5.pus_service_1.__that = &pus_service_1;
+    pus_service_5.pus_service_1._that = &pus_service_1;
     pus_service_5.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_5.pus_service_1.send_tm_1_4_short_pack_length = &CPUSService1__send_tm_1_4_short_pack_length;
     pus_service_5.pus_service_1.send_tm_1_4_num_of_instr_not_valid = &CPUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -126,14 +136,14 @@ void __termina_app__init_globals(void) {
     pus_service_5.pus_service_1.send_tm_1_4_error_in_acceptance = &CPUSService1__send_tm_1_4_error_in_acceptance;
     pus_service_5.pus_service_1.notify_tm_1_7 = &CPUSService1__notify_tm_1_7;
     pus_service_5.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
-    pus_service_5.tm_channel.__that = &tm_channel;
+    pus_service_5.tm_channel._that = &tm_channel;
     pus_service_5.tm_channel.send_tm = &CTMChannel__send_tm;
-    pus_service_5.tm_counter.__that = &tm_counter;
+    pus_service_5.tm_counter._that = &tm_counter;
     pus_service_5.tm_counter.get_next_tm_count = &CTMCounter__get_next_tm_count;
-    pus_service_5.tm_handler_pool.__that = &tm_pool;
-    pus_service_5.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_5.tm_handler_pool.free = __termina_pool__free;
-    pus_service_3.__lock_type.type = __termina_resource_lock_type__none;
+    pus_service_5.tm_handler_pool._that = &tm_pool;
+    pus_service_5.tm_handler_pool.alloc = termina__pool__alloc;
+    pus_service_5.tm_handler_pool.free = termina__pool__free;
+    pus_service_3._lock_type.type = termina__resource_lock_type__none;
     pus_service_3.hk_config_table[0U].SID = 0U;
     pus_service_3.hk_config_table[0U].enabled = true;
     pus_service_3.hk_config_table[0U].interval = 2U;
@@ -302,9 +312,9 @@ void __termina_app__init_globals(void) {
     pus_service_3.hk_config_table[7U].params_def[13U] = 0U;
     pus_service_3.hk_config_table[7U].params_def[14U] = 0U;
     pus_service_3.hk_config_table[7U].params_def[15U] = 0U;
-    pus_service_3.obt_manager.__that = &obt_manager;
+    pus_service_3.obt_manager._that = &obt_manager;
     pus_service_3.obt_manager.get_current_obt = &COBTManager__get_current_obt;
-    pus_service_3.pus_service_1.__that = &pus_service_1;
+    pus_service_3.pus_service_1._that = &pus_service_1;
     pus_service_3.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_3.pus_service_1.send_tm_1_4_short_pack_length = &CPUSService1__send_tm_1_4_short_pack_length;
     pus_service_3.pus_service_1.send_tm_1_4_num_of_instr_not_valid = &CPUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -312,28 +322,28 @@ void __termina_app__init_globals(void) {
     pus_service_3.pus_service_1.send_tm_1_4_error_in_acceptance = &CPUSService1__send_tm_1_4_error_in_acceptance;
     pus_service_3.pus_service_1.notify_tm_1_7 = &CPUSService1__notify_tm_1_7;
     pus_service_3.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
-    pus_service_3.pus_service_5.__that = &pus_service_5;
+    pus_service_3.pus_service_5._that = &pus_service_5;
     pus_service_3.pus_service_5.send_tm_5_2 = &CPUSService5__send_tm_5_2;
     pus_service_3.random_seed = 42U;
     pus_service_3.system_data_pool_u32 = u32_system_data_pool;
     pus_service_3.system_data_pool_u8 = u8_system_data_pool;
-    pus_service_3.tm_channel.__that = &tm_channel;
+    pus_service_3.tm_channel._that = &tm_channel;
     pus_service_3.tm_channel.send_tm = &CTMChannel__send_tm;
-    pus_service_3.tm_counter.__that = &tm_counter;
+    pus_service_3.tm_counter._that = &tm_counter;
     pus_service_3.tm_counter.get_next_tm_count = &CTMCounter__get_next_tm_count;
-    pus_service_3.tm_handler_pool.__that = &tm_pool;
-    pus_service_3.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_3.tm_handler_pool.free = __termina_pool__free;
-    pus_service_12.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_12.do_monitoring_req_status.__variant = DoMonitoringReqStatus__Init;
+    pus_service_3.tm_handler_pool._that = &tm_pool;
+    pus_service_3.tm_handler_pool.alloc = termina__pool__alloc;
+    pus_service_3.tm_handler_pool.free = termina__pool__free;
+    pus_service_12._lock_type.type = termina__resource_lock_type__none;
+    pus_service_12.do_monitoring_req_status._variant = DoMonitoringReqStatus__Init;
     pus_service_12.do_monitoring_req_status_update.EvID = 0U;
     pus_service_12.do_monitoring_req_status_update.PMONID = 0U;
-    pus_service_12.do_monitoring_req_status_update.current_monitor_definition.__variant = MonitorDefinition__Unselected;
+    pus_service_12.do_monitoring_req_status_update.current_monitor_definition._variant = MonitorDefinition__Unselected;
     pus_service_12.do_monitoring_req_status_update.event_triggered = false;
-    pus_service_12.do_monitoring_req_status_update.fault_info.__variant = FaultInfo__Empty;
-    pus_service_12.do_monitoring_req_status_update.new_status.__variant = CheckState__Unselected;
-    pus_service_12.do_monitoring_req_status_update.prev_status.__variant = CheckState__Unselected;
-    pus_service_12.do_monitoring_req_status_update.status.__variant = Success;
+    pus_service_12.do_monitoring_req_status_update.fault_info._variant = FaultInfo__Empty;
+    pus_service_12.do_monitoring_req_status_update.new_status._variant = CheckState__Unselected;
+    pus_service_12.do_monitoring_req_status_update.prev_status._variant = CheckState__Unselected;
+    pus_service_12.do_monitoring_req_status_update.status._variant = Status__Success;
     pus_service_12.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_12.exec_tc_req_status_update.packet_id = 0U;
     pus_service_12.exec_tc_req_status_update.packet_seq_ctrl = 0U;
@@ -342,48 +352,52 @@ void __termina_app__init_globals(void) {
     pus_service_12.exec_tc_req_status_update.tc_data_5.N = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.PMONID = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.PID = 0U;
-    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.current_state.__variant = CheckState__Unselected;
-    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.definition.__variant = MonitorDefinition__Unselected;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.current_state._variant = CheckState__Unselected;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.definition._variant = MonitorDefinition__Unselected;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.enabled = false;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.interval = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.interval_control = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.repetition = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.repetition_control = 0U;
-    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.temp_state.__variant = CheckState__Unselected;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.temp_state._variant = CheckState__Unselected;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.transition_obt.finetime = 0U;
     pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.transition_obt.seconds = 0U;
-    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.type.__variant = MonitorCheckType__Free;
+    pus_service_12.exec_tc_req_status_update.tc_data_5.mon_config.type._variant = MonitorCheckType__Free;
     pus_service_12.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_12.monitoring_transition_counter = 0U;
-    pus_service_12.obt_manager.__that = &obt_manager;
+    pus_service_12.obt_manager._that = &obt_manager;
     pus_service_12.obt_manager.get_current_obt = &COBTManager__get_current_obt;
-    for (size_t __i0 = 0U; __i0 < 16U; __i0 = __i0 + 1U) {
-        pus_service_12.param_mon_config_table[__i0].PID = 0U;
-        pus_service_12.param_mon_config_table[__i0].current_state.__variant = CheckState__Unselected;
-        pus_service_12.param_mon_config_table[__i0].definition.__variant = MonitorDefinition__Unselected;
-        pus_service_12.param_mon_config_table[__i0].enabled = false;
-        pus_service_12.param_mon_config_table[__i0].interval = 0U;
-        pus_service_12.param_mon_config_table[__i0].interval_control = 0U;
-        pus_service_12.param_mon_config_table[__i0].repetition = 0U;
-        pus_service_12.param_mon_config_table[__i0].repetition_control = 0U;
-        pus_service_12.param_mon_config_table[__i0].temp_state.__variant = CheckState__Unselected;
-        pus_service_12.param_mon_config_table[__i0].transition_obt.finetime = 0U;
-        pus_service_12.param_mon_config_table[__i0].transition_obt.seconds = 0U;
-        pus_service_12.param_mon_config_table[__i0].type.__variant = MonitorCheckType__Free;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 16U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_12.param_mon_config_table[termina__i0].PID = 0U;
+        pus_service_12.param_mon_config_table[termina__i0].current_state._variant = CheckState__Unselected;
+        pus_service_12.param_mon_config_table[termina__i0].definition._variant = MonitorDefinition__Unselected;
+        pus_service_12.param_mon_config_table[termina__i0].enabled = false;
+        pus_service_12.param_mon_config_table[termina__i0].interval = 0U;
+        pus_service_12.param_mon_config_table[termina__i0].interval_control = 0U;
+        pus_service_12.param_mon_config_table[termina__i0].repetition = 0U;
+        pus_service_12.param_mon_config_table[termina__i0].repetition_control = 0U;
+        pus_service_12.param_mon_config_table[termina__i0].temp_state._variant = CheckState__Unselected;
+        pus_service_12.param_mon_config_table[termina__i0].transition_obt.finetime = 0U;
+        pus_service_12.param_mon_config_table[termina__i0].transition_obt.seconds = 0U;
+        pus_service_12.param_mon_config_table[termina__i0].type._variant = MonitorCheckType__Free;
     }
-    for (size_t __i0 = 0U; __i0 < 1U; __i0 = __i0 + 1U) {
-        pus_service_12.param_mon_transitions_table[__i0].PID = 0U;
-        pus_service_12.param_mon_transitions_table[__i0].PMONID = 0U;
-        pus_service_12.param_mon_transitions_table[__i0].limit_value = 0U;
-        pus_service_12.param_mon_transitions_table[__i0].mask_value = 0U;
-        pus_service_12.param_mon_transitions_table[__i0].new_status.__variant = CheckState__Unselected;
-        pus_service_12.param_mon_transitions_table[__i0].new_value = 0U;
-        pus_service_12.param_mon_transitions_table[__i0].prev_status.__variant = CheckState__Unselected;
-        pus_service_12.param_mon_transitions_table[__i0].trans_obt.finetime = 0U;
-        pus_service_12.param_mon_transitions_table[__i0].trans_obt.seconds = 0U;
-        pus_service_12.param_mon_transitions_table[__i0].type.__variant = MonitorCheckType__Free;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 1U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_12.param_mon_transitions_table[termina__i0].PID = 0U;
+        pus_service_12.param_mon_transitions_table[termina__i0].PMONID = 0U;
+        pus_service_12.param_mon_transitions_table[termina__i0].limit_value = 0U;
+        pus_service_12.param_mon_transitions_table[termina__i0].mask_value = 0U;
+        pus_service_12.param_mon_transitions_table[termina__i0].new_status._variant = CheckState__Unselected;
+        pus_service_12.param_mon_transitions_table[termina__i0].new_value = 0U;
+        pus_service_12.param_mon_transitions_table[termina__i0].prev_status._variant = CheckState__Unselected;
+        pus_service_12.param_mon_transitions_table[termina__i0].trans_obt.finetime = 0U;
+        pus_service_12.param_mon_transitions_table[termina__i0].trans_obt.seconds = 0U;
+        pus_service_12.param_mon_transitions_table[termina__i0].type._variant = MonitorCheckType__Free;
     }
-    pus_service_12.pus_service_1.__that = &pus_service_1;
+    pus_service_12.pus_service_1._that = &pus_service_1;
     pus_service_12.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_12.pus_service_1.send_tm_1_4_short_pack_length = &CPUSService1__send_tm_1_4_short_pack_length;
     pus_service_12.pus_service_1.send_tm_1_4_num_of_instr_not_valid = &CPUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -397,35 +411,43 @@ void __termina_app__init_globals(void) {
     pus_service_12.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
     pus_service_12.system_data_pool_u32 = u32_system_data_pool;
     pus_service_12.system_data_pool_u8 = u8_system_data_pool;
-    pus_service_12.tm_channel.__that = &tm_channel;
+    pus_service_12.tm_channel._that = &tm_channel;
     pus_service_12.tm_channel.send_tm = &CTMChannel__send_tm;
-    pus_service_12.tm_counter.__that = &tm_counter;
+    pus_service_12.tm_counter._that = &tm_counter;
     pus_service_12.tm_counter.get_next_tm_count = &CTMCounter__get_next_tm_count;
-    pus_service_12.tm_handler_pool.__that = &tm_pool;
-    pus_service_12.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_12.tm_handler_pool.free = __termina_pool__free;
-    pus_service_19.__lock_type.type = __termina_resource_lock_type__none;
-    for (size_t __i0 = 0U; __i0 < 16U; __i0 = __i0 + 1U) {
-        pus_service_19.event_action_config[__i0].enabled = false;
-        pus_service_19.event_action_config[__i0].event_ID = 0U;
+    pus_service_12.tm_handler_pool._that = &tm_pool;
+    pus_service_12.tm_handler_pool.alloc = termina__pool__alloc;
+    pus_service_12.tm_handler_pool.free = termina__pool__free;
+    pus_service_19._lock_type.type = termina__resource_lock_type__none;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 16U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_19.event_action_config[termina__i0].enabled = false;
+        pus_service_19.event_action_config[termina__i0].event_ID = 0U;
     }
-    for (size_t __i0 = 0U; __i0 < 16U; __i0 = __i0 + 1U) {
-        pus_service_19.event_action_packets[__i0].app_data_index = 0U;
-        pus_service_19.event_action_packets[__i0].df_header.flag_ver_ack = 0U;
-        pus_service_19.event_action_packets[__i0].df_header.sourceID = 0U;
-        pus_service_19.event_action_packets[__i0].df_header.subtype = 0U;
-        pus_service_19.event_action_packets[__i0].df_header.type = 0U;
-        pus_service_19.event_action_packets[__i0].packet_error_ctrl = 0U;
-        pus_service_19.event_action_packets[__i0].packet_header.packet_id = 0U;
-        pus_service_19.event_action_packets[__i0].packet_header.packet_length = 0U;
-        pus_service_19.event_action_packets[__i0].packet_header.packet_seq_ctrl = 0U;
-        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
-            pus_service_19.event_action_packets[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 16U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_19.event_action_packets[termina__i0].app_data_index = 0U;
+        pus_service_19.event_action_packets[termina__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.event_action_packets[termina__i0].df_header.sourceID = 0U;
+        pus_service_19.event_action_packets[termina__i0].df_header.subtype = 0U;
+        pus_service_19.event_action_packets[termina__i0].df_header.type = 0U;
+        pus_service_19.event_action_packets[termina__i0].packet_error_ctrl = 0U;
+        pus_service_19.event_action_packets[termina__i0].packet_header.packet_id = 0U;
+        pus_service_19.event_action_packets[termina__i0].packet_header.packet_length = 0U;
+        pus_service_19.event_action_packets[termina__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t termina__i1 = 0U;
+             termina__i1 < 256U;
+             termina__i1 = termina__i1 + 1U) {
+            pus_service_19.event_action_packets[termina__i0].tc_descriptor.tc_bytes[termina__i1] = 0U;
         }
-        pus_service_19.event_action_packets[__i0].tc_descriptor.tc_num_bytes = 0U;
+        pus_service_19.event_action_packets[termina__i0].tc_descriptor.tc_num_bytes = 0U;
     }
-    for (size_t __i0 = 0U; __i0 < 256U; __i0 = __i0 + 1U) {
-        pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_bytes[__i0] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 256U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_bytes[termina__i0] = 0U;
     }
     pus_service_19.exec_tc_req_status_update.action_tc_packet.tc_num_bytes = 0U;
     pus_service_19.exec_tc_req_status_update.ev_action_ID.enabled = false;
@@ -437,73 +459,93 @@ void __termina_app__init_globals(void) {
     pus_service_19.exec_tc_req_status_update.tc_data.packet_id = 0U;
     pus_service_19.exec_tc_req_status_update.tc_data.packet_seq_ctrl = 0U;
     pus_service_19.exec_tc_req_status_update.tc_data.tc_num_bytes = 0U;
-    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
-        pus_service_19.pending_action_head[__i0] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 4U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_19.pending_action_head[termina__i0] = 0U;
     }
-    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
-        pus_service_19.pending_action_number[__i0] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 4U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_19.pending_action_number[termina__i0] = 0U;
     }
-    for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        pus_service_19.pending_action_queue_1I[__i0].app_data_index = 0U;
-        pus_service_19.pending_action_queue_1I[__i0].df_header.flag_ver_ack = 0U;
-        pus_service_19.pending_action_queue_1I[__i0].df_header.sourceID = 0U;
-        pus_service_19.pending_action_queue_1I[__i0].df_header.subtype = 0U;
-        pus_service_19.pending_action_queue_1I[__i0].df_header.type = 0U;
-        pus_service_19.pending_action_queue_1I[__i0].packet_error_ctrl = 0U;
-        pus_service_19.pending_action_queue_1I[__i0].packet_header.packet_id = 0U;
-        pus_service_19.pending_action_queue_1I[__i0].packet_header.packet_length = 0U;
-        pus_service_19.pending_action_queue_1I[__i0].packet_header.packet_seq_ctrl = 0U;
-        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
-            pus_service_19.pending_action_queue_1I[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 8U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_19.pending_action_queue_1I[termina__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_1I[termina__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_1I[termina__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_1I[termina__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_1I[termina__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_1I[termina__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_1I[termina__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_1I[termina__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_1I[termina__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t termina__i1 = 0U;
+             termina__i1 < 256U;
+             termina__i1 = termina__i1 + 1U) {
+            pus_service_19.pending_action_queue_1I[termina__i0].tc_descriptor.tc_bytes[termina__i1] = 0U;
         }
-        pus_service_19.pending_action_queue_1I[__i0].tc_descriptor.tc_num_bytes = 0U;
+        pus_service_19.pending_action_queue_1I[termina__i0].tc_descriptor.tc_num_bytes = 0U;
     }
-    for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        pus_service_19.pending_action_queue_2LS[__i0].app_data_index = 0U;
-        pus_service_19.pending_action_queue_2LS[__i0].df_header.flag_ver_ack = 0U;
-        pus_service_19.pending_action_queue_2LS[__i0].df_header.sourceID = 0U;
-        pus_service_19.pending_action_queue_2LS[__i0].df_header.subtype = 0U;
-        pus_service_19.pending_action_queue_2LS[__i0].df_header.type = 0U;
-        pus_service_19.pending_action_queue_2LS[__i0].packet_error_ctrl = 0U;
-        pus_service_19.pending_action_queue_2LS[__i0].packet_header.packet_id = 0U;
-        pus_service_19.pending_action_queue_2LS[__i0].packet_header.packet_length = 0U;
-        pus_service_19.pending_action_queue_2LS[__i0].packet_header.packet_seq_ctrl = 0U;
-        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
-            pus_service_19.pending_action_queue_2LS[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 8U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_19.pending_action_queue_2LS[termina__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_2LS[termina__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_2LS[termina__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_2LS[termina__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_2LS[termina__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_2LS[termina__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_2LS[termina__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_2LS[termina__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_2LS[termina__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t termina__i1 = 0U;
+             termina__i1 < 256U;
+             termina__i1 = termina__i1 + 1U) {
+            pus_service_19.pending_action_queue_2LS[termina__i0].tc_descriptor.tc_bytes[termina__i1] = 0U;
         }
-        pus_service_19.pending_action_queue_2LS[__i0].tc_descriptor.tc_num_bytes = 0U;
+        pus_service_19.pending_action_queue_2LS[termina__i0].tc_descriptor.tc_num_bytes = 0U;
     }
-    for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        pus_service_19.pending_action_queue_3MS[__i0].app_data_index = 0U;
-        pus_service_19.pending_action_queue_3MS[__i0].df_header.flag_ver_ack = 0U;
-        pus_service_19.pending_action_queue_3MS[__i0].df_header.sourceID = 0U;
-        pus_service_19.pending_action_queue_3MS[__i0].df_header.subtype = 0U;
-        pus_service_19.pending_action_queue_3MS[__i0].df_header.type = 0U;
-        pus_service_19.pending_action_queue_3MS[__i0].packet_error_ctrl = 0U;
-        pus_service_19.pending_action_queue_3MS[__i0].packet_header.packet_id = 0U;
-        pus_service_19.pending_action_queue_3MS[__i0].packet_header.packet_length = 0U;
-        pus_service_19.pending_action_queue_3MS[__i0].packet_header.packet_seq_ctrl = 0U;
-        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
-            pus_service_19.pending_action_queue_3MS[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 8U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_19.pending_action_queue_3MS[termina__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_3MS[termina__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_3MS[termina__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_3MS[termina__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_3MS[termina__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_3MS[termina__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_3MS[termina__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_3MS[termina__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_3MS[termina__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t termina__i1 = 0U;
+             termina__i1 < 256U;
+             termina__i1 = termina__i1 + 1U) {
+            pus_service_19.pending_action_queue_3MS[termina__i0].tc_descriptor.tc_bytes[termina__i1] = 0U;
         }
-        pus_service_19.pending_action_queue_3MS[__i0].tc_descriptor.tc_num_bytes = 0U;
+        pus_service_19.pending_action_queue_3MS[termina__i0].tc_descriptor.tc_num_bytes = 0U;
     }
-    for (size_t __i0 = 0U; __i0 < 8U; __i0 = __i0 + 1U) {
-        pus_service_19.pending_action_queue_4HS[__i0].app_data_index = 0U;
-        pus_service_19.pending_action_queue_4HS[__i0].df_header.flag_ver_ack = 0U;
-        pus_service_19.pending_action_queue_4HS[__i0].df_header.sourceID = 0U;
-        pus_service_19.pending_action_queue_4HS[__i0].df_header.subtype = 0U;
-        pus_service_19.pending_action_queue_4HS[__i0].df_header.type = 0U;
-        pus_service_19.pending_action_queue_4HS[__i0].packet_error_ctrl = 0U;
-        pus_service_19.pending_action_queue_4HS[__i0].packet_header.packet_id = 0U;
-        pus_service_19.pending_action_queue_4HS[__i0].packet_header.packet_length = 0U;
-        pus_service_19.pending_action_queue_4HS[__i0].packet_header.packet_seq_ctrl = 0U;
-        for (size_t __i1 = 0U; __i1 < 256U; __i1 = __i1 + 1U) {
-            pus_service_19.pending_action_queue_4HS[__i0].tc_descriptor.tc_bytes[__i1] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 8U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_19.pending_action_queue_4HS[termina__i0].app_data_index = 0U;
+        pus_service_19.pending_action_queue_4HS[termina__i0].df_header.flag_ver_ack = 0U;
+        pus_service_19.pending_action_queue_4HS[termina__i0].df_header.sourceID = 0U;
+        pus_service_19.pending_action_queue_4HS[termina__i0].df_header.subtype = 0U;
+        pus_service_19.pending_action_queue_4HS[termina__i0].df_header.type = 0U;
+        pus_service_19.pending_action_queue_4HS[termina__i0].packet_error_ctrl = 0U;
+        pus_service_19.pending_action_queue_4HS[termina__i0].packet_header.packet_id = 0U;
+        pus_service_19.pending_action_queue_4HS[termina__i0].packet_header.packet_length = 0U;
+        pus_service_19.pending_action_queue_4HS[termina__i0].packet_header.packet_seq_ctrl = 0U;
+        for (size_t termina__i1 = 0U;
+             termina__i1 < 256U;
+             termina__i1 = termina__i1 + 1U) {
+            pus_service_19.pending_action_queue_4HS[termina__i0].tc_descriptor.tc_bytes[termina__i1] = 0U;
         }
-        pus_service_19.pending_action_queue_4HS[__i0].tc_descriptor.tc_num_bytes = 0U;
+        pus_service_19.pending_action_queue_4HS[termina__i0].tc_descriptor.tc_num_bytes = 0U;
     }
-    pus_service_19.pus_service_1.__that = &pus_service_1;
+    pus_service_19.pus_service_1._that = &pus_service_1;
     pus_service_19.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_19.pus_service_1.send_tm_1_4_short_pack_length = &CPUSService1__send_tm_1_4_short_pack_length;
     pus_service_19.pus_service_1.send_tm_1_4_num_of_instr_not_valid = &CPUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -515,7 +557,7 @@ void __termina_app__init_globals(void) {
     pus_service_19.pus_service_1.notify_tm_1_7 = &CPUSService1__notify_tm_1_7;
     pus_service_19.pus_service_1.send_tm_1_8_max_ev_actions_defined = &CPUSService1__send_tm_1_8_max_ev_actions_defined;
     pus_service_19.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
-    pus_service_20.__lock_type.type = __termina_resource_lock_type__none;
+    pus_service_20._lock_type.type = termina__resource_lock_type__none;
     pus_service_20.exec_tc_req_status_update.N = 0U;
     pus_service_20.exec_tc_req_status_update.PID = 0U;
     pus_service_20.exec_tc_req_status_update.flags_ack = 0U;
@@ -524,9 +566,9 @@ void __termina_app__init_globals(void) {
     pus_service_20.exec_tc_req_status_update.tc_20_3_data.PID_value_u32 = 0U;
     pus_service_20.exec_tc_req_status_update.tc_20_3_data.PID_value_u8 = 0U;
     pus_service_20.exec_tc_req_status_update.tc_num_bytes = 0U;
-    pus_service_20.obt_manager.__that = &obt_manager;
+    pus_service_20.obt_manager._that = &obt_manager;
     pus_service_20.obt_manager.get_current_obt = &COBTManager__get_current_obt;
-    pus_service_20.pus_service_1.__that = &pus_service_1;
+    pus_service_20.pus_service_1._that = &pus_service_1;
     pus_service_20.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_20.pus_service_1.send_tm_1_4_short_pack_length = &CPUSService1__send_tm_1_4_short_pack_length;
     pus_service_20.pus_service_1.send_tm_1_4_num_of_instr_not_valid = &CPUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -537,45 +579,45 @@ void __termina_app__init_globals(void) {
     pus_service_20.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
     pus_service_20.system_data_pool_u32 = u32_system_data_pool;
     pus_service_20.system_data_pool_u8 = u8_system_data_pool;
-    pus_service_20.tm_channel.__that = &tm_channel;
+    pus_service_20.tm_channel._that = &tm_channel;
     pus_service_20.tm_channel.send_tm = &CTMChannel__send_tm;
-    pus_service_20.tm_counter.__that = &tm_counter;
+    pus_service_20.tm_counter._that = &tm_counter;
     pus_service_20.tm_counter.get_next_tm_count = &CTMCounter__get_next_tm_count;
-    pus_service_20.tm_handler_pool.__that = &tm_pool;
-    pus_service_20.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_20.tm_handler_pool.free = __termina_pool__free;
-    pus_service_17.__lock_type.type = __termina_resource_lock_type__none;
+    pus_service_20.tm_handler_pool._that = &tm_pool;
+    pus_service_20.tm_handler_pool.alloc = termina__pool__alloc;
+    pus_service_20.tm_handler_pool.free = termina__pool__free;
+    pus_service_17._lock_type.type = termina__resource_lock_type__none;
     pus_service_17.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_17.exec_tc_req_status_update.packet_id = 0U;
     pus_service_17.exec_tc_req_status_update.packet_seq_ctrl = 0U;
-    pus_service_17.obt_manager.__that = &obt_manager;
+    pus_service_17.obt_manager._that = &obt_manager;
     pus_service_17.obt_manager.get_current_obt = &COBTManager__get_current_obt;
-    pus_service_17.pus_service_1.__that = &pus_service_1;
+    pus_service_17.pus_service_1._that = &pus_service_1;
     pus_service_17.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_17.pus_service_1.send_tm_1_4_error_in_acceptance = &CPUSService1__send_tm_1_4_error_in_acceptance;
     pus_service_17.pus_service_1.notify_tm_1_7 = &CPUSService1__notify_tm_1_7;
     pus_service_17.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
-    pus_service_17.tm_channel.__that = &tm_channel;
+    pus_service_17.tm_channel._that = &tm_channel;
     pus_service_17.tm_channel.send_tm = &CTMChannel__send_tm;
-    pus_service_17.tm_counter.__that = &tm_counter;
+    pus_service_17.tm_counter._that = &tm_counter;
     pus_service_17.tm_counter.get_next_tm_count = &CTMCounter__get_next_tm_count;
-    pus_service_17.tm_handler_pool.__that = &tm_pool;
-    pus_service_17.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_17.tm_handler_pool.free = __termina_pool__free;
-    pus_service_128.__lock_type.type = __termina_resource_lock_type__none;
+    pus_service_17.tm_handler_pool._that = &tm_pool;
+    pus_service_17.tm_handler_pool.alloc = termina__pool__alloc;
+    pus_service_17.tm_handler_pool.free = termina__pool__free;
+    pus_service_128._lock_type.type = termina__resource_lock_type__none;
     pus_service_128.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_128.exec_tc_req_status_update.packet_id = 0U;
     pus_service_128.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_128.exec_tc_req_status_update.reebot_flag = false;
-    pus_service_128.pus_service_1.__that = &pus_service_1;
+    pus_service_128.pus_service_1._that = &pus_service_1;
     pus_service_128.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_128.pus_service_1.send_tm_1_4_error_in_acceptance = &CPUSService1__send_tm_1_4_error_in_acceptance;
     pus_service_128.pus_service_1.notify_tm_1_7 = &CPUSService1__notify_tm_1_7;
     pus_service_128.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
-    pus_service_2.__lock_type.type = __termina_resource_lock_type__none;
-    pus_service_2.gpio_driver.__that = &gpio_drv;
+    pus_service_2._lock_type.type = termina__resource_lock_type__none;
+    pus_service_2.gpio_driver._that = &gpio_drv;
     pus_service_2.gpio_driver.write_led = &CGPIODriver__write_led;
-    pus_service_2.pus_service_1.__that = &pus_service_1;
+    pus_service_2.pus_service_1._that = &pus_service_1;
     pus_service_2.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_2.pus_service_1.send_tm_1_4_short_pack_length = &CPUSService1__send_tm_1_4_short_pack_length;
     pus_service_2.pus_service_1.send_tm_1_4_num_of_instr_not_valid = &CPUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -584,13 +626,13 @@ void __termina_app__init_globals(void) {
     pus_service_2.pus_service_1.notify_tm_1_7 = &CPUSService1__notify_tm_1_7;
     pus_service_2.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
     pus_service_2.pus_service_1.send_tm_1_8_device_command_exec_error = &CPUSService1__send_tm_1_8_device_command_exec_error;
-    pus_service_6.__lock_type.type = __termina_resource_lock_type__none;
+    pus_service_6._lock_type.type = termina__resource_lock_type__none;
     pus_service_6.exec_tc_req_status_update.N = 0U;
     pus_service_6.exec_tc_req_status_update.address = 0U;
-    for (size_t __i0 = 0U;
-         __i0 < max_num_of_bytes_memory_load;
-         __i0 = __i0 + 1U) {
-        pus_service_6.exec_tc_req_status_update.data[__i0] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < max_num_of_bytes_memory_load;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_6.exec_tc_req_status_update.data[termina__i0] = 0U;
     }
     pus_service_6.exec_tc_req_status_update.flags_ack = 0U;
     pus_service_6.exec_tc_req_status_update.length = 0U;
@@ -607,9 +649,9 @@ void __termina_app__init_globals(void) {
     pus_service_6.mem_id_write_permissions[6U] = true;
     pus_service_6.mem_id_write_permissions[7U] = false;
     pus_service_6.memory = (volatile uint8_t (*)[16777216U])0x40000000U;
-    pus_service_6.obt_manager.__that = &obt_manager;
+    pus_service_6.obt_manager._that = &obt_manager;
     pus_service_6.obt_manager.get_current_obt = &COBTManager__get_current_obt;
-    pus_service_6.pus_service_1.__that = &pus_service_1;
+    pus_service_6.pus_service_1._that = &pus_service_1;
     pus_service_6.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_6.pus_service_1.send_tm_1_4_short_pack_length = &CPUSService1__send_tm_1_4_short_pack_length;
     pus_service_6.pus_service_1.send_tm_1_4_num_of_instr_not_valid = &CPUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -619,14 +661,14 @@ void __termina_app__init_globals(void) {
     pus_service_6.pus_service_1.notify_tm_1_7 = &CPUSService1__notify_tm_1_7;
     pus_service_6.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
     pus_service_6.pus_service_1.send_tm_1_8_mem_access_error = &CPUSService1__send_tm_1_8_mem_access_error;
-    pus_service_6.tm_channel.__that = &tm_channel;
+    pus_service_6.tm_channel._that = &tm_channel;
     pus_service_6.tm_channel.send_tm = &CTMChannel__send_tm;
-    pus_service_6.tm_counter.__that = &tm_counter;
+    pus_service_6.tm_counter._that = &tm_counter;
     pus_service_6.tm_counter.get_next_tm_count = &CTMCounter__get_next_tm_count;
-    pus_service_6.tm_handler_pool.__that = &tm_pool;
-    pus_service_6.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_6.tm_handler_pool.free = __termina_pool__free;
-    pus_service_4.__lock_type.type = __termina_resource_lock_type__none;
+    pus_service_6.tm_handler_pool._that = &tm_pool;
+    pus_service_6.tm_handler_pool.alloc = termina__pool__alloc;
+    pus_service_6.tm_handler_pool.free = termina__pool__free;
+    pus_service_4._lock_type.type = termina__resource_lock_type__none;
     pus_service_4.exec_tc_req_status_update.N = 0U;
     pus_service_4.exec_tc_req_status_update.PID = 0U;
     pus_service_4.exec_tc_req_status_update.flags_ack = 0U;
@@ -634,19 +676,21 @@ void __termina_app__init_globals(void) {
     pus_service_4.exec_tc_req_status_update.packet_seq_ctrl = 0U;
     pus_service_4.exec_tc_req_status_update.tc_num_bytes = 0U;
     pus_service_4.exec_tc_req_status_update.valid_index = 0U;
-    pus_service_4.obt_manager.__that = &obt_manager;
+    pus_service_4.obt_manager._that = &obt_manager;
     pus_service_4.obt_manager.get_current_obt = &COBTManager__get_current_obt;
-    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
-        pus_service_4.param_stats[__i0].max = 0U;
-        pus_service_4.param_stats[__i0].max_obt.finetime = 0U;
-        pus_service_4.param_stats[__i0].max_obt.seconds = 0U;
-        pus_service_4.param_stats[__i0].mean_value = 0U;
-        pus_service_4.param_stats[__i0].min = 0U;
-        pus_service_4.param_stats[__i0].min_obt.finetime = 0U;
-        pus_service_4.param_stats[__i0].min_obt.seconds = 0U;
-        pus_service_4.param_stats[__i0].samples = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 4U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_4.param_stats[termina__i0].max = 0U;
+        pus_service_4.param_stats[termina__i0].max_obt.finetime = 0U;
+        pus_service_4.param_stats[termina__i0].max_obt.seconds = 0U;
+        pus_service_4.param_stats[termina__i0].mean_value = 0U;
+        pus_service_4.param_stats[termina__i0].min = 0U;
+        pus_service_4.param_stats[termina__i0].min_obt.finetime = 0U;
+        pus_service_4.param_stats[termina__i0].min_obt.seconds = 0U;
+        pus_service_4.param_stats[termina__i0].samples = 0U;
     }
-    pus_service_4.pus_service_1.__that = &pus_service_1;
+    pus_service_4.pus_service_1._that = &pus_service_1;
     pus_service_4.pus_service_1.notify_tm_1_3 = &CPUSService1__notify_tm_1_3;
     pus_service_4.pus_service_1.send_tm_1_4_short_pack_length = &CPUSService1__send_tm_1_4_short_pack_length;
     pus_service_4.pus_service_1.send_tm_1_4_num_of_instr_not_valid = &CPUSService1__send_tm_1_4_num_of_instr_not_valid;
@@ -656,97 +700,103 @@ void __termina_app__init_globals(void) {
     pus_service_4.pus_service_1.notify_tm_1_7 = &CPUSService1__notify_tm_1_7;
     pus_service_4.pus_service_1.send_tm_1_8_tm_exceed_limit_appdata = &CPUSService1__send_tm_1_8_tm_exceed_limit_appdata;
     pus_service_4.pus_service_1.send_tm_1_8_not_free_stats_config = &CPUSService1__send_tm_1_8_not_free_stats_config;
-    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
-        pus_service_4.stats_config_table.PID[__i0] = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 4U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_4.stats_config_table.PID[termina__i0] = 0U;
     }
-    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
-        pus_service_4.stats_config_table.defined[__i0] = false;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 4U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_4.stats_config_table.defined[termina__i0] = false;
     }
-    for (size_t __i0 = 0U; __i0 < 4U; __i0 = __i0 + 1U) {
-        pus_service_4.stats_config_table.start_time[__i0].finetime = 0U;
-        pus_service_4.stats_config_table.start_time[__i0].seconds = 0U;
+    for (size_t termina__i0 = 0U;
+         termina__i0 < 4U;
+         termina__i0 = termina__i0 + 1U) {
+        pus_service_4.stats_config_table.start_time[termina__i0].finetime = 0U;
+        pus_service_4.stats_config_table.start_time[termina__i0].seconds = 0U;
     }
     pus_service_4.system_data_pool_u32 = u32_system_data_pool;
     pus_service_4.system_data_pool_u8 = u8_system_data_pool;
-    pus_service_4.tm_channel.__that = &tm_channel;
+    pus_service_4.tm_channel._that = &tm_channel;
     pus_service_4.tm_channel.send_tm = &CTMChannel__send_tm;
-    pus_service_4.tm_counter.__that = &tm_counter;
+    pus_service_4.tm_counter._that = &tm_counter;
     pus_service_4.tm_counter.get_next_tm_count = &CTMCounter__get_next_tm_count;
-    pus_service_4.tm_handler_pool.__that = &tm_pool;
-    pus_service_4.tm_handler_pool.alloc = __termina_pool__alloc;
-    pus_service_4.tm_handler_pool.free = __termina_pool__free;
-    mng_tc_executor.__lock_type.type = __termina_resource_lock_type__none;
-    mng_tc_executor.pus_service_1.__that = &pus_service_1;
+    pus_service_4.tm_handler_pool._that = &tm_pool;
+    pus_service_4.tm_handler_pool.alloc = termina__pool__alloc;
+    pus_service_4.tm_handler_pool.free = termina__pool__free;
+    mng_tc_executor._lock_type.type = termina__resource_lock_type__none;
+    mng_tc_executor.pus_service_1._that = &pus_service_1;
     mng_tc_executor.pus_service_1.notify_tm_1_1 = &CPUSService1__notify_tm_1_1;
     mng_tc_executor.pus_service_1.send_tm_1_2 = &CPUSService1__send_tm_1_2;
     mng_tc_executor.pus_service_1.send_tm_1_4_error_in_acceptance = &CPUSService1__send_tm_1_4_error_in_acceptance;
-    mng_tc_executor.pus_service_128.__that = &pus_service_128;
+    mng_tc_executor.pus_service_128._that = &pus_service_128;
     mng_tc_executor.pus_service_128.exec_tc = &CPUSService128__exec_tc;
-    mng_tc_executor.pus_service_17.__that = &pus_service_17;
+    mng_tc_executor.pus_service_17._that = &pus_service_17;
     mng_tc_executor.pus_service_17.exec_tc = &CPUSService17__exec_tc;
-    mng_tc_executor.pus_service_2.__that = &pus_service_2;
+    mng_tc_executor.pus_service_2._that = &pus_service_2;
     mng_tc_executor.pus_service_2.exec_tc = &CPUSService2__exec_tc;
-    mng_tc_executor.pus_service_9.__that = &pus_service_9;
+    mng_tc_executor.pus_service_9._that = &pus_service_9;
     mng_tc_executor.pus_service_9.exec_tc = &CPUSService9__exec_tc;
-    init_hdlr.gpio_driver.__that = &gpio_drv;
+    init_hdlr.gpio_driver._that = &gpio_drv;
     init_hdlr.gpio_driver.init_gpio = &CGPIODriver__init_gpio;
     init_hdlr.system_data_pool_u32 = u32_system_data_pool;
     init_hdlr.system_data_pool_u8 = u8_system_data_pool;
-    init_hdlr.uart_drv.__that = &uart_drv;
+    init_hdlr.uart_drv._that = &uart_drv;
     init_hdlr.uart_drv.initialize = &CAPBUARTDriver__initialize;
     uart_hdlr.frame_ready_output = &rx_task_message_queue;
-    uart_hdlr.uart_drv.__that = &uart_drv;
+    uart_hdlr.uart_drv._that = &uart_drv;
     uart_hdlr.uart_drv.notify_irq = &CAPBUARTDriver__notify_irq;
-    tc_rx_bottom_half_task.tc_channel.__that = &tc_channel;
+    tc_rx_bottom_half_task.tc_channel._that = &tc_channel;
     tc_rx_bottom_half_task.tc_channel.dequeue = &CTCChannel__dequeue;
-    tc_rx_bottom_half_task.tc_handler_pool.__that = &tc_pool;
-    tc_rx_bottom_half_task.tc_handler_pool.alloc = __termina_pool__alloc;
-    tc_rx_bottom_half_task.tc_handler_pool.free = __termina_pool__free;
+    tc_rx_bottom_half_task.tc_handler_pool._that = &tc_pool;
+    tc_rx_bottom_half_task.tc_handler_pool.alloc = termina__pool__alloc;
+    tc_rx_bottom_half_task.tc_handler_pool.free = termina__pool__free;
     tc_rx_bottom_half_task.tc_message_queue_output = &tc_message_queue;
     obdh_manager.bkg_message_queue_output = &bkg_message_queue;
     obdh_manager.hkfdir_message_queue_output = &hkfdir_message_queue;
-    obdh_manager.mng_tc_executor.__that = &mng_tc_executor;
+    obdh_manager.mng_tc_executor._that = &mng_tc_executor;
     obdh_manager.mng_tc_executor.PUS_prio_exec_tc = &CManagerTExecutor__PUS_prio_exec_tc;
     obdh_manager.mng_tc_executor.mng_tc_acceptation = &CManagerTExecutor__mng_tc_acceptation;
     obdh_manager.mng_tc_executor.mng_tc_rejection = &CManagerTExecutor__mng_tc_rejection;
-    obdh_manager.tc_handler_pool.__that = &tc_pool;
-    obdh_manager.tc_handler_pool.alloc = __termina_pool__alloc;
-    obdh_manager.tc_handler_pool.free = __termina_pool__free;
+    obdh_manager.tc_handler_pool._that = &tc_pool;
+    obdh_manager.tc_handler_pool.alloc = termina__pool__alloc;
+    obdh_manager.tc_handler_pool.free = termina__pool__free;
     hk_fdir.action_tc_message_queue_output = &action_tc_message_queue;
-    hk_fdir.pus_service_1.__that = &pus_service_1;
+    hk_fdir.pus_service_1._that = &pus_service_1;
     hk_fdir.pus_service_1.send_tm_1_4_error_in_acceptance = &CPUSService1__send_tm_1_4_error_in_acceptance;
-    hk_fdir.pus_service_12.__that = &pus_service_12;
+    hk_fdir.pus_service_12._that = &pus_service_12;
     hk_fdir.pus_service_12.exec_tc = &CPUSService12__exec_tc;
     hk_fdir.pus_service_12.do_monitoring = &CPUSService12__do_monitoring;
     hk_fdir.pus_service_12.is_PMON_enabled = &CPUSService12__is_PMON_enabled;
-    hk_fdir.pus_service_19.__that = &pus_service_19;
+    hk_fdir.pus_service_19._that = &pus_service_19;
     hk_fdir.pus_service_19.exec_tc = &CPUSService19__exec_tc;
     hk_fdir.pus_service_19.manage_event_action = &CPUSService19__manage_event_action;
     hk_fdir.pus_service_19.get_pending_action_number = &CPUSService19__get_pending_action_number;
     hk_fdir.pus_service_19.extract_action = &CPUSService19__extract_action;
-    hk_fdir.pus_service_3.__that = &pus_service_3;
+    hk_fdir.pus_service_3._that = &pus_service_3;
     hk_fdir.pus_service_3.do_hk = &CPUSService3__do_hk;
     hk_fdir.pus_service_3.exec_tc = &CPUSService3__exec_tc;
     hk_fdir.pus_service_3.update_params = &CPUSService3__update_params;
-    hk_fdir.pus_service_4.__that = &pus_service_4;
+    hk_fdir.pus_service_4._that = &pus_service_4;
     hk_fdir.pus_service_4.exec_tc = &CPUSService4__exec_tc;
     hk_fdir.pus_service_4.update_all_stats = &CPUSService4__update_all_stats;
-    hk_fdir.pus_service_5.__that = &pus_service_5;
+    hk_fdir.pus_service_5._that = &pus_service_5;
     hk_fdir.pus_service_5.exec_tc = &CPUSService5__exec_tc;
     hk_fdir.pus_service_5.is_Ev_ID_enabled_ext = &CPUSService5__is_Ev_ID_enabled_ext;
     hk_fdir.pus_service_5.send_tm_5_x = &CPUSService5__send_tm_5_x;
-    hk_fdir.tc_handler_pool.__that = &tc_pool;
-    hk_fdir.tc_handler_pool.alloc = __termina_pool__alloc;
-    hk_fdir.tc_handler_pool.free = __termina_pool__free;
-    bkg_tc_executor.pus_service_1.__that = &pus_service_1;
+    hk_fdir.tc_handler_pool._that = &tc_pool;
+    hk_fdir.tc_handler_pool.alloc = termina__pool__alloc;
+    hk_fdir.tc_handler_pool.free = termina__pool__free;
+    bkg_tc_executor.pus_service_1._that = &pus_service_1;
     bkg_tc_executor.pus_service_1.send_tm_1_4_error_in_acceptance = &CPUSService1__send_tm_1_4_error_in_acceptance;
-    bkg_tc_executor.pus_service_20.__that = &pus_service_20;
+    bkg_tc_executor.pus_service_20._that = &pus_service_20;
     bkg_tc_executor.pus_service_20.exec_tc = &CPUSService20__exec_tc;
-    bkg_tc_executor.pus_service_6.__that = &pus_service_6;
+    bkg_tc_executor.pus_service_6._that = &pus_service_6;
     bkg_tc_executor.pus_service_6.exec_tc = &CPUSService6__exec_tc;
-    bkg_tc_executor.tc_handler_pool.__that = &tc_pool;
-    bkg_tc_executor.tc_handler_pool.alloc = __termina_pool__alloc;
-    bkg_tc_executor.tc_handler_pool.free = __termina_pool__free;
+    bkg_tc_executor.tc_handler_pool._that = &tc_pool;
+    bkg_tc_executor.tc_handler_pool.alloc = termina__pool__alloc;
+    bkg_tc_executor.tc_handler_pool.free = termina__pool__free;
 
     return;
 

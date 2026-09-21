@@ -35,16 +35,16 @@ _Bool tc_handler_is_valid_next_appdata_field(const TCHandler * const tc_handler,
 
 }
 
-__status_int32_t tc_handler_get_u8_appdata_field(TCHandler * const tc_handler, uint8_t * const data) {
+Status__i32 tc_handler_get_u8_appdata_field(TCHandler * const tc_handler, uint8_t * const data) {
     
     #line 101 "src/service_libraries/pus_tc_handler.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 103 "src/service_libraries/pus_tc_handler.fin"
     if (tc_handler_is_valid_next_appdata_field(tc_handler, 1U)) {
         
         #line 105 "src/service_libraries/pus_tc_handler.fin"
-        *data = tc_handler->tc_descriptor.tc_bytes[__termina_array__index(256U, tc_handler->app_data_index)];
+        *data = tc_handler->tc_descriptor.tc_bytes[termina__check__array_index(256U, tc_handler->app_data_index)];
 
         #line 106 "src/service_libraries/pus_tc_handler.fin"
         tc_handler->app_data_index = tc_handler->app_data_index + 1U;
@@ -53,9 +53,9 @@ __status_int32_t tc_handler_get_u8_appdata_field(TCHandler * const tc_handler, u
     {
         
         #line 110 "src/service_libraries/pus_tc_handler.fin"
-        status.__variant = Failure;
+        status._variant = Status__Failure;
         #line 110 "src/service_libraries/pus_tc_handler.fin"
-        status.Failure.__0 = TC_DATA_OUT_OF_RANGE_ERROR;
+        status.Failure._0 = TC_DATA_OUT_OF_RANGE_ERROR;
 
     }
 
@@ -64,16 +64,16 @@ __status_int32_t tc_handler_get_u8_appdata_field(TCHandler * const tc_handler, u
 
 }
 
-__status_int32_t tc_handler_get_u16_appdata_field(TCHandler * const tc_handler, uint16_t * const data) {
+Status__i32 tc_handler_get_u16_appdata_field(TCHandler * const tc_handler, uint16_t * const data) {
     
     #line 130 "src/service_libraries/pus_tc_handler.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 132 "src/service_libraries/pus_tc_handler.fin"
     if (tc_handler_is_valid_next_appdata_field(tc_handler, 2U)) {
         
         #line 134 "src/service_libraries/pus_tc_handler.fin"
-        *data = deserialize_uint16(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(256U, 2U, tc_handler->app_data_index, tc_handler->app_data_index + 2U)]);
+        *data = deserialize_uint16(&tc_handler->tc_descriptor.tc_bytes[termina__check__array_slice(256U, 2U, tc_handler->app_data_index, tc_handler->app_data_index + 2U)]);
 
         #line 135 "src/service_libraries/pus_tc_handler.fin"
         tc_handler->app_data_index = tc_handler->app_data_index + 2U;
@@ -82,9 +82,9 @@ __status_int32_t tc_handler_get_u16_appdata_field(TCHandler * const tc_handler, 
     {
         
         #line 139 "src/service_libraries/pus_tc_handler.fin"
-        status.__variant = Failure;
+        status._variant = Status__Failure;
         #line 139 "src/service_libraries/pus_tc_handler.fin"
-        status.Failure.__0 = TC_DATA_OUT_OF_RANGE_ERROR;
+        status.Failure._0 = TC_DATA_OUT_OF_RANGE_ERROR;
 
     }
 
@@ -93,16 +93,16 @@ __status_int32_t tc_handler_get_u16_appdata_field(TCHandler * const tc_handler, 
 
 }
 
-__status_int32_t tc_handler_get_u32_appdata_field(TCHandler * const tc_handler, uint32_t * const data) {
+Status__i32 tc_handler_get_u32_appdata_field(TCHandler * const tc_handler, uint32_t * const data) {
     
     #line 159 "src/service_libraries/pus_tc_handler.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 161 "src/service_libraries/pus_tc_handler.fin"
     if (tc_handler_is_valid_next_appdata_field(tc_handler, 4U)) {
         
         #line 163 "src/service_libraries/pus_tc_handler.fin"
-        *data = deserialize_uint32(&tc_handler->tc_descriptor.tc_bytes[__termina_array__slice(256U, 4U, tc_handler->app_data_index, tc_handler->app_data_index + 4U)]);
+        *data = deserialize_uint32(&tc_handler->tc_descriptor.tc_bytes[termina__check__array_slice(256U, 4U, tc_handler->app_data_index, tc_handler->app_data_index + 4U)]);
 
         #line 164 "src/service_libraries/pus_tc_handler.fin"
         tc_handler->app_data_index = tc_handler->app_data_index + 4U;
@@ -111,9 +111,9 @@ __status_int32_t tc_handler_get_u32_appdata_field(TCHandler * const tc_handler, 
     {
         
         #line 168 "src/service_libraries/pus_tc_handler.fin"
-        status.__variant = Failure;
+        status._variant = Status__Failure;
         #line 168 "src/service_libraries/pus_tc_handler.fin"
-        status.Failure.__0 = TC_DATA_OUT_OF_RANGE_ERROR;
+        status.Failure._0 = TC_DATA_OUT_OF_RANGE_ERROR;
 
     }
 

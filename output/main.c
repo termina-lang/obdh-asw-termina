@@ -3,286 +3,286 @@
 
 #include "app.h"
 
-static uint8_t __pool_tc_pool_memory[__termina_pool__size(sizeof(TCHandler), 10U)];
-static uint8_t __pool_tm_pool_memory[__termina_pool__size(sizeof(TMHandler), 10U)];
+static uint8_t termina__pool_memory__tc_pool[termina__pool__size(sizeof(TCHandler), 10U)];
+static uint8_t termina__pool_memory__tm_pool[termina__pool__size(sizeof(TMHandler), 10U)];
 
-static void __termina_app__init_tasks(int32_t * const status) {
+static void termina__app__init_tasks(int32_t * const status) {
     
     *status = 0L;
 
-    bkg_tc_executor.__task_id = __bkg_tc_executor__task_id;
+    bkg_tc_executor._task_id = bkg_tc_executor__task_id;
 
-    bkg_tc_executor.__task_msg_queue_id = __bkg_tc_executor__task_msg_queue_id;
+    bkg_tc_executor._task_msg_queue_id = bkg_tc_executor__task_msg_queue_id;
 
-    __termina_task__init(__bkg_tc_executor__task_id, 8, 4096U, &__CBKGTCExecutorTask__termina_task, &bkg_tc_executor, status);
+    termina__task__init(bkg_tc_executor__task_id, 8, 4096U, &termina__task_entry__CBKGTCExecutorTask, &bkg_tc_executor, status);
 
     if (0L == *status) {
         
-        hk_fdir.__task_id = __hk_fdir__task_id;
+        hk_fdir._task_id = hk_fdir__task_id;
 
-        hk_fdir.__task_msg_queue_id = __hk_fdir__task_msg_queue_id;
+        hk_fdir._task_msg_queue_id = hk_fdir__task_msg_queue_id;
 
-        __termina_task__init(__hk_fdir__task_id, 6, 4096U, &__CHousekeepingFDIRTask__termina_task, &hk_fdir, status);
+        termina__task__init(hk_fdir__task_id, 6, 4096U, &termina__task_entry__CHousekeepingFDIRTask, &hk_fdir, status);
 
     }
 
     if (0L == *status) {
         
-        obdh_manager.__task_id = __obdh_manager__task_id;
+        obdh_manager._task_id = obdh_manager__task_id;
 
-        obdh_manager.__task_msg_queue_id = __obdh_manager__task_msg_queue_id;
+        obdh_manager._task_msg_queue_id = obdh_manager__task_msg_queue_id;
 
-        __termina_task__init(__obdh_manager__task_id, 5, 4096U, &__COBDHManagerTask__termina_task, &obdh_manager, status);
+        termina__task__init(obdh_manager__task_id, 5, 4096U, &termina__task_entry__COBDHManagerTask, &obdh_manager, status);
 
     }
 
     if (0L == *status) {
         
-        tc_rx_bottom_half_task.__task_id = __tc_rx_bottom_half_task__task_id;
+        tc_rx_bottom_half_task._task_id = tc_rx_bottom_half_task__task_id;
 
-        tc_rx_bottom_half_task.__task_msg_queue_id = __tc_rx_bottom_half_task__task_msg_queue_id;
+        tc_rx_bottom_half_task._task_msg_queue_id = tc_rx_bottom_half_task__task_msg_queue_id;
 
-        __termina_task__init(__tc_rx_bottom_half_task__task_id, 4, 4096U, &__CTXRxBottomHalfTask__termina_task, &tc_rx_bottom_half_task, status);
+        termina__task__init(tc_rx_bottom_half_task__task_id, 4, 4096U, &termina__task_entry__CTXRxBottomHalfTask, &tc_rx_bottom_half_task, status);
 
     }
 
 }
 
-static void __termina_app__init_handlers(void) {
+static void termina__app__init_handlers(void) {
     
-    init_hdlr.__handler_id = __init_hdlr__handler_id;
+    init_hdlr._handler_id = init_hdlr__handler_id;
 
-    uart_hdlr.__handler_id = __uart_hdlr__handler_id;
+    uart_hdlr._handler_id = uart_hdlr__handler_id;
 
 }
 
-static void __termina_app__init_emitters(int32_t * const status) {
+static void termina__app__init_emitters(int32_t * const status) {
     
-    __termina_periodic_timer_connection_t timer_connection;
+    termina__periodic_timer_connection_t timer_connection;
 
-    __termina_interrupt_connection_t interrupt_connection;
+    termina__interrupt_connection_t interrupt_connection;
 
     *status = 0L;
 
-    timer_connection.type = __termina_emitter_connection_type__task;
-    timer_connection.task.task_msg_queue_id = __hk_fdir__task_msg_queue_id;
-    timer_connection.task.sink_msgq_id = __hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id;
-    timer_connection.task.sink_port_id = __CHousekeepingFDIRTask__hk_fdir_timer_ev;
+    timer_connection.type = termina__emitter_connection_type__task;
+    timer_connection.task.task_msg_queue_id = hk_fdir__task_msg_queue_id;
+    timer_connection.task.sink_msgq_id = hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id;
+    timer_connection.task.sink_port_id = CHousekeepingFDIRTask__hk_fdir_timer_ev;
 
-    hk_fdir.hk_fdir_timer_ev = __hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id;
+    hk_fdir.hk_fdir_timer_ev = hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id;
 
-    __termina_periodic_timer__init(__hk_fdir_timer__timer_id, __hk_fdir_timer__emitter_id, &timer_connection, &hk_fdir_timer.period, status);
+    termina__periodic_timer__init(hk_fdir_timer__timer_id, hk_fdir_timer__emitter_id, &timer_connection, &hk_fdir_timer.period, status);
 
     if (0L == *status) {
         
-        interrupt_connection.type = __termina_emitter_connection_type__handler;
+        interrupt_connection.type = termina__emitter_connection_type__handler;
         interrupt_connection.handler.handler_object = (void *)&uart_hdlr;
-        interrupt_connection.handler.handler_id = __uart_hdlr__handler_id;
+        interrupt_connection.handler.handler_id = uart_hdlr__handler_id;
         interrupt_connection.handler.handler_action = CCharDevIRQHandler__irq_handler;
 
-        __termina_interrupt__init(2, __irq_2__emitter_id, &interrupt_connection, status);
+        termina__interrupt__init(2, irq_2__emitter_id, &interrupt_connection, status);
 
     }
 
 }
 
-static void __termina_app__init_mutexes(int32_t * const status) {
+static void termina__app__init_mutexes(int32_t * const status) {
     
     MutexProtocol protocol;
 
     *status = 0L;
 
-    protocol.__variant = MutexProtocol__Ceiling;
-    protocol.Ceiling.__0 = 5;
+    protocol._variant = MutexProtocol__Ceiling;
+    protocol.Ceiling._0 = 5;
 
-    __termina_mutex__init(__obt_manager__mutex_id, protocol, status);
+    termina__mutex__init(obt_manager__mutex_id, protocol, status);
 
     if (0L == *status) {
         
-        protocol.__variant = MutexProtocol__Ceiling;
-        protocol.Ceiling.__0 = 4;
+        protocol._variant = MutexProtocol__Ceiling;
+        protocol.Ceiling._0 = 4;
 
-        __termina_mutex__init(__tc_pool__mutex_id, protocol, status);
+        termina__mutex__init(tc_pool__mutex_id, protocol, status);
 
     }
 
     if (0L == *status) {
         
-        protocol.__variant = MutexProtocol__Ceiling;
-        protocol.Ceiling.__0 = 5;
+        protocol._variant = MutexProtocol__Ceiling;
+        protocol.Ceiling._0 = 5;
 
-        __termina_mutex__init(__tm_channel__mutex_id, protocol, status);
-
-    }
-
-    if (0L == *status) {
-        
-        protocol.__variant = MutexProtocol__Ceiling;
-        protocol.Ceiling.__0 = 5;
-
-        __termina_mutex__init(__tm_counter__mutex_id, protocol, status);
+        termina__mutex__init(tm_channel__mutex_id, protocol, status);
 
     }
 
     if (0L == *status) {
         
-        protocol.__variant = MutexProtocol__Ceiling;
-        protocol.Ceiling.__0 = 5;
+        protocol._variant = MutexProtocol__Ceiling;
+        protocol.Ceiling._0 = 5;
 
-        __termina_mutex__init(__tm_pool__mutex_id, protocol, status);
+        termina__mutex__init(tm_counter__mutex_id, protocol, status);
+
+    }
+
+    if (0L == *status) {
+        
+        protocol._variant = MutexProtocol__Ceiling;
+        protocol.Ceiling._0 = 5;
+
+        termina__mutex__init(tm_pool__mutex_id, protocol, status);
 
     }
 
 }
 
-static void __termina_app__init_pools(int32_t * const status) {
+static void termina__app__init_pools(int32_t * const status) {
     
     *status = 0L;
 
-    tc_pool.__pool_id = __tc_pool__pool_id;
+    tc_pool.pool_id = tc_pool__pool_id;
 
-    __termina_pool__init(&tc_pool, (void *)__pool_tc_pool_memory, sizeof(__pool_tc_pool_memory), sizeof(TCHandler), status);
+    termina__pool__init(&tc_pool, (void *)termina__pool_memory__tc_pool, sizeof(termina__pool_memory__tc_pool), sizeof(TCHandler), status);
 
     if (0L == *status) {
         
-        tm_pool.__pool_id = __tm_pool__pool_id;
+        tm_pool.pool_id = tm_pool__pool_id;
 
-        __termina_pool__init(&tm_pool, (void *)__pool_tm_pool_memory, sizeof(__pool_tm_pool_memory), sizeof(TMHandler), status);
+        termina__pool__init(&tm_pool, (void *)termina__pool_memory__tm_pool, sizeof(termina__pool_memory__tm_pool), sizeof(TMHandler), status);
 
     }
 
 }
 
-static void __termina_app__init_msg_queues(int32_t * const status) {
+static void termina__app__init_msg_queues(int32_t * const status) {
     
     *status = 0L;
 
-    __termina_msg_queue__init(__tc_rx_bottom_half_task__task_msg_queue_id, sizeof(__termina_event_t), 10U, status);
+    termina__msg_queue__init(tc_rx_bottom_half_task__task_msg_queue_id, sizeof(termina__event_t), 10U, status);
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__obdh_manager__task_msg_queue_id, sizeof(__termina_event_t), 10U + 5U, status);
+        termina__msg_queue__init(obdh_manager__task_msg_queue_id, sizeof(termina__event_t), 10U + 5U, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__hk_fdir__task_msg_queue_id, sizeof(__termina_event_t), 1U + 10U, status);
+        termina__msg_queue__init(hk_fdir__task_msg_queue_id, sizeof(termina__event_t), 1U + 10U, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__bkg_tc_executor__task_msg_queue_id, sizeof(__termina_event_t), 10U, status);
+        termina__msg_queue__init(bkg_tc_executor__task_msg_queue_id, sizeof(termina__event_t), 10U, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id, sizeof(TimeVal), 1U, status);
+        termina__msg_queue__init(hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id, sizeof(TimeVal), 1U, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__tc_message_queue__channel_msg_queue_id, sizeof(__termina_box_t), 10U, status);
+        termina__msg_queue__init(tc_message_queue__channel_msg_queue_id, sizeof(termina__box_t), 10U, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__rx_task_message_queue__channel_msg_queue_id, sizeof(size_t), 10U, status);
+        termina__msg_queue__init(rx_task_message_queue__channel_msg_queue_id, sizeof(size_t), 10U, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__hkfdir_message_queue__channel_msg_queue_id, sizeof(__termina_box_t), 10U, status);
+        termina__msg_queue__init(hkfdir_message_queue__channel_msg_queue_id, sizeof(termina__box_t), 10U, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__bkg_message_queue__channel_msg_queue_id, sizeof(__termina_box_t), 10U, status);
+        termina__msg_queue__init(bkg_message_queue__channel_msg_queue_id, sizeof(termina__box_t), 10U, status);
 
     }
 
     if (0L == *status) {
         
-        __termina_msg_queue__init(__action_tc_message_queue__channel_msg_queue_id, sizeof(__termina_box_t), 5U, status);
+        termina__msg_queue__init(action_tc_message_queue__channel_msg_queue_id, sizeof(termina__box_t), 5U, status);
 
     }
 
 }
 
-static void __termina_app__enable_protection(void) {
+static void termina__app__enable_protection(void) {
     
-    obt_manager.__lock_type.type = __termina_resource_lock_type__mutex;
-    obt_manager.__lock_type.mutex.mutex_id = __obt_manager__mutex_id;
+    obt_manager._lock_type.type = termina__resource_lock_type__mutex;
+    obt_manager._lock_type.mutex.mutex_id = obt_manager__mutex_id;
 
-    tc_channel.__lock_type.type = __termina_resource_lock_type__irq;
+    tc_channel._lock_type.type = termina__resource_lock_type__irq;
 
-    tm_channel.__lock_type.type = __termina_resource_lock_type__mutex;
-    tm_channel.__lock_type.mutex.mutex_id = __tm_channel__mutex_id;
+    tm_channel._lock_type.type = termina__resource_lock_type__mutex;
+    tm_channel._lock_type.mutex.mutex_id = tm_channel__mutex_id;
 
-    tm_counter.__lock_type.type = __termina_resource_lock_type__mutex;
-    tm_counter.__lock_type.mutex.mutex_id = __tm_counter__mutex_id;
+    tm_counter._lock_type.type = termina__resource_lock_type__mutex;
+    tm_counter._lock_type.mutex.mutex_id = tm_counter__mutex_id;
 
-    uart_drv.__lock_type.type = __termina_resource_lock_type__irq;
+    uart_drv._lock_type.type = termina__resource_lock_type__irq;
 
-    tc_pool.__lock_type.type = __termina_resource_lock_type__mutex;
-    tc_pool.__lock_type.mutex.mutex_id = __tc_pool__mutex_id;
+    tc_pool._lock_type.type = termina__resource_lock_type__mutex;
+    tc_pool._lock_type.mutex.mutex_id = tc_pool__mutex_id;
 
-    tm_pool.__lock_type.type = __termina_resource_lock_type__mutex;
-    tm_pool.__lock_type.mutex.mutex_id = __tm_pool__mutex_id;
+    tm_pool._lock_type.type = termina__resource_lock_type__mutex;
+    tm_pool._lock_type.mutex.mutex_id = tm_pool__mutex_id;
 
 }
 
-static void __termina_app__init_channel_connections(void) {
+static void termina__app__init_channel_connections(void) {
     
-    action_tc_message_queue.task_id = __obdh_manager__task_id;
-    action_tc_message_queue.task_msg_queue_id = __obdh_manager__task_msg_queue_id;
-    action_tc_message_queue.channel_msg_queue_id = __action_tc_message_queue__channel_msg_queue_id;
-    action_tc_message_queue.port_id = __COBDHManagerTask__action_tc_message_queue_input;
+    action_tc_message_queue.task_id = obdh_manager__task_id;
+    action_tc_message_queue.task_msg_queue_id = obdh_manager__task_msg_queue_id;
+    action_tc_message_queue.channel_msg_queue_id = action_tc_message_queue__channel_msg_queue_id;
+    action_tc_message_queue.port_id = COBDHManagerTask__action_tc_message_queue_input;
 
-    obdh_manager.action_tc_message_queue_input = __action_tc_message_queue__channel_msg_queue_id;
+    obdh_manager.action_tc_message_queue_input = action_tc_message_queue__channel_msg_queue_id;
 
-    bkg_message_queue.task_id = __bkg_tc_executor__task_id;
-    bkg_message_queue.task_msg_queue_id = __bkg_tc_executor__task_msg_queue_id;
-    bkg_message_queue.channel_msg_queue_id = __bkg_message_queue__channel_msg_queue_id;
-    bkg_message_queue.port_id = __CBKGTCExecutorTask__bkg_message_queue_input;
+    bkg_message_queue.task_id = bkg_tc_executor__task_id;
+    bkg_message_queue.task_msg_queue_id = bkg_tc_executor__task_msg_queue_id;
+    bkg_message_queue.channel_msg_queue_id = bkg_message_queue__channel_msg_queue_id;
+    bkg_message_queue.port_id = CBKGTCExecutorTask__bkg_message_queue_input;
 
-    bkg_tc_executor.bkg_message_queue_input = __bkg_message_queue__channel_msg_queue_id;
+    bkg_tc_executor.bkg_message_queue_input = bkg_message_queue__channel_msg_queue_id;
 
-    hkfdir_message_queue.task_id = __hk_fdir__task_id;
-    hkfdir_message_queue.task_msg_queue_id = __hk_fdir__task_msg_queue_id;
-    hkfdir_message_queue.channel_msg_queue_id = __hkfdir_message_queue__channel_msg_queue_id;
-    hkfdir_message_queue.port_id = __CHousekeepingFDIRTask__hkfdir_message_queue_input;
+    hkfdir_message_queue.task_id = hk_fdir__task_id;
+    hkfdir_message_queue.task_msg_queue_id = hk_fdir__task_msg_queue_id;
+    hkfdir_message_queue.channel_msg_queue_id = hkfdir_message_queue__channel_msg_queue_id;
+    hkfdir_message_queue.port_id = CHousekeepingFDIRTask__hkfdir_message_queue_input;
 
-    hk_fdir.hkfdir_message_queue_input = __hkfdir_message_queue__channel_msg_queue_id;
+    hk_fdir.hkfdir_message_queue_input = hkfdir_message_queue__channel_msg_queue_id;
 
-    rx_task_message_queue.task_id = __tc_rx_bottom_half_task__task_id;
-    rx_task_message_queue.task_msg_queue_id = __tc_rx_bottom_half_task__task_msg_queue_id;
-    rx_task_message_queue.channel_msg_queue_id = __rx_task_message_queue__channel_msg_queue_id;
-    rx_task_message_queue.port_id = __CTXRxBottomHalfTask__frame_ready_input;
+    rx_task_message_queue.task_id = tc_rx_bottom_half_task__task_id;
+    rx_task_message_queue.task_msg_queue_id = tc_rx_bottom_half_task__task_msg_queue_id;
+    rx_task_message_queue.channel_msg_queue_id = rx_task_message_queue__channel_msg_queue_id;
+    rx_task_message_queue.port_id = CTXRxBottomHalfTask__frame_ready_input;
 
-    tc_rx_bottom_half_task.frame_ready_input = __rx_task_message_queue__channel_msg_queue_id;
+    tc_rx_bottom_half_task.frame_ready_input = rx_task_message_queue__channel_msg_queue_id;
 
-    tc_message_queue.task_id = __obdh_manager__task_id;
-    tc_message_queue.task_msg_queue_id = __obdh_manager__task_msg_queue_id;
-    tc_message_queue.channel_msg_queue_id = __tc_message_queue__channel_msg_queue_id;
-    tc_message_queue.port_id = __COBDHManagerTask__tc_message_queue_input;
+    tc_message_queue.task_id = obdh_manager__task_id;
+    tc_message_queue.task_msg_queue_id = obdh_manager__task_msg_queue_id;
+    tc_message_queue.channel_msg_queue_id = tc_message_queue__channel_msg_queue_id;
+    tc_message_queue.port_id = COBDHManagerTask__tc_message_queue_input;
 
-    obdh_manager.tc_message_queue_input = __tc_message_queue__channel_msg_queue_id;
+    obdh_manager.tc_message_queue_input = tc_message_queue__channel_msg_queue_id;
 
 }
 
-static void __termina_app__initial_event(void) {
+static void termina__app__initial_event(void) {
     
-    __termina_event_t event;
-    event.emitter_id = __system_init__emitter_id;
-    event.owner.type = __termina_active_entity__handler;
-    event.owner.handler.handler_id = __init_hdlr__handler_id;
+    termina__event_t event;
+    event.emitter_id = system_init__emitter_id;
+    event.owner.type = termina__active_entity__handler;
+    event.owner.handler.handler_id = init_hdlr__handler_id;
     event.port_id = 0;
 
     TimeVal current;
@@ -290,18 +290,18 @@ static void __termina_app__initial_event(void) {
 
     CInitHandler * self = &init_hdlr;
 
-    __status_int32_t result;
-    result.__variant = Success;
+    Status__i32 result;
+    result._variant = Status__Success;
 
     result = CInitHandler__init(&event, self, current);
 
-    if (result.__variant != Success) {
+    if (result._variant != Status__Success) {
         
         ExceptSource source;
-        source.__variant = ExceptSource__Handler;
-        source.Handler.__0 = __init_hdlr__handler_id;
+        source._variant = ExceptSource__Handler;
+        source.Handler._0 = init_hdlr__handler_id;
 
-        __termina_except__action_failure(source, 0U, result.Failure.__0);
+        termina__except__action_failure(source, 0U, result.Failure._0);
 
     }
 
@@ -309,43 +309,43 @@ static void __termina_app__initial_event(void) {
 
 }
 
-void __termina_app__init(int32_t * const status) {
+void termina__app__init(int32_t * const status) {
     
     *status = 0L;
 
-    __termina_app__init_globals();
+    termina__app__init_globals();
 
-    __termina_app__init_msg_queues(status);
+    termina__app__init_msg_queues(status);
 
     if (0L == *status) {
         
-        __termina_app__init_channel_connections();
+        termina__app__init_channel_connections();
 
-        __termina_app__init_pools(status);
+        termina__app__init_pools(status);
 
     }
 
     if (0L == *status) {
         
-        __termina_app__initial_event();
+        termina__app__initial_event();
 
-        __termina_app__init_mutexes(status);
-
-    }
-
-    if (0L == *status) {
-        
-        __termina_app__enable_protection();
-
-        __termina_app__init_emitters(status);
+        termina__app__init_mutexes(status);
 
     }
 
     if (0L == *status) {
         
-        __termina_app__init_handlers();
+        termina__app__enable_protection();
 
-        __termina_app__init_tasks(status);
+        termina__app__init_emitters(status);
+
+    }
+
+    if (0L == *status) {
+        
+        termina__app__init_handlers();
+
+        termina__app__init_tasks(status);
 
     }
 

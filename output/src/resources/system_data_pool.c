@@ -10,13 +10,13 @@ DataPoolItemType sys_data_pool_get_item_type(uint16_t PID) {
     if ((size_t)PID < 11U) {
         
         #line 56 "src/resources/system_data_pool.fin"
-        sdp_type.__variant = DataPoolItemType__u32_t;
+        sdp_type._variant = DataPoolItemType__u32_t;
 
     } else
     {
         
         #line 60 "src/resources/system_data_pool.fin"
-        sdp_type.__variant = DataPoolItemType__u8_t;
+        sdp_type._variant = DataPoolItemType__u8_t;
 
     }
 
@@ -24,7 +24,7 @@ DataPoolItemType sys_data_pool_get_item_type(uint16_t PID) {
     if ((size_t)PID >= 28U) {
         
         #line 65 "src/resources/system_data_pool.fin"
-        sdp_type.__variant = DataPoolItemType__NoValidPID;
+        sdp_type._variant = DataPoolItemType__NoValidPID;
 
     }
 

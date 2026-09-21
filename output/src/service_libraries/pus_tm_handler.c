@@ -7,16 +7,16 @@ const uint16_t DESTINATION_ID = 0x78U;
 
 const size_t tm_app_data_offset = 19U;
 
-__status_int32_t append_u8_appdata_field(TMHandler * const tm_handler, uint8_t data) {
+Status__i32 append_u8_appdata_field(TMHandler * const tm_handler, uint8_t data) {
     
     #line 58 "src/service_libraries/pus_tm_handler.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 60 "src/service_libraries/pus_tm_handler.fin"
     if (tm_handler->app_data_index < 256U) {
         
         #line 62 "src/service_libraries/pus_tm_handler.fin"
-        tm_handler->tm_descriptor.tm_bytes[__termina_array__index(256U, tm_handler->app_data_index)] = data;
+        tm_handler->tm_descriptor.tm_bytes[termina__check__array_index(256U, tm_handler->app_data_index)] = data;
 
         #line 63 "src/service_libraries/pus_tm_handler.fin"
         tm_handler->app_data_index = tm_handler->app_data_index + 1U;
@@ -25,9 +25,9 @@ __status_int32_t append_u8_appdata_field(TMHandler * const tm_handler, uint8_t d
     {
         
         #line 67 "src/service_libraries/pus_tm_handler.fin"
-        status.__variant = Failure;
+        status._variant = Status__Failure;
         #line 67 "src/service_libraries/pus_tm_handler.fin"
-        status.Failure.__0 = BUILD_TM_ERROR;
+        status.Failure._0 = BUILD_TM_ERROR;
 
     }
 
@@ -36,16 +36,16 @@ __status_int32_t append_u8_appdata_field(TMHandler * const tm_handler, uint8_t d
 
 }
 
-__status_int32_t append_u16_appdata_field(TMHandler * const tm_handler, uint16_t data) {
+Status__i32 append_u16_appdata_field(TMHandler * const tm_handler, uint16_t data) {
     
     #line 85 "src/service_libraries/pus_tm_handler.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 87 "src/service_libraries/pus_tm_handler.fin"
     if ((size_t)(tm_handler->app_data_index + 1U) < 256U) {
         
         #line 89 "src/service_libraries/pus_tm_handler.fin"
-        serialize_uint16(data, &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(256U, 2U, tm_handler->app_data_index, tm_handler->app_data_index + 2U)]);
+        serialize_uint16(data, &tm_handler->tm_descriptor.tm_bytes[termina__check__array_slice(256U, 2U, tm_handler->app_data_index, tm_handler->app_data_index + 2U)]);
 
         #line 90 "src/service_libraries/pus_tm_handler.fin"
         tm_handler->app_data_index = tm_handler->app_data_index + 2U;
@@ -54,9 +54,9 @@ __status_int32_t append_u16_appdata_field(TMHandler * const tm_handler, uint16_t
     {
         
         #line 94 "src/service_libraries/pus_tm_handler.fin"
-        status.__variant = Failure;
+        status._variant = Status__Failure;
         #line 94 "src/service_libraries/pus_tm_handler.fin"
-        status.Failure.__0 = BUILD_TM_ERROR;
+        status.Failure._0 = BUILD_TM_ERROR;
 
     }
 
@@ -65,16 +65,16 @@ __status_int32_t append_u16_appdata_field(TMHandler * const tm_handler, uint16_t
 
 }
 
-__status_int32_t append_u32_appdata_field(TMHandler * const tm_handler, uint32_t data) {
+Status__i32 append_u32_appdata_field(TMHandler * const tm_handler, uint32_t data) {
     
     #line 111 "src/service_libraries/pus_tm_handler.fin"
-    __status_int32_t status = { .__variant = Success };
+    Status__i32 status = { ._variant = Status__Success };
 
     #line 113 "src/service_libraries/pus_tm_handler.fin"
     if ((size_t)(tm_handler->app_data_index + 3U) < 256U) {
         
         #line 115 "src/service_libraries/pus_tm_handler.fin"
-        serialize_uint32(data, &tm_handler->tm_descriptor.tm_bytes[__termina_array__slice(256U, 4U, tm_handler->app_data_index, tm_handler->app_data_index + 4U)]);
+        serialize_uint32(data, &tm_handler->tm_descriptor.tm_bytes[termina__check__array_slice(256U, 4U, tm_handler->app_data_index, tm_handler->app_data_index + 4U)]);
 
         #line 116 "src/service_libraries/pus_tm_handler.fin"
         tm_handler->app_data_index = tm_handler->app_data_index + 4U;
@@ -83,9 +83,9 @@ __status_int32_t append_u32_appdata_field(TMHandler * const tm_handler, uint32_t
     {
         
         #line 120 "src/service_libraries/pus_tm_handler.fin"
-        status.__variant = Failure;
+        status._variant = Status__Failure;
         #line 120 "src/service_libraries/pus_tm_handler.fin"
-        status.Failure.__0 = BUILD_TM_ERROR;
+        status.Failure._0 = BUILD_TM_ERROR;
 
     }
 

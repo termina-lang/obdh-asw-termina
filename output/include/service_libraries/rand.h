@@ -1,5 +1,5 @@
-#ifndef __SERVICE_LIBRARIES__RAND_H__
-#define __SERVICE_LIBRARIES__RAND_H__
+#ifndef SERVICE_LIBRARIES__RAND_H__
+#define SERVICE_LIBRARIES__RAND_H__
 
 #include <termina.h>
 

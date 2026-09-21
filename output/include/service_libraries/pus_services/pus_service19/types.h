@@ -1,5 +1,5 @@
-#ifndef __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE19__TYPES_H__
-#define __SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE19__TYPES_H__
+#ifndef SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE19__TYPES_H__
+#define SERVICE_LIBRARIES__PUS_SERVICES__PUS_SERVICE19__TYPES_H__
 
 #include <termina.h>
 
@@ -41,10 +41,10 @@ typedef enum {
     TC19_1_Error__NoError,
     TC19_1_Error__EvIDEnabled,
     TC19_1_Error__MaxEventActionDefinitions
-} __enum_TC19_1_Error_t;
+} termina__enum__TC19_1_Error_t;
 
 typedef struct {
-    __enum_TC19_1_Error_t __variant;
+    termina__enum__TC19_1_Error_t _variant;
 } TC19_1_Error;
 
 #endif

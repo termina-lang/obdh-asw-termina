@@ -3,19 +3,19 @@
 
 PeriodicTimer hk_fdir_timer;
 
-__termina_msg_queue_t rx_task_message_queue;
+termina__msg_queue_t rx_task_message_queue;
 
-__termina_msg_queue_t tc_message_queue;
+termina__msg_queue_t tc_message_queue;
 
-__termina_msg_queue_t hkfdir_message_queue;
+termina__msg_queue_t hkfdir_message_queue;
 
-__termina_msg_queue_t bkg_message_queue;
+termina__msg_queue_t bkg_message_queue;
 
-__termina_msg_queue_t action_tc_message_queue;
+termina__msg_queue_t action_tc_message_queue;
 
-__termina_pool_t tm_pool;
+termina__pool_t tm_pool;
 
-__termina_pool_t tc_pool;
+termina__pool_t tc_pool;
 
 _Atomic uint32_t u32_system_data_pool[12U];
 

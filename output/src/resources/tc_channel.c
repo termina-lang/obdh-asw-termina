@@ -1,41 +1,41 @@
 
 #include "resources/tc_channel.h"
 
-void CTCChannel__dequeue(const __termina_event_t * const __ev, void * const __this, __option_uint8_t * const obyte) {
+void CTCChannel__dequeue(const termina__event_t * const termina__ev, void * const termina__this, Option__u8 * const obyte) {
     
     #line 125 "src/resources/tc_channel.fin"
-    CTCChannel * self = (CTCChannel *)__this;
+    CTCChannel * self = (CTCChannel *)termina__this;
 
     #line 125 "src/resources/tc_channel.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 128 "src/resources/tc_channel.fin"
     dequeue(&self->tc_rx_queue, obyte);
 
     #line 130 "src/resources/tc_channel.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 130 "src/resources/tc_channel.fin"
     return;
 
 }
 
-void CTCChannel__enqueue(const __termina_event_t * const __ev, void * const __this, uint8_t byte, CharDevIrqStatus * const status) {
+void CTCChannel__enqueue(const termina__event_t * const termina__ev, void * const termina__this, uint8_t byte, CharDevIrqStatus * const status) {
     
     #line 43 "src/resources/tc_channel.fin"
-    CTCChannel * self = (CTCChannel *)__this;
+    CTCChannel * self = (CTCChannel *)termina__this;
 
     #line 43 "src/resources/tc_channel.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 45 "src/resources/tc_channel.fin"
-    (*status).__variant = CharDevIrqStatus__IrqOk;
+    (*status)._variant = CharDevIrqStatus__IrqOk;
 
     #line 49 "src/resources/tc_channel.fin"
-    if (self->rx_status.__variant == TCRxStatus__SyncBytesRx) {
+    if (self->rx_status._variant == TCRxStatus__SyncBytesRx) {
         
         #line 51 "src/resources/tc_channel.fin"
-        if (byte == self->sync_word[__termina_array__index(4U, self->aux_index)]) {
+        if (byte == self->sync_word[termina__check__array_index(4U, self->aux_index)]) {
             
             #line 53 "src/resources/tc_channel.fin"
             if (3U == self->aux_index) {
@@ -44,7 +44,7 @@ void CTCChannel__enqueue(const __termina_event_t * const __ev, void * const __th
                 self->aux_index = 0U;
 
                 #line 55 "src/resources/tc_channel.fin"
-                self->rx_status.__variant = TCRxStatus__SyncLengthRx;
+                self->rx_status._variant = TCRxStatus__SyncLengthRx;
 
             } else
             {
@@ -64,10 +64,10 @@ void CTCChannel__enqueue(const __termina_event_t * const __ev, void * const __th
 
     } else
     #line 65 "src/resources/tc_channel.fin"
-    if (self->rx_status.__variant == TCRxStatus__SyncLengthRx) {
+    if (self->rx_status._variant == TCRxStatus__SyncLengthRx) {
         
         #line 67 "src/resources/tc_channel.fin"
-        self->raw_rx_tc_length[__termina_array__index(2U, self->aux_index)] = byte;
+        self->raw_rx_tc_length[termina__check__array_index(2U, self->aux_index)] = byte;
 
         #line 68 "src/resources/tc_channel.fin"
         self->aux_index = self->aux_index + 1U;
@@ -82,13 +82,13 @@ void CTCChannel__enqueue(const __termina_event_t * const __ev, void * const __th
             if (self->tc_num_bytes < 256U) {
                 
                 #line 76 "src/resources/tc_channel.fin"
-                self->rx_status.__variant = TCRxStatus__TCBytesRx;
+                self->rx_status._variant = TCRxStatus__TCBytesRx;
 
             } else
             {
                 
                 #line 80 "src/resources/tc_channel.fin"
-                self->rx_status.__variant = TCRxStatus__SyncBytesRx;
+                self->rx_status._variant = TCRxStatus__SyncBytesRx;
 
             }
 
@@ -99,13 +99,13 @@ void CTCChannel__enqueue(const __termina_event_t * const __ev, void * const __th
 
     } else
     #line 87 "src/resources/tc_channel.fin"
-    if (self->rx_status.__variant == TCRxStatus__TCBytesRx) {
+    if (self->rx_status._variant == TCRxStatus__TCBytesRx) {
         
         #line 89 "src/resources/tc_channel.fin"
-        __status_int32_t result = enqueue(&self->tc_rx_queue, byte);
+        Status__i32 result = enqueue(&self->tc_rx_queue, byte);
 
         #line 92 "src/resources/tc_channel.fin"
-        if (result.__variant == Success) {
+        if (result._variant == Status__Success) {
             
             #line 94 "src/resources/tc_channel.fin"
             self->aux_index = self->aux_index + 1U;
@@ -114,7 +114,7 @@ void CTCChannel__enqueue(const __termina_event_t * const __ev, void * const __th
             if (self->aux_index == self->tc_num_bytes) {
                 
                 #line 98 "src/resources/tc_channel.fin"
-                self->rx_status.__variant = TCRxStatus__FinishedTCRx;
+                self->rx_status._variant = TCRxStatus__FinishedTCRx;
 
             }
 
@@ -122,12 +122,12 @@ void CTCChannel__enqueue(const __termina_event_t * const __ev, void * const __th
         {
             
             #line 102 "src/resources/tc_channel.fin"
-            int32_t error_code = result.Failure.__0;
+            int32_t error_code = result.Failure._0;
 
             #line 103 "src/resources/tc_channel.fin"
-            (*status).__variant = CharDevIrqStatus__IrqError;
+            (*status)._variant = CharDevIrqStatus__IrqError;
             #line 103 "src/resources/tc_channel.fin"
-            (*status).IrqError.__0 = error_code;
+            (*status).IrqError._0 = error_code;
 
         }
 
@@ -138,23 +138,23 @@ void CTCChannel__enqueue(const __termina_event_t * const __ev, void * const __th
     }
 
     #line 112 "src/resources/tc_channel.fin"
-    if ((*status).__variant == CharDevIrqStatus__IrqOk && self->rx_status.__variant == TCRxStatus__FinishedTCRx) {
+    if ((*status)._variant == CharDevIrqStatus__IrqOk && self->rx_status._variant == TCRxStatus__FinishedTCRx) {
         
         #line 115 "src/resources/tc_channel.fin"
-        self->rx_status.__variant = TCRxStatus__SyncBytesRx;
+        self->rx_status._variant = TCRxStatus__SyncBytesRx;
 
         #line 116 "src/resources/tc_channel.fin"
         self->aux_index = 0U;
 
         #line 117 "src/resources/tc_channel.fin"
-        (*status).__variant = CharDevIrqStatus__RxComplete;
+        (*status)._variant = CharDevIrqStatus__RxComplete;
         #line 117 "src/resources/tc_channel.fin"
-        (*status).RxComplete.__0 = self->tc_num_bytes;
+        (*status).RxComplete._0 = self->tc_num_bytes;
 
     }
 
     #line 121 "src/resources/tc_channel.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 121 "src/resources/tc_channel.fin"
     return;

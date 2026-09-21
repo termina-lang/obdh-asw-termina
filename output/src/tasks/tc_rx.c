@@ -1,58 +1,58 @@
 
 #include "tasks/tc_rx.h"
 
-__status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __ev, void * const __this, size_t size) {
+Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__ev, void * const termina__this, size_t size) {
     
     #line 15 "src/tasks/tc_rx.fin"
-    CTXRxBottomHalfTask * self = (CTXRxBottomHalfTask *)__this;
+    CTXRxBottomHalfTask * self = (CTXRxBottomHalfTask *)termina__this;
 
     #line 17 "src/tasks/tc_rx.fin"
-    __status_int32_t ret = { .__variant = Success };
+    Status__i32 ret = { ._variant = Status__Success };
 
     #line 19 "src/tasks/tc_rx.fin"
-    __option_box_t tc_handler = { .__variant = None };
+    Option__box tc_handler = { ._variant = Option__None };
 
     #line 20 "src/tasks/tc_rx.fin"
-    self->tc_handler_pool.alloc(__ev, self->tc_handler_pool.__that, &tc_handler);
+    self->tc_handler_pool.alloc(termina__ev, self->tc_handler_pool._that, &tc_handler);
 
     #line 24 "src/tasks/tc_rx.fin"
-    if (tc_handler.__variant == Some) {
+    if (tc_handler._variant == Option__Some) {
         
         #line 24 "src/tasks/tc_rx.fin"
-        __termina_box_t tc_handler_b = tc_handler.Some.__0;
+        termina__box_t tc_handler_b = tc_handler.Some._0;
 
         #line 26 "src/tasks/tc_rx.fin"
-        for (size_t i = 0U; i < 256U && (i < size && ret.__variant == Success); i = i + 1U) {
+        for (size_t i = 0U; i < 256U && (i < size && ret._variant == Status__Success); i = i + 1U) {
             
             #line 28 "src/tasks/tc_rx.fin"
-            __option_uint8_t obyte = { .__variant = None };
+            Option__u8 obyte = { ._variant = Option__None };
 
             #line 29 "src/tasks/tc_rx.fin"
-            self->tc_channel.dequeue(__ev, self->tc_channel.__that, &obyte);
+            self->tc_channel.dequeue(termina__ev, self->tc_channel._that, &obyte);
 
             #line 33 "src/tasks/tc_rx.fin"
-            if (obyte.__variant == Some) {
+            if (obyte._variant == Option__Some) {
                 
                 #line 33 "src/tasks/tc_rx.fin"
-                uint8_t byte = obyte.Some.__0;
+                uint8_t byte = obyte.Some._0;
 
                 #line 34 "src/tasks/tc_rx.fin"
-                (*(TCHandler *)tc_handler_b.data).tc_descriptor.tc_bytes[__termina_array__index(256U, i)] = byte;
+                (*(TCHandler *)tc_handler_b.data).tc_descriptor.tc_bytes[termina__check__array_index(256U, i)] = byte;
 
             } else
             {
                 
                 #line 37 "src/tasks/tc_rx.fin"
-                ret.__variant = Failure;
+                ret._variant = Status__Failure;
                 #line 37 "src/tasks/tc_rx.fin"
-                ret.Failure.__0 = 13L;
+                ret.Failure._0 = 13L;
 
             }
 
         }
 
         #line 44 "src/tasks/tc_rx.fin"
-        if (ret.__variant == Success) {
+        if (ret._variant == Status__Success) {
             
             #line 46 "src/tasks/tc_rx.fin"
             (*(TCHandler *)tc_handler_b.data).tc_descriptor.tc_num_bytes = size;
@@ -61,13 +61,13 @@ __status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __e
             tc_handler_build((TCHandler *)tc_handler_b.data);
 
             #line 50 "src/tasks/tc_rx.fin"
-            __termina_out_port__send(__ev, self->tc_message_queue_output, (void *)&tc_handler_b);
+            termina__out_port__send(termina__ev, self->tc_message_queue_output, (void *)&tc_handler_b);
 
         } else
         {
             
             #line 54 "src/tasks/tc_rx.fin"
-            self->tc_handler_pool.free(__ev, self->tc_handler_pool.__that, tc_handler_b);
+            self->tc_handler_pool.free(termina__ev, self->tc_handler_pool._that, tc_handler_b);
 
         }
 
@@ -75,9 +75,9 @@ __status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __e
     {
         
         #line 61 "src/tasks/tc_rx.fin"
-        ret.__variant = Failure;
+        ret._variant = Status__Failure;
         #line 61 "src/tasks/tc_rx.fin"
-        ret.Failure.__0 = TM_POOL_ALLOC_FAILURE;
+        ret.Failure._0 = TM_POOL_ALLOC_FAILURE;
 
     }
 
@@ -86,21 +86,21 @@ __status_int32_t CTXRxBottomHalfTask__get_tc(const __termina_event_t * const __e
 
 }
 
-void __CTXRxBottomHalfTask__termina_task(void * arg) {
+void termina__task_entry__CTXRxBottomHalfTask(void * arg) {
     
     CTXRxBottomHalfTask * self = (CTXRxBottomHalfTask *)arg;
 
     int32_t status = 0L;
 
-    __termina_event_t event;
+    termina__event_t event;
 
-    __status_int32_t result;
+    Status__i32 result;
 
     size_t get_tc__msg_data;
 
     for (;;) {
         
-        __termina_msg_queue__recv(self->__task_msg_queue_id, &event, &status);
+        termina__msg_queue__recv(self->_task_msg_queue_id, &event, &status);
 
         if (status != 0L) {
             break;
@@ -108,23 +108,23 @@ void __CTXRxBottomHalfTask__termina_task(void * arg) {
 
         switch (event.port_id) {
             
-            case __CTXRxBottomHalfTask__frame_ready_input:
+            case CTXRxBottomHalfTask__frame_ready_input:
 
-                __termina_msg_queue__recv(self->frame_ready_input, (void *)&get_tc__msg_data, &status);
+                termina__msg_queue__recv(self->frame_ready_input, (void *)&get_tc__msg_data, &status);
 
                 if (status != 0L) {
-                    __termina_except__msg_queue_recv_error(self->frame_ready_input, status);
+                    termina__except__msg_queue_recv_error(self->frame_ready_input, status);
                 }
 
                 result = CTXRxBottomHalfTask__get_tc(&event, self, get_tc__msg_data);
 
-                if (result.__variant != Success) {
+                if (result._variant != Status__Success) {
                     
                     ExceptSource source;
-                    source.__variant = ExceptSource__Task;
-                    source.Task.__0 = self->__task_id;
+                    source._variant = ExceptSource__Task;
+                    source.Task._0 = self->_task_id;
 
-                    __termina_except__action_failure(source, __CTXRxBottomHalfTask__frame_ready_input, result.Failure.__0);
+                    termina__except__action_failure(source, CTXRxBottomHalfTask__frame_ready_input, result.Failure._0);
 
                 }
 
@@ -132,7 +132,7 @@ void __CTXRxBottomHalfTask__termina_task(void * arg) {
 
             default:
 
-                __termina_exec__reboot();
+                termina__exec__reboot();
 
                 break;
 

@@ -1,38 +1,38 @@
 
 #include "resources/gpio_driver.h"
 
-void CGPIODriver__init_gpio(const __termina_event_t * const __ev, void * const __this) {
+void CGPIODriver__init_gpio(const termina__event_t * const termina__ev, void * const termina__this) {
     
     #line 46 "src/resources/gpio_driver.fin"
-    CGPIODriver * self = (CGPIODriver *)__this;
+    CGPIODriver * self = (CGPIODriver *)termina__this;
 
     #line 46 "src/resources/gpio_driver.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 48 "src/resources/gpio_driver.fin"
     self->registers->Direction = self->registers->Direction | 983040U;
 
     #line 50 "src/resources/gpio_driver.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 50 "src/resources/gpio_driver.fin"
     return;
 
 }
 
-void CGPIODriver__write_led(const __termina_event_t * const __ev, void * const __this, uint8_t led, uint8_t value, __status_int32_t * const status) {
+void CGPIODriver__write_led(const termina__event_t * const termina__ev, void * const termina__this, uint8_t led, uint8_t value, Status__i32 * const status) {
     
     #line 63 "src/resources/gpio_driver.fin"
-    CGPIODriver * self = (CGPIODriver *)__this;
+    CGPIODriver * self = (CGPIODriver *)termina__this;
 
     #line 63 "src/resources/gpio_driver.fin"
-    __termina_lock_t __lock = __termina_resource__lock(&__ev->owner, &self->__lock_type);
+    termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
     #line 65 "src/resources/gpio_driver.fin"
     if (led > 5U && led < 10U) {
         
         #line 67 "src/resources/gpio_driver.fin"
-        (*status).__variant = Success;
+        (*status)._variant = Status__Success;
 
         #line 69 "src/resources/gpio_driver.fin"
         uint8_t bit = led + 17U;
@@ -41,7 +41,7 @@ void CGPIODriver__write_led(const __termina_event_t * const __ev, void * const _
         if (value == 0U) {
             
             #line 71 "src/resources/gpio_driver.fin"
-            uint32_t mask = 0xFFFFFFFFU ^ (uint32_t)((uint32_t)1U << __termina_shift__amount(32U, bit));
+            uint32_t mask = 0xFFFFFFFFU ^ (uint32_t)((uint32_t)1U << termina__check__shift_amount(32U, bit));
 
             #line 72 "src/resources/gpio_driver.fin"
             self->registers->Output = self->registers->Output & mask;
@@ -50,7 +50,7 @@ void CGPIODriver__write_led(const __termina_event_t * const __ev, void * const _
         {
             
             #line 74 "src/resources/gpio_driver.fin"
-            self->registers->Output = self->registers->Output | (uint32_t)((uint32_t)1U << __termina_shift__amount(32U, bit));
+            self->registers->Output = self->registers->Output | (uint32_t)((uint32_t)1U << termina__check__shift_amount(32U, bit));
 
         }
 
@@ -58,14 +58,14 @@ void CGPIODriver__write_led(const __termina_event_t * const __ev, void * const _
     {
         
         #line 79 "src/resources/gpio_driver.fin"
-        (*status).__variant = Failure;
+        (*status)._variant = Status__Failure;
         #line 79 "src/resources/gpio_driver.fin"
-        (*status).Failure.__0 = INVALID_LED_INDEX_ERROR;
+        (*status).Failure._0 = INVALID_LED_INDEX_ERROR;
 
     }
 
     #line 83 "src/resources/gpio_driver.fin"
-    __termina_resource__unlock(&__ev->owner, &self->__lock_type, __lock);
+    termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
     #line 83 "src/resources/gpio_driver.fin"
     return;

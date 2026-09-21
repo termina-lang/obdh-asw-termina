@@ -1,5 +1,5 @@
-#ifndef __RESOURCES__SYSTEM_DATA_POOL_H__
-#define __RESOURCES__SYSTEM_DATA_POOL_H__
+#ifndef RESOURCES__SYSTEM_DATA_POOL_H__
+#define RESOURCES__SYSTEM_DATA_POOL_H__
 
 #include <termina.h>
 
@@ -9,10 +9,10 @@ typedef enum {
     DataPoolItemType__u8_t,
     DataPoolItemType__u32_t,
     DataPoolItemType__NoValidPID
-} __enum_DataPoolItemType_t;
+} termina__enum__DataPoolItemType_t;
 
 typedef struct {
-    __enum_DataPoolItemType_t __variant;
+    termina__enum__DataPoolItemType_t _variant;
 } DataPoolItemType;
 
 DataPoolItemType sys_data_pool_get_item_type(uint16_t PID);
