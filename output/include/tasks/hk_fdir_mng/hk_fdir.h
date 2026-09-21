@@ -63,7 +63,7 @@ Status__i32 CHousekeepingFDIRTask__check_pending_actions(const termina__event_t 
 
 Status__i32 CHousekeepingFDIRTask__do_fdir(const termina__event_t * const termina__ev, void * const termina__this);
 
-Status__i32 CHousekeepingFDIRTask__do_hk_fdir(const termina__event_t * const termina__ev, void * const termina__this, TimeVal _current_time);
+Status__i32 CHousekeepingFDIRTask__do_hk_fdir(const termina__event_t * const termina__ev, void * const termina__this, TimeVal termina__ignored__current_time);
 
 Status__i32 CHousekeepingFDIRTask__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tc_handler);
 

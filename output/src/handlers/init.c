@@ -7,9 +7,9 @@ const uint32_t Unit = 204U;
 
 const uint32_t Dec = 20U;
 
-Status__i32 CInitHandler__init(const termina__event_t * const termina__ev, void * const termina__this, TimeVal _boot_time) {
+Status__i32 CInitHandler__init(const termina__event_t * const termina__ev, void * const termina__this, TimeVal termina__ignored__boot_time) {
     
-    (void)_boot_time;
+    (void)termina__ignored__boot_time;
 
     #line 42 "src/handlers/init.fin"
     CInitHandler * self = (CInitHandler *)termina__this;

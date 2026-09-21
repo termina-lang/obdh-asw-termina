@@ -1,9 +1,9 @@
 
 #include "drivers/char_dev/irq_handler.h"
 
-Status__i32 CCharDevIRQHandler__irq_handler(const termina__event_t * const termina__ev, void * const termina__this, uint32_t _vector) {
+Status__i32 CCharDevIRQHandler__irq_handler(const termina__event_t * const termina__ev, void * const termina__this, uint32_t termina__ignored__vector) {
     
-    (void)_vector;
+    (void)termina__ignored__vector;
 
     #line 14 "src/drivers/char_dev/irq_handler.fin"
     CCharDevIRQHandler * self = (CCharDevIRQHandler *)termina__this;

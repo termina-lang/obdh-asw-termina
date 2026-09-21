@@ -57,73 +57,76 @@ void CPUSService3__do_hk(const termina__event_t * const termina__ev, void * cons
                     Status__i32 do_hk_status = append_u16_appdata_field((TMHandler *)b_tm_handler.data, self->hk_config_table[termina__check__array_index(8U, i)].SID);
 
                     #line 337 "src/service_libraries/pus_services/pus_service3.fin"
-                    for (size_t j = 0U; j < 16U && (j < (size_t)self->hk_config_table[termina__check__array_index(8U, i)].num_params && do_hk_status._variant == Status__Success); j = j + 1U) {
+                    size_t num_params = (size_t)self->hk_config_table[termina__check__array_index(8U, i)].num_params;
+
+                    #line 339 "src/service_libraries/pus_services/pus_service3.fin"
+                    for (size_t j = 0U; j < 16U && (j < num_params && do_hk_status._variant == Status__Success); j = j + 1U) {
                         
-                        #line 339 "src/service_libraries/pus_services/pus_service3.fin"
+                        #line 341 "src/service_libraries/pus_services/pus_service3.fin"
                         uint16_t PID = self->hk_config_table[termina__check__array_index(8U, i)].params_def[termina__check__array_index(16U, j)];
 
-                        #line 340 "src/service_libraries/pus_services/pus_service3.fin"
+                        #line 342 "src/service_libraries/pus_services/pus_service3.fin"
                         DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
 
-                        #line 343 "src/service_libraries/pus_services/pus_service3.fin"
+                        #line 345 "src/service_libraries/pus_services/pus_service3.fin"
                         if (item_type._variant == DataPoolItemType__u8_t) {
                             
-                            #line 344 "src/service_libraries/pus_services/pus_service3.fin"
+                            #line 346 "src/service_libraries/pus_services/pus_service3.fin"
                             uint8_t u8_SDP_value = 0U;
 
-                            #line 345 "src/service_libraries/pus_services/pus_service3.fin"
+                            #line 347 "src/service_libraries/pus_services/pus_service3.fin"
                             u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
 
-                            #line 346 "src/service_libraries/pus_services/pus_service3.fin"
+                            #line 348 "src/service_libraries/pus_services/pus_service3.fin"
                             do_hk_status = append_u8_appdata_field((TMHandler *)b_tm_handler.data, u8_SDP_value);
 
                         } else
-                        #line 348 "src/service_libraries/pus_services/pus_service3.fin"
+                        #line 350 "src/service_libraries/pus_services/pus_service3.fin"
                         if (item_type._variant == DataPoolItemType__u32_t) {
                             
-                            #line 349 "src/service_libraries/pus_services/pus_service3.fin"
+                            #line 351 "src/service_libraries/pus_services/pus_service3.fin"
                             uint32_t u32_SDP_value = 0U;
 
-                            #line 350 "src/service_libraries/pus_services/pus_service3.fin"
+                            #line 352 "src/service_libraries/pus_services/pus_service3.fin"
                             u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
 
-                            #line 351 "src/service_libraries/pus_services/pus_service3.fin"
+                            #line 353 "src/service_libraries/pus_services/pus_service3.fin"
                             do_hk_status = append_u32_appdata_field((TMHandler *)b_tm_handler.data, u32_SDP_value);
 
                         } else
                         {
                             
-                            #line 354 "src/service_libraries/pus_services/pus_service3.fin"
+                            #line 356 "src/service_libraries/pus_services/pus_service3.fin"
                             do_hk_status._variant = Status__Failure;
-                            #line 354 "src/service_libraries/pus_services/pus_service3.fin"
+                            #line 356 "src/service_libraries/pus_services/pus_service3.fin"
                             do_hk_status.Failure._0 = SDP_ITEM_TYPE_ERROR;
 
                         }
 
                     }
 
-                    #line 360 "src/service_libraries/pus_services/pus_service3.fin"
+                    #line 362 "src/service_libraries/pus_services/pus_service3.fin"
                     MissionOBT current_obt = { .finetime = 0U, .seconds = 0U };
 
-                    #line 361 "src/service_libraries/pus_services/pus_service3.fin"
+                    #line 363 "src/service_libraries/pus_services/pus_service3.fin"
                     self->obt_manager.get_current_obt(termina__ev, self->obt_manager._that, &current_obt);
 
-                    #line 363 "src/service_libraries/pus_services/pus_service3.fin"
+                    #line 365 "src/service_libraries/pus_services/pus_service3.fin"
                     if (do_hk_status._variant == Status__Success) {
                         
-                        #line 364 "src/service_libraries/pus_services/pus_service3.fin"
+                        #line 366 "src/service_libraries/pus_services/pus_service3.fin"
                         close_tm((TMHandler *)b_tm_handler.data, 3U, 25U, tm_count, current_obt);
 
-                        #line 365 "src/service_libraries/pus_services/pus_service3.fin"
+                        #line 367 "src/service_libraries/pus_services/pus_service3.fin"
                         self->tm_channel.send_tm(termina__ev, self->tm_channel._that, b_tm_handler, &do_hk_status);
 
                     } else
                     {
                         
-                        #line 369 "src/service_libraries/pus_services/pus_service3.fin"
+                        #line 371 "src/service_libraries/pus_services/pus_service3.fin"
                         self->pus_service_5.send_tm_5_2(termina__ev, self->pus_service_5._that, &do_hk_status);
 
-                        #line 370 "src/service_libraries/pus_services/pus_service3.fin"
+                        #line 372 "src/service_libraries/pus_services/pus_service3.fin"
                         self->tm_handler_pool.free(termina__ev, self->tm_handler_pool._that, b_tm_handler);
 
                     }
@@ -131,9 +134,9 @@ void CPUSService3__do_hk(const termina__event_t * const termina__ev, void * cons
                 } else
                 {
                     
-                    #line 376 "src/service_libraries/pus_services/pus_service3.fin"
+                    #line 378 "src/service_libraries/pus_services/pus_service3.fin"
                     (*action_status)._variant = Status__Failure;
-                    #line 376 "src/service_libraries/pus_services/pus_service3.fin"
+                    #line 378 "src/service_libraries/pus_services/pus_service3.fin"
                     (*action_status).Failure._0 = TM_POOL_ALLOC_FAILURE;
 
                 }
@@ -144,10 +147,10 @@ void CPUSService3__do_hk(const termina__event_t * const termina__ev, void * cons
 
     }
 
-    #line 384 "src/service_libraries/pus_services/pus_service3.fin"
+    #line 386 "src/service_libraries/pus_services/pus_service3.fin"
     termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
-    #line 384 "src/service_libraries/pus_services/pus_service3.fin"
+    #line 386 "src/service_libraries/pus_services/pus_service3.fin"
     return;
 
 }
@@ -478,36 +481,36 @@ void CPUSService3__exec_tc(const termina__event_t * const termina__ev, void * co
 
 void CPUSService3__update_params(const termina__event_t * const termina__ev, void * const termina__this) {
     
-    #line 387 "src/service_libraries/pus_services/pus_service3.fin"
+    #line 389 "src/service_libraries/pus_services/pus_service3.fin"
     CPUSService3 * self = (CPUSService3 *)termina__this;
 
-    #line 387 "src/service_libraries/pus_services/pus_service3.fin"
+    #line 389 "src/service_libraries/pus_services/pus_service3.fin"
     termina__lock_t termina__lock = termina__resource__lock(&termina__ev->owner, &self->_lock_type);
 
-    #line 389 "src/service_libraries/pus_services/pus_service3.fin"
+    #line 391 "src/service_libraries/pus_services/pus_service3.fin"
     for (size_t i = 0U; i < 5U; i = i + 1U) {
         
-        #line 391 "src/service_libraries/pus_services/pus_service3.fin"
+        #line 393 "src/service_libraries/pus_services/pus_service3.fin"
         uint32_t random_noise = (uint32_t)(rand_r(&self->random_seed) % 11U) - 5U;
 
-        #line 392 "src/service_libraries/pus_services/pus_service3.fin"
+        #line 394 "src/service_libraries/pus_services/pus_service3.fin"
         uint32_t data = 0U;
 
-        #line 394 "src/service_libraries/pus_services/pus_service3.fin"
+        #line 396 "src/service_libraries/pus_services/pus_service3.fin"
         data = atomic_load(&self->system_data_pool_u32[i]);
 
-        #line 395 "src/service_libraries/pus_services/pus_service3.fin"
+        #line 397 "src/service_libraries/pus_services/pus_service3.fin"
         data = data + random_noise;
 
-        #line 397 "src/service_libraries/pus_services/pus_service3.fin"
+        #line 399 "src/service_libraries/pus_services/pus_service3.fin"
         atomic_store(&self->system_data_pool_u32[i], data);
 
     }
 
-    #line 400 "src/service_libraries/pus_services/pus_service3.fin"
+    #line 402 "src/service_libraries/pus_services/pus_service3.fin"
     termina__resource__unlock(&termina__ev->owner, &self->_lock_type, termina__lock);
 
-    #line 400 "src/service_libraries/pus_services/pus_service3.fin"
+    #line 402 "src/service_libraries/pus_services/pus_service3.fin"
     return;
 
 }

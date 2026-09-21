@@ -165,9 +165,9 @@ Status__i32 CHousekeepingFDIRTask__do_fdir(const termina__event_t * const termin
 
 }
 
-Status__i32 CHousekeepingFDIRTask__do_hk_fdir(const termina__event_t * const termina__ev, void * const termina__this, TimeVal _current_time) {
+Status__i32 CHousekeepingFDIRTask__do_hk_fdir(const termina__event_t * const termina__ev, void * const termina__this, TimeVal termina__ignored__current_time) {
     
-    (void)_current_time;
+    (void)termina__ignored__current_time;
 
     #line 156 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)termina__this;

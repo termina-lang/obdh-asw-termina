@@ -274,7 +274,7 @@ void CAPBUARTDriver__send(const termina__event_t * const termina__ev, void * con
     (*status)._variant = Status__Success;
 
     #line 224 "src/drivers/char_dev/uart/apbuart.fin"
-    if (self->rem_bytes || CAPBUARTDriver__tf_is_empty(termina__ev, self) == false) {
+    if (CAPBUARTDriver__tf_is_empty(termina__ev, self) == false || self->rem_bytes) {
         
         #line 226 "src/drivers/char_dev/uart/apbuart.fin"
         size_t num_elements = 0U;
