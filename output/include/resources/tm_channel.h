@@ -14,10 +14,10 @@ typedef struct {
     termina__allocator_t tm_handler_pool;
     struct {
         void * _that;
-        void (* send)(const termina__event_t * const termina__ev, void * const termina__this, uint8_t output_byte, Status__i32 * const status);
+        void (* send)(const termina__event_t * const termina__ev, void * const termina__this, const uint8_t output_byte, Status__i32 * const status);
     } char_dev;
 } CTMChannel;
 
-void CTMChannel__send_tm(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tm_handler, Status__i32 * const status);
+void CTMChannel__send_tm(const termina__event_t * const termina__ev, void * const termina__this, const termina__box_t tm_handler, Status__i32 * const status);
 
 #endif

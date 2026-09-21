@@ -18,7 +18,7 @@ typedef struct {
 
 void tc_handler_build(TCHandler * const tc_handler);
 
-_Bool tc_handler_is_valid_next_appdata_field(const TCHandler * const tc_handler, size_t field_size);
+_Bool tc_handler_is_valid_next_appdata_field(const TCHandler * const tc_handler, const size_t field_size);
 
 Status__i32 tc_handler_get_u8_appdata_field(TCHandler * const tc_handler, uint8_t * const data);
 

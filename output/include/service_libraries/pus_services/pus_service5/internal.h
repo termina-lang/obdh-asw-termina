@@ -57,16 +57,16 @@ typedef struct {
     uint16_t EvID;
 } PS5ExecTCReqStatusUpdate;
 
-Ev_IDType get_Ev_ID_type(uint16_t Ev_ID);
+Ev_IDType get_Ev_ID_type(const uint16_t Ev_ID);
 
-_Bool is_Ev_ID_valid(uint16_t evID);
+_Bool is_Ev_ID_valid(const uint16_t evID);
 
-size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID);
+size_t get_Ev_ID_enable_config_index(const uint16_t Ev_ID);
 
-uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID);
+uint8_t get_Ev_ID_enable_config_offset(const uint16_t Ev_ID);
 
-Status__i32 build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamOutOfLimitInfo fault_info, uint16_t ev_ID, MissionOBT current_obt);
+Status__i32 build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const ParamOutOfLimitInfo fault_info, const uint16_t ev_ID, const MissionOBT current_obt);
 
-Status__i32 build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamFaultValueInfo fault_info, uint16_t ev_ID, MissionOBT current_obt);
+Status__i32 build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const ParamFaultValueInfo fault_info, const uint16_t ev_ID, const MissionOBT current_obt);
 
 #endif

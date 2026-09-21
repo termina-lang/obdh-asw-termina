@@ -72,7 +72,7 @@ Status__i32 CHousekeepingFDIRTask__check_pending_actions(const termina__event_t 
             self->pus_service_19.extract_action(termina__ev, self->pus_service_19._that, n, (TCHandler *)b_tc_handler.data);
 
             #line 135 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            termina__out_port__send(termina__ev, self->action_tc_message_queue_output, (void *)&b_tc_handler);
+            termina__out_port__send(termina__ev, self->action_tc_message_queue_output, (const void *)&b_tc_handler);
 
         } else
         {
@@ -165,7 +165,7 @@ Status__i32 CHousekeepingFDIRTask__do_fdir(const termina__event_t * const termin
 
 }
 
-Status__i32 CHousekeepingFDIRTask__do_hk_fdir(const termina__event_t * const termina__ev, void * const termina__this, TimeVal termina__ignored__current_time) {
+Status__i32 CHousekeepingFDIRTask__do_hk_fdir(const termina__event_t * const termina__ev, void * const termina__this, const TimeVal termina__ignored__current_time) {
     
     (void)termina__ignored__current_time;
 
@@ -200,7 +200,7 @@ Status__i32 CHousekeepingFDIRTask__do_hk_fdir(const termina__event_t * const ter
 
 }
 
-Status__i32 CHousekeepingFDIRTask__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tc_handler) {
+Status__i32 CHousekeepingFDIRTask__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, const termina__box_t tc_handler) {
     
     #line 179 "src/tasks/hk_fdir_mng/hk_fdir.fin"
     CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)termina__this;
@@ -261,7 +261,7 @@ Status__i32 CHousekeepingFDIRTask__exec_tc(const termina__event_t * const termin
 
 }
 
-void termina__task_entry__CHousekeepingFDIRTask(void * arg) {
+void termina__task_entry__CHousekeepingFDIRTask(void * const arg) {
     
     CHousekeepingFDIRTask * self = (CHousekeepingFDIRTask *)arg;
 

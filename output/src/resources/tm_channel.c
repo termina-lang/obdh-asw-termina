@@ -1,7 +1,7 @@
 
 #include "resources/tm_channel.h"
 
-void CTMChannel__send_tm(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tm_handler, Status__i32 * const status) {
+void CTMChannel__send_tm(const termina__event_t * const termina__ev, void * const termina__this, const termina__box_t tm_handler, Status__i32 * const status) {
     
     #line 52 "src/resources/tm_channel.fin"
     CTMChannel * self = (CTMChannel *)termina__this;

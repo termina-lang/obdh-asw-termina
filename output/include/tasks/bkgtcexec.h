@@ -19,7 +19,7 @@ typedef struct {
     termina__id_t _task_msg_queue_id;
     struct {
         void * _that;
-        void (* send_tm_1_4_error_in_acceptance)(const termina__event_t * const termina__ev, void * const termina__this, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, Status__i32 * const status);
+        void (* send_tm_1_4_error_in_acceptance)(const termina__event_t * const termina__ev, void * const termina__this, const uint16_t tc_packet_id, const uint16_t tc_packet_seq_ctrl, Status__i32 * const status);
     } pus_service_1;
     struct {
         void * _that;
@@ -35,6 +35,6 @@ typedef struct {
 
 void termina__task_entry__CBKGTCExecutorTask(void * const arg);
 
-Status__i32 CBKGTCExecutorTask__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tc_handler);
+Status__i32 CBKGTCExecutorTask__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, const termina__box_t tc_handler);
 
 #endif

@@ -1,7 +1,7 @@
 
 #include "tasks/obdh_manager/obdh_manager.h"
 
-Status__i32 COBDHManagerTask__process_action_tc(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tc_handler) {
+Status__i32 COBDHManagerTask__process_action_tc(const termina__event_t * const termina__ev, void * const termina__this, const termina__box_t tc_handler) {
     
     #line 120 "src/tasks/obdh_manager/obdh_manager.fin"
     COBDHManagerTask * self = (COBDHManagerTask *)termina__this;
@@ -16,14 +16,14 @@ Status__i32 COBDHManagerTask__process_action_tc(const termina__event_t * const t
     if (execution_status._variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
         
         #line 130 "src/tasks/obdh_manager/obdh_manager.fin"
-        termina__out_port__send(termina__ev, self->hkfdir_message_queue_output, (void *)&tc_handler);
+        termina__out_port__send(termina__ev, self->hkfdir_message_queue_output, (const void *)&tc_handler);
 
     } else
     #line 132 "src/tasks/obdh_manager/obdh_manager.fin"
     if (execution_status._variant == TCExecutionCtrl__ExecCtrlBKGTC) {
         
         #line 134 "src/tasks/obdh_manager/obdh_manager.fin"
-        termina__out_port__send(termina__ev, self->bkg_message_queue_output, (void *)&tc_handler);
+        termina__out_port__send(termina__ev, self->bkg_message_queue_output, (const void *)&tc_handler);
 
     } else
     #line 137 "src/tasks/obdh_manager/obdh_manager.fin"
@@ -58,7 +58,7 @@ Status__i32 COBDHManagerTask__process_action_tc(const termina__event_t * const t
 
 }
 
-Status__i32 COBDHManagerTask__process_tc(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tc_handler) {
+Status__i32 COBDHManagerTask__process_tc(const termina__event_t * const termina__ev, void * const termina__this, const termina__box_t tc_handler) {
     
     #line 52 "src/tasks/obdh_manager/obdh_manager.fin"
     COBDHManagerTask * self = (COBDHManagerTask *)termina__this;
@@ -79,14 +79,14 @@ Status__i32 COBDHManagerTask__process_tc(const termina__event_t * const termina_
         if (current_tc_status.execution_status._variant == TCExecutionCtrl__ExecCtrlHK_FDIRTC) {
             
             #line 68 "src/tasks/obdh_manager/obdh_manager.fin"
-            termina__out_port__send(termina__ev, self->hkfdir_message_queue_output, (void *)&tc_handler);
+            termina__out_port__send(termina__ev, self->hkfdir_message_queue_output, (const void *)&tc_handler);
 
         } else
         #line 70 "src/tasks/obdh_manager/obdh_manager.fin"
         if (current_tc_status.execution_status._variant == TCExecutionCtrl__ExecCtrlBKGTC) {
             
             #line 72 "src/tasks/obdh_manager/obdh_manager.fin"
-            termina__out_port__send(termina__ev, self->bkg_message_queue_output, (void *)&tc_handler);
+            termina__out_port__send(termina__ev, self->bkg_message_queue_output, (const void *)&tc_handler);
 
         } else
         #line 75 "src/tasks/obdh_manager/obdh_manager.fin"
@@ -132,7 +132,7 @@ Status__i32 COBDHManagerTask__process_tc(const termina__event_t * const termina_
 
 }
 
-void termina__task_entry__COBDHManagerTask(void * arg) {
+void termina__task_entry__COBDHManagerTask(void * const arg) {
     
     COBDHManagerTask * self = (COBDHManagerTask *)arg;
 

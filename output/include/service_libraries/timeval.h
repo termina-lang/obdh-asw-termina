@@ -5,6 +5,6 @@
 
 #include "option.h"
 
-TimeVal substract_TimeVal(TimeVal timeval1, TimeVal timeval2);
+TimeVal substract_TimeVal(const TimeVal timeval1, const TimeVal timeval2);
 
 #endif

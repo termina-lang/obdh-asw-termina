@@ -20,6 +20,6 @@ typedef struct {
 
 void CGPIODriver__init_gpio(const termina__event_t * const termina__ev, void * const termina__this);
 
-void CGPIODriver__write_led(const termina__event_t * const termina__ev, void * const termina__this, uint8_t led, uint8_t value, Status__i32 * const status);
+void CGPIODriver__write_led(const termina__event_t * const termina__ev, void * const termina__this, const uint8_t led, const uint8_t value, Status__i32 * const status);
 
 #endif

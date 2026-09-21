@@ -1,7 +1,7 @@
 
 #include "tasks/tc_rx.h"
 
-Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__ev, void * const termina__this, size_t size) {
+Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__ev, void * const termina__this, const size_t size) {
     
     #line 15 "src/tasks/tc_rx.fin"
     CTXRxBottomHalfTask * self = (CTXRxBottomHalfTask *)termina__this;
@@ -61,7 +61,7 @@ Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__
             tc_handler_build((TCHandler *)tc_handler_b.data);
 
             #line 50 "src/tasks/tc_rx.fin"
-            termina__out_port__send(termina__ev, self->tc_message_queue_output, (void *)&tc_handler_b);
+            termina__out_port__send(termina__ev, self->tc_message_queue_output, (const void *)&tc_handler_b);
 
         } else
         {
@@ -86,7 +86,7 @@ Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__
 
 }
 
-void termina__task_entry__CTXRxBottomHalfTask(void * arg) {
+void termina__task_entry__CTXRxBottomHalfTask(void * const arg) {
     
     CTXRxBottomHalfTask * self = (CTXRxBottomHalfTask *)arg;
 

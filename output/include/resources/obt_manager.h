@@ -23,6 +23,6 @@ typedef struct {
 
 void COBTManager__get_current_obt(const termina__event_t * const termina__ev, void * const termina__this, MissionOBT * const current_obt);
 
-void COBTManager__set_obt(const termina__event_t * const termina__ev, void * const termina__this, MissionOBT next_obt);
+void COBTManager__set_obt(const termina__event_t * const termina__ev, void * const termina__this, const MissionOBT next_obt);
 
 #endif

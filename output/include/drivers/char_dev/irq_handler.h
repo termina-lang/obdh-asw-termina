@@ -16,6 +16,6 @@ typedef struct {
     } uart_drv;
 } CCharDevIRQHandler;
 
-Status__i32 CCharDevIRQHandler__irq_handler(const termina__event_t * const termina__ev, void * const termina__this, uint32_t termina__ignored__vector);
+Status__i32 CCharDevIRQHandler__irq_handler(const termina__event_t * const termina__ev, void * const termina__this, const uint32_t termina__ignored__vector);
 
 #endif

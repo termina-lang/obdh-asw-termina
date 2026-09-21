@@ -1,7 +1,7 @@
 
 #include "tasks/bkgtcexec.h"
 
-Status__i32 CBKGTCExecutorTask__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tc_handler) {
+Status__i32 CBKGTCExecutorTask__exec_tc(const termina__event_t * const termina__ev, void * const termina__this, const termina__box_t tc_handler) {
     
     #line 48 "src/tasks/bkgtcexec.fin"
     CBKGTCExecutorTask * self = (CBKGTCExecutorTask *)termina__this;
@@ -41,7 +41,7 @@ Status__i32 CBKGTCExecutorTask__exec_tc(const termina__event_t * const termina__
 
 }
 
-void termina__task_entry__CBKGTCExecutorTask(void * arg) {
+void termina__task_entry__CBKGTCExecutorTask(void * const arg) {
     
     CBKGTCExecutorTask * self = (CBKGTCExecutorTask *)arg;
 

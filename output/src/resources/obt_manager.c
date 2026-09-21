@@ -38,7 +38,7 @@ void COBTManager__get_current_obt(const termina__event_t * const termina__ev, vo
 
 }
 
-void COBTManager__set_obt(const termina__event_t * const termina__ev, void * const termina__this, MissionOBT next_obt) {
+void COBTManager__set_obt(const termina__event_t * const termina__ev, void * const termina__this, const MissionOBT next_obt) {
     
     #line 30 "src/resources/obt_manager.fin"
     COBTManager * self = (COBTManager *)termina__this;

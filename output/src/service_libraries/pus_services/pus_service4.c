@@ -1,11 +1,11 @@
 
 #include "service_libraries/pus_services/pus_service4.h"
 
-static uint32_t CPUSService4__SDP_get_mean(const termina__event_t * const termina__ev, const CPUSService4 * const self, size_t pid_index);
+static uint32_t CPUSService4__SDP_get_mean(const termina__event_t * const termina__ev, const CPUSService4 * const self, const size_t pid_index);
 
-static _Bool CPUSService4__SDP_param_higher_than_limit(const termina__event_t * const termina__ev, const CPUSService4 * const self, size_t pid_index);
+static _Bool CPUSService4__SDP_param_higher_than_limit(const termina__event_t * const termina__ev, const CPUSService4 * const self, const size_t pid_index);
 
-static _Bool CPUSService4__SDP_param_lower_than_limit(const termina__event_t * const termina__ev, const CPUSService4 * const self, size_t pid_index);
+static _Bool CPUSService4__SDP_param_lower_than_limit(const termina__event_t * const termina__ev, const CPUSService4 * const self, const size_t pid_index);
 
 static Status__i32 CPUSService4__get_PID_defined_stats_index(const termina__event_t * const termina__ev, CPUSService4 * const self);
 
@@ -21,11 +21,11 @@ static Status__i32 CPUSService4__exec4_6TC(const termina__event_t * const termin
 
 static Status__i32 CPUSService4__exec4_7TC(const termina__event_t * const termina__ev, CPUSService4 * const self);
 
-static uint32_t CPUSService4__get_data_pool_item(const termina__event_t * const termina__ev, const CPUSService4 * const self, uint16_t PID);
+static uint32_t CPUSService4__get_data_pool_item(const termina__event_t * const termina__ev, const CPUSService4 * const self, const uint16_t PID);
 
-static _Bool CPUSService4__is_stats_index_defined(const termina__event_t * const termina__ev, const CPUSService4 * const self, size_t stats_index);
+static _Bool CPUSService4__is_stats_index_defined(const termina__event_t * const termina__ev, const CPUSService4 * const self, const size_t stats_index);
 
-static uint32_t CPUSService4__SDP_get_mean(const termina__event_t * const termina__ev, const CPUSService4 * const self, size_t pid_index) {
+static uint32_t CPUSService4__SDP_get_mean(const termina__event_t * const termina__ev, const CPUSService4 * const self, const size_t pid_index) {
     
     (void)termina__ev;
 
@@ -74,7 +74,7 @@ static uint32_t CPUSService4__SDP_get_mean(const termina__event_t * const termin
 
 }
 
-static _Bool CPUSService4__SDP_param_higher_than_limit(const termina__event_t * const termina__ev, const CPUSService4 * const self, size_t pid_index) {
+static _Bool CPUSService4__SDP_param_higher_than_limit(const termina__event_t * const termina__ev, const CPUSService4 * const self, const size_t pid_index) {
     
     (void)termina__ev;
 
@@ -133,7 +133,7 @@ static _Bool CPUSService4__SDP_param_higher_than_limit(const termina__event_t * 
 
 }
 
-static _Bool CPUSService4__SDP_param_lower_than_limit(const termina__event_t * const termina__ev, const CPUSService4 * const self, size_t pid_index) {
+static _Bool CPUSService4__SDP_param_lower_than_limit(const termina__event_t * const termina__ev, const CPUSService4 * const self, const size_t pid_index) {
     
     (void)termina__ev;
 
@@ -679,7 +679,7 @@ void CPUSService4__exec_tc(const termina__event_t * const termina__ev, void * co
 
 }
 
-static uint32_t CPUSService4__get_data_pool_item(const termina__event_t * const termina__ev, const CPUSService4 * const self, uint16_t PID) {
+static uint32_t CPUSService4__get_data_pool_item(const termina__event_t * const termina__ev, const CPUSService4 * const self, const uint16_t PID) {
     
     (void)termina__ev;
 
@@ -719,7 +719,7 @@ static uint32_t CPUSService4__get_data_pool_item(const termina__event_t * const 
 
 }
 
-static _Bool CPUSService4__is_stats_index_defined(const termina__event_t * const termina__ev, const CPUSService4 * const self, size_t stats_index) {
+static _Bool CPUSService4__is_stats_index_defined(const termina__event_t * const termina__ev, const CPUSService4 * const self, const size_t stats_index) {
     
     (void)termina__ev;
 

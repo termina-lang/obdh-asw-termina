@@ -20,7 +20,7 @@ void CTCChannel__dequeue(const termina__event_t * const termina__ev, void * cons
 
 }
 
-void CTCChannel__enqueue(const termina__event_t * const termina__ev, void * const termina__this, uint8_t byte, CharDevIrqStatus * const status) {
+void CTCChannel__enqueue(const termina__event_t * const termina__ev, void * const termina__this, const uint8_t byte, CharDevIrqStatus * const status) {
     
     #line 43 "src/resources/tc_channel.fin"
     CTCChannel * self = (CTCChannel *)termina__this;

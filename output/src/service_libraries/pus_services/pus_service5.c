@@ -5,7 +5,7 @@ static Status__i32 CPUSService5__exec5_5TC(const termina__event_t * const termin
 
 static Status__i32 CPUSService5__exec5_6TC(const termina__event_t * const termina__ev, CPUSService5 * const self);
 
-static _Bool CPUSService5__is_Ev_ID_enabled(const termina__event_t * const termina__ev, const CPUSService5 * const self, uint16_t Ev_ID);
+static _Bool CPUSService5__is_Ev_ID_enabled(const termina__event_t * const termina__ev, const CPUSService5 * const self, const uint16_t Ev_ID);
 
 static Status__i32 CPUSService5__exec5_5TC(const termina__event_t * const termina__ev, CPUSService5 * const self) {
     
@@ -223,7 +223,7 @@ void CPUSService5__exec_tc(const termina__event_t * const termina__ev, void * co
 
 }
 
-static _Bool CPUSService5__is_Ev_ID_enabled(const termina__event_t * const termina__ev, const CPUSService5 * const self, uint16_t Ev_ID) {
+static _Bool CPUSService5__is_Ev_ID_enabled(const termina__event_t * const termina__ev, const CPUSService5 * const self, const uint16_t Ev_ID) {
     
     (void)termina__ev;
 
@@ -257,7 +257,7 @@ static _Bool CPUSService5__is_Ev_ID_enabled(const termina__event_t * const termi
 
 }
 
-void CPUSService5__is_Ev_ID_enabled_ext(const termina__event_t * const termina__ev, void * const termina__this, uint16_t Ev_ID, _Bool * const p_enabled) {
+void CPUSService5__is_Ev_ID_enabled_ext(const termina__event_t * const termina__ev, void * const termina__this, const uint16_t Ev_ID, _Bool * const p_enabled) {
     
     #line 79 "src/service_libraries/pus_services/pus_service5.fin"
     CPUSService5 * self = (CPUSService5 *)termina__this;
@@ -349,7 +349,7 @@ void CPUSService5__send_tm_5_2(const termina__event_t * const termina__ev, void 
 
 }
 
-void CPUSService5__send_tm_5_x(const termina__event_t * const termina__ev, void * const termina__this, uint16_t evID, const FaultInfo * const fault_info, Status__i32 * const status) {
+void CPUSService5__send_tm_5_x(const termina__event_t * const termina__ev, void * const termina__this, const uint16_t evID, const FaultInfo * const fault_info, Status__i32 * const status) {
     
     #line 220 "src/service_libraries/pus_services/pus_service5.fin"
     CPUSService5 * self = (CPUSService5 *)termina__this;

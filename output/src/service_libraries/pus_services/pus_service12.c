@@ -1074,7 +1074,7 @@ static DoMonitoringReqStatus CPUSService12__manage_unexpected_value(const termin
 
 }
 
-void CPUSService12__do_monitoring(const termina__event_t * const termina__ev, void * const termina__this, uint16_t PMONID, uint16_t * const evID, FaultInfo * const fault_info, _Bool * const event_triggered, Status__i32 * const status) {
+void CPUSService12__do_monitoring(const termina__event_t * const termina__ev, void * const termina__this, const uint16_t PMONID, uint16_t * const evID, FaultInfo * const fault_info, _Bool * const event_triggered, Status__i32 * const status) {
     
     #line 622 "src/service_libraries/pus_services/pus_service12.fin"
     CPUSService12 * self = (CPUSService12 *)termina__this;
@@ -1971,7 +1971,7 @@ void CPUSService12__exec_tc(const termina__event_t * const termina__ev, void * c
 
 }
 
-void CPUSService12__is_PMON_enabled(const termina__event_t * const termina__ev, void * const termina__this, size_t PMONID, _Bool * const is_enabled) {
+void CPUSService12__is_PMON_enabled(const termina__event_t * const termina__ev, void * const termina__this, const size_t PMONID, _Bool * const is_enabled) {
     
     #line 738 "src/service_libraries/pus_services/pus_service12.fin"
     CPUSService12 * self = (CPUSService12 *)termina__this;

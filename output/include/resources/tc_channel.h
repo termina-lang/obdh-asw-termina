@@ -34,6 +34,6 @@ typedef struct {
 
 void CTCChannel__dequeue(const termina__event_t * const termina__ev, void * const termina__this, Option__u8 * const obyte);
 
-void CTCChannel__enqueue(const termina__event_t * const termina__ev, void * const termina__this, uint8_t byte, CharDevIrqStatus * const status);
+void CTCChannel__enqueue(const termina__event_t * const termina__ev, void * const termina__this, const uint8_t byte, CharDevIrqStatus * const status);
 
 #endif

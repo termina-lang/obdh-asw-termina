@@ -25,6 +25,6 @@ typedef struct {
 
 void termina__task_entry__CTXRxBottomHalfTask(void * const arg);
 
-Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__ev, void * const termina__this, size_t size);
+Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__ev, void * const termina__this, const size_t size);
 
 #endif

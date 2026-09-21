@@ -29,15 +29,15 @@ uint16_t get_packet_id(const uint8_t tc_bytes[256U]);
 
 uint16_t get_APID(const uint8_t tc_bytes[256U]);
 
-uint16_t get_seq_flags(uint16_t packet_seq_ctrl);
+uint16_t get_seq_flags(const uint16_t packet_seq_ctrl);
 
-uint16_t get_seq_count(uint16_t packet_seq_ctrl);
+uint16_t get_seq_count(const uint16_t packet_seq_ctrl);
 
 uint16_t get_packet_length(const uint8_t tc_bytes[256U]);
 
 uint16_t get_packet_seq_ctrl(const uint8_t tc_bytes[256U]);
 
-uint8_t get_ack(uint8_t flag_ver_ack);
+uint8_t get_ack(const uint8_t flag_ver_ack);
 
 uint8_t get_type(const uint8_t tc_bytes[256U]);
 

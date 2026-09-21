@@ -1,7 +1,7 @@
 
 #include "drivers/char_dev/irq_handler.h"
 
-Status__i32 CCharDevIRQHandler__irq_handler(const termina__event_t * const termina__ev, void * const termina__this, uint32_t termina__ignored__vector) {
+Status__i32 CCharDevIRQHandler__irq_handler(const termina__event_t * const termina__ev, void * const termina__this, const uint32_t termina__ignored__vector) {
     
     (void)termina__ignored__vector;
 
@@ -24,7 +24,7 @@ Status__i32 CCharDevIRQHandler__irq_handler(const termina__event_t * const termi
         size_t size = result.RxComplete._0;
 
         #line 23 "src/drivers/char_dev/irq_handler.fin"
-        termina__out_port__send(termina__ev, self->frame_ready_output, (void *)&size);
+        termina__out_port__send(termina__ev, self->frame_ready_output, (const void *)&size);
 
     } else
     #line 25 "src/drivers/char_dev/irq_handler.fin"

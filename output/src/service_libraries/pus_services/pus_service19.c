@@ -9,7 +9,7 @@ static Status__i32 CPUSService19__enable_event_action(const termina__event_t * c
 
 static FoundID CPUSService19__get_free_event_action_index(const termina__event_t * const termina__ev, const CPUSService19 * const self);
 
-static FoundID CPUSService19__is_ev_action_defined(const termina__event_t * const termina__ev, const CPUSService19 * const self, uint16_t evID);
+static FoundID CPUSService19__is_ev_action_defined(const termina__event_t * const termina__ev, const CPUSService19 * const self, const uint16_t evID);
 
 static Status__i32 CPUSService19__exec19_1TC(const termina__event_t * const termina__ev, CPUSService19 * const self);
 
@@ -134,7 +134,7 @@ static FoundID CPUSService19__get_free_event_action_index(const termina__event_t
 
 }
 
-static FoundID CPUSService19__is_ev_action_defined(const termina__event_t * const termina__ev, const CPUSService19 * const self, uint16_t evID) {
+static FoundID CPUSService19__is_ev_action_defined(const termina__event_t * const termina__ev, const CPUSService19 * const self, const uint16_t evID) {
     
     (void)termina__ev;
 
@@ -634,7 +634,7 @@ void CPUSService19__exec_tc(const termina__event_t * const termina__ev, void * c
 
 }
 
-void CPUSService19__extract_action(const termina__event_t * const termina__ev, void * const termina__this, size_t action_index, TCHandler * const action_packet) {
+void CPUSService19__extract_action(const termina__event_t * const termina__ev, void * const termina__this, const size_t action_index, TCHandler * const action_packet) {
     
     #line 641 "src/service_libraries/pus_services/pus_service19.fin"
     CPUSService19 * self = (CPUSService19 *)termina__this;
@@ -731,7 +731,7 @@ void CPUSService19__get_pending_action_number(const termina__event_t * const ter
 
 }
 
-void CPUSService19__manage_event_action(const termina__event_t * const termina__ev, void * const termina__this, uint16_t evID) {
+void CPUSService19__manage_event_action(const termina__event_t * const termina__ev, void * const termina__this, const uint16_t evID) {
     
     #line 550 "src/service_libraries/pus_services/pus_service19.fin"
     CPUSService19 * self = (CPUSService19 *)termina__this;

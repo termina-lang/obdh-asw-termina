@@ -15,10 +15,10 @@ typedef struct {
     termina__enum__DataPoolItemType_t _variant;
 } DataPoolItemType;
 
-DataPoolItemType sys_data_pool_get_item_type(uint16_t PID);
+DataPoolItemType sys_data_pool_get_item_type(const uint16_t PID);
 
-_Bool sys_data_pool_is_valid_PID(uint16_t PID);
+_Bool sys_data_pool_is_valid_PID(const uint16_t PID);
 
-_Bool sys_data_pool_is_PID_update_via_TC_enabled(uint16_t PID);
+_Bool sys_data_pool_is_PID_update_via_TC_enabled(const uint16_t PID);
 
 #endif

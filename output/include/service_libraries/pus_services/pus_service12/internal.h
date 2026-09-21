@@ -223,16 +223,16 @@ typedef struct {
     PS12TC_5_Data tc_data_5;
 } PS12ExecTCReqStatusUpdate;
 
-uint8_t get_check_status_index(CheckState status);
+uint8_t get_check_status_index(const CheckState status);
 
-uint8_t get_type_index(MonitorCheckType type);
+uint8_t get_type_index(const MonitorCheckType type);
 
-_Bool are_status_equal(CheckState status1, CheckState status2);
+_Bool are_status_equal(const CheckState status1, const CheckState status2);
 
-MonitorCheckType get_check_type(uint8_t aux);
+MonitorCheckType get_check_type(const uint8_t aux);
 
 _Bool is_valid_check_limit_def(const MonitorDefinition * const param_limit_check_definition);
 
-Status__i32 build_tm_12_12(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, uint8_t counter, const ParamMonitoringTransition param_mon_transitions_table[1U]);
+Status__i32 build_tm_12_12(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const MissionOBT current_obt, const uint8_t counter, const ParamMonitoringTransition param_mon_transitions_table[1U]);
 
 #endif

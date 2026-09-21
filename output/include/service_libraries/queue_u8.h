@@ -17,7 +17,7 @@ _Bool is_full(const QueueU8 * const queue);
 
 _Bool is_empty(const QueueU8 * const queue);
 
-Status__i32 enqueue(QueueU8 * const queue, uint8_t new_elem);
+Status__i32 enqueue(QueueU8 * const queue, const uint8_t new_elem);
 
 void dequeue(QueueU8 * const queue, Option__u8 * const old_elem);
 

@@ -78,7 +78,7 @@ static void termina__app__init_emitters(int32_t * const status) {
         interrupt_connection.type = termina__emitter_connection_type__handler;
         interrupt_connection.handler.handler_object = (void *)&uart_hdlr;
         interrupt_connection.handler.handler_id = uart_hdlr__handler_id;
-        interrupt_connection.handler.handler_action = CCharDevIRQHandler__irq_handler;
+        interrupt_connection.handler.handler_action = &CCharDevIRQHandler__irq_handler;
 
         termina__interrupt__init(2, irq_2__emitter_id, &interrupt_connection, status);
 

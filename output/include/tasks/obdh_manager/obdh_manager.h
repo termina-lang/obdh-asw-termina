@@ -25,8 +25,8 @@ typedef struct {
 
 void termina__task_entry__COBDHManagerTask(void * const arg);
 
-Status__i32 COBDHManagerTask__process_action_tc(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tc_handler);
+Status__i32 COBDHManagerTask__process_action_tc(const termina__event_t * const termina__ev, void * const termina__this, const termina__box_t tc_handler);
 
-Status__i32 COBDHManagerTask__process_tc(const termina__event_t * const termina__ev, void * const termina__this, termina__box_t tc_handler);
+Status__i32 COBDHManagerTask__process_tc(const termina__event_t * const termina__ev, void * const termina__this, const termina__box_t tc_handler);
 
 #endif

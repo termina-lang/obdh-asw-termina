@@ -262,7 +262,7 @@ static _Bool CAPBUARTDriver__tf_is_empty(const termina__event_t * const termina_
 
 }
 
-void CAPBUARTDriver__send(const termina__event_t * const termina__ev, void * const termina__this, uint8_t output_byte, Status__i32 * const status) {
+void CAPBUARTDriver__send(const termina__event_t * const termina__ev, void * const termina__this, const uint8_t output_byte, Status__i32 * const status) {
     
     #line 219 "src/drivers/char_dev/uart/apbuart.fin"
     CAPBUARTDriver * self = (CAPBUARTDriver *)termina__this;
