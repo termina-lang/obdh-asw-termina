@@ -221,7 +221,7 @@ resource class CAPBUARTDriver provides
 
         *status = Success;
 
-        if (self->rem_bytes || self->tf_is_empty() == false) { 
+        if (self->tf_is_empty() == false || self->rem_bytes) {
 
             var num_elements : usize = 0;
             get_num_enqueued_elems(&(self->uart_tx_queue), &mut num_elements);

@@ -637,8 +637,14 @@ resource class CPUSService12 provides IPUSService12 {
                 case CheckPMONID => {
 
                     //choice point
-                    if (self->is_valid_PMONID() && (self->param_mon_config_table[PMONID as usize].enabled == true)) {
-                        self->do_monitoring_req_status = self->manage_interval_control(); //method 
+                    if (self->is_valid_PMONID()) {
+
+                        if (self->param_mon_config_table[PMONID as usize].enabled == true) {
+                            self->do_monitoring_req_status = self->manage_interval_control(); //method
+                        } else {
+                            self->do_monitoring_req_status = DoMonitoringReqStatus::Exit;
+                        }
+
                     } else {
                         self->do_monitoring_req_status = DoMonitoringReqStatus::Exit;
                     }

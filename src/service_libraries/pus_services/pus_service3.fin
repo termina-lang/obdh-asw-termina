@@ -334,7 +334,9 @@ resource class CPUSService3 provides IPUSService3 {
                         startup_tm(&mut b_tm_handler);
                         var do_hk_status : Status<i32> = append_u16_appdata_field(&mut b_tm_handler, self->hk_config_table[i].SID);
 
-                        for j : usize in 0 .. max_params_per_SID while (j < (self->hk_config_table[i].num_params as usize) && (do_hk_status is Success)) {
+                        var num_params : usize = self->hk_config_table[i].num_params as usize;
+
+                        for j : usize in 0 .. max_params_per_SID while (j < num_params && (do_hk_status is Success)) {
 
                             var PID : u16 = self->hk_config_table[i].params_def[j];
                             var item_type : DataPoolItemType = sys_data_pool_get_item_type(PID);

@@ -63,7 +63,9 @@ resource class CPUSService4 provides IPUSService4 {
 
         for i : usize in 0 .. max_num_of_stats while (id_status.status is Failure) {
 
-            if ((self->stats_config_table.defined[i] == false) || (sys_data_pool_is_valid_PID(self->stats_config_table.PID[i])) == false) {
+            var pid_is_valid : bool = sys_data_pool_is_valid_PID(self->stats_config_table.PID[i]);
+
+            if ((self->stats_config_table.defined[i] == false) || (pid_is_valid == false)) {
 
                 id_status.index = i; 
                 id_status.status = Success;
