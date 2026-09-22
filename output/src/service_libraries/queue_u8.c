@@ -23,7 +23,7 @@ _Bool is_empty(const QueueU8 * const queue) {
 
 }
 
-Status__i32 enqueue(QueueU8 * const queue, uint8_t new_elem) {
+Status__i32 enqueue(QueueU8 * const queue, const uint8_t new_elem) {
     
     #line 25 "src/service_libraries/queue_u8.fin"
     _Bool queue_is_full = is_full(queue);

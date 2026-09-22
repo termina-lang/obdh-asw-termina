@@ -14,7 +14,7 @@ void tc_handler_build(TCHandler * const tc_handler) {
 
 }
 
-_Bool tc_handler_is_valid_next_appdata_field(const TCHandler * const tc_handler, size_t field_size) {
+_Bool tc_handler_is_valid_next_appdata_field(const TCHandler * const tc_handler, const size_t field_size) {
     
     #line 76 "src/service_libraries/pus_tc_handler.fin"
     _Bool res = false;

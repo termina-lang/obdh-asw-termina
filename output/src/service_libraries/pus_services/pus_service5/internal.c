@@ -15,7 +15,7 @@ const uint16_t offset_mask = 0x1FU;
 
 const uint16_t EvID_build_tm_error = 0x2100U;
 
-Ev_IDType get_Ev_ID_type(uint16_t Ev_ID) {
+Ev_IDType get_Ev_ID_type(const uint16_t Ev_ID) {
     
     #line 65 "src/service_libraries/pus_services/pus_service5/internal.fin"
     Ev_IDType Ev_ID_type = { ._variant = Ev_IDType__Ev_IDNotValid };
@@ -69,7 +69,7 @@ Ev_IDType get_Ev_ID_type(uint16_t Ev_ID) {
 
 }
 
-_Bool is_Ev_ID_valid(uint16_t evID) {
+_Bool is_Ev_ID_valid(const uint16_t evID) {
     
     #line 89 "src/service_libraries/pus_services/pus_service5/internal.fin"
     _Bool is_valid = true;
@@ -94,7 +94,7 @@ _Bool is_Ev_ID_valid(uint16_t evID) {
 
 }
 
-size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID) {
+size_t get_Ev_ID_enable_config_index(const uint16_t Ev_ID) {
     
     #line 103 "src/service_libraries/pus_services/pus_service5/internal.fin"
     Ev_IDType Ev_ID_type = get_Ev_ID_type(Ev_ID);
@@ -140,14 +140,14 @@ size_t get_Ev_ID_enable_config_index(uint16_t Ev_ID) {
 
 }
 
-uint8_t get_Ev_ID_enable_config_offset(uint16_t Ev_ID) {
+uint8_t get_Ev_ID_enable_config_offset(const uint16_t Ev_ID) {
     
     #line 127 "src/service_libraries/pus_services/pus_service5/internal.fin"
     return (uint8_t)(uint16_t)(Ev_ID & offset_mask);
 
 }
 
-Status__i32 build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamOutOfLimitInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
+Status__i32 build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const ParamOutOfLimitInfo fault_info, const uint16_t ev_ID, const MissionOBT current_obt) {
     
     #line 134 "src/service_libraries/pus_services/pus_service5/internal.fin"
     startup_tm(p_tm_handler);
@@ -195,7 +195,7 @@ Status__i32 build_tm_5_x_param_out_of_limit(TMHandler * const p_tm_handler, uint
 
 }
 
-Status__i32 build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, ParamFaultValueInfo fault_info, uint16_t ev_ID, MissionOBT current_obt) {
+Status__i32 build_tm_5_x_param_check_value_fail(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const ParamFaultValueInfo fault_info, const uint16_t ev_ID, const MissionOBT current_obt) {
     
     #line 156 "src/service_libraries/pus_services/pus_service5/internal.fin"
     startup_tm(p_tm_handler);

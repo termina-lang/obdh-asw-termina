@@ -7,7 +7,7 @@ const size_t banks_number = 8U;
 
 const size_t bank_size = 16777216U;
 
-Status__i32 build_tm_6_6(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data) {
+Status__i32 build_tm_6_6(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data) {
     
     #line 30 "src/service_libraries/pus_services/pus_service6/internal.fin"
     startup_tm(p_tm_handler);
@@ -60,7 +60,7 @@ Status__i32 build_tm_6_6(TMHandler * const p_tm_handler, uint16_t tm_seq_counter
 
 }
 
-Status__i32 build_tm_6_10(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data, uint16_t checksum) {
+Status__i32 build_tm_6_10(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const MissionOBT current_obt, const PS6ExecTCReqStatusUpdate * const mem_data, const uint16_t checksum) {
     
     #line 54 "src/service_libraries/pus_services/pus_service6/internal.fin"
     startup_tm(p_tm_handler);

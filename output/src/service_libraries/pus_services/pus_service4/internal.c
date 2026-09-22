@@ -1,7 +1,7 @@
 
 #include "service_libraries/pus_services/pus_service4/internal.h"
 
-Status__i32 build_tm_4_2(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, size_t stats_index, uint8_t N, const StatsConfig * const stats_config_table, const StatsDef param_stats[4U], MissionOBT current_obt) {
+Status__i32 build_tm_4_2(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const size_t stats_index, const uint8_t N, const StatsConfig * const stats_config_table, const StatsDef param_stats[4U], const MissionOBT current_obt) {
     
     #line 55 "src/service_libraries/pus_services/pus_service4/internal.fin"
     startup_tm(p_tm_handler);

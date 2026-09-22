@@ -57,7 +57,7 @@ _Bool is_sourceID_valid(const TCDescriptor * const tc_descriptor) {
 
 }
 
-_Bool is_tc_ack_accept_enabled(uint8_t flags_ack) {
+_Bool is_tc_ack_accept_enabled(const uint8_t flags_ack) {
     
     #line 129 "src/service_libraries/pus_services/pus_service1/internal.fin"
     _Bool ack_enabled = false;
@@ -75,7 +75,7 @@ _Bool is_tc_ack_accept_enabled(uint8_t flags_ack) {
 
 }
 
-_Bool is_tc_ack_start_exec_enabled(uint8_t flags_ack) {
+_Bool is_tc_ack_start_exec_enabled(const uint8_t flags_ack) {
     
     #line 147 "src/service_libraries/pus_services/pus_service1/internal.fin"
     _Bool ack_enabled = false;
@@ -93,7 +93,7 @@ _Bool is_tc_ack_start_exec_enabled(uint8_t flags_ack) {
 
 }
 
-_Bool is_tc_ack_progress_exec_enabled(uint8_t flags_ack) {
+_Bool is_tc_ack_progress_exec_enabled(const uint8_t flags_ack) {
     
     #line 164 "src/service_libraries/pus_services/pus_service1/internal.fin"
     _Bool ack_enabled = false;
@@ -111,7 +111,7 @@ _Bool is_tc_ack_progress_exec_enabled(uint8_t flags_ack) {
 
 }
 
-_Bool is_tc_ack_completion_exec_enabled(uint8_t flags_ack) {
+_Bool is_tc_ack_completion_exec_enabled(const uint8_t flags_ack) {
     
     #line 181 "src/service_libraries/pus_services/pus_service1/internal.fin"
     _Bool ack_enabled = false;
@@ -129,7 +129,7 @@ _Bool is_tc_ack_completion_exec_enabled(uint8_t flags_ack) {
 
 }
 
-uint8_t get_failure_subtype(TCVerifyStage verify_stage) {
+uint8_t get_failure_subtype(const TCVerifyStage verify_stage) {
     
     #line 198 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype;
@@ -167,7 +167,7 @@ uint8_t get_failure_subtype(TCVerifyStage verify_stage) {
 
 }
 
-Status__i32 build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const uint16_t tc_packet_id, const uint16_t tc_packet_seq_ctrl, const TCVerifyStage verify_stage, const uint8_t failure_code, const MissionOBT current_obt) {
     
     #line 234 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -207,7 +207,7 @@ Status__i32 build_tm_1_X_no_failure_data(TMHandler * const p_tm_handler, uint16_
 
 }
 
-Status__i32 build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint8_t failure_data, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const uint16_t tc_packet_id, const uint16_t tc_packet_seq_ctrl, const TCVerifyStage verify_stage, const uint8_t failure_code, const uint8_t failure_data, const MissionOBT current_obt) {
     
     #line 259 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -255,7 +255,7 @@ Status__i32 build_tm_1_X_u8_failure_data(TMHandler * const p_tm_handler, uint16_
 
 }
 
-Status__i32 build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint16_t failure_data, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const uint16_t tc_packet_id, const uint16_t tc_packet_seq_ctrl, const TCVerifyStage verify_stage, const uint8_t failure_code, const uint16_t failure_data, const MissionOBT current_obt) {
     
     #line 287 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -303,7 +303,7 @@ Status__i32 build_tm_1_X_u16_failure_data(TMHandler * const p_tm_handler, uint16
 
 }
 
-Status__i32 build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint32_t failure_data, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const uint16_t tc_packet_id, const uint16_t tc_packet_seq_ctrl, const TCVerifyStage verify_stage, const uint8_t failure_code, const uint32_t failure_data, const MissionOBT current_obt) {
     
     #line 315 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);
@@ -351,7 +351,7 @@ Status__i32 build_tm_1_X_u32_failure_data(TMHandler * const p_tm_handler, uint16
 
 }
 
-Status__i32 build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler, uint16_t tm_seq_counter, uint16_t tc_packet_id, uint16_t tc_packet_seq_ctrl, TCVerifyStage verify_stage, uint8_t failure_code, uint8_t failure_data1, uint32_t failure_data2, MissionOBT current_obt) {
+Status__i32 build_tm_1_X_u8_u32_failure_data(TMHandler * const p_tm_handler, const uint16_t tm_seq_counter, const uint16_t tc_packet_id, const uint16_t tc_packet_seq_ctrl, const TCVerifyStage verify_stage, const uint8_t failure_code, const uint8_t failure_data1, const uint32_t failure_data2, const MissionOBT current_obt) {
     
     #line 345 "src/service_libraries/pus_services/pus_service1/internal.fin"
     uint8_t subtype = get_failure_subtype(verify_stage);

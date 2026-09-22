@@ -1,7 +1,7 @@
 
 #include "service_libraries/timeval.h"
 
-TimeVal substract_TimeVal(TimeVal timeval1, TimeVal timeval2) {
+TimeVal substract_TimeVal(const TimeVal timeval1, const TimeVal timeval2) {
     
     #line 14 "src/service_libraries/timeval.fin"
     TimeVal result = { .tv_sec = 0U, .tv_usec = 0U };

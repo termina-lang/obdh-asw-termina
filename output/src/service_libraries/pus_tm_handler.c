@@ -7,7 +7,7 @@ const uint16_t DESTINATION_ID = 0x78U;
 
 const size_t tm_app_data_offset = 19U;
 
-Status__i32 append_u8_appdata_field(TMHandler * const tm_handler, uint8_t data) {
+Status__i32 append_u8_appdata_field(TMHandler * const tm_handler, const uint8_t data) {
     
     #line 58 "src/service_libraries/pus_tm_handler.fin"
     Status__i32 status = { ._variant = Status__Success };
@@ -36,7 +36,7 @@ Status__i32 append_u8_appdata_field(TMHandler * const tm_handler, uint8_t data) 
 
 }
 
-Status__i32 append_u16_appdata_field(TMHandler * const tm_handler, uint16_t data) {
+Status__i32 append_u16_appdata_field(TMHandler * const tm_handler, const uint16_t data) {
     
     #line 85 "src/service_libraries/pus_tm_handler.fin"
     Status__i32 status = { ._variant = Status__Success };
@@ -65,7 +65,7 @@ Status__i32 append_u16_appdata_field(TMHandler * const tm_handler, uint16_t data
 
 }
 
-Status__i32 append_u32_appdata_field(TMHandler * const tm_handler, uint32_t data) {
+Status__i32 append_u32_appdata_field(TMHandler * const tm_handler, const uint32_t data) {
     
     #line 111 "src/service_libraries/pus_tm_handler.fin"
     Status__i32 status = { ._variant = Status__Success };
@@ -94,7 +94,7 @@ Status__i32 append_u32_appdata_field(TMHandler * const tm_handler, uint32_t data
 
 }
 
-void tm_handler_build_packet_header(TMHandler * const tm_handler, uint16_t tm_seq_counter) {
+void tm_handler_build_packet_header(TMHandler * const tm_handler, const uint16_t tm_seq_counter) {
     
     #line 139 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->packet_header.packet_id = ccsds_pus_tm_build_packet_id(APID);
@@ -110,7 +110,7 @@ void tm_handler_build_packet_header(TMHandler * const tm_handler, uint16_t tm_se
 
 }
 
-void tm_handler_build_df_header(TMHandler * const tm_handler, uint8_t tm_type, uint8_t tm_subtype, MissionOBT current_obt) {
+void tm_handler_build_df_header(TMHandler * const tm_handler, const uint8_t tm_type, const uint8_t tm_subtype, const MissionOBT current_obt) {
     
     #line 161 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->df_header.version = 0x20U;
@@ -138,7 +138,7 @@ void tm_handler_build_df_header(TMHandler * const tm_handler, uint8_t tm_type, u
 
 }
 
-void close_tm(TMHandler * const tm_handler, uint8_t type, uint8_t subtype, uint16_t tm_count, MissionOBT current_obt) {
+void close_tm(TMHandler * const tm_handler, const uint8_t type, const uint8_t subtype, const uint16_t tm_count, const MissionOBT current_obt) {
     
     #line 187 "src/service_libraries/pus_tm_handler.fin"
     tm_handler_build_packet_header(tm_handler, tm_count);
