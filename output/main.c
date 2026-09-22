@@ -279,30 +279,13 @@ static void termina__app__init_channel_connections(void) {
 
 static void termina__app__initial_event(void) {
     
-    termina__event_t event;
-    event.emitter_id = system_init__emitter_id;
-    event.owner.type = termina__active_entity__handler;
-    event.owner.handler.handler_id = init_hdlr__handler_id;
-    event.port_id = 0;
+    termina__system_init_connection_t connection;
 
-    TimeVal current;
-    SystemEntry__clock_get_uptime(&event, &current);
+    connection.handler_object = (void *)&init_hdlr;
+    connection.handler_id = init_hdlr__handler_id;
+    connection.handler_action = &CInitHandler__init;
 
-    CInitHandler * self = &init_hdlr;
-
-    Status__i32 result;
-
-    result = CInitHandler__init(&event, self, current);
-
-    if (result._variant != Status__Success) {
-        
-        ExceptSource source;
-        source._variant = ExceptSource__Handler;
-        source.Handler._0 = init_hdlr__handler_id;
-
-        termina__except__action_failure(source, 0U, result.Failure._0);
-
-    }
+    termina__system_init__dispatch(system_init__emitter_id, &connection);
 
     return;
 
