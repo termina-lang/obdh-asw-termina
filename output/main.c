@@ -291,7 +291,6 @@ static void termina__app__initial_event(void) {
     CInitHandler * self = &init_hdlr;
 
     Status__i32 result;
-    result._variant = Status__Success;
 
     result = CInitHandler__init(&event, self, current);
 

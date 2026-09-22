@@ -41,7 +41,7 @@ static Status__i32 CPUSService5__exec5_5TC(const termina__event_t * const termin
         if (status._variant == Status__Success) {
             
             #line 117 "src/service_libraries/pus_services/pus_service5.fin"
-            uint32_t mask = (uint32_t)0x1U << termina__check__shift_amount(32U, (uint8_t)(offset - 1U & 0xFFU));
+            uint32_t mask = (uint32_t)0x1U << termina__check__shift_amount(32U, (uint8_t)((offset - 1U) & 0xFFU));
 
             #line 118 "src/service_libraries/pus_services/pus_service5.fin"
             self->Ev_ID_enable_config[termina__check__array_index(4U, config_slot - 1U)] = self->Ev_ID_enable_config[termina__check__array_index(4U, config_slot - 1U)] | mask;
@@ -92,7 +92,7 @@ static Status__i32 CPUSService5__exec5_6TC(const termina__event_t * const termin
         if (status._variant == Status__Success) {
             
             #line 166 "src/service_libraries/pus_services/pus_service5.fin"
-            uint32_t mask = (uint32_t)0x1U << termina__check__shift_amount(32U, (uint8_t)(offset - 1U & 0xFFU));
+            uint32_t mask = (uint32_t)0x1U << termina__check__shift_amount(32U, (uint8_t)((offset - 1U) & 0xFFU));
 
             #line 167 "src/service_libraries/pus_services/pus_service5.fin"
             self->Ev_ID_enable_config[termina__check__array_index(4U, config_slot - 1U)] = self->Ev_ID_enable_config[termina__check__array_index(4U, config_slot - 1U)] & (uint32_t)(0xFFFFFFFEU ^ mask);
@@ -243,7 +243,7 @@ static _Bool CPUSService5__is_Ev_ID_enabled(const termina__event_t * const termi
         size_t config_array_index = config_slot - 1U;
 
         #line 71 "src/service_libraries/pus_services/pus_service5.fin"
-        if ((uint32_t)((uint32_t)(self->Ev_ID_enable_config[termina__check__array_index(4U, config_array_index)] >> termina__check__shift_amount(32U, (uint8_t)(offset - 1U & 0xFFU))) & 0x1U) != 0U) {
+        if ((uint32_t)((uint32_t)(self->Ev_ID_enable_config[termina__check__array_index(4U, config_array_index)] >> termina__check__shift_amount(32U, (uint8_t)((offset - 1U) & 0xFFU))) & 0x1U) != 0U) {
             
             #line 72 "src/service_libraries/pus_services/pus_service5.fin"
             enabled = true;
