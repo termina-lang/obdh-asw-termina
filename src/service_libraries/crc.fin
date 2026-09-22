@@ -27,7 +27,7 @@ function cal_crc_16 (data : & [u8; max_tc_size], nbytes : usize) -> u16  {
         for j : u16 in 0 : u16 .. 8 : u16 {
 
             if ((crc_value & 0x8000 : u16) != 0 : u16) {
-                crc_value = (crc_value << 1 : u16) ^ 0x1021 : u16;
+                crc_value = (crc_value << 1 : u16) ^ 0x1021;
             } else {
                 crc_value = crc_value << 1 : u16;
             }
