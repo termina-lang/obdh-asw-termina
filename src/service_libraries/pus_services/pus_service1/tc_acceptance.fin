@@ -11,7 +11,7 @@ import service_libraries.pus_services.pus_service1.internal;
  * This function classifies the telecommand (TC) based on its type, 
  * and selects an appropriate execution control category.
  *
- * - Types 9, 17, and 128 → ExecCtrlPrioTC
+ * - Types 2, 9, 17, and 128 → ExecCtrlPrioTC
  * - Types 3, 5, 12, and 19 → ExecCtrlHK_FDIRTC
  * - Type 20 → ExecCtrlBKGTC
  *
@@ -25,7 +25,7 @@ function handle_tc(tc_descriptor: &TCDescriptor) -> TCExecutionCtrl {
     var type : u8 = get_type(&(tc_descriptor->tc_bytes));
     var exec_ctrl : TCExecutionCtrl;
 
-    if (type == 9 || type == 17 || type == 128) {
+    if (type == 2 || type == 9 || type == 17 || type == 128) {
 
         exec_ctrl = TCExecutionCtrl::ExecCtrlPrioTC;
 
