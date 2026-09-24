@@ -5,6 +5,7 @@ MKDIR:=mkdir
 PROJECT_NAME:=obdh-asw-termina
 PLATFORM:=rtems5-leon3-nexysa7
 TERMINA_OSAL_DIR:=/opt/termina-osal
+TERMINA_PROFILE:=debug
 
 include $(TERMINA_OSAL_DIR)/platform/$(PLATFORM)/platform.mk
 

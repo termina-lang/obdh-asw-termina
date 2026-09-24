@@ -10,7 +10,7 @@ TCExecutionCtrl handle_tc(const TCDescriptor * const tc_descriptor) {
     TCExecutionCtrl exec_ctrl;
 
     #line 28 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
-    if (type == 9U || type == 17U || type == 128U) {
+    if (type == 2U || type == 9U || type == 17U || type == 128U) {
         
         #line 30 "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin"
         exec_ctrl._variant = TCExecutionCtrl__ExecCtrlPrioTC;
