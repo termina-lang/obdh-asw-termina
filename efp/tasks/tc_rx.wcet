@@ -1,7 +1,7 @@
 wcet rtems5-leon3-nexysa7 = {
 
-    CTXRxBottomHalfTask::get_tc::path0() = 0.001300,
-    CTXRxBottomHalfTask::get_tc::path1() = 0.001276,
-    CTXRxBottomHalfTask::get_tc::path2() = 1.10e-05
+    CTXRxBottomHalfTask::get_tc::path0 = 0.001300,
+    CTXRxBottomHalfTask::get_tc::path1 = 0.001276,
+    CTXRxBottomHalfTask::get_tc::path2 = 1.10e-05
 
 };

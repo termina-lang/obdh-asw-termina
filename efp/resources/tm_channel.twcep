@@ -1,11 +1,12 @@
 
-twcep CTMChannel::send_tm::path0() = [
+twcep CTMChannel::send_tm::path0 = [
     block@(54:44,61:53),
-    invoke(char_dev.send)(6)@(64:9,64:54),
-    for(0..256)@(67:9,76:9)[
-        block@(69:33,69:34),
-        invoke(char_dev.send)(1)@(71:13,71:88)
+    for(0..6)@(63:9,70:9)[
+        invoke(char_dev.send)@(65:13,65:57)
     ],
-    free(tm_handler_pool)@(76:9,76:47),
-    return@(78:9,78:15)
+    for(0..256)@(70:9,77:9)[
+        invoke(char_dev.send)@(72:13,72:67)
+    ],
+    free(tm_handler_pool)@(77:9,77:47),
+    return@(79:9,79:15)
 ]

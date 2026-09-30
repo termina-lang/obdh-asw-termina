@@ -1,5 +1,5 @@
 
-twcep CInitHandler::init::path0() = [
+twcep CInitHandler::init::path0 = [
     block@(44:33,44:40),
     invoke(uart_drv.initialize)@(47:9,47:36),
     invoke(gpio_driver.init_gpio)@(50:9,50:38),

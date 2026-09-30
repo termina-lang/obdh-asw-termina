@@ -1,5 +1,5 @@
 wcet rtems5-leon3-nexysa7 = {
 
-    CTMChannel::send_tm::path0() = 6.26e-04
+    CTMChannel::send_tm::path0 = 0.007083
 
 };

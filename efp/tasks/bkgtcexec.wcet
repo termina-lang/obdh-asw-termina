@@ -1,7 +1,7 @@
 wcet rtems5-leon3-nexysa7 = {
 
-    CBKGTCExecutorTask::exec_tc::path0() = 5.36e-06,
-    CBKGTCExecutorTask::exec_tc::path1() = 5.36e-06,
-    CBKGTCExecutorTask::exec_tc::path2() = 5.28e-06
+    CBKGTCExecutorTask::exec_tc::path0 = 5.36e-06,
+    CBKGTCExecutorTask::exec_tc::path1 = 5.36e-06,
+    CBKGTCExecutorTask::exec_tc::path2 = 5.28e-06
 
 };

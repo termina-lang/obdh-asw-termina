@@ -1,5 +1,5 @@
 wcet rtems5-leon3-nexysa7 = {
 
-    CInitHandler::init::path0() = 8.20e-06
+    CInitHandler::init::path0 = 8.20e-06
 
 };

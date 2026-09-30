@@ -1,5 +1,5 @@
 
-twcep CTXRxBottomHalfTask::get_tc::path0() = [
+twcep CTXRxBottomHalfTask::get_tc::path0 = [
     block@(17:33,19:54),
     alloc(tc_handler_pool)@(20:9,20:53),
     case@(24:13,60:13)[
@@ -16,7 +16,7 @@ twcep CTXRxBottomHalfTask::get_tc::path0() = [
     return@(66:9,66:19)
 ]
 
-twcep CTXRxBottomHalfTask::get_tc::path1() = [
+twcep CTXRxBottomHalfTask::get_tc::path1 = [
     block@(17:33,19:54),
     alloc(tc_handler_pool)@(20:9,20:53),
     case@(24:13,60:13)[
@@ -32,7 +32,7 @@ twcep CTXRxBottomHalfTask::get_tc::path1() = [
     return@(66:9,66:19)
 ]
 
-twcep CTXRxBottomHalfTask::get_tc::path2() = [
+twcep CTXRxBottomHalfTask::get_tc::path2 = [
     block@(17:33,19:54),
     alloc(tc_handler_pool)@(20:9,20:53),
     block@(22:9,66:9),

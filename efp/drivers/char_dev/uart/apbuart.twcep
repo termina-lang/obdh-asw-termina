@@ -1,102 +1,87 @@
 
-twcep CAPBUARTDriver::disable_RF::path0() = [
-    block@(161:35,162:74),
-    return@(163:9,163:15)
-]
-
-twcep CAPBUARTDriver::disable_TF::path0() = [
-    block@(151:35,152:74),
-    return@(153:9,153:15)
-]
-
-twcep CAPBUARTDriver::disable_TI::path0() = [
-    block@(141:35,142:74),
-    return@(143:9,143:15)
-]
-
-twcep CAPBUARTDriver::enable_RI::path0() = [
-    block@(121:35,122:74),
-    return@(123:9,123:15)
-]
-
-twcep CAPBUARTDriver::enable_RX::path0() = [
-    block@(111:36,112:75),
-    return@(113:9,113:15)
-]
-
-twcep CAPBUARTDriver::enable_TI::path0() = [
+twcep CAPBUARTDriver::disable_RF::path0 = [
     block@(131:35,132:74),
     return@(133:9,133:15)
 ]
 
-twcep CAPBUARTDriver::enable_TX::path0() = [
-    block@(101:36,102:75),
+twcep CAPBUARTDriver::disable_TF::path0 = [
+    block@(121:35,122:74),
+    return@(123:9,123:15)
+]
+
+twcep CAPBUARTDriver::enable_RI::path0 = [
+    block@(101:35,102:74),
     return@(103:9,103:15)
 ]
 
-twcep CAPBUARTDriver::initialize::path0() = [
-    call(disable_RF)@(334:9,334:27),
-    return@(336:9,336:15)
+twcep CAPBUARTDriver::enable_RX::path0 = [
+    block@(91:36,92:75),
+    return@(93:9,93:15)
 ]
 
-twcep CAPBUARTDriver::initialize::path1() = [
-    call(disable_TF)@(333:9,333:27),
-    return@(336:9,336:15)
+twcep CAPBUARTDriver::enable_TI::path0 = [
+    block@(111:35,112:74),
+    return@(113:9,113:15)
 ]
 
-twcep CAPBUARTDriver::initialize::path2() = [
-    call(enable_TI)@(332:9,332:26),
-    return@(336:9,336:15)
+twcep CAPBUARTDriver::enable_TX::path0 = [
+    block@(81:36,82:75),
+    return@(83:9,83:15)
 ]
 
-twcep CAPBUARTDriver::initialize::path3() = [
-    call(enable_RI)@(331:9,331:26),
-    return@(336:9,336:15)
+twcep CAPBUARTDriver::initialize::path0 = [
+    call(disable_RF)@(262:9,262:27),
+    return@(264:9,264:15)
 ]
 
-twcep CAPBUARTDriver::initialize::path4() = [
-    call(enable_TX)@(330:9,330:26),
-    return@(336:9,336:15)
+twcep CAPBUARTDriver::initialize::path1 = [
+    call(disable_TF)@(261:9,261:27),
+    return@(264:9,264:15)
 ]
 
-twcep CAPBUARTDriver::initialize::path5() = [
-    call(enable_RX)@(329:9,329:26),
-    return@(336:9,336:15)
+twcep CAPBUARTDriver::initialize::path2 = [
+    call(enable_TI)@(260:9,260:26),
+    return@(264:9,264:15)
 ]
 
-twcep CAPBUARTDriver::release_tx::path0() = [
-    block@(197:9,235:9),
-    return@(235:9,235:15)
+twcep CAPBUARTDriver::initialize::path3 = [
+    call(enable_RI)@(259:9,259:26),
+    return@(264:9,264:15)
 ]
 
-twcep CAPBUARTDriver::notify_irq::path0() = [
-    block@(169:33,169:55),
-    if@(172:9,178:9)[
-        call(release_tx)@(174:13,174:31)
+twcep CAPBUARTDriver::initialize::path4 = [
+    call(enable_TX)@(258:9,258:26),
+    return@(264:9,264:15)
+]
+
+twcep CAPBUARTDriver::initialize::path5 = [
+    call(enable_RX)@(257:9,257:26),
+    return@(264:9,264:15)
+]
+
+twcep CAPBUARTDriver::release_tx::path0 = [
+    block@(167:9,205:9),
+    return@(205:9,205:15)
+]
+
+twcep CAPBUARTDriver::notify_irq::path0 = [
+    block@(139:33,139:55),
+    if@(142:9,148:9)[
+        call(release_tx)@(144:13,144:31)
     ],
-    if@(178:9,185:9)[
-        block@(180:29,180:50),
-        invoke(rx_queue.enqueue)@(181:13,181:49)
+    if@(148:9,155:9)[
+        block@(150:29,150:50),
+        invoke(rx_queue.enqueue)@(151:13,151:49)
     ],
-    return@(185:9,185:15)
+    return@(155:9,155:15)
 ]
 
-twcep CAPBUARTDriver::rf_data_ready::path0() = [
-    block@(92:35,92:51),
-    return@(93:9,93:69)
-]
-
-twcep CAPBUARTDriver::tf_is_empty::path0() = [
-    block@(82:35,82:51),
-    return@(83:9,83:69)
-]
-
-twcep CAPBUARTDriver::send::path0(nbytes) = [
-    block@(253:19,316:9),
-    return@(316:9,316:15)
-]
-
-twcep CAPBUARTDriver::tf_is_full::path0() = [
+twcep CAPBUARTDriver::tf_is_empty::path0 = [
     block@(72:35,72:51),
     return@(73:9,73:69)
+]
+
+twcep CAPBUARTDriver::send::path0 = [
+    block@(222:19,244:9),
+    return@(244:9,244:15)
 ]
