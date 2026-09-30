@@ -45,7 +45,7 @@ void termina__task_entry__CBKGTCExecutorTask(void * const arg) {
     
     CBKGTCExecutorTask * self = (CBKGTCExecutorTask *)arg;
 
-    int32_t status = 0L;
+    termina__error_code_t status = termina__error__none;
 
     termina__event_t event;
 
@@ -57,7 +57,7 @@ void termina__task_entry__CBKGTCExecutorTask(void * const arg) {
         
         termina__msg_queue__recv(self->_task_msg_queue_id, &event, &status);
 
-        if (status != 0L) {
+        if (status != termina__error__none) {
             break;
         }
 
@@ -67,7 +67,7 @@ void termina__task_entry__CBKGTCExecutorTask(void * const arg) {
 
                 termina__msg_queue__recv(self->bkg_message_queue_input, (void *)&exec_tc__msg_data, &status);
 
-                if (status != 0L) {
+                if (status != termina__error__none) {
                     termina__except__msg_queue_recv_error(self->bkg_message_queue_input, status);
                 }
 

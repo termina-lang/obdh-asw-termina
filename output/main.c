@@ -3,12 +3,12 @@
 
 #include "app.h"
 
-static uint8_t termina__pool_memory__tc_pool[termina__pool__size(sizeof(TCHandler), 10U)];
-static uint8_t termina__pool_memory__tm_pool[termina__pool__size(sizeof(TMHandler), 10U)];
+static max_align_t termina__pool_memory__tc_pool[termina__pool__area_length(sizeof(TCHandler), 10U)];
+static max_align_t termina__pool_memory__tm_pool[termina__pool__area_length(sizeof(TMHandler), 10U)];
 
-static void termina__app__init_tasks(int32_t * const status) {
+static void termina__app__init_tasks(termina__error_code_t * const status) {
     
-    *status = 0L;
+    *status = termina__error__none;
 
     bkg_tc_executor._task_id = bkg_tc_executor__task_id;
 
@@ -16,7 +16,7 @@ static void termina__app__init_tasks(int32_t * const status) {
 
     termina__task__init(bkg_tc_executor__task_id, 8, 4096U, &termina__task_entry__CBKGTCExecutorTask, &bkg_tc_executor, status);
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         hk_fdir._task_id = hk_fdir__task_id;
 
@@ -26,7 +26,7 @@ static void termina__app__init_tasks(int32_t * const status) {
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         obdh_manager._task_id = obdh_manager__task_id;
 
@@ -36,7 +36,7 @@ static void termina__app__init_tasks(int32_t * const status) {
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         tc_rx_bottom_half_task._task_id = tc_rx_bottom_half_task__task_id;
 
@@ -56,13 +56,13 @@ static void termina__app__init_handlers(void) {
 
 }
 
-static void termina__app__init_emitters(int32_t * const status) {
+static void termina__app__init_emitters(termina__error_code_t * const status) {
     
     termina__periodic_timer_connection_t timer_connection;
 
     termina__interrupt_connection_t interrupt_connection;
 
-    *status = 0L;
+    *status = termina__error__none;
 
     timer_connection.type = termina__emitter_connection_type__task;
     timer_connection.task.task_msg_queue_id = hk_fdir__task_msg_queue_id;
@@ -73,7 +73,7 @@ static void termina__app__init_emitters(int32_t * const status) {
 
     termina__periodic_timer__init(hk_fdir_timer__timer_id, hk_fdir_timer__emitter_id, &timer_connection, &hk_fdir_timer.period, status);
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         interrupt_connection.type = termina__emitter_connection_type__handler;
         interrupt_connection.handler.handler_object = (void *)&uart_hdlr;
@@ -86,18 +86,18 @@ static void termina__app__init_emitters(int32_t * const status) {
 
 }
 
-static void termina__app__init_mutexes(int32_t * const status) {
+static void termina__app__init_mutexes(termina__error_code_t * const status) {
     
     MutexProtocol protocol;
 
-    *status = 0L;
+    *status = termina__error__none;
 
     protocol._variant = MutexProtocol__Ceiling;
     protocol.Ceiling._0 = 5;
 
     termina__mutex__init(obt_manager__mutex_id, protocol, status);
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         protocol._variant = MutexProtocol__Ceiling;
         protocol.Ceiling._0 = 4;
@@ -106,7 +106,7 @@ static void termina__app__init_mutexes(int32_t * const status) {
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         protocol._variant = MutexProtocol__Ceiling;
         protocol.Ceiling._0 = 5;
@@ -115,7 +115,7 @@ static void termina__app__init_mutexes(int32_t * const status) {
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         protocol._variant = MutexProtocol__Ceiling;
         protocol.Ceiling._0 = 5;
@@ -124,7 +124,7 @@ static void termina__app__init_mutexes(int32_t * const status) {
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         protocol._variant = MutexProtocol__Ceiling;
         protocol.Ceiling._0 = 5;
@@ -135,15 +135,15 @@ static void termina__app__init_mutexes(int32_t * const status) {
 
 }
 
-static void termina__app__init_pools(int32_t * const status) {
+static void termina__app__init_pools(termina__error_code_t * const status) {
     
-    *status = 0L;
+    *status = termina__error__none;
 
     tc_pool.pool_id = tc_pool__pool_id;
 
     termina__pool__init(&tc_pool, (void *)termina__pool_memory__tc_pool, sizeof(termina__pool_memory__tc_pool), sizeof(TCHandler), status);
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         tm_pool.pool_id = tm_pool__pool_id;
 
@@ -153,61 +153,61 @@ static void termina__app__init_pools(int32_t * const status) {
 
 }
 
-static void termina__app__init_msg_queues(int32_t * const status) {
+static void termina__app__init_msg_queues(termina__error_code_t * const status) {
     
-    *status = 0L;
+    *status = termina__error__none;
 
     termina__msg_queue__init(tc_rx_bottom_half_task__task_msg_queue_id, sizeof(termina__event_t), 10U, status);
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__msg_queue__init(obdh_manager__task_msg_queue_id, sizeof(termina__event_t), 10U + 5U, status);
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__msg_queue__init(hk_fdir__task_msg_queue_id, sizeof(termina__event_t), 1U + 10U, status);
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__msg_queue__init(bkg_tc_executor__task_msg_queue_id, sizeof(termina__event_t), 10U, status);
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__msg_queue__init(hk_fdir__hk_fdir_timer_ev__sink_msg_queue_id, sizeof(TimeVal), 1U, status);
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__msg_queue__init(tc_message_queue__channel_msg_queue_id, sizeof(termina__box_t), 10U, status);
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__msg_queue__init(rx_task_message_queue__channel_msg_queue_id, sizeof(size_t), 10U, status);
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__msg_queue__init(hkfdir_message_queue__channel_msg_queue_id, sizeof(termina__box_t), 10U, status);
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__msg_queue__init(bkg_message_queue__channel_msg_queue_id, sizeof(termina__box_t), 10U, status);
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__msg_queue__init(action_tc_message_queue__channel_msg_queue_id, sizeof(termina__box_t), 5U, status);
 
@@ -291,15 +291,15 @@ static void termina__app__initial_event(void) {
 
 }
 
-void termina__app__init(int32_t * const status) {
+void termina__app__init(termina__error_code_t * const status) {
     
-    *status = 0L;
+    *status = termina__error__none;
 
     termina__app__init_globals();
 
     termina__app__init_msg_queues(status);
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__app__init_channel_connections();
 
@@ -307,7 +307,7 @@ void termina__app__init(int32_t * const status) {
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__app__initial_event();
 
@@ -315,7 +315,7 @@ void termina__app__init(int32_t * const status) {
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__app__enable_protection();
 
@@ -323,7 +323,7 @@ void termina__app__init(int32_t * const status) {
 
     }
 
-    if (0L == *status) {
+    if (termina__error__none == *status) {
         
         termina__app__init_handlers();
 

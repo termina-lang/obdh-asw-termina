@@ -12,7 +12,7 @@ include $(TERMINA_OSAL_DIR)/platform/$(PLATFORM)/platform.mk
 TARGET_DIR_NAME:=$R/bin
 TARGET:=$(TARGET_DIR_NAME)/$(PROJECT_NAME)
 
-INCLUDE_DIRS+=$R/include
+PROJECT_INCLUDE_DIRS+=$R/include
 
 SRCS+=$(wildcard $R/*.c)
 SRCS+=$(wildcard $R/src/./*.c)
@@ -42,6 +42,7 @@ SRCS+=$(wildcard $R/src/tasks/obdh_manager/*.c)
 OBJS+=$(patsubst %.c, %.o, $(patsubst %.s, %.o, $(patsubst $(TERMINA_OSAL_DIR)/%, $(TARGET_DIR_NAME)/termina/%, $(wildcard $(OSAL_SRCS)))))
 OBJS+=$(patsubst %.c, %.o, $(patsubst $R/%, $(TARGET_DIR_NAME)/%, $(SRCS)))
 
+CPPFLAGS+=$(patsubst %, -iquote %, $(PROJECT_INCLUDE_DIRS))
 CPPFLAGS+=$(patsubst %, -I %, $(INCLUDE_DIRS))
 
 DEPS:=$(patsubst %.o, %.d, $(OBJS))

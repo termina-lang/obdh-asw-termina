@@ -387,30 +387,30 @@ static void CPUSService12__add_valid_mng_mon_def(const termina__event_t * const 
     if (PMONID < 16U) {
         
         #line 919 "src/service_libraries/pus_services/pus_service12.fin"
-        if (self->param_mon_config_table[termina__check__array_index(16U, PMONID)].type._variant == MonitorCheckType__ExpectedValue) {
+        if (self->param_mon_config_table[PMONID].type._variant == MonitorCheckType__ExpectedValue) {
             
             #line 921 "src/service_libraries/pus_services/pus_service12.fin"
-            self->param_mon_config_table[termina__check__array_index(16U, PMONID)].current_state._variant = CheckState__ParamValueStatus;
+            self->param_mon_config_table[PMONID].current_state._variant = CheckState__ParamValueStatus;
             #line 921 "src/service_libraries/pus_services/pus_service12.fin"
-            self->param_mon_config_table[termina__check__array_index(16U, PMONID)].current_state.ParamValueStatus._0._variant = Option__None;
+            self->param_mon_config_table[PMONID].current_state.ParamValueStatus._0._variant = Option__None;
 
         } else
         #line 923 "src/service_libraries/pus_services/pus_service12.fin"
-        if (self->param_mon_config_table[termina__check__array_index(16U, PMONID)].type._variant == MonitorCheckType__Limits) {
+        if (self->param_mon_config_table[PMONID].type._variant == MonitorCheckType__Limits) {
             
             #line 925 "src/service_libraries/pus_services/pus_service12.fin"
-            self->param_mon_config_table[termina__check__array_index(16U, PMONID)].current_state._variant = CheckState__ParamLimitStatus;
+            self->param_mon_config_table[PMONID].current_state._variant = CheckState__ParamLimitStatus;
             #line 925 "src/service_libraries/pus_services/pus_service12.fin"
-            self->param_mon_config_table[termina__check__array_index(16U, PMONID)].current_state.ParamLimitStatus._0._variant = Option__None;
+            self->param_mon_config_table[PMONID].current_state.ParamLimitStatus._0._variant = Option__None;
 
         } else
         #line 928 "src/service_libraries/pus_services/pus_service12.fin"
-        if (self->param_mon_config_table[termina__check__array_index(16U, PMONID)].type._variant == MonitorCheckType__Delta) {
+        if (self->param_mon_config_table[PMONID].type._variant == MonitorCheckType__Delta) {
             
             #line 930 "src/service_libraries/pus_services/pus_service12.fin"
-            self->param_mon_config_table[termina__check__array_index(16U, PMONID)].current_state._variant = CheckState__ParamDeltaStatus;
+            self->param_mon_config_table[PMONID].current_state._variant = CheckState__ParamDeltaStatus;
             #line 930 "src/service_libraries/pus_services/pus_service12.fin"
-            self->param_mon_config_table[termina__check__array_index(16U, PMONID)].current_state.ParamDeltaStatus._0._variant = Option__None;
+            self->param_mon_config_table[PMONID].current_state.ParamDeltaStatus._0._variant = Option__None;
 
         } else
         {
@@ -1986,10 +1986,10 @@ void CPUSService12__is_PMON_enabled(const termina__event_t * const termina__ev, 
     if (PMONID < 16U) {
         
         #line 744 "src/service_libraries/pus_services/pus_service12.fin"
-        if ((self->param_mon_config_table[termina__check__array_index(16U, PMONID)].type._variant == MonitorCheckType__Free) == false) {
+        if ((self->param_mon_config_table[PMONID].type._variant == MonitorCheckType__Free) == false) {
             
             #line 746 "src/service_libraries/pus_services/pus_service12.fin"
-            *is_enabled = self->param_mon_config_table[termina__check__array_index(16U, (size_t)PMONID)].enabled;
+            *is_enabled = self->param_mon_config_table[(size_t)PMONID].enabled;
 
         }
 

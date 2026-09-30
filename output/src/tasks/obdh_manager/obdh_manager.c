@@ -136,7 +136,7 @@ void termina__task_entry__COBDHManagerTask(void * const arg) {
     
     COBDHManagerTask * self = (COBDHManagerTask *)arg;
 
-    int32_t status = 0L;
+    termina__error_code_t status = termina__error__none;
 
     termina__event_t event;
 
@@ -149,7 +149,7 @@ void termina__task_entry__COBDHManagerTask(void * const arg) {
         
         termina__msg_queue__recv(self->_task_msg_queue_id, &event, &status);
 
-        if (status != 0L) {
+        if (status != termina__error__none) {
             break;
         }
 
@@ -159,7 +159,7 @@ void termina__task_entry__COBDHManagerTask(void * const arg) {
 
                 termina__msg_queue__recv(self->tc_message_queue_input, (void *)&process_tc__msg_data, &status);
 
-                if (status != 0L) {
+                if (status != termina__error__none) {
                     termina__except__msg_queue_recv_error(self->tc_message_queue_input, status);
                 }
 
@@ -181,7 +181,7 @@ void termina__task_entry__COBDHManagerTask(void * const arg) {
 
                 termina__msg_queue__recv(self->action_tc_message_queue_input, (void *)&process_action_tc__msg_data, &status);
 
-                if (status != 0L) {
+                if (status != termina__error__none) {
                     termina__except__msg_queue_recv_error(self->action_tc_message_queue_input, status);
                 }
 

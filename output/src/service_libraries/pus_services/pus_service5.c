@@ -44,7 +44,7 @@ static Status__i32 CPUSService5__exec5_5TC(const termina__event_t * const termin
             uint32_t mask = (uint32_t)0x1U << termina__check__shift_amount(32U, (uint8_t)((offset - 1U) & 0xFFU));
 
             #line 118 "src/service_libraries/pus_services/pus_service5.fin"
-            self->Ev_ID_enable_config[termina__check__array_index(4U, config_slot - 1U)] = self->Ev_ID_enable_config[termina__check__array_index(4U, config_slot - 1U)] | mask;
+            self->Ev_ID_enable_config[config_slot - 1U] = self->Ev_ID_enable_config[config_slot - 1U] | mask;
 
             #line 120 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.notify_tm_1_7(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -95,7 +95,7 @@ static Status__i32 CPUSService5__exec5_6TC(const termina__event_t * const termin
             uint32_t mask = (uint32_t)0x1U << termina__check__shift_amount(32U, (uint8_t)((offset - 1U) & 0xFFU));
 
             #line 167 "src/service_libraries/pus_services/pus_service5.fin"
-            self->Ev_ID_enable_config[termina__check__array_index(4U, config_slot - 1U)] = self->Ev_ID_enable_config[termina__check__array_index(4U, config_slot - 1U)] & (uint32_t)(0xFFFFFFFEU ^ mask);
+            self->Ev_ID_enable_config[config_slot - 1U] = self->Ev_ID_enable_config[config_slot - 1U] & (uint32_t)(0xFFFFFFFEU ^ mask);
 
             #line 169 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.notify_tm_1_7(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.flags_ack, &status);
@@ -243,7 +243,7 @@ static _Bool CPUSService5__is_Ev_ID_enabled(const termina__event_t * const termi
         size_t config_array_index = config_slot - 1U;
 
         #line 71 "src/service_libraries/pus_services/pus_service5.fin"
-        if ((uint32_t)((uint32_t)(self->Ev_ID_enable_config[termina__check__array_index(4U, config_array_index)] >> termina__check__shift_amount(32U, (uint8_t)((offset - 1U) & 0xFFU))) & 0x1U) != 0U) {
+        if ((uint32_t)((uint32_t)(self->Ev_ID_enable_config[config_array_index] >> termina__check__shift_amount(32U, (uint8_t)((offset - 1U) & 0xFFU))) & 0x1U) != 0U) {
             
             #line 72 "src/service_libraries/pus_services/pus_service5.fin"
             enabled = true;

@@ -22,7 +22,7 @@ void CTMChannel__send_tm(const termina__event_t * const termina__ev, void * cons
     for (size_t i = 0U; i < 6U; i = i + 1U) {
         
         #line 65 "src/resources/tm_channel.fin"
-        self->char_dev.send(termina__ev, self->char_dev._that, frame_header[termina__check__array_index(6U, i)], status);
+        self->char_dev.send(termina__ev, self->char_dev._that, frame_header[i], status);
 
     }
 
@@ -30,7 +30,7 @@ void CTMChannel__send_tm(const termina__event_t * const termina__ev, void * cons
     for (size_t i = 0U; i < 256U && (i < tm_descriptor.tm_num_bytes && (*status)._variant == Status__Success); i = i + 1U) {
         
         #line 72 "src/resources/tm_channel.fin"
-        self->char_dev.send(termina__ev, self->char_dev._that, tm_descriptor.tm_bytes[termina__check__array_index(256U, i)], status);
+        self->char_dev.send(termina__ev, self->char_dev._that, tm_descriptor.tm_bytes[i], status);
 
     }
 

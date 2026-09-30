@@ -37,7 +37,7 @@ Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__
                 uint8_t byte = obyte.Some._0;
 
                 #line 34 "src/tasks/tc_rx.fin"
-                (*(TCHandler *)tc_handler_b.data).tc_descriptor.tc_bytes[termina__check__array_index(256U, i)] = byte;
+                (*(TCHandler *)tc_handler_b.data).tc_descriptor.tc_bytes[i] = byte;
 
             } else
             {
@@ -90,7 +90,7 @@ void termina__task_entry__CTXRxBottomHalfTask(void * const arg) {
     
     CTXRxBottomHalfTask * self = (CTXRxBottomHalfTask *)arg;
 
-    int32_t status = 0L;
+    termina__error_code_t status = termina__error__none;
 
     termina__event_t event;
 
@@ -102,7 +102,7 @@ void termina__task_entry__CTXRxBottomHalfTask(void * const arg) {
         
         termina__msg_queue__recv(self->_task_msg_queue_id, &event, &status);
 
-        if (status != 0L) {
+        if (status != termina__error__none) {
             break;
         }
 
@@ -112,7 +112,7 @@ void termina__task_entry__CTXRxBottomHalfTask(void * const arg) {
 
                 termina__msg_queue__recv(self->frame_ready_input, (void *)&get_tc__msg_data, &status);
 
-                if (status != 0L) {
+                if (status != termina__error__none) {
                     termina__except__msg_queue_recv_error(self->frame_ready_input, status);
                 }
 

@@ -43,7 +43,7 @@ Status__i32 build_tm_6_6(TMHandler * const p_tm_handler, const uint16_t tm_seq_c
     for (size_t i = 0U; i < 256U - tm_app_data_offset && (status._variant == Status__Success && i < (size_t)mem_data->length); i = i + 1U) {
         
         #line 42 "src/service_libraries/pus_services/pus_service6/internal.fin"
-        status = append_u8_appdata_field(p_tm_handler, mem_data->data[termina__check__array_index(256U, i)]);
+        status = append_u8_appdata_field(p_tm_handler, mem_data->data[i]);
 
     }
 

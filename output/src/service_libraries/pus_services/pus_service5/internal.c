@@ -30,7 +30,7 @@ Ev_IDType get_Ev_ID_type(const uint16_t Ev_ID) {
         uint16_t aux_id = Ev_ID & 0xFFFU;
 
         #line 70 "src/service_libraries/pus_services/pus_service5/internal.fin"
-        if (aux_id < Ev_IDs_per_type[termina__check__array_index(5U, (size_t)aux_type)]) {
+        if (aux_id < Ev_IDs_per_type[(size_t)aux_type]) {
             
             #line 71 "src/service_libraries/pus_services/pus_service5/internal.fin"
             if (aux_type == 1U) {

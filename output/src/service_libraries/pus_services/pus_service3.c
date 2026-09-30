@@ -21,16 +21,16 @@ void CPUSService3__do_hk(const termina__event_t * const termina__ev, void * cons
     for (size_t i = 0U; i < 8U && (*action_status)._variant == Status__Success; i = i + 1U) {
         
         #line 316 "src/service_libraries/pus_services/pus_service3.fin"
-        if (self->hk_config_table[termina__check__array_index(8U, i)].enabled == true) {
+        if (self->hk_config_table[i].enabled == true) {
             
             #line 318 "src/service_libraries/pus_services/pus_service3.fin"
-            self->hk_config_table[termina__check__array_index(8U, i)].interval_control = self->hk_config_table[termina__check__array_index(8U, i)].interval_control + 1U;
+            self->hk_config_table[i].interval_control = self->hk_config_table[i].interval_control + 1U;
 
             #line 320 "src/service_libraries/pus_services/pus_service3.fin"
-            if (self->hk_config_table[termina__check__array_index(8U, i)].interval_control >= self->hk_config_table[termina__check__array_index(8U, i)].interval) {
+            if (self->hk_config_table[i].interval_control >= self->hk_config_table[i].interval) {
                 
                 #line 322 "src/service_libraries/pus_services/pus_service3.fin"
-                self->hk_config_table[termina__check__array_index(8U, i)].interval_control = 0U;
+                self->hk_config_table[i].interval_control = 0U;
 
                 #line 324 "src/service_libraries/pus_services/pus_service3.fin"
                 Option__box tm_handler = { ._variant = Option__None };
@@ -54,16 +54,16 @@ void CPUSService3__do_hk(const termina__event_t * const termina__ev, void * cons
                     startup_tm((TMHandler *)b_tm_handler.data);
 
                     #line 335 "src/service_libraries/pus_services/pus_service3.fin"
-                    Status__i32 do_hk_status = append_u16_appdata_field((TMHandler *)b_tm_handler.data, self->hk_config_table[termina__check__array_index(8U, i)].SID);
+                    Status__i32 do_hk_status = append_u16_appdata_field((TMHandler *)b_tm_handler.data, self->hk_config_table[i].SID);
 
                     #line 337 "src/service_libraries/pus_services/pus_service3.fin"
-                    size_t num_params = (size_t)self->hk_config_table[termina__check__array_index(8U, i)].num_params;
+                    size_t num_params = (size_t)self->hk_config_table[i].num_params;
 
                     #line 339 "src/service_libraries/pus_services/pus_service3.fin"
                     for (size_t j = 0U; j < 16U && (j < num_params && do_hk_status._variant == Status__Success); j = j + 1U) {
                         
                         #line 341 "src/service_libraries/pus_services/pus_service3.fin"
-                        uint16_t PID = self->hk_config_table[termina__check__array_index(8U, i)].params_def[termina__check__array_index(16U, j)];
+                        uint16_t PID = self->hk_config_table[i].params_def[j];
 
                         #line 342 "src/service_libraries/pus_services/pus_service3.fin"
                         DataPoolItemType item_type = sys_data_pool_get_item_type(PID);
@@ -166,7 +166,7 @@ static Option__usize CPUSService3__get_SIDindex(const termina__event_t * const t
     for (size_t i = 0U; i < 8U && index_found._variant == Option__None; i = i + 1U) {
         
         #line 41 "src/service_libraries/pus_services/pus_service3.fin"
-        if (exec_tc_req_status_update->SID == self->hk_config_table[termina__check__array_index(8U, i)].SID) {
+        if (exec_tc_req_status_update->SID == self->hk_config_table[i].SID) {
             
             #line 43 "src/service_libraries/pus_services/pus_service3.fin"
             index_found._variant = Option__Some;

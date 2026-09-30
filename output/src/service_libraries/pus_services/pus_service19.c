@@ -117,7 +117,7 @@ static FoundID CPUSService19__get_free_event_action_index(const termina__event_t
     for (size_t i = 0U; i < 16U && found_and_id.found == false; i = i + 1U) {
         
         #line 89 "src/service_libraries/pus_services/pus_service19.fin"
-        if (self->event_action_config[termina__check__array_index(16U, i)].event_ID == 0U) {
+        if (self->event_action_config[i].event_ID == 0U) {
             
             #line 91 "src/service_libraries/pus_services/pus_service19.fin"
             found_and_id.ev_action_index = i;
@@ -145,13 +145,13 @@ static FoundID CPUSService19__is_ev_action_defined(const termina__event_t * cons
     for (size_t i = 0U; i < 16U && found_and_id.found == false; i = i + 1U) {
         
         #line 104 "src/service_libraries/pus_services/pus_service19.fin"
-        if (self->event_action_config[termina__check__array_index(16U, i)].event_ID == evID) {
+        if (self->event_action_config[i].event_ID == evID) {
             
             #line 106 "src/service_libraries/pus_services/pus_service19.fin"
             found_and_id.ev_action_index = i;
 
             #line 107 "src/service_libraries/pus_services/pus_service19.fin"
-            found_and_id.enabled = self->event_action_config[termina__check__array_index(16U, i)].enabled;
+            found_and_id.enabled = self->event_action_config[i].enabled;
 
             #line 108 "src/service_libraries/pus_services/pus_service19.fin"
             found_and_id.found = true;
@@ -534,7 +534,7 @@ void CPUSService19__exec_tc(const termina__event_t * const termina__ev, void * c
         for (size_t j = 0U; j < event_action_max_bytes && j < self->exec_tc_req_status_update.action_tc_packet.tc_num_bytes; j = j + 1U) {
             
             #line 474 "src/service_libraries/pus_services/pus_service19.fin"
-            self->exec_tc_req_status_update.action_tc_packet.tc_bytes[termina__check__array_index(256U, j)] = tc_handler->tc_descriptor.tc_bytes[termina__check__array_index(256U, j + tc_handler->app_data_index)];
+            self->exec_tc_req_status_update.action_tc_packet.tc_bytes[j] = tc_handler->tc_descriptor.tc_bytes[termina__check__array_index(256U, j + tc_handler->app_data_index)];
 
         }
 
@@ -719,7 +719,7 @@ void CPUSService19__get_pending_action_number(const termina__event_t * const ter
     for (size_t i = 0U; i < 3U; i = i + 1U) {
         
         #line 634 "src/service_libraries/pus_services/pus_service19.fin"
-        paction_num[termina__check__array_index(4U, i)] = self->pending_action_number[termina__check__array_index(4U, i)];
+        paction_num[i] = self->pending_action_number[i];
 
     }
 

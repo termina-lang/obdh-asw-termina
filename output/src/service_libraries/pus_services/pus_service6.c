@@ -34,7 +34,7 @@ static uint16_t CPUSService6__check_data(const termina__event_t * const termina_
     for (size_t i = 0U; i < 256U && i < (size_t)self->exec_tc_req_status_update.length; i = i + 1U) {
         
         #line 90 "src/service_libraries/pus_services/pus_service6.fin"
-        data[termina__check__array_index(256U, i)] = self->memory[termina__check__array_index(8U, bank_index)][termina__check__array_index(16777216U, start_address + i)];
+        data[i] = self->memory[termina__check__array_index(8U, bank_index)][termina__check__array_index(16777216U, start_address + i)];
 
     }
 
@@ -117,7 +117,7 @@ static Status__i32 CPUSService6__write_data(const termina__event_t * const termi
     for (size_t i = 0U; i < 256U && i < (size_t)self->exec_tc_req_status_update.length; i = i + 1U) {
         
         #line 65 "src/service_libraries/pus_services/pus_service6.fin"
-        self->memory[termina__check__array_index(8U, bank_index)][termina__check__array_index(16777216U, start_address + i)] = self->exec_tc_req_status_update.data[termina__check__array_index(256U, i)];
+        self->memory[termina__check__array_index(8U, bank_index)][termina__check__array_index(16777216U, start_address + i)] = self->exec_tc_req_status_update.data[i];
 
     }
 
@@ -203,7 +203,7 @@ static Status__i32 CPUSService6__read_data(const termina__event_t * const termin
     for (size_t i = 0U; i < 256U && i < (size_t)self->exec_tc_req_status_update.length; i = i + 1U) {
         
         #line 78 "src/service_libraries/pus_services/pus_service6.fin"
-        self->exec_tc_req_status_update.data[termina__check__array_index(256U, i)] = self->memory[termina__check__array_index(8U, bank_index)][termina__check__array_index(16777216U, start_address + i)];
+        self->exec_tc_req_status_update.data[i] = self->memory[termina__check__array_index(8U, bank_index)][termina__check__array_index(16777216U, start_address + i)];
 
     }
 
@@ -471,7 +471,7 @@ void CPUSService6__exec_tc(const termina__event_t * const termina__ev, void * co
         for (size_t j = 0U; j < max_num_of_bytes_memory_load && (j < (size_t)self->exec_tc_req_status_update.length && status._variant == Status__Success); j = j + 1U) {
             
             #line 353 "src/service_libraries/pus_services/pus_service6.fin"
-            status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.data[termina__check__array_index(256U, j)]);
+            status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.data[j]);
 
         }
 

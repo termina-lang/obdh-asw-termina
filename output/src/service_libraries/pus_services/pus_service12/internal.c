@@ -268,7 +268,7 @@ Status__i32 build_tm_12_12(TMHandler * const p_tm_handler, const uint16_t tm_seq
         if (status._variant == Status__Success) {
             
             #line 370 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            status = append_u16_appdata_field(p_tm_handler, param_mon_transitions_table[termina__check__array_index(1U, i)].PMONID);
+            status = append_u16_appdata_field(p_tm_handler, param_mon_transitions_table[i].PMONID);
 
         }
 
@@ -276,7 +276,7 @@ Status__i32 build_tm_12_12(TMHandler * const p_tm_handler, const uint16_t tm_seq
         if (status._variant == Status__Success) {
             
             #line 373 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            status = append_u16_appdata_field(p_tm_handler, param_mon_transitions_table[termina__check__array_index(1U, i)].PID);
+            status = append_u16_appdata_field(p_tm_handler, param_mon_transitions_table[i].PID);
 
         }
 
@@ -284,7 +284,7 @@ Status__i32 build_tm_12_12(TMHandler * const p_tm_handler, const uint16_t tm_seq
         if (status._variant == Status__Success) {
             
             #line 376 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            uint8_t type_id = get_type_index(param_mon_transitions_table[termina__check__array_index(1U, i)].type);
+            uint8_t type_id = get_type_index(param_mon_transitions_table[i].type);
 
             #line 377 "src/service_libraries/pus_services/pus_service12/internal.fin"
             status = append_u8_appdata_field(p_tm_handler, type_id);
@@ -292,24 +292,24 @@ Status__i32 build_tm_12_12(TMHandler * const p_tm_handler, const uint16_t tm_seq
         }
 
         #line 381 "src/service_libraries/pus_services/pus_service12/internal.fin"
-        if (param_mon_transitions_table[termina__check__array_index(1U, i)].type._variant == MonitorCheckType__ExpectedValue && status._variant == Status__Success) {
+        if (param_mon_transitions_table[i].type._variant == MonitorCheckType__ExpectedValue && status._variant == Status__Success) {
             
             #line 382 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[termina__check__array_index(1U, i)].mask_value);
+            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].mask_value);
 
         }
 
         #line 385 "src/service_libraries/pus_services/pus_service12/internal.fin"
-        uint8_t aux_prev_status = get_check_status_index(param_mon_transitions_table[termina__check__array_index(1U, i)].prev_status);
+        uint8_t aux_prev_status = get_check_status_index(param_mon_transitions_table[i].prev_status);
 
         #line 386 "src/service_libraries/pus_services/pus_service12/internal.fin"
-        uint8_t aux_new_status = get_check_status_index(param_mon_transitions_table[termina__check__array_index(1U, i)].new_status);
+        uint8_t aux_new_status = get_check_status_index(param_mon_transitions_table[i].new_status);
 
         #line 388 "src/service_libraries/pus_services/pus_service12/internal.fin"
         if (status._variant == Status__Success) {
             
             #line 389 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[termina__check__array_index(1U, i)].new_value);
+            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].new_value);
 
         }
 
@@ -317,7 +317,7 @@ Status__i32 build_tm_12_12(TMHandler * const p_tm_handler, const uint16_t tm_seq
         if (status._variant == Status__Success) {
             
             #line 392 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[termina__check__array_index(1U, i)].limit_value);
+            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].limit_value);
 
         }
 
@@ -341,7 +341,7 @@ Status__i32 build_tm_12_12(TMHandler * const p_tm_handler, const uint16_t tm_seq
         if (status._variant == Status__Success) {
             
             #line 401 "src/service_libraries/pus_services/pus_service12/internal.fin"
-            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[termina__check__array_index(1U, i)].trans_obt.seconds);
+            status = append_u32_appdata_field(p_tm_handler, param_mon_transitions_table[i].trans_obt.seconds);
 
         }
 
