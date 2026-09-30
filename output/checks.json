@@ -11,27 +11,27 @@
             "obligations": []
         },
         {
-            "module": "drivers/char_dev",
+            "module": "drivers.char_dev",
             "file": "src/drivers/char_dev.fin",
             "obligations": []
         },
         {
-            "module": "drivers/char_dev/irq_handler",
+            "module": "drivers.char_dev.irq_handler",
             "file": "src/drivers/char_dev/irq_handler.fin",
             "obligations": []
         },
         {
-            "module": "drivers/char_dev/uart/apbuart",
+            "module": "drivers.char_dev.uart.apbuart",
             "file": "src/drivers/char_dev/uart/apbuart.fin",
             "obligations": []
         },
         {
-            "module": "handlers/init",
+            "module": "handlers.init",
             "file": "src/handlers/init.fin",
             "obligations": []
         },
         {
-            "module": "resources/gpio_driver",
+            "module": "resources.gpio_driver",
             "file": "src/resources/gpio_driver.fin",
             "obligations": [
                 {
@@ -65,7 +65,7 @@
             ]
         },
         {
-            "module": "resources/obt_manager",
+            "module": "resources.obt_manager",
             "file": "src/resources/obt_manager.fin",
             "obligations": [
                 {
@@ -99,12 +99,12 @@
             ]
         },
         {
-            "module": "resources/system_data_pool",
+            "module": "resources.system_data_pool",
             "file": "src/resources/system_data_pool.fin",
             "obligations": []
         },
         {
-            "module": "resources/tc_channel",
+            "module": "resources.tc_channel",
             "file": "src/resources/tc_channel.fin",
             "obligations": [
                 {
@@ -134,7 +134,7 @@
             ]
         },
         {
-            "module": "resources/tm_channel",
+            "module": "resources.tm_channel",
             "file": "src/resources/tm_channel.fin",
             "obligations": [
                 {
@@ -182,12 +182,12 @@
             ]
         },
         {
-            "module": "resources/tm_counter",
+            "module": "resources.tm_counter",
             "file": "src/resources/tm_counter.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/crc",
+            "module": "service_libraries.crc",
             "file": "src/service_libraries/crc.fin",
             "obligations": [
                 {
@@ -249,27 +249,27 @@
             ]
         },
         {
-            "module": "service_libraries/errors",
+            "module": "service_libraries.errors",
             "file": "src/service_libraries/errors.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service1",
+            "module": "service_libraries.pus_services.pus_service1",
             "file": "src/service_libraries/pus_services/pus_service1.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service1/internal",
+            "module": "service_libraries.pus_services.pus_service1.internal",
             "file": "src/service_libraries/pus_services/pus_service1/internal.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service1/tc_acceptance",
+            "module": "service_libraries.pus_services.pus_service1.tc_acceptance",
             "file": "src/service_libraries/pus_services/pus_service1/tc_acceptance.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service12",
+            "module": "service_libraries.pus_services.pus_service12",
             "file": "src/service_libraries/pus_services/pus_service12.fin",
             "obligations": [
                 {
@@ -1151,7 +1151,7 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service12/internal",
+            "module": "service_libraries.pus_services.pus_service12.internal",
             "file": "src/service_libraries/pus_services/pus_service12/internal.fin",
             "obligations": [
                 {
@@ -1297,27 +1297,27 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service128",
+            "module": "service_libraries.pus_services.pus_service128",
             "file": "src/service_libraries/pus_services/pus_service128.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service128/types",
+            "module": "service_libraries.pus_services.pus_service128.types",
             "file": "src/service_libraries/pus_services/pus_service128/types.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service17",
+            "module": "service_libraries.pus_services.pus_service17",
             "file": "src/service_libraries/pus_services/pus_service17.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service17/internal",
+            "module": "service_libraries.pus_services.pus_service17.internal",
             "file": "src/service_libraries/pus_services/pus_service17/internal.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service19",
+            "module": "service_libraries.pus_services.pus_service19",
             "file": "src/service_libraries/pus_services/pus_service19.fin",
             "obligations": [
                 {
@@ -2355,12 +2355,12 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service19/types",
+            "module": "service_libraries.pus_services.pus_service19.types",
             "file": "src/service_libraries/pus_services/pus_service19/types.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service2",
+            "module": "service_libraries.pus_services.pus_service2",
             "file": "src/service_libraries/pus_services/pus_service2.fin",
             "obligations": [
                 {
@@ -2380,27 +2380,27 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service2/internal",
+            "module": "service_libraries.pus_services.pus_service2.internal",
             "file": "src/service_libraries/pus_services/pus_service2/internal.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service2/types",
+            "module": "service_libraries.pus_services.pus_service2.types",
             "file": "src/service_libraries/pus_services/pus_service2/types.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service20",
+            "module": "service_libraries.pus_services.pus_service20",
             "file": "src/service_libraries/pus_services/pus_service20.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service20/types",
+            "module": "service_libraries.pus_services.pus_service20.types",
             "file": "src/service_libraries/pus_services/pus_service20/types.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service3",
+            "module": "service_libraries.pus_services.pus_service3",
             "file": "src/service_libraries/pus_services/pus_service3.fin",
             "obligations": [
                 {
@@ -2646,12 +2646,12 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service3/internal",
+            "module": "service_libraries.pus_services.pus_service3.internal",
             "file": "src/service_libraries/pus_services/pus_service3/internal.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service4",
+            "module": "service_libraries.pus_services.pus_service4",
             "file": "src/service_libraries/pus_services/pus_service4.fin",
             "obligations": [
                 {
@@ -3289,7 +3289,7 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service4/internal",
+            "module": "service_libraries.pus_services.pus_service4.internal",
             "file": "src/service_libraries/pus_services/pus_service4/internal.fin",
             "obligations": [
                 {
@@ -3391,7 +3391,7 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service5",
+            "module": "service_libraries.pus_services.pus_service5",
             "file": "src/service_libraries/pus_services/pus_service5.fin",
             "obligations": [
                 {
@@ -3503,7 +3503,7 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service5/internal",
+            "module": "service_libraries.pus_services.pus_service5.internal",
             "file": "src/service_libraries/pus_services/pus_service5/internal.fin",
             "obligations": [
                 {
@@ -3537,7 +3537,7 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service6",
+            "module": "service_libraries.pus_services.pus_service6",
             "file": "src/service_libraries/pus_services/pus_service6.fin",
             "obligations": [
                 {
@@ -3683,7 +3683,7 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service6/internal",
+            "module": "service_libraries.pus_services.pus_service6.internal",
             "file": "src/service_libraries/pus_services/pus_service6/internal.fin",
             "obligations": [
                 {
@@ -3703,17 +3703,17 @@
             ]
         },
         {
-            "module": "service_libraries/pus_services/pus_service9",
+            "module": "service_libraries.pus_services.pus_service9",
             "file": "src/service_libraries/pus_services/pus_service9.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_services/pus_service9/types",
+            "module": "service_libraries.pus_services.pus_service9.types",
             "file": "src/service_libraries/pus_services/pus_service9/types.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/pus_tc_handler",
+            "module": "service_libraries.pus_tc_handler",
             "file": "src/service_libraries/pus_tc_handler.fin",
             "obligations": [
                 {
@@ -3755,7 +3755,7 @@
             ]
         },
         {
-            "module": "service_libraries/pus_tm_handler",
+            "module": "service_libraries.pus_tm_handler",
             "file": "src/service_libraries/pus_tm_handler.fin",
             "obligations": [
                 {
@@ -3811,7 +3811,7 @@
             ]
         },
         {
-            "module": "service_libraries/queue_u8",
+            "module": "service_libraries.queue_u8",
             "file": "src/service_libraries/queue_u8.fin",
             "obligations": [
                 {
@@ -3869,7 +3869,7 @@
             ]
         },
         {
-            "module": "service_libraries/rand",
+            "module": "service_libraries.rand",
             "file": "src/service_libraries/rand.fin",
             "obligations": [
                 {
@@ -3987,7 +3987,7 @@
             ]
         },
         {
-            "module": "service_libraries/serialize",
+            "module": "service_libraries.serialize",
             "file": "src/service_libraries/serialize.fin",
             "obligations": [
                 {
@@ -4273,7 +4273,7 @@
             ]
         },
         {
-            "module": "service_libraries/tc_ccsds_pus_format",
+            "module": "service_libraries.tc_ccsds_pus_format",
             "file": "src/service_libraries/tc_ccsds_pus_format.fin",
             "obligations": [
                 {
@@ -4525,12 +4525,12 @@
             ]
         },
         {
-            "module": "service_libraries/timeval",
+            "module": "service_libraries.timeval",
             "file": "src/service_libraries/timeval.fin",
             "obligations": []
         },
         {
-            "module": "service_libraries/tm_ccsds_pus_format",
+            "module": "service_libraries.tm_ccsds_pus_format",
             "file": "src/service_libraries/tm_ccsds_pus_format.fin",
             "obligations": [
                 {
@@ -4732,12 +4732,12 @@
             ]
         },
         {
-            "module": "tasks/bkgtcexec",
+            "module": "tasks.bkgtcexec",
             "file": "src/tasks/bkgtcexec.fin",
             "obligations": []
         },
         {
-            "module": "tasks/hk_fdir_mng/hk_fdir",
+            "module": "tasks.hk_fdir_mng.hk_fdir",
             "file": "src/tasks/hk_fdir_mng/hk_fdir.fin",
             "obligations": [
                 {
@@ -4799,17 +4799,17 @@
             ]
         },
         {
-            "module": "tasks/obdh_manager/mng_tc_executor",
+            "module": "tasks.obdh_manager.mng_tc_executor",
             "file": "src/tasks/obdh_manager/mng_tc_executor.fin",
             "obligations": []
         },
         {
-            "module": "tasks/obdh_manager/obdh_manager",
+            "module": "tasks.obdh_manager.obdh_manager",
             "file": "src/tasks/obdh_manager/obdh_manager.fin",
             "obligations": []
         },
         {
-            "module": "tasks/tc_rx",
+            "module": "tasks.tc_rx",
             "file": "src/tasks/tc_rx.fin",
             "obligations": [
                 {
