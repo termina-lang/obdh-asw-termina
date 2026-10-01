@@ -136,7 +136,7 @@ void CPUSService1__notify_tm_1_1(const termina__event_t * const termina__ev, voi
             #line 441 "src/service_libraries/pus_services/pus_service1.fin"
             (*status)._variant = Status__Failure;
             #line 441 "src/service_libraries/pus_services/pus_service1.fin"
-            (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+            (*status).Failure._0 = 1L;
 
         }
 
@@ -225,7 +225,7 @@ void CPUSService1__notify_tm_1_3(const termina__event_t * const termina__ev, voi
             #line 607 "src/service_libraries/pus_services/pus_service1.fin"
             (*status)._variant = Status__Failure;
             #line 607 "src/service_libraries/pus_services/pus_service1.fin"
-            (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+            (*status).Failure._0 = 1L;
 
         }
 
@@ -314,7 +314,7 @@ void CPUSService1__notify_tm_1_7(const termina__event_t * const termina__ev, voi
             #line 1559 "src/service_libraries/pus_services/pus_service1.fin"
             (*status)._variant = Status__Failure;
             #line 1559 "src/service_libraries/pus_services/pus_service1.fin"
-            (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+            (*status).Failure._0 = 1L;
 
         }
 
@@ -506,7 +506,7 @@ void CPUSService1__send_tm_1_2(const termina__event_t * const termina__ev, void 
         #line 556 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 556 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -557,7 +557,7 @@ void CPUSService1__send_tm_1_4_EvID_not_valid(const termina__event_t * const ter
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 929 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_5_X_INVALID_EV_ID, EvID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 7U, EvID, current_obt);
 
         #line 933 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -579,7 +579,7 @@ void CPUSService1__send_tm_1_4_EvID_not_valid(const termina__event_t * const ter
         #line 942 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 942 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -630,7 +630,7 @@ void CPUSService1__send_tm_1_4_PID_not_valid(const termina__event_t * const term
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 977 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_20_X_INVALID_PID, PID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 22U, PID, current_obt);
 
         #line 981 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -652,7 +652,7 @@ void CPUSService1__send_tm_1_4_PID_not_valid(const termina__event_t * const term
         #line 990 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 990 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -703,7 +703,7 @@ void CPUSService1__send_tm_1_4_PID_read_only_via_TC(const termina__event_t * con
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1447 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_20_X_PID_READ_ONLY_VIA_TC, PID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 23U, PID, current_obt);
 
         #line 1451 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -725,7 +725,7 @@ void CPUSService1__send_tm_1_4_PID_read_only_via_TC(const termina__event_t * con
         #line 1460 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1460 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -776,7 +776,7 @@ void CPUSService1__send_tm_1_4_PID_stats_undefined(const termina__event_t * cons
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1400 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_4_7_PID_STATS_UNDEFINED, PID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 6U, PID, current_obt);
 
         #line 1404 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -798,7 +798,7 @@ void CPUSService1__send_tm_1_4_PID_stats_undefined(const termina__event_t * cons
         #line 1413 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1413 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -849,7 +849,7 @@ void CPUSService1__send_tm_1_4_PMONID_invalid(const termina__event_t * const ter
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1165 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_INVALID_PMONID, PMONID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 16U, PMONID, current_obt);
 
         #line 1169 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -871,7 +871,7 @@ void CPUSService1__send_tm_1_4_PMONID_invalid(const termina__event_t * const ter
         #line 1178 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1178 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -922,7 +922,7 @@ void CPUSService1__send_tm_1_4_PMON_defined(const termina__event_t * const termi
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1071 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_PMON_DEFINED, PMONID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 14U, PMONID, current_obt);
 
         #line 1075 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -944,7 +944,7 @@ void CPUSService1__send_tm_1_4_PMON_defined(const termina__event_t * const termi
         #line 1084 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1084 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -995,7 +995,7 @@ void CPUSService1__send_tm_1_4_PMON_definition_invalid(const termina__event_t * 
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1211 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_INVALID_PMON_DEFINITION, PMONID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 17U, PMONID, current_obt);
 
         #line 1215 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1017,7 +1017,7 @@ void CPUSService1__send_tm_1_4_PMON_definition_invalid(const termina__event_t * 
         #line 1224 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1224 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1068,7 +1068,7 @@ void CPUSService1__send_tm_1_4_PMON_enabled(const termina__event_t * const termi
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1118 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_PMON_ENABLED, PMONID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 15U, PMONID, current_obt);
 
         #line 1122 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1090,7 +1090,7 @@ void CPUSService1__send_tm_1_4_PMON_enabled(const termina__event_t * const termi
         #line 1131 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1131 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1141,7 +1141,7 @@ void CPUSService1__send_tm_1_4_PMON_undefined(const termina__event_t * const ter
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1024 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_12_X_PMON_UNDEFINED, PMONID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 13U, PMONID, current_obt);
 
         #line 1028 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1163,7 +1163,7 @@ void CPUSService1__send_tm_1_4_PMON_undefined(const termina__event_t * const ter
         #line 1037 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1037 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1214,7 +1214,7 @@ void CPUSService1__send_tm_1_4_SID_not_valid(const termina__event_t * const term
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 785 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_3_X_INVALID_SID, SID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 5U, SID, current_obt);
 
         #line 789 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1236,7 +1236,7 @@ void CPUSService1__send_tm_1_4_SID_not_valid(const termina__event_t * const term
         #line 797 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 797 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1287,7 +1287,7 @@ void CPUSService1__send_tm_1_4_device_address_not_valid(const termina__event_t *
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 737 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u32_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_2_X_DEVICE_ADDRESS_NOT_VALID, device_address, current_obt);
+        *status = build_tm_1_X_u32_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 4U, device_address, current_obt);
 
         #line 742 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1309,7 +1309,7 @@ void CPUSService1__send_tm_1_4_device_address_not_valid(const termina__event_t *
         #line 751 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 751 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1360,7 +1360,7 @@ void CPUSService1__send_tm_1_4_error_in_acceptance(const termina__event_t * cons
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1494 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_no_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_ERROR_IN_ACCEPTANCE, current_obt);
+        *status = build_tm_1_X_no_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 24U, current_obt);
 
         #line 1498 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1382,7 +1382,7 @@ void CPUSService1__send_tm_1_4_error_in_acceptance(const termina__event_t * cons
         #line 1507 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1507 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1433,7 +1433,7 @@ void CPUSService1__send_tm_1_4_ev_action_enabled(const termina__event_t * const 
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1258 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_19_X_EV_ACTION_IS_ENABLED, event_ID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 19U, event_ID, current_obt);
 
         #line 1262 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1455,7 +1455,7 @@ void CPUSService1__send_tm_1_4_ev_action_enabled(const termina__event_t * const 
         #line 1271 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1271 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1506,7 +1506,7 @@ void CPUSService1__send_tm_1_4_ev_action_rejected(const termina__event_t * const
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1305 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_19_1_EV_ACTION_REJECTED, event_ID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 20U, event_ID, current_obt);
 
         #line 1309 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1528,7 +1528,7 @@ void CPUSService1__send_tm_1_4_ev_action_rejected(const termina__event_t * const
         #line 1318 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1318 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1579,7 +1579,7 @@ void CPUSService1__send_tm_1_4_ev_action_undefined(const termina__event_t * cons
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 1353 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_19_X_EV_ACTION_NOT_DEFINED, event_ID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 21U, event_ID, current_obt);
 
         #line 1357 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1601,7 +1601,7 @@ void CPUSService1__send_tm_1_4_ev_action_undefined(const termina__event_t * cons
         #line 1366 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1366 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1652,7 +1652,7 @@ void CPUSService1__send_tm_1_4_mem_address_not_valid(const termina__event_t * co
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 832 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u8_u32_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_6_X_INVALID_MEMORY_ADDRESS, mem_id, mem_address, current_obt);
+        *status = build_tm_1_X_u8_u32_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 8U, mem_id, mem_address, current_obt);
 
         #line 837 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1674,7 +1674,7 @@ void CPUSService1__send_tm_1_4_mem_address_not_valid(const termina__event_t * co
         #line 846 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 846 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1725,7 +1725,7 @@ void CPUSService1__send_tm_1_4_mem_id_read_only(const termina__event_t * const t
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 881 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u8_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_6_X_MEMORY_ID_READ_ONLY, mem_id, current_obt);
+        *status = build_tm_1_X_u8_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 9U, mem_id, current_obt);
 
         #line 886 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1747,7 +1747,7 @@ void CPUSService1__send_tm_1_4_mem_id_read_only(const termina__event_t * const t
         #line 895 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 895 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1798,7 +1798,7 @@ void CPUSService1__send_tm_1_4_num_of_instr_not_valid(const termina__event_t * c
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecStart };
 
         #line 691 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u8_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_X_Y_TC_NOT_VALID_NUM_OF_INSTR, N, current_obt);
+        *status = build_tm_1_X_u8_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 2U, N, current_obt);
 
         #line 695 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1820,7 +1820,7 @@ void CPUSService1__send_tm_1_4_num_of_instr_not_valid(const termina__event_t * c
         #line 703 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 703 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1874,7 +1874,7 @@ void CPUSService1__send_tm_1_4_short_pack_length(const termina__event_t * const 
         uint16_t failure_data = (uint16_t)tc_bytes;
 
         #line 643 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_4_TC_X_Y_TC_SHORT_PACK_LENGTH, failure_data, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 1U, failure_data, current_obt);
 
         #line 648 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1896,7 +1896,7 @@ void CPUSService1__send_tm_1_4_short_pack_length(const termina__event_t * const 
         #line 657 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 657 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -1947,7 +1947,7 @@ void CPUSService1__send_tm_1_8_device_command_exec_error(const termina__event_t 
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecCompletion };
 
         #line 1689 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u32_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TM_2_1_DEV_COMMAND_EXEC_ERROR, on_off_command, current_obt);
+        *status = build_tm_1_X_u32_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 2U, on_off_command, current_obt);
 
         #line 1694 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -1969,7 +1969,7 @@ void CPUSService1__send_tm_1_8_device_command_exec_error(const termina__event_t 
         #line 1703 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1703 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -2020,7 +2020,7 @@ void CPUSService1__send_tm_1_8_max_ev_actions_defined(const termina__event_t * c
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecCompletion };
 
         #line 1593 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TC_19_1_MAX_EV_ACTIONS_REACHED, evID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 6U, evID, current_obt);
 
         #line 1598 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -2042,7 +2042,7 @@ void CPUSService1__send_tm_1_8_max_ev_actions_defined(const termina__event_t * c
         #line 1607 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1607 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -2093,7 +2093,7 @@ void CPUSService1__send_tm_1_8_mem_access_error(const termina__event_t * const t
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecCompletion };
 
         #line 1785 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u8_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TC_6_X_MEM_ACCESS_FAIL, mem_ID, current_obt);
+        *status = build_tm_1_X_u8_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 4U, mem_ID, current_obt);
 
         #line 1789 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -2115,7 +2115,7 @@ void CPUSService1__send_tm_1_8_mem_access_error(const termina__event_t * const t
         #line 1798 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1798 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -2166,7 +2166,7 @@ void CPUSService1__send_tm_1_8_not_free_stats_config(const termina__event_t * co
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecCompletion };
 
         #line 1737 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TC_4_1_NOT_FREE_PID_STATS_CONFIG, PID, current_obt);
+        *status = build_tm_1_X_u16_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 3U, PID, current_obt);
 
         #line 1742 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -2188,7 +2188,7 @@ void CPUSService1__send_tm_1_8_not_free_stats_config(const termina__event_t * co
         #line 1751 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1751 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -2239,7 +2239,7 @@ void CPUSService1__send_tm_1_8_tm_exceed_limit_appdata(const termina__event_t * 
         TCVerifyStage verify_stage = { ._variant = TCVerifyStage__ExecCompletion };
 
         #line 1642 "src/service_libraries/pus_services/pus_service1.fin"
-        *status = build_tm_1_X_no_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, TM_1_8_TM_X_Y_TM_EXCEED_LIMIT_APPDATA, current_obt);
+        *status = build_tm_1_X_no_failure_data((TMHandler *)b_tm_handler.data, tm_count, tc_packet_id, tc_packet_seq_ctrl, verify_stage, 1U, current_obt);
 
         #line 1646 "src/service_libraries/pus_services/pus_service1.fin"
         if ((*status)._variant == Status__Success) {
@@ -2261,7 +2261,7 @@ void CPUSService1__send_tm_1_8_tm_exceed_limit_appdata(const termina__event_t * 
         #line 1655 "src/service_libraries/pus_services/pus_service1.fin"
         (*status)._variant = Status__Failure;
         #line 1655 "src/service_libraries/pus_services/pus_service1.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 

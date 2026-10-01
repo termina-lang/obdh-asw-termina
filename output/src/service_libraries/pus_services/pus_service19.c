@@ -41,7 +41,7 @@ static Status__i32 CPUSService19__delete_event_action(const termina__event_t * c
         #line 77 "src/service_libraries/pus_services/pus_service19.fin"
         status._variant = Status__Failure;
         #line 77 "src/service_libraries/pus_services/pus_service19.fin"
-        status.Failure._0 = EVENT_ACTION_NOT_DEFINED_ERROR;
+        status.Failure._0 = 11L;
 
     }
 
@@ -69,7 +69,7 @@ static Status__i32 CPUSService19__disable_event_action(const termina__event_t * 
         #line 43 "src/service_libraries/pus_services/pus_service19.fin"
         status._variant = Status__Failure;
         #line 43 "src/service_libraries/pus_services/pus_service19.fin"
-        status.Failure._0 = EVENT_ACTION_NOT_DEFINED_ERROR;
+        status.Failure._0 = 11L;
 
     }
 
@@ -97,7 +97,7 @@ static Status__i32 CPUSService19__enable_event_action(const termina__event_t * c
         #line 59 "src/service_libraries/pus_services/pus_service19.fin"
         status._variant = Status__Failure;
         #line 59 "src/service_libraries/pus_services/pus_service19.fin"
-        status.Failure._0 = EVENT_ACTION_NOT_DEFINED_ERROR;
+        status.Failure._0 = 11L;
 
     }
 
@@ -531,7 +531,7 @@ void CPUSService19__exec_tc(const termina__event_t * const termina__ev, void * c
         self->exec_tc_req_status_update.action_tc_packet.tc_num_bytes = (size_t)(tc_handler->tc_descriptor.tc_num_bytes - 2U) - tc_handler->app_data_index;
 
         #line 472 "src/service_libraries/pus_services/pus_service19.fin"
-        for (size_t j = 0U; j < event_action_max_bytes && j < self->exec_tc_req_status_update.action_tc_packet.tc_num_bytes; j = j + 1U) {
+        for (size_t j = 0U; j < 242U && j < self->exec_tc_req_status_update.action_tc_packet.tc_num_bytes; j = j + 1U) {
             
             #line 474 "src/service_libraries/pus_services/pus_service19.fin"
             self->exec_tc_req_status_update.action_tc_packet.tc_bytes[j] = tc_handler->tc_descriptor.tc_bytes[termina__check__array_index(256U, j + tc_handler->app_data_index)];
@@ -576,7 +576,7 @@ void CPUSService19__exec_tc(const termina__event_t * const termina__ev, void * c
             #line 500 "src/service_libraries/pus_services/pus_service19.fin"
             status._variant = Status__Failure;
             #line 500 "src/service_libraries/pus_services/pus_service19.fin"
-            status.Failure._0 = ACCEPTANCE_ERROR;
+            status.Failure._0 = 4L;
 
         }
 
@@ -595,21 +595,21 @@ void CPUSService19__exec_tc(const termina__event_t * const termina__ev, void * c
         int32_t error_code = status.Failure._0;
 
         #line 515 "src/service_libraries/pus_services/pus_service19.fin"
-        if (error_code == ACCEPTANCE_ERROR) {
+        if (error_code == 4L) {
             
             #line 517 "src/service_libraries/pus_services/pus_service19.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.tc_data.packet_id, self->exec_tc_req_status_update.tc_data.packet_seq_ctrl, action_status);
 
         } else
         #line 522 "src/service_libraries/pus_services/pus_service19.fin"
-        if (error_code == BUILD_TM_ERROR) {
+        if (error_code == 3L) {
             
             #line 524 "src/service_libraries/pus_services/pus_service19.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.tc_data.packet_id, self->exec_tc_req_status_update.tc_data.packet_seq_ctrl, action_status);
 
         } else
         #line 529 "src/service_libraries/pus_services/pus_service19.fin"
-        if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+        if (error_code == 5L) {
             
             #line 531 "src/service_libraries/pus_services/pus_service19.fin"
             self->pus_service_1.send_tm_1_4_short_pack_length(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.tc_data.packet_id, self->exec_tc_req_status_update.tc_data.packet_seq_ctrl, self->exec_tc_req_status_update.tc_data.tc_num_bytes, action_status);
@@ -758,7 +758,7 @@ void CPUSService19__manage_event_action(const termina__event_t * const termina__
                 size_t tail_index = (size_t)(self->pending_action_head[0U] + self->pending_action_number[0U]) % 8U;
 
                 #line 566 "src/service_libraries/pus_services/pus_service19.fin"
-                self->pending_action_queue_1I[termina__check__array_index(8U, tail_index)] = self->event_action_packets[termina__check__array_index(16U, found_and_id.ev_action_index)];
+                self->pending_action_queue_1I[tail_index] = self->event_action_packets[termina__check__array_index(16U, found_and_id.ev_action_index)];
 
                 #line 567 "src/service_libraries/pus_services/pus_service19.fin"
                 self->pending_action_number[0U] = self->pending_action_number[0U] + 1U;
@@ -780,7 +780,7 @@ void CPUSService19__manage_event_action(const termina__event_t * const termina__
                 size_t tail_index = (size_t)(self->pending_action_head[1U] + self->pending_action_number[1U]) % 8U;
 
                 #line 580 "src/service_libraries/pus_services/pus_service19.fin"
-                self->pending_action_queue_2LS[termina__check__array_index(8U, tail_index)] = self->event_action_packets[termina__check__array_index(16U, found_and_id.ev_action_index)];
+                self->pending_action_queue_2LS[tail_index] = self->event_action_packets[termina__check__array_index(16U, found_and_id.ev_action_index)];
 
                 #line 581 "src/service_libraries/pus_services/pus_service19.fin"
                 self->pending_action_number[1U] = self->pending_action_number[1U] + 1U;
@@ -802,7 +802,7 @@ void CPUSService19__manage_event_action(const termina__event_t * const termina__
                 size_t tail_index = (size_t)(self->pending_action_head[2U] + self->pending_action_number[2U]) % 8U;
 
                 #line 594 "src/service_libraries/pus_services/pus_service19.fin"
-                self->pending_action_queue_3MS[termina__check__array_index(8U, tail_index)] = self->event_action_packets[termina__check__array_index(16U, found_and_id.ev_action_index)];
+                self->pending_action_queue_3MS[tail_index] = self->event_action_packets[termina__check__array_index(16U, found_and_id.ev_action_index)];
 
                 #line 595 "src/service_libraries/pus_services/pus_service19.fin"
                 self->pending_action_number[2U] = self->pending_action_number[2U] + 1U;
@@ -824,7 +824,7 @@ void CPUSService19__manage_event_action(const termina__event_t * const termina__
                 size_t tail_index = (size_t)(self->pending_action_head[3U] + self->pending_action_number[3U]) % 8U;
 
                 #line 608 "src/service_libraries/pus_services/pus_service19.fin"
-                self->pending_action_queue_4HS[termina__check__array_index(8U, tail_index)] = self->event_action_packets[termina__check__array_index(16U, found_and_id.ev_action_index)];
+                self->pending_action_queue_4HS[tail_index] = self->event_action_packets[termina__check__array_index(16U, found_and_id.ev_action_index)];
 
                 #line 609 "src/service_libraries/pus_services/pus_service19.fin"
                 self->pending_action_number[3U] = self->pending_action_number[3U] + 1U;

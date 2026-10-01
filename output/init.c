@@ -56,7 +56,7 @@ void termina__app__init_globals(void) {
     tc_channel.sync_word[3U] = 0xEFU;
     tc_channel.tc_num_bytes = 0U;
     for (size_t termina__i0 = 0U;
-         termina__i0 < queue_max_noe;
+         termina__i0 < 1024U;
          termina__i0 = termina__i0 + 1U) {
         tc_channel.tc_rx_queue.elements[termina__i0] = 0U;
     }
@@ -68,7 +68,7 @@ void termina__app__init_globals(void) {
     uart_drv.rx_queue._that = &tc_channel;
     uart_drv.rx_queue.enqueue = &CTCChannel__enqueue;
     for (size_t termina__i0 = 0U;
-         termina__i0 < queue_max_noe;
+         termina__i0 < 1024U;
          termina__i0 = termina__i0 + 1U) {
         uart_drv.uart_tx_queue.elements[termina__i0] = 0U;
     }
@@ -630,7 +630,7 @@ void termina__app__init_globals(void) {
     pus_service_6.exec_tc_req_status_update.N = 0U;
     pus_service_6.exec_tc_req_status_update.address = 0U;
     for (size_t termina__i0 = 0U;
-         termina__i0 < max_num_of_bytes_memory_load;
+         termina__i0 < 256U;
          termina__i0 = termina__i0 + 1U) {
         pus_service_6.exec_tc_req_status_update.data[termina__i0] = 0U;
     }

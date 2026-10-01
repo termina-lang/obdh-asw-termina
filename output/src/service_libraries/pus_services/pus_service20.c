@@ -77,7 +77,7 @@ static Status__i32 CPUSService20__exec20_1TC(const termina__event_t * const term
                     uint8_t u8_SDP_value = 0U;
 
                     #line 80 "src/service_libraries/pus_services/pus_service20.fin"
-                    u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)self->exec_tc_req_status_update.PID]);
+                    u8_SDP_value = atomic_load(&self->system_data_pool_u8[termina__check__array_index(18U, (size_t)self->exec_tc_req_status_update.PID)]);
 
                     #line 81 "src/service_libraries/pus_services/pus_service20.fin"
                     status = append_u8_appdata_field((TMHandler *)b_tm_handler.data, u8_SDP_value);
@@ -90,7 +90,7 @@ static Status__i32 CPUSService20__exec20_1TC(const termina__event_t * const term
                     uint32_t u32_SDP_value = 0U;
 
                     #line 85 "src/service_libraries/pus_services/pus_service20.fin"
-                    u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)self->exec_tc_req_status_update.PID]);
+                    u32_SDP_value = atomic_load(&self->system_data_pool_u32[termina__check__array_index(12U, (size_t)self->exec_tc_req_status_update.PID)]);
 
                     #line 86 "src/service_libraries/pus_services/pus_service20.fin"
                     status = append_u32_appdata_field((TMHandler *)b_tm_handler.data, u32_SDP_value);
@@ -101,7 +101,7 @@ static Status__i32 CPUSService20__exec20_1TC(const termina__event_t * const term
                     #line 89 "src/service_libraries/pus_services/pus_service20.fin"
                     status._variant = Status__Failure;
                     #line 89 "src/service_libraries/pus_services/pus_service20.fin"
-                    status.Failure._0 = INVALID_PID_ERROR;
+                    status.Failure._0 = 10L;
 
                 }
 
@@ -133,7 +133,7 @@ static Status__i32 CPUSService20__exec20_1TC(const termina__event_t * const term
             #line 106 "src/service_libraries/pus_services/pus_service20.fin"
             status._variant = Status__Failure;
             #line 106 "src/service_libraries/pus_services/pus_service20.fin"
-            status.Failure._0 = TM_POOL_ALLOC_FAILURE;
+            status.Failure._0 = 1L;
 
         }
 
@@ -188,14 +188,14 @@ static Status__i32 CPUSService20__exec20_3TC(const termina__event_t * const term
             if (item_type._variant == DataPoolItemType__u8_t) {
                 
                 #line 166 "src/service_libraries/pus_services/pus_service20.fin"
-                atomic_store(&self->system_data_pool_u8[(size_t)self->exec_tc_req_status_update.PID - 11U], self->exec_tc_req_status_update.tc_20_3_data.PID_value_u8);
+                atomic_store(&self->system_data_pool_u8[termina__check__array_index(18U, (size_t)self->exec_tc_req_status_update.PID - 11U)], self->exec_tc_req_status_update.tc_20_3_data.PID_value_u8);
 
             } else
             #line 168 "src/service_libraries/pus_services/pus_service20.fin"
             if (item_type._variant == DataPoolItemType__u32_t) {
                 
                 #line 169 "src/service_libraries/pus_services/pus_service20.fin"
-                atomic_store(&self->system_data_pool_u32[(size_t)self->exec_tc_req_status_update.PID - 0U], self->exec_tc_req_status_update.tc_20_3_data.PID_value_u32);
+                atomic_store(&self->system_data_pool_u32[termina__check__array_index(12U, (size_t)self->exec_tc_req_status_update.PID - 0U)], self->exec_tc_req_status_update.tc_20_3_data.PID_value_u32);
 
             } else
             {
@@ -203,7 +203,7 @@ static Status__i32 CPUSService20__exec20_3TC(const termina__event_t * const term
                 #line 172 "src/service_libraries/pus_services/pus_service20.fin"
                 status._variant = Status__Failure;
                 #line 172 "src/service_libraries/pus_services/pus_service20.fin"
-                status.Failure._0 = INVALID_PID_ERROR;
+                status.Failure._0 = 10L;
 
             }
 
@@ -283,7 +283,7 @@ void CPUSService20__exec_tc(const termina__event_t * const termina__ev, void * c
             #line 221 "src/service_libraries/pus_services/pus_service20.fin"
             status._variant = Status__Failure;
             #line 221 "src/service_libraries/pus_services/pus_service20.fin"
-            status.Failure._0 = INVALID_PID_ERROR;
+            status.Failure._0 = 10L;
 
         }
 
@@ -311,7 +311,7 @@ void CPUSService20__exec_tc(const termina__event_t * const termina__ev, void * c
             #line 239 "src/service_libraries/pus_services/pus_service20.fin"
             status._variant = Status__Failure;
             #line 239 "src/service_libraries/pus_services/pus_service20.fin"
-            status.Failure._0 = ACCEPTANCE_ERROR;
+            status.Failure._0 = 4L;
 
         }
 
@@ -330,28 +330,28 @@ void CPUSService20__exec_tc(const termina__event_t * const termina__ev, void * c
         int32_t error_code = status.Failure._0;
 
         #line 254 "src/service_libraries/pus_services/pus_service20.fin"
-        if (error_code == ACCEPTANCE_ERROR) {
+        if (error_code == 4L) {
             
             #line 256 "src/service_libraries/pus_services/pus_service20.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 261 "src/service_libraries/pus_services/pus_service20.fin"
-        if (error_code == BUILD_TM_ERROR) {
+        if (error_code == 3L) {
             
             #line 263 "src/service_libraries/pus_services/pus_service20.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 268 "src/service_libraries/pus_services/pus_service20.fin"
-        if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+        if (error_code == 5L) {
             
             #line 270 "src/service_libraries/pus_services/pus_service20.fin"
             self->pus_service_1.send_tm_1_4_short_pack_length(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.tc_num_bytes, action_status);
 
         } else
         #line 276 "src/service_libraries/pus_services/pus_service20.fin"
-        if (error_code == INVALID_PID_ERROR) {
+        if (error_code == 10L) {
             
             #line 278 "src/service_libraries/pus_services/pus_service20.fin"
             self->pus_service_1.send_tm_1_4_PID_not_valid(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.PID, action_status);

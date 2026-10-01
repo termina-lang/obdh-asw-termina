@@ -60,7 +60,7 @@ void CGPIODriver__write_led(const termina__event_t * const termina__ev, void * c
         #line 79 "src/resources/gpio_driver.fin"
         (*status)._variant = Status__Failure;
         #line 79 "src/resources/gpio_driver.fin"
-        (*status).Failure._0 = INVALID_LED_INDEX_ERROR;
+        (*status).Failure._0 = 7L;
 
     }
 

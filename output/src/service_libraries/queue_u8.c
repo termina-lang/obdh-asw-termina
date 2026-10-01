@@ -6,7 +6,7 @@ const size_t queue_max_noe = 1024U;
 _Bool is_full(const QueueU8 * const queue) {
     
     #line 14 "src/service_libraries/queue_u8.fin"
-    _Bool queue_is_full = queue->num_elements == queue_max_noe;
+    _Bool queue_is_full = queue->num_elements == 1024U;
 
     #line 15 "src/service_libraries/queue_u8.fin"
     return queue_is_full;
@@ -35,10 +35,10 @@ Status__i32 enqueue(QueueU8 * const queue, const uint8_t new_elem) {
     if (false == queue_is_full) {
         
         #line 29 "src/service_libraries/queue_u8.fin"
-        size_t next_tail_index = (size_t)(queue->head_index + queue->num_elements) % queue_max_noe;
+        size_t next_tail_index = (size_t)(queue->head_index + queue->num_elements) % 1024U;
 
         #line 30 "src/service_libraries/queue_u8.fin"
-        queue->elements[termina__check__array_index(1024U, next_tail_index)] = new_elem;
+        queue->elements[next_tail_index] = new_elem;
 
         #line 31 "src/service_libraries/queue_u8.fin"
         queue->num_elements = queue->num_elements + 1U;
@@ -75,7 +75,7 @@ void dequeue(QueueU8 * const queue, Option__u8 * const old_elem) {
         (*old_elem).Some._0 = element;
 
         #line 45 "src/service_libraries/queue_u8.fin"
-        queue->head_index = (size_t)(queue->head_index + 1U) % queue_max_noe;
+        queue->head_index = (size_t)(queue->head_index + 1U) % 1024U;
 
         #line 46 "src/service_libraries/queue_u8.fin"
         queue->num_elements = queue->num_elements - 1U;

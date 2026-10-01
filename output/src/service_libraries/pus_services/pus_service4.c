@@ -45,7 +45,7 @@ static uint32_t CPUSService4__SDP_get_mean(const termina__event_t * const termin
         uint8_t u8_SDP_value = 0U;
 
         #line 501 "src/service_libraries/pus_services/pus_service4.fin"
-        u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
+        u8_SDP_value = atomic_load(&self->system_data_pool_u8[termina__check__array_index(18U, (size_t)PID)]);
 
         #line 502 "src/service_libraries/pus_services/pus_service4.fin"
         mean_value = (uint32_t)((uint32_t)(self->param_stats[termina__check__array_index(4U, pid_index)].mean_value * self->param_stats[termina__check__array_index(4U, pid_index)].samples) + (uint32_t)u8_SDP_value) / termina__check__divisor_u32((uint32_t)(self->param_stats[termina__check__array_index(4U, pid_index)].samples + 1U));
@@ -58,7 +58,7 @@ static uint32_t CPUSService4__SDP_get_mean(const termina__event_t * const termin
         uint32_t u32_SDP_value = 0U;
 
         #line 506 "src/service_libraries/pus_services/pus_service4.fin"
-        u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
+        u32_SDP_value = atomic_load(&self->system_data_pool_u32[termina__check__array_index(12U, (size_t)PID)]);
 
         #line 507 "src/service_libraries/pus_services/pus_service4.fin"
         mean_value = (uint32_t)((uint32_t)(self->param_stats[termina__check__array_index(4U, pid_index)].mean_value * self->param_stats[termina__check__array_index(4U, pid_index)].samples) + u32_SDP_value) / termina__check__divisor_u32((uint32_t)(self->param_stats[termina__check__array_index(4U, pid_index)].samples + 1U));
@@ -94,7 +94,7 @@ static _Bool CPUSService4__SDP_param_higher_than_limit(const termina__event_t * 
         uint8_t u8_SDP_value = 0U;
 
         #line 417 "src/service_libraries/pus_services/pus_service4.fin"
-        u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
+        u8_SDP_value = atomic_load(&self->system_data_pool_u8[termina__check__array_index(18U, (size_t)PID)]);
 
         #line 418 "src/service_libraries/pus_services/pus_service4.fin"
         if ((uint32_t)u8_SDP_value > self->param_stats[termina__check__array_index(4U, pid_index)].max) {
@@ -112,7 +112,7 @@ static _Bool CPUSService4__SDP_param_higher_than_limit(const termina__event_t * 
         uint32_t u32_SDP_value = 0U;
 
         #line 424 "src/service_libraries/pus_services/pus_service4.fin"
-        u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
+        u32_SDP_value = atomic_load(&self->system_data_pool_u32[termina__check__array_index(12U, (size_t)PID)]);
 
         #line 425 "src/service_libraries/pus_services/pus_service4.fin"
         if (u32_SDP_value > self->param_stats[termina__check__array_index(4U, pid_index)].max) {
@@ -153,7 +153,7 @@ static _Bool CPUSService4__SDP_param_lower_than_limit(const termina__event_t * c
         uint8_t u8_SDP_value = 0U;
 
         #line 448 "src/service_libraries/pus_services/pus_service4.fin"
-        u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
+        u8_SDP_value = atomic_load(&self->system_data_pool_u8[termina__check__array_index(18U, (size_t)PID)]);
 
         #line 449 "src/service_libraries/pus_services/pus_service4.fin"
         if ((uint32_t)u8_SDP_value < self->param_stats[termina__check__array_index(4U, pid_index)].min) {
@@ -171,7 +171,7 @@ static _Bool CPUSService4__SDP_param_lower_than_limit(const termina__event_t * c
         uint32_t u32_SDP_value = 0U;
 
         #line 455 "src/service_libraries/pus_services/pus_service4.fin"
-        u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
+        u32_SDP_value = atomic_load(&self->system_data_pool_u32[termina__check__array_index(12U, (size_t)PID)]);
 
         #line 456 "src/service_libraries/pus_services/pus_service4.fin"
         if (u32_SDP_value < self->param_stats[termina__check__array_index(4U, pid_index)].min) {
@@ -197,7 +197,7 @@ static Status__i32 CPUSService4__get_PID_defined_stats_index(const termina__even
     (void)termina__ev;
 
     #line 36 "src/service_libraries/pus_services/pus_service4.fin"
-    Status__i32 status = { ._variant = Status__Failure, .Failure = { ._0 = INVALID_PID_ERROR } };
+    Status__i32 status = { ._variant = Status__Failure, .Failure = { ._0 = 10L } };
 
     #line 38 "src/service_libraries/pus_services/pus_service4.fin"
     for (size_t i = 0U; i < 4U && status._variant == Status__Failure; i = i + 1U) {
@@ -241,7 +241,7 @@ static IndexStatus CPUSService4__get_free_index(const termina__event_t * const t
     (void)termina__ev;
 
     #line 62 "src/service_libraries/pus_services/pus_service4.fin"
-    IndexStatus id_status = { .index = 0U, .status = { ._variant = Status__Failure, .Failure = { ._0 = NO_FREE_STATS_INDEX_ERROR } } };
+    IndexStatus id_status = { .index = 0U, .status = { ._variant = Status__Failure, .Failure = { ._0 = 12L } } };
 
     #line 64 "src/service_libraries/pus_services/pus_service4.fin"
     for (size_t i = 0U; i < 4U && id_status.status._variant == Status__Failure; i = i + 1U) {
@@ -319,7 +319,7 @@ static Status__i32 CPUSService4__add_PID_stats(const termina__event_t * const te
         #line 124 "src/service_libraries/pus_services/pus_service4.fin"
         status._variant = Status__Failure;
         #line 124 "src/service_libraries/pus_services/pus_service4.fin"
-        status.Failure._0 = NO_FREE_STATS_INDEX_ERROR;
+        status.Failure._0 = 12L;
 
     }
 
@@ -419,7 +419,7 @@ static Status__i32 CPUSService4__exec4_1TC(const termina__event_t * const termin
                 #line 189 "src/service_libraries/pus_services/pus_service4.fin"
                 status._variant = Status__Failure;
                 #line 189 "src/service_libraries/pus_services/pus_service4.fin"
-                status.Failure._0 = TM_POOL_ALLOC_FAILURE;
+                status.Failure._0 = 1L;
 
             }
 
@@ -621,7 +621,7 @@ void CPUSService4__exec_tc(const termina__event_t * const termina__ev, void * co
             #line 359 "src/service_libraries/pus_services/pus_service4.fin"
             status._variant = Status__Failure;
             #line 359 "src/service_libraries/pus_services/pus_service4.fin"
-            status.Failure._0 = ACCEPTANCE_ERROR;
+            status.Failure._0 = 4L;
 
         }
 
@@ -640,21 +640,21 @@ void CPUSService4__exec_tc(const termina__event_t * const termina__ev, void * co
         int32_t error_code = status.Failure._0;
 
         #line 373 "src/service_libraries/pus_services/pus_service4.fin"
-        if (error_code == ACCEPTANCE_ERROR) {
+        if (error_code == 4L) {
             
             #line 375 "src/service_libraries/pus_services/pus_service4.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, &status);
 
         } else
         #line 380 "src/service_libraries/pus_services/pus_service4.fin"
-        if (error_code == BUILD_TM_ERROR) {
+        if (error_code == 3L) {
             
             #line 382 "src/service_libraries/pus_services/pus_service4.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, &status);
 
         } else
         #line 387 "src/service_libraries/pus_services/pus_service4.fin"
-        if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+        if (error_code == 5L) {
             
             #line 389 "src/service_libraries/pus_services/pus_service4.fin"
             self->pus_service_1.send_tm_1_4_short_pack_length(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.tc_num_bytes, &status);
@@ -696,7 +696,7 @@ static uint32_t CPUSService4__get_data_pool_item(const termina__event_t * const 
         uint8_t aux_value = 0U;
 
         #line 476 "src/service_libraries/pus_services/pus_service4.fin"
-        aux_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
+        aux_value = atomic_load(&self->system_data_pool_u8[termina__check__array_index(18U, (size_t)PID)]);
 
         #line 477 "src/service_libraries/pus_services/pus_service4.fin"
         SDP_value = (uint32_t)aux_value;
@@ -706,7 +706,7 @@ static uint32_t CPUSService4__get_data_pool_item(const termina__event_t * const 
     if (item_type._variant == DataPoolItemType__u32_t) {
         
         #line 480 "src/service_libraries/pus_services/pus_service4.fin"
-        SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
+        SDP_value = atomic_load(&self->system_data_pool_u32[termina__check__array_index(12U, (size_t)PID)]);
 
     } else
     {

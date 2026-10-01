@@ -55,7 +55,7 @@ Status__i32 tc_handler_get_u8_appdata_field(TCHandler * const tc_handler, uint8_
         #line 110 "src/service_libraries/pus_tc_handler.fin"
         status._variant = Status__Failure;
         #line 110 "src/service_libraries/pus_tc_handler.fin"
-        status.Failure._0 = TC_DATA_OUT_OF_RANGE_ERROR;
+        status.Failure._0 = 5L;
 
     }
 
@@ -84,7 +84,7 @@ Status__i32 tc_handler_get_u16_appdata_field(TCHandler * const tc_handler, uint1
         #line 139 "src/service_libraries/pus_tc_handler.fin"
         status._variant = Status__Failure;
         #line 139 "src/service_libraries/pus_tc_handler.fin"
-        status.Failure._0 = TC_DATA_OUT_OF_RANGE_ERROR;
+        status.Failure._0 = 5L;
 
     }
 
@@ -113,7 +113,7 @@ Status__i32 tc_handler_get_u32_appdata_field(TCHandler * const tc_handler, uint3
         #line 168 "src/service_libraries/pus_tc_handler.fin"
         status._variant = Status__Failure;
         #line 168 "src/service_libraries/pus_tc_handler.fin"
-        status.Failure._0 = TC_DATA_OUT_OF_RANGE_ERROR;
+        status.Failure._0 = 5L;
 
     }
 

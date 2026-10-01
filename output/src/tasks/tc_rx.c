@@ -77,7 +77,7 @@ Status__i32 CTXRxBottomHalfTask__get_tc(const termina__event_t * const termina__
         #line 61 "src/tasks/tc_rx.fin"
         ret._variant = Status__Failure;
         #line 61 "src/tasks/tc_rx.fin"
-        ret.Failure._0 = TM_POOL_ALLOC_FAILURE;
+        ret.Failure._0 = 1L;
 
     }
 

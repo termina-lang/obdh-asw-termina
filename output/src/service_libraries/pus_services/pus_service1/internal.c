@@ -63,7 +63,7 @@ _Bool is_tc_ack_accept_enabled(const uint8_t flags_ack) {
     _Bool ack_enabled = false;
 
     #line 131 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if ((uint8_t)(flags_ack & ACCEPT_ACK_ENABLED_MASK) != 0U) {
+    if ((uint8_t)(flags_ack & 0x1U) != 0U) {
         
         #line 132 "src/service_libraries/pus_services/pus_service1/internal.fin"
         ack_enabled = true;
@@ -81,7 +81,7 @@ _Bool is_tc_ack_start_exec_enabled(const uint8_t flags_ack) {
     _Bool ack_enabled = false;
 
     #line 149 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if ((uint8_t)(flags_ack & EXEC_START_ACK_ENABLED_MASK) != 0U) {
+    if ((uint8_t)(flags_ack & 0x2U) != 0U) {
         
         #line 150 "src/service_libraries/pus_services/pus_service1/internal.fin"
         ack_enabled = true;
@@ -99,7 +99,7 @@ _Bool is_tc_ack_progress_exec_enabled(const uint8_t flags_ack) {
     _Bool ack_enabled = false;
 
     #line 166 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if ((uint8_t)(flags_ack & EXEC_PROGRESS_ACK_ENABLED_MASK) != 0U) {
+    if ((uint8_t)(flags_ack & 0x4U) != 0U) {
         
         #line 167 "src/service_libraries/pus_services/pus_service1/internal.fin"
         ack_enabled = true;
@@ -117,7 +117,7 @@ _Bool is_tc_ack_completion_exec_enabled(const uint8_t flags_ack) {
     _Bool ack_enabled = false;
 
     #line 183 "src/service_libraries/pus_services/pus_service1/internal.fin"
-    if ((uint8_t)(flags_ack & EXEC_COMPLETION_ACK_ENABLED_MASK) != 0U) {
+    if ((uint8_t)(flags_ack & 0x8U) != 0U) {
         
         #line 184 "src/service_libraries/pus_services/pus_service1/internal.fin"
         ack_enabled = true;

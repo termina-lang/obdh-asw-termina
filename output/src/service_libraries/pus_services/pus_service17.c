@@ -50,7 +50,7 @@ static Status__i32 CPUSService17__exec17_1TC(const termina__event_t * const term
             #line 105 "src/service_libraries/pus_services/pus_service17.fin"
             status._variant = Status__Failure;
             #line 105 "src/service_libraries/pus_services/pus_service17.fin"
-            status.Failure._0 = TM_POOL_ALLOC_FAILURE;
+            status.Failure._0 = 1L;
 
         }
 
@@ -104,7 +104,7 @@ void CPUSService17__exec_tc(const termina__event_t * const termina__ev, void * c
         #line 151 "src/service_libraries/pus_services/pus_service17.fin"
         status._variant = Status__Failure;
         #line 151 "src/service_libraries/pus_services/pus_service17.fin"
-        status.Failure._0 = ACCEPTANCE_ERROR;
+        status.Failure._0 = 4L;
 
     }
 
@@ -121,14 +121,14 @@ void CPUSService17__exec_tc(const termina__event_t * const termina__ev, void * c
         int32_t error_code = status.Failure._0;
 
         #line 165 "src/service_libraries/pus_services/pus_service17.fin"
-        if (error_code == ACCEPTANCE_ERROR) {
+        if (error_code == 4L) {
             
             #line 167 "src/service_libraries/pus_services/pus_service17.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 172 "src/service_libraries/pus_services/pus_service17.fin"
-        if (error_code == BUILD_TM_ERROR) {
+        if (error_code == 3L) {
             
             #line 174 "src/service_libraries/pus_services/pus_service17.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);

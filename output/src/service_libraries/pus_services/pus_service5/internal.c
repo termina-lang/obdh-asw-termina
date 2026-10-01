@@ -9,7 +9,7 @@ const uint16_t medium_severity_anomaly_Ev_IDs = 0U;
 
 const uint16_t high_severity_anomaly_Ev_IDs = 16U;
 
-const uint16_t Ev_IDs_per_type[5U] = { 0U, informative_Ev_IDs, low_severity_anomaly_Ev_IDs, medium_severity_anomaly_Ev_IDs, high_severity_anomaly_Ev_IDs };
+const uint16_t Ev_IDs_per_type[5U] = { 0U, 3U, 4U, 0U, 16U };
 
 const uint16_t offset_mask = 0x1FU;
 
@@ -143,7 +143,7 @@ size_t get_Ev_ID_enable_config_index(const uint16_t Ev_ID) {
 uint8_t get_Ev_ID_enable_config_offset(const uint16_t Ev_ID) {
     
     #line 127 "src/service_libraries/pus_services/pus_service5/internal.fin"
-    return (uint8_t)(uint16_t)(Ev_ID & offset_mask);
+    return (uint8_t)(uint16_t)(Ev_ID & 0x1FU);
 
 }
 

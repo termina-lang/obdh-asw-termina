@@ -75,7 +75,7 @@ void CPUSService3__do_hk(const termina__event_t * const termina__ev, void * cons
                             uint8_t u8_SDP_value = 0U;
 
                             #line 347 "src/service_libraries/pus_services/pus_service3.fin"
-                            u8_SDP_value = atomic_load(&self->system_data_pool_u8[(size_t)PID]);
+                            u8_SDP_value = atomic_load(&self->system_data_pool_u8[termina__check__array_index(18U, (size_t)PID)]);
 
                             #line 348 "src/service_libraries/pus_services/pus_service3.fin"
                             do_hk_status = append_u8_appdata_field((TMHandler *)b_tm_handler.data, u8_SDP_value);
@@ -88,7 +88,7 @@ void CPUSService3__do_hk(const termina__event_t * const termina__ev, void * cons
                             uint32_t u32_SDP_value = 0U;
 
                             #line 352 "src/service_libraries/pus_services/pus_service3.fin"
-                            u32_SDP_value = atomic_load(&self->system_data_pool_u32[(size_t)PID]);
+                            u32_SDP_value = atomic_load(&self->system_data_pool_u32[termina__check__array_index(12U, (size_t)PID)]);
 
                             #line 353 "src/service_libraries/pus_services/pus_service3.fin"
                             do_hk_status = append_u32_appdata_field((TMHandler *)b_tm_handler.data, u32_SDP_value);
@@ -99,7 +99,7 @@ void CPUSService3__do_hk(const termina__event_t * const termina__ev, void * cons
                             #line 356 "src/service_libraries/pus_services/pus_service3.fin"
                             do_hk_status._variant = Status__Failure;
                             #line 356 "src/service_libraries/pus_services/pus_service3.fin"
-                            do_hk_status.Failure._0 = SDP_ITEM_TYPE_ERROR;
+                            do_hk_status.Failure._0 = 9L;
 
                         }
 
@@ -137,7 +137,7 @@ void CPUSService3__do_hk(const termina__event_t * const termina__ev, void * cons
                     #line 378 "src/service_libraries/pus_services/pus_service3.fin"
                     (*action_status)._variant = Status__Failure;
                     #line 378 "src/service_libraries/pus_services/pus_service3.fin"
-                    (*action_status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+                    (*action_status).Failure._0 = 1L;
 
                 }
 
@@ -421,7 +421,7 @@ void CPUSService3__exec_tc(const termina__event_t * const termina__ev, void * co
             #line 261 "src/service_libraries/pus_services/pus_service3.fin"
             status._variant = Status__Failure;
             #line 261 "src/service_libraries/pus_services/pus_service3.fin"
-            status.Failure._0 = ACCEPTANCE_ERROR;
+            status.Failure._0 = 4L;
 
         }
 
@@ -440,21 +440,21 @@ void CPUSService3__exec_tc(const termina__event_t * const termina__ev, void * co
         int32_t error_code = status.Failure._0;
 
         #line 277 "src/service_libraries/pus_services/pus_service3.fin"
-        if (error_code == ACCEPTANCE_ERROR) {
+        if (error_code == 4L) {
             
             #line 279 "src/service_libraries/pus_services/pus_service3.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(termina__ev, self->pus_service_1._that, exec_tc_req_status_update.packet_id, exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 284 "src/service_libraries/pus_services/pus_service3.fin"
-        if (error_code == BUILD_TM_ERROR) {
+        if (error_code == 3L) {
             
             #line 286 "src/service_libraries/pus_services/pus_service3.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(termina__ev, self->pus_service_1._that, exec_tc_req_status_update.packet_id, exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 291 "src/service_libraries/pus_services/pus_service3.fin"
-        if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+        if (error_code == 5L) {
             
             #line 293 "src/service_libraries/pus_services/pus_service3.fin"
             self->pus_service_1.send_tm_1_4_short_pack_length(termina__ev, self->pus_service_1._that, exec_tc_req_status_update.packet_id, exec_tc_req_status_update.packet_seq_ctrl, exec_tc_req_status_update.tc_num_bytes, action_status);

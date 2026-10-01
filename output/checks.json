@@ -1,8 +1,8 @@
 {
     "summary": {
-        "obligations": 345,
-        "discharged": 199,
-        "checked": 146
+        "obligations": 381,
+        "discharged": 214,
+        "checked": 167
     },
     "modules": [
         {
@@ -28,7 +28,120 @@
         {
             "module": "handlers.init",
             "file": "src/handlers/init.fin",
-            "obligations": []
+            "obligations": [
+                {
+                    "start": {
+                        "line": 54,
+                        "column": 13
+                    },
+                    "end": {
+                        "line": 54,
+                        "column": 63
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "value",
+                    "reason": "the index stays between 5 and 11"
+                },
+                {
+                    "start": {
+                        "line": 56,
+                        "column": 9
+                    },
+                    "end": {
+                        "line": 56,
+                        "column": 53
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "constant",
+                    "reason": "the index is a constant"
+                },
+                {
+                    "start": {
+                        "line": 58,
+                        "column": 9
+                    },
+                    "end": {
+                        "line": 58,
+                        "column": 72
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "constant",
+                    "reason": "the index is a constant"
+                },
+                {
+                    "start": {
+                        "line": 59,
+                        "column": 9
+                    },
+                    "end": {
+                        "line": 59,
+                        "column": 72
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "constant",
+                    "reason": "the index is a constant"
+                },
+                {
+                    "start": {
+                        "line": 60,
+                        "column": 9
+                    },
+                    "end": {
+                        "line": 60,
+                        "column": 72
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "constant",
+                    "reason": "the index is a constant"
+                },
+                {
+                    "start": {
+                        "line": 61,
+                        "column": 9
+                    },
+                    "end": {
+                        "line": 61,
+                        "column": 72
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "constant",
+                    "reason": "the index is a constant"
+                },
+                {
+                    "start": {
+                        "line": 62,
+                        "column": 9
+                    },
+                    "end": {
+                        "line": 62,
+                        "column": 64
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "constant",
+                    "reason": "the index is a constant"
+                },
+                {
+                    "start": {
+                        "line": 66,
+                        "column": 13
+                    },
+                    "end": {
+                        "line": 66,
+                        "column": 61
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "value",
+                    "reason": "the index stays between 0 and 17"
+                }
+            ]
         },
         {
             "module": "resources.gpio_driver",
@@ -394,6 +507,30 @@
                 },
                 {
                     "start": {
+                        "line": 205,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 205,
+                        "column": 111
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 209,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 209,
+                        "column": 112
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
                         "line": 231,
                         "column": 25
                     },
@@ -406,12 +543,60 @@
                 },
                 {
                     "start": {
+                        "line": 238,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 238,
+                        "column": 111
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 242,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 242,
+                        "column": 110
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
                         "line": 263,
                         "column": 25
                     },
                     "end": {
                         "line": 263,
                         "column": 70
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 270,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 270,
+                        "column": 111
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 274,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 274,
+                        "column": 112
                     },
                     "property": "index-in-bounds",
                     "status": "checked"
@@ -442,6 +627,30 @@
                 },
                 {
                     "start": {
+                        "line": 317,
+                        "column": 25
+                    },
+                    "end": {
+                        "line": 317,
+                        "column": 143
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 321,
+                        "column": 25
+                    },
+                    "end": {
+                        "line": 321,
+                        "column": 124
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
                         "line": 372,
                         "column": 15
                     },
@@ -466,6 +675,30 @@
                 },
                 {
                     "start": {
+                        "line": 388,
+                        "column": 25
+                    },
+                    "end": {
+                        "line": 388,
+                        "column": 143
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 392,
+                        "column": 25
+                    },
+                    "end": {
+                        "line": 392,
+                        "column": 124
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
                         "line": 427,
                         "column": 15
                     },
@@ -484,6 +717,30 @@
                     "end": {
                         "line": 435,
                         "column": 79
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 443,
+                        "column": 25
+                    },
+                    "end": {
+                        "line": 443,
+                        "column": 143
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 447,
+                        "column": 25
+                    },
+                    "end": {
+                        "line": 447,
+                        "column": 124
                     },
                     "property": "index-in-bounds",
                     "status": "checked"
@@ -1574,7 +1831,9 @@
                         "column": 67
                     },
                     "property": "index-in-bounds",
-                    "status": "checked"
+                    "status": "discharged",
+                    "prover": "value",
+                    "reason": "the index stays between 0 and 7"
                 },
                 {
                     "start": {
@@ -1682,7 +1941,9 @@
                         "column": 68
                     },
                     "property": "index-in-bounds",
-                    "status": "checked"
+                    "status": "discharged",
+                    "prover": "value",
+                    "reason": "the index stays between 0 and 7"
                 },
                 {
                     "start": {
@@ -1790,7 +2051,9 @@
                         "column": 68
                     },
                     "property": "index-in-bounds",
-                    "status": "checked"
+                    "status": "discharged",
+                    "prover": "value",
+                    "reason": "the index stays between 0 and 7"
                 },
                 {
                     "start": {
@@ -1898,7 +2161,9 @@
                         "column": 68
                     },
                     "property": "index-in-bounds",
-                    "status": "checked"
+                    "status": "discharged",
+                    "prover": "value",
+                    "reason": "the index stays between 0 and 7"
                 },
                 {
                     "start": {
@@ -2392,7 +2657,56 @@
         {
             "module": "service_libraries.pus_services.pus_service20",
             "file": "src/service_libraries/pus_services/pus_service20.fin",
-            "obligations": []
+            "obligations": [
+                {
+                    "start": {
+                        "line": 80,
+                        "column": 33
+                    },
+                    "end": {
+                        "line": 80,
+                        "column": 138
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 85,
+                        "column": 33
+                    },
+                    "end": {
+                        "line": 85,
+                        "column": 140
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 166,
+                        "column": 25
+                    },
+                    "end": {
+                        "line": 166,
+                        "column": 195
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 169,
+                        "column": 25
+                    },
+                    "end": {
+                        "line": 169,
+                        "column": 198
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                }
+            ]
         },
         {
             "module": "service_libraries.pus_services.pus_service20.types",
@@ -2631,6 +2945,30 @@
                 },
                 {
                     "start": {
+                        "line": 347,
+                        "column": 37
+                    },
+                    "end": {
+                        "line": 347,
+                        "column": 106
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 352,
+                        "column": 37
+                    },
+                    "end": {
+                        "line": 352,
+                        "column": 108
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
                         "line": 393,
                         "column": 39
                     },
@@ -2642,6 +2980,34 @@
                     "status": "discharged",
                     "prover": "constant",
                     "reason": "the divisor is a constant"
+                },
+                {
+                    "start": {
+                        "line": 396,
+                        "column": 13
+                    },
+                    "end": {
+                        "line": 396,
+                        "column": 64
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "value",
+                    "reason": "the index stays between 0 and 4"
+                },
+                {
+                    "start": {
+                        "line": 399,
+                        "column": 12
+                    },
+                    "end": {
+                        "line": 399,
+                        "column": 59
+                    },
+                    "property": "index-in-bounds",
+                    "status": "discharged",
+                    "prover": "value",
+                    "reason": "the index stays between 0 and 4"
                 }
             ]
         },
@@ -2868,12 +3234,36 @@
                 },
                 {
                     "start": {
+                        "line": 417,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 417,
+                        "column": 86
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
                         "line": 418,
                         "column": 45
                     },
                     "end": {
                         "line": 418,
                         "column": 73
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 424,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 424,
+                        "column": 88
                     },
                     "property": "index-in-bounds",
                     "status": "checked"
@@ -2904,12 +3294,36 @@
                 },
                 {
                     "start": {
+                        "line": 448,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 448,
+                        "column": 86
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
                         "line": 449,
                         "column": 45
                     },
                     "end": {
                         "line": 449,
                         "column": 73
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 455,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 455,
+                        "column": 88
                     },
                     "property": "index-in-bounds",
                     "status": "checked"
@@ -2928,12 +3342,48 @@
                 },
                 {
                     "start": {
+                        "line": 476,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 476,
+                        "column": 83
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 480,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 480,
+                        "column": 84
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
                         "line": 493,
                         "column": 25
                     },
                     "end": {
                         "line": 493,
                         "column": 64
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 501,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 501,
+                        "column": 86
                     },
                     "property": "index-in-bounds",
                     "status": "checked"
@@ -2982,6 +3432,18 @@
                     "end": {
                         "line": 502,
                         "column": 168
+                    },
+                    "property": "index-in-bounds",
+                    "status": "checked"
+                },
+                {
+                    "start": {
+                        "line": 506,
+                        "column": 17
+                    },
+                    "end": {
+                        "line": 506,
+                        "column": 88
                     },
                     "property": "index-in-bounds",
                     "status": "checked"
@@ -3825,8 +4287,8 @@
                     },
                     "property": "non-zero-divisor",
                     "status": "discharged",
-                    "prover": "value",
-                    "reason": "the divisor stays between 1024 and 1024"
+                    "prover": "constant",
+                    "reason": "the divisor is a constant"
                 },
                 {
                     "start": {
@@ -3838,7 +4300,9 @@
                         "column": 42
                     },
                     "property": "index-in-bounds",
-                    "status": "checked"
+                    "status": "discharged",
+                    "prover": "value",
+                    "reason": "the index stays between 0 and 1023"
                 },
                 {
                     "start": {
@@ -3863,8 +4327,8 @@
                     },
                     "property": "non-zero-divisor",
                     "status": "discharged",
-                    "prover": "value",
-                    "reason": "the divisor stays between 1024 and 1024"
+                    "prover": "constant",
+                    "reason": "the divisor is a constant"
                 }
             ]
         },

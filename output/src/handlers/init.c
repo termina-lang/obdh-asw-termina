@@ -35,19 +35,19 @@ Status__i32 CInitHandler__init(const termina__event_t * const termina__ev, void 
     atomic_store(&self->system_data_pool_u32[10U], 5U);
 
     #line 58 "src/handlers/init.fin"
-    atomic_store(&self->system_data_pool_u32[0U], (uint32_t)(Zero + (uint32_t)(1U * Unit)) + (uint32_t)(1U * Dec));
+    atomic_store(&self->system_data_pool_u32[0U], 2272U);
 
     #line 59 "src/handlers/init.fin"
-    atomic_store(&self->system_data_pool_u32[1U], (uint32_t)(Zero + (uint32_t)(2U * Unit)) + (uint32_t)(4U * Dec));
+    atomic_store(&self->system_data_pool_u32[1U], 2536U);
 
     #line 60 "src/handlers/init.fin"
-    atomic_store(&self->system_data_pool_u32[2U], (uint32_t)(Zero + (uint32_t)(3U * Unit)) + (uint32_t)(2U * Dec));
+    atomic_store(&self->system_data_pool_u32[2U], 2700U);
 
     #line 61 "src/handlers/init.fin"
-    atomic_store(&self->system_data_pool_u32[3U], (uint32_t)(Zero + (uint32_t)(4U * Unit)) + (uint32_t)(9U * Dec));
+    atomic_store(&self->system_data_pool_u32[3U], 3044U);
 
     #line 62 "src/handlers/init.fin"
-    atomic_store(&self->system_data_pool_u32[4U], Zero + (uint32_t)(5U * Unit));
+    atomic_store(&self->system_data_pool_u32[4U], 3068U);
 
     #line 65 "src/handlers/init.fin"
     for (size_t i = 0U; i < 18U; i = i + 1U) {

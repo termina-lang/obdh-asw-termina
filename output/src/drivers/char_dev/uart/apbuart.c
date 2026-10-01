@@ -163,7 +163,7 @@ static void CAPBUARTDriver__release_tx(const termina__event_t * const termina__e
         Option__u8 extracted_elem = { ._variant = Option__None };
 
         #line 176 "src/drivers/char_dev/uart/apbuart.fin"
-        for (size_t i = 0U; i < hw_fifo_size; i = i + 1U) {
+        for (size_t i = 0U; i < 1U; i = i + 1U) {
             
             #line 178 "src/drivers/char_dev/uart/apbuart.fin"
             dequeue(&self->uart_tx_queue, &extracted_elem);
@@ -283,7 +283,7 @@ void CAPBUARTDriver__send(const termina__event_t * const termina__ev, void * con
         get_num_enqueued_elems(&self->uart_tx_queue, &num_elements);
 
         #line 229 "src/drivers/char_dev/uart/apbuart.fin"
-        if ((size_t)(queue_max_noe - num_elements) >= 1U) {
+        if ((size_t)(1024U - num_elements) >= 1U) {
             
             #line 231 "src/drivers/char_dev/uart/apbuart.fin"
             *status = enqueue(&self->uart_tx_queue, output_byte);
@@ -297,7 +297,7 @@ void CAPBUARTDriver__send(const termina__event_t * const termina__ev, void * con
             #line 235 "src/drivers/char_dev/uart/apbuart.fin"
             (*status)._variant = Status__Failure;
             #line 235 "src/drivers/char_dev/uart/apbuart.fin"
-            (*status).Failure._0 = TM_SEND_FAILURE;
+            (*status).Failure._0 = 2L;
 
         }
 

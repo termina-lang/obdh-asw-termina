@@ -54,28 +54,28 @@ static _Bool CPUSService6__is_address_valid(const termina__event_t * const termi
     _Bool is_valid = true;
 
     #line 35 "src/service_libraries/pus_services/pus_service6.fin"
-    if ((size_t)self->exec_tc_req_status_update.mem_id >= banks_number) {
+    if ((size_t)self->exec_tc_req_status_update.mem_id >= 8U) {
         
         #line 36 "src/service_libraries/pus_services/pus_service6.fin"
         is_valid = false;
 
     } else
     #line 37 "src/service_libraries/pus_services/pus_service6.fin"
-    if ((size_t)self->exec_tc_req_status_update.address >= bank_size) {
+    if ((size_t)self->exec_tc_req_status_update.address >= 16777216U) {
         
         #line 38 "src/service_libraries/pus_services/pus_service6.fin"
         is_valid = false;
 
     } else
     #line 39 "src/service_libraries/pus_services/pus_service6.fin"
-    if ((size_t)((size_t)self->exec_tc_req_status_update.address + (size_t)self->exec_tc_req_status_update.length) > bank_size) {
+    if ((size_t)((size_t)self->exec_tc_req_status_update.address + (size_t)self->exec_tc_req_status_update.length) > 16777216U) {
         
         #line 40 "src/service_libraries/pus_services/pus_service6.fin"
         is_valid = false;
 
     } else
     #line 41 "src/service_libraries/pus_services/pus_service6.fin"
-    if ((size_t)self->exec_tc_req_status_update.length > max_num_of_bytes_memory_load) {
+    if ((size_t)self->exec_tc_req_status_update.length > 256U) {
         
         #line 42 "src/service_libraries/pus_services/pus_service6.fin"
         is_valid = false;
@@ -302,7 +302,7 @@ static Status__i32 CPUSService6__exec6_5TC(const termina__event_t * const termin
                 #line 235 "src/service_libraries/pus_services/pus_service6.fin"
                 status._variant = Status__Failure;
                 #line 235 "src/service_libraries/pus_services/pus_service6.fin"
-                status.Failure._0 = TM_POOL_ALLOC_FAILURE;
+                status.Failure._0 = 1L;
 
             }
 
@@ -403,7 +403,7 @@ static Status__i32 CPUSService6__exec6_9TC(const termina__event_t * const termin
             #line 318 "src/service_libraries/pus_services/pus_service6.fin"
             status._variant = Status__Failure;
             #line 318 "src/service_libraries/pus_services/pus_service6.fin"
-            status.Failure._0 = TM_POOL_ALLOC_FAILURE;
+            status.Failure._0 = 1L;
 
         }
 
@@ -468,7 +468,7 @@ void CPUSService6__exec_tc(const termina__event_t * const termina__ev, void * co
     if (status._variant == Status__Success && subtype == 2U) {
         
         #line 352 "src/service_libraries/pus_services/pus_service6.fin"
-        for (size_t j = 0U; j < max_num_of_bytes_memory_load && (j < (size_t)self->exec_tc_req_status_update.length && status._variant == Status__Success); j = j + 1U) {
+        for (size_t j = 0U; j < 256U && (j < (size_t)self->exec_tc_req_status_update.length && status._variant == Status__Success); j = j + 1U) {
             
             #line 353 "src/service_libraries/pus_services/pus_service6.fin"
             status = tc_handler_get_u8_appdata_field(tc_handler, &self->exec_tc_req_status_update.data[j]);
@@ -506,7 +506,7 @@ void CPUSService6__exec_tc(const termina__event_t * const termina__ev, void * co
             #line 373 "src/service_libraries/pus_services/pus_service6.fin"
             status._variant = Status__Failure;
             #line 373 "src/service_libraries/pus_services/pus_service6.fin"
-            status.Failure._0 = ACCEPTANCE_ERROR;
+            status.Failure._0 = 4L;
 
         }
 
@@ -525,21 +525,21 @@ void CPUSService6__exec_tc(const termina__event_t * const termina__ev, void * co
         int32_t error_code = status.Failure._0;
 
         #line 387 "src/service_libraries/pus_services/pus_service6.fin"
-        if (error_code == ACCEPTANCE_ERROR) {
+        if (error_code == 4L) {
             
             #line 389 "src/service_libraries/pus_services/pus_service6.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 394 "src/service_libraries/pus_services/pus_service6.fin"
-        if (error_code == BUILD_TM_ERROR) {
+        if (error_code == 3L) {
             
             #line 396 "src/service_libraries/pus_services/pus_service6.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 401 "src/service_libraries/pus_services/pus_service6.fin"
-        if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+        if (error_code == 5L) {
             
             #line 403 "src/service_libraries/pus_services/pus_service6.fin"
             self->pus_service_1.send_tm_1_4_short_pack_length(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.tc_num_bytes, action_status);

@@ -80,7 +80,7 @@ Status__i32 CHousekeepingFDIRTask__check_pending_actions(const termina__event_t 
             #line 139 "src/tasks/hk_fdir_mng/hk_fdir.fin"
             result._variant = Status__Failure;
             #line 139 "src/tasks/hk_fdir_mng/hk_fdir.fin"
-            result.Failure._0 = TM_POOL_ALLOC_FAILURE;
+            result.Failure._0 = 1L;
 
         }
 

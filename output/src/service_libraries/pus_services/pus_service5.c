@@ -165,7 +165,7 @@ void CPUSService5__exec_tc(const termina__event_t * const termina__ev, void * co
             #line 288 "src/service_libraries/pus_services/pus_service5.fin"
             status._variant = Status__Failure;
             #line 288 "src/service_libraries/pus_services/pus_service5.fin"
-            status.Failure._0 = ACCEPTANCE_ERROR;
+            status.Failure._0 = 4L;
 
         }
 
@@ -184,21 +184,21 @@ void CPUSService5__exec_tc(const termina__event_t * const termina__ev, void * co
         int32_t error_code = status.Failure._0;
 
         #line 302 "src/service_libraries/pus_services/pus_service5.fin"
-        if (error_code == ACCEPTANCE_ERROR) {
+        if (error_code == 4L) {
             
             #line 304 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.send_tm_1_4_error_in_acceptance(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 309 "src/service_libraries/pus_services/pus_service5.fin"
-        if (error_code == BUILD_TM_ERROR) {
+        if (error_code == 3L) {
             
             #line 311 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.send_tm_1_8_tm_exceed_limit_appdata(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, action_status);
 
         } else
         #line 316 "src/service_libraries/pus_services/pus_service5.fin"
-        if (error_code == TC_DATA_OUT_OF_RANGE_ERROR) {
+        if (error_code == 5L) {
             
             #line 318 "src/service_libraries/pus_services/pus_service5.fin"
             self->pus_service_1.send_tm_1_4_short_pack_length(termina__ev, self->pus_service_1._that, self->exec_tc_req_status_update.packet_id, self->exec_tc_req_status_update.packet_seq_ctrl, self->exec_tc_req_status_update.tc_num_bytes, action_status);
@@ -300,7 +300,7 @@ void CPUSService5__send_tm_5_2(const termina__event_t * const termina__ev, void 
         startup_tm((TMHandler *)b_tm_handler.data);
 
         #line 192 "src/service_libraries/pus_services/pus_service5.fin"
-        *status = append_u16_appdata_field((TMHandler *)b_tm_handler.data, EvID_build_tm_error);
+        *status = append_u16_appdata_field((TMHandler *)b_tm_handler.data, 0x2100U);
 
         #line 194 "src/service_libraries/pus_services/pus_service5.fin"
         if ((*status)._variant == Status__Success) {
@@ -337,7 +337,7 @@ void CPUSService5__send_tm_5_2(const termina__event_t * const termina__ev, void 
         #line 212 "src/service_libraries/pus_services/pus_service5.fin"
         (*status)._variant = Status__Failure;
         #line 212 "src/service_libraries/pus_services/pus_service5.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 
@@ -426,7 +426,7 @@ void CPUSService5__send_tm_5_x(const termina__event_t * const termina__ev, void 
         #line 255 "src/service_libraries/pus_services/pus_service5.fin"
         (*status)._variant = Status__Failure;
         #line 255 "src/service_libraries/pus_services/pus_service5.fin"
-        (*status).Failure._0 = TM_POOL_ALLOC_FAILURE;
+        (*status).Failure._0 = 1L;
 
     }
 

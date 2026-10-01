@@ -27,7 +27,7 @@ Status__i32 append_u8_appdata_field(TMHandler * const tm_handler, const uint8_t 
         #line 67 "src/service_libraries/pus_tm_handler.fin"
         status._variant = Status__Failure;
         #line 67 "src/service_libraries/pus_tm_handler.fin"
-        status.Failure._0 = BUILD_TM_ERROR;
+        status.Failure._0 = 3L;
 
     }
 
@@ -56,7 +56,7 @@ Status__i32 append_u16_appdata_field(TMHandler * const tm_handler, const uint16_
         #line 94 "src/service_libraries/pus_tm_handler.fin"
         status._variant = Status__Failure;
         #line 94 "src/service_libraries/pus_tm_handler.fin"
-        status.Failure._0 = BUILD_TM_ERROR;
+        status.Failure._0 = 3L;
 
     }
 
@@ -85,7 +85,7 @@ Status__i32 append_u32_appdata_field(TMHandler * const tm_handler, const uint32_
         #line 120 "src/service_libraries/pus_tm_handler.fin"
         status._variant = Status__Failure;
         #line 120 "src/service_libraries/pus_tm_handler.fin"
-        status.Failure._0 = BUILD_TM_ERROR;
+        status.Failure._0 = 3L;
 
     }
 
@@ -97,7 +97,7 @@ Status__i32 append_u32_appdata_field(TMHandler * const tm_handler, const uint32_
 void tm_handler_build_packet_header(TMHandler * const tm_handler, const uint16_t tm_seq_counter) {
     
     #line 139 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->packet_header.packet_id = ccsds_pus_tm_build_packet_id(APID);
+    tm_handler->packet_header.packet_id = ccsds_pus_tm_build_packet_id(0x32CU);
 
     #line 141 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->packet_header.packet_seq_ctrl = tm_seq_counter & 0x3FFFU;
@@ -125,7 +125,7 @@ void tm_handler_build_df_header(TMHandler * const tm_handler, const uint8_t tm_t
     tm_handler->df_header.msg_type_counter = 0U;
 
     #line 165 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->df_header.destinationID = DESTINATION_ID;
+    tm_handler->df_header.destinationID = 0x78U;
 
     #line 166 "src/service_libraries/pus_tm_handler.fin"
     tm_handler->df_header.obt_secs = current_obt.seconds;
@@ -163,7 +163,7 @@ void startup_tm(TMHandler * const tm_handler) {
     tm_handler->tm_descriptor.tm_num_bytes = 256U;
 
     #line 209 "src/service_libraries/pus_tm_handler.fin"
-    tm_handler->app_data_index = tm_app_data_offset;
+    tm_handler->app_data_index = 19U;
 
     #line 211 "src/service_libraries/pus_tm_handler.fin"
     return;
